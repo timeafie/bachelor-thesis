@@ -1,0 +1,83 @@
+%*************************************************************************
+% Grundlagen
+%*************************************************************************
+\chapter{Grundlagen}
+\label{ch:grundlagen}
+
+\section{Argumentationsrahmen}
+\label{sec:af}
+
+In diesem Abschnitt werden \emph{argumentation frameworks}~\cite{dung:1995:acceptability}, Semantiken und labelling basierte Sematiken
+vorgestellt. Außerdem wird das Konzept von \emph{conditional independence} eingeführt. Schlussendlich werden \emph{quantified boolean formulas} 
+vorgestellt. 
+
+\emph{Argumentation frameworks} (AF) sind ein zentrales Konzept
+der formalen Argumentationstheorie. Sie wurden von Dung~\cite{dung:1995:acceptability}
+eingeführt, um das grundlegende Prinzip menschlicher Argumentation formal zu erfassen und maschinell nutzbar zu machen.
+
+\begin{Definition}[Argumentationsrahmen]
+    \label{def:af}
+Ein \emph{Argumentationsrahmen} (AF) ist ein Paar $F = (A, R)$, wobei $A$ eine Menge von Argumenten und
+ $R \subseteq A \times A$ eine binäre Angriffsrelation auf $A$ ist.
+ Für ein AF $F = (A, R)$ repräsentiert $A_F$ die Menge der Argumente von $F$ und $R_F$ die Angriffsrelation von $F$.
+\end{Definition}
+
+\subsection{Grundlegende Semantiken}
+\label{subsec:af-semantiken}
+
+Die Semantiken eines AF bestimmen, welche Argumente als akzeptiert gelten~\cite{dung:1995:acceptability}.
+
+\begin{Definition}[Semantiken eines Argumentation Framework]
+  \label{def:semantiken}
+  Sei $F = (A, R)$ ein AF und $S \subseteq A$.
+  \begin{enumerate}
+    \item $S$ heißt \emph{conflict-free}, wenn es keine $a, b \in S$ gibt mit
+          $(a, b) \in R$.
+    \item Ein Argument $a \in A$ heißt \emph{acceptable} bezüglich $S$, wenn für
+          jedes $b \in A$ mit $(b, a) \in R$ ein $c \in S$ existiert mit $(c, b) \in R$.
+    \item $S$ heißt \emph{admissible}, wenn $S$ conflict-free ist und jedes
+          $a \in S$ acceptable bezüglich $S$ ist.
+    \item $S$ heißt \emph{preferred}, wenn $S$ eine bezüglich
+          Mengeninklusion maximale admissible Menge ist.
+    \item $S$ heißt \emph{stable}, wenn $S$ conflict-free ist und für
+          jedes $a \in A \setminus S$ ein $b \in S$ existiert mit $(b, a) \in R$.
+  \end{enumerate}
+\end{Definition}
+
+\subsection{Labelling-basierte Semantiken}
+\label{subsec:af-labelling}
+Eine weitere Möglichkeit, die Akzeptanz von Argumenten zu bestimmen, 
+ist der labelling-basierte Ansatz, 
+der von Caminada~\cite{caminada:2009:logical-account} eingeführt wurde.
+\begin{Definition}[Labelling eines Argumentation Frameworks]
+  \label{def:labelling}
+  Sei $F = (A, R)$ ein AF. Ein \emph{Labelling} von $F$ ist eine Funktion
+  $\mathcal{L} : A \rightarrow \{\text{in}, \text{out}, \text{undec}\}$, die jedem Argument
+  eines von drei Labeln zuordnet: \texttt{in}, \texttt{out} oder \texttt{undec}.
+\end{Definition}
+
+Wir verwenden $\text{in}(\mathcal{L})$ für $\{a \mid \mathcal{L}(a) = \text{in}\}$, 
+$\text{out}(\mathcal{L})$ für $\{a \mid \mathcal{L}(a) = \text{out}\}$ 
+und $\text{undec}(\mathcal{L})$ für $\{a \mid \mathcal{L}(a) = \text{undec}\}$.
+
+\begin{Definition}[Labellings und Extensions]
+  \label{def:labellings-extensions}
+  Sei $F = (A, R)$ ein AF und $\mathcal{L}$ ein Labelling von $F$. Das Labelling $\mathcal{L}$ heißt:
+  \begin{enumerate}
+    \item \emph{conflict-free}, wenn kein Argument in $\text{in}(\mathcal{L})$ ein anderes
+          Argument in $\text{in}(\mathcal{L})$ angreift.
+    \item \emph{admissible}, wenn $\mathcal{L}$ conflict-free ist und für jedes $a \in \text{in}(\mathcal{L})$
+          alle Angreifer von $a$ in $\text{out}(\mathcal{L})$ sind.
+    \item \emph{complete}, wenn $\mathcal{L}$ conflict-free ist und zusätzlich:
+          \begin{itemize}
+            \item[$-$] Wenn alle Angreifer von $a$ in $\text{out}(\mathcal{L})$ sind, dann $a \in \text{in}(\mathcal{L})$.
+            \item[$-$] Wenn $a$ mindestens einen Angreifer in $\text{in}(\mathcal{L})$ hat, dann $a \in \text{out}(\mathcal{L})$.
+          \end{itemize}
+    \item \emph{grounded}, wenn $\mathcal{L}$ ein complete Labelling mit minimalem $\text{in}(\mathcal{L})$ ist.
+    \item \emph{preferred}, wenn $\mathcal{L}$ ein complete Labelling mit maximalem $\text{in}(\mathcal{L})$ ist.
+    \item \emph{stable}, wenn $\mathcal{L}$ complete ist und $\text{undec}(\mathcal{L}) = \emptyset$.
+  \end{enumerate}
+\end{Definition}
+
+
+
