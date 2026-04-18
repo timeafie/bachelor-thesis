@@ -1,0 +1,17 @@
+Titel: Conditional Indepence in AF
+
+
+Hintergrund: 
+-Argumentational Frameworks
+-Semantiken und labelling basierte Semantiken
+-Conditional Indepence
+-QBF
+
+eigener Anteil: 
+Bezug auf Prop 4.10
+-Conditional Indepence Check in Quantified Boolean Formula
+-Formeln aufstellen
+-Korrektheit zeigen
+-Implementieren (QBF-Checker in Programmiersprache nach Wahl)
+
+(Pearls Axiome: semi-graphoid axioms 2009)
