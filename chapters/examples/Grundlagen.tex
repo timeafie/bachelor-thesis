@@ -4,7 +4,7 @@
 \chapter{Grundlagen}
 \label{ch:grundlagen}
 
-\section{Argumentationsrahmen}
+\section{Argumentation Frameworks}
 \label{sec:af}
 
 In diesem Abschnitt werden \emph{argumentation frameworks}~\cite{dung:1995:acceptability}, Semantiken und labelling basierte Sematiken
@@ -15,19 +15,20 @@ vorgestellt.
 der formalen Argumentationstheorie. Sie wurden von Dung~\cite{dung:1995:acceptability}
 eingeführt, um das grundlegende Prinzip menschlicher Argumentation formal zu erfassen und maschinell nutzbar zu machen.
 
-\begin{Definition}[Argumentationsrahmen]
+\begin{Definition}
     \label{def:af}
-Ein \emph{Argumentationsrahmen} (AF) ist ein Paar $F = (A, R)$, wobei $A$ eine Menge von Argumenten und
+Ein \emph{Argumentation Framework} (AF) ist ein Paar $F = (A, R)$, 
+wobei $A$ eine Menge von Argumenten und
  $R \subseteq A \times A$ eine binäre Angriffsrelation auf $A$ ist.
  Für ein AF $F = (A, R)$ repräsentiert $A_F$ die Menge der Argumente von $F$ und $R_F$ die Angriffsrelation von $F$.
 \end{Definition}
 
-\subsection{Grundlegende Semantiken}
-\label{subsec:af-semantiken}
+\section{Grundlegende Semantiken}
+\label{sec:af-semantiken}
 
-Die Semantiken eines AF bestimmen, welche Argumente als akzeptiert gelten~\cite{dung:1995:acceptability}.
+Die Semantiken eines AF bestimmen, welche Argumente akzeptiert werden~\cite{dung:1995:acceptability}.
 
-\begin{Definition}[Semantiken eines Argumentation Framework]
+\begin{Definition}
   \label{def:semantiken}
   Sei $F = (A, R)$ ein AF und $S \subseteq A$.
   \begin{enumerate}
@@ -44,40 +45,47 @@ Die Semantiken eines AF bestimmen, welche Argumente als akzeptiert gelten~\cite{
   \end{enumerate}
 \end{Definition}
 
-\subsection{Labelling-basierte Semantiken}
-\label{subsec:af-labelling}
+\section{labelling-basierte Semantiken}
+\label{sec:af-labelling}
 Eine weitere Möglichkeit, die Akzeptanz von Argumenten zu bestimmen, 
 ist der labelling-basierte Ansatz, 
 der von Caminada~\cite{caminada:2009:logical-account} eingeführt wurde.
-\begin{Definition}[Labelling eines Argumentation Frameworks]
+\begin{Definition}
   \label{def:labelling}
-  Sei $F = (A, R)$ ein AF. Ein \emph{Labelling} von $F$ ist eine Funktion
-  $\mathcal{L} : A \rightarrow \{\text{in}, \text{out}, \text{undec}\}$, die jedem Argument
-  eines von drei Labeln zuordnet: \texttt{in}, \texttt{out} oder \texttt{undec}.
+  Sei $F = (A, R)$ ein AF. Ein \emph{labelling} von $F$ ist eine Funktion
+  $\mathcal{L} : A \rightarrow \{\text{in}, \text{out}, \text{und}\}$, die jedem Argument
+  eines von drei Labeln zuordnet: \texttt{in}, \texttt{out} oder \texttt{und}.
 \end{Definition}
 
 Wir verwenden $\text{in}(\mathcal{L})$ für $\{a \mid \mathcal{L}(a) = \text{in}\}$, 
 $\text{out}(\mathcal{L})$ für $\{a \mid \mathcal{L}(a) = \text{out}\}$ 
-und $\text{undec}(\mathcal{L})$ für $\{a \mid \mathcal{L}(a) = \text{undec}\}$.
+und $\text{und}(\mathcal{L})$ für $\{a \mid \mathcal{L}(a) = \text{und}\}$.
 
-\begin{Definition}[Labellings und Extensions]
-  \label{def:labellings-extensions}
-  Sei $F = (A, R)$ ein AF und $\mathcal{L}$ ein Labelling von $F$. Das Labelling $\mathcal{L}$ heißt:
-  \begin{enumerate}
-    \item \emph{conflict-free}, wenn kein Argument in $\text{in}(\mathcal{L})$ ein anderes
-          Argument in $\text{in}(\mathcal{L})$ angreift.
-    \item \emph{admissible}, wenn $\mathcal{L}$ conflict-free ist und für jedes $a \in \text{in}(\mathcal{L})$
-          alle Angreifer von $a$ in $\text{out}(\mathcal{L})$ sind.
-    \item \emph{complete}, wenn $\mathcal{L}$ conflict-free ist und zusätzlich:
-          \begin{itemize}
-            \item[$-$] Wenn alle Angreifer von $a$ in $\text{out}(\mathcal{L})$ sind, dann $a \in \text{in}(\mathcal{L})$.
-            \item[$-$] Wenn $a$ mindestens einen Angreifer in $\text{in}(\mathcal{L})$ hat, dann $a \in \text{out}(\mathcal{L})$.
-          \end{itemize}
-    \item \emph{grounded}, wenn $\mathcal{L}$ ein complete Labelling mit minimalem $\text{in}(\mathcal{L})$ ist.
-    \item \emph{preferred}, wenn $\mathcal{L}$ ein complete Labelling mit maximalem $\text{in}(\mathcal{L})$ ist.
-    \item \emph{stable}, wenn $\mathcal{L}$ complete ist und $\text{undec}(\mathcal{L}) = \emptyset$.
-  \end{enumerate}
+\begin{Definition}
+      \label{def:complete-labelling}
+      Sei $F = (A, R)$ ein AF und $\mathcal{L} : A \rightarrow \{\text{in}, \text{out}, \text{und}\}$ ein $labelling$
+      von $F$. $\mathcal{L}$ heißt \emph{complete}, wenn für jedes Argument $a \in A$ gilt:
+      \begin{itemize}
+            \item $\mathcal{L}(a) = \text{in}$ gdw. für jedes $b \in A$ mit $(b, a) \in R$ $\mathcal{L}(b) = \text{out}$ gilt.
+            \item $\mathcal{L}(a) = \text{out}$ gdw. es ein $b \in A$ mit $(b, a) \in R$ gibt, für das $\mathcal{L}(b) = \text{in}$ gilt.
+      \end{itemize}
 \end{Definition}
+
+\section{Conditional Independence}
+\label{sec:conditional-independence}
+      Der Begriff der \emph{conditional independence} ist ein zentrales Konzept in der Wahrscheinlichkeitstheorie.
+      Er beschreibt die Unabhängigkeit von zwei Zufallsvariablen unter der Bedingung, 
+      dass eine andere dritte Variable einen bestimmten Wert annimmt.
+
+      Die semi-graphoiden Axiome, nach Pearl~\cite{pearl:2009:causality}, sind eine Reihe von Eigenschaften, 
+      die die konditionale Unabhängigkeitsrelation erfüllt.\par Sie lauten wie folgt:
+      \begin{itemize}
+            \item Symmetrie: $A \perp B \mid C \implies B \perp A \mid C$
+            \item Dekomposition: $A \perp B \cup D \mid C \implies A \perp B \mid C$ 
+            \item Schwache Vereinigung: $A \perp B \cup D \mid C \implies A \perp B \mid C \cup D$ 
+            \item Kontraktion: $A \perp B \mid C \land A \perp D \mid C \cup B \implies A \perp B \cup D \mid C$
+      \end{itemize}
+
 
 
 
