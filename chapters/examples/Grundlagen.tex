@@ -4,32 +4,43 @@
 \chapter{Grundlagen}
 \label{ch:grundlagen}
 
-\section{Argumentation Frameworks}
+\section{Abstrakte Argumentations Formalismen}
 \label{sec:af}
 
-In diesem Abschnitt werden \emph{argumentation frameworks}~\cite{dung:1995:acceptability}, Semantiken und labelling basierte Sematiken
-vorgestellt. Außerdem wird das Konzept von \emph{conditional independence} eingeführt. Schlussendlich werden \emph{quantified boolean formulas} 
-vorgestellt. 
+In diesem Abschnitt werden \emph{Abstrakte Argumentations Formalismen}~\cite{dung:1995:acceptability},
+Semantiken und labelling basierte Sematiken vorgestellt. 
+Außerdem wird das Konzept der \emph{bedingten Unabhängigkeit} eingeführt. 
+Schlussendlich werden \emph{Quantifizierte Boolesche Formeln} vorgestellt. 
 
-\emph{Argumentation frameworks} (AF) sind ein zentrales Konzept
+\emph{Abstrakte Argumentations Formalismen} (AF) sind ein zentrales Konzept
 der formalen Argumentationstheorie. Sie wurden von Dung~\cite{dung:1995:acceptability}
 eingeführt, um das grundlegende Prinzip menschlicher Argumentation formal zu erfassen und maschinell nutzbar zu machen.
+Der Grundgedanke von AF ist es, Argumente als abstrakte Einheiten zu betrachten, die durch eine Angriffsrelation miteinander verbunden sind.
+Damit ist die Akzeptanz eines Arguments immer von der Auswertung anderer Argumente abhängig und nicht von der inneren Struktur des Arguments selbst. 
 
 \begin{Definition}
     \label{def:af}
-Ein \emph{Argumentation Framework} (AF) ist ein Paar $F = (A, R)$, 
+Ein \emph{Abstrakter Argumentations Formalismus} (AF) ist ein Paar $F = (A, R)$, 
 wobei $A$ eine Menge von Argumenten und
  $R \subseteq A \times A$ eine binäre Angriffsrelation auf $A$ ist.
  Für ein AF $F = (A, R)$ repräsentiert $A_F$ die Menge der Argumente von $F$ und $R_F$ die Angriffsrelation von $F$.
 \end{Definition}
 
-\section{Grundlegende Semantiken}
+\section{Semantiken}
 \label{sec:af-semantiken}
 
-Die Semantiken eines AF bestimmen, welche Argumente akzeptiert werden~\cite{dung:1995:acceptability}.
+Die Semantiken eines AF bestimmen, welche Argumente akzeptiert werden~\cite{dung:1995:acceptability}. 
+Dabei lässt zwischen extension-basierten und labelling-basierten Semantiken unterscheiden.
+Extension-basierte Semantiken definieren die Akzeptanz von Argumenten durch die Auswahl von Mengen von Argumenten, 
+die bestimmte Eigenschaften erfüllen.
+Labelling-basierte Semantiken hingegen ordnen jedem Argument ein Label zu, das seinen Akzeptanzstatus festhält.
+
+Im Folgenden wird der Unterschied der beiden Ansätze anhand einiger grundlegender Sematiken erläutert.
+
+\subsection{Extension-basierte Semantiken}
 
 \begin{Definition}
-  \label{def:semantiken}
+  \label{def:semantiken-extension}
   Sei $F = (A, R)$ ein AF und $S \subseteq A$.
   \begin{enumerate}
     \item $S$ heißt \emph{conflict-free}, wenn es keine $a, b \in S$ gibt mit
@@ -45,7 +56,7 @@ Die Semantiken eines AF bestimmen, welche Argumente akzeptiert werden~\cite{dung
   \end{enumerate}
 \end{Definition}
 
-\section{labelling-basierte Semantiken}
+\subsection{Labelling-basierte Semantiken}
 \label{sec:af-labelling}
 Eine weitere Möglichkeit, die Akzeptanz von Argumenten zu bestimmen, 
 ist der labelling-basierte Ansatz, 
