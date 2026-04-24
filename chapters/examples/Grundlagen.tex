@@ -39,21 +39,71 @@ Im Folgenden wird der Unterschied der beiden Ansätze anhand einiger grundlegend
 
 \subsection{Extension-basierte Semantiken}
 
+Die Definition einer extension-basierten Sematik basiert lediglich auf der Festlegung von bestimmten Eigenschaften, die eine Menge von 
+Argumenten erfüllen muss, um als akzeptabel zu gelten.
+
+Angriff
 \begin{Definition}
-  \label{def:semantiken-extension}
-  Sei $F = (A, R)$ ein AF und $S \subseteq A$.
-  \begin{enumerate}
-    \item $S$ heißt \emph{conflict-free}, wenn es keine $a, b \in S$ gibt mit
-          $(a, b) \in R$.
-    \item Ein Argument $a \in A$ heißt \emph{acceptable} bezüglich $S$, wenn für
-          jedes $b \in A$ mit $(b, a) \in R$ ein $c \in S$ existiert mit $(c, b) \in R$.
-    \item $S$ heißt \emph{admissible}, wenn $S$ conflict-free ist und jedes
-          $a \in S$ acceptable bezüglich $S$ ist.
-    \item $S$ heißt \emph{preferred}, wenn $S$ eine bezüglich
-          Mengeninklusion maximale admissible Menge ist.
-    \item $S$ heißt \emph{stable}, wenn $S$ conflict-free ist und für
-          jedes $a \in A \setminus S$ ein $b \in S$ existiert mit $(b, a) \in R$.
-  \end{enumerate}
+      \label{def:attack-single-argument}
+      Sei $F = (A, R)$ ein AF. Ein Argument $b \in A$ heißt \emph{Angreifer} auf ein Argument $a \in A$, genau dann wenn $(b, a) \in R$ gilt.
+      Wir schreiben: $b \rightarrow a$ für $(b, a) \in R$. Und definieren die Menge aller Angreifer von $a$ als $a^{-} = \{b \in A \mid b \rightarrow a\}$.
+\end{Definition}
+Für eine Menge von Argumenten formalisieren wir das Konzept des Angriffs wie folgt:
+\begin{Definition}
+      \label{def:attack-set-arguments}
+      Sei $F = (A, R)$ ein AF. Ein Argument $b \in A$ heißt \emph{Angreifer} auf eine Menge von Argumenten $S \subseteq A$, 
+      genau dann wenn es ein Argument $a \in S$ gibt, so dass $(b, a) \in R$ gilt.
+      Wir schreiben: $b \rightarrow S$ für $b \in A$, $a \in S$, $S \subseteq A$ und $(b, a) \in R$. 
+      Die Menge aller Angreifer von $S$ definieren wir als $S^{-} = \{b \in A \mid b \rightarrow S\}$.
+\end{Definition}
+
+Wir fassen formal zusammen.
+
+\begin{Definition}
+      \label{attack-object-subject}
+      Sei $F = (A, R)$ ein AF, eine Menge $S$ mit $S \subseteq A$ und $a$ ein Argument mit $a \in A$. Wir schreiben:
+\begin{itemize}
+      \item $a^{+} = \{b \in A \mid a \rightarrow b\}$
+      \item $a^{-} = \{b \in A \mid b \rightarrow a\}$
+      \item $S^{+} = \{b \in A \mid a \rightarrow b \text{ für ein } a \in S\}$
+      \item $S^{-} = \{b \in A \mid b \rightarrow a \text{ für ein } a \in S\}$
+\end{itemize}
+\end{Definition}
+
+Neben des expliziten Konzepts des Angriffs, transportiert die Angriffsrelation implizit auch die Idee der \emph{Verteidigung}.
+Soll ein einzelnes Argument Teil unserer ausgewählten Menge sein, so sollte es
+gegen Angriffe von außen geschützt sein. Diese Eigenschaft definieren wir wie folgt:
+\begin{Definition}
+    \label{def:defense}
+    Sei $F = (A, R)$ ein AF. Ein Argument $a \in A$ heißt \emph{verteidigt} durch eine Menge $S \subseteq A$, 
+    genau dann wenn für jedes Argument $b \in A$ mit $b \rightarrow a$ gilt, dass es ein Argument $c \in S$ gibt, so dass $c \rightarrow b$ gilt.
+
+\end{Definition}
+
+
+Basis aller Semantiken ist die \emph{Konfliktfreiheit}. Eine Menge an Argumenten soll ein Argumentationsszenario nur "überleben", 
+wenn es in sich selbst stimmig ist \cite{handbook__of_formal_argumentation__vol__3:2024}.
+\begin{Definition}
+    \label{def:conflict-free}
+    Sei $F = (A, R)$ ein AF. Eine Menge $S \subseteq A$ heißt \emph{konfliktfrei}, genau dann wenn es keine Argumente $a, b \in S$ gibt, 
+    so dass $a \rightarrow b$ gilt.
+\end{Definition}
+Insbesondere ist damit ein Argument, das sich selbst angreift, nicht \emph{konfliktfrei}.
+
+\begin{Definition}
+      \label{range}
+      Sei $F = (A, R)$ ein AF und $S \subseteq A$. Die \emph{Reichweite} von $S$ ist definiert als $S \cup S^{+}$.
+\end{Definition}
+
+\begin{Definition}
+      \label{semantic-extensions}
+      Sei $F = (A, R)$ ein AF, $S \subseteq A$ und $S$ \emph{konfliktfrei}. $S$ heißt:
+\begin{itemize}
+      \item \emph{admissible}, genau dann wenn jedes Argument in $S$ durch $S$ verteidigt wird.
+      \item \emph{complete}, genau dann wenn jedes Argument, das durch $S$ verteidigt wird, in $S$ enthalten ist.
+      \item \emph{preferred}, genau dann wenn $S$ inhaltsmaximal unter den admissible Mengen ist.
+      \item \emph{stable}, genau dann wenn $S^{+} = A \setminus S$ gilt.
+\end{itemize}
 \end{Definition}
 
 \subsection{Labelling-basierte Semantiken}
