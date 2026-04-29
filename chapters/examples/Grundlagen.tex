@@ -7,7 +7,7 @@
 \section{Abstrakte Argumentations Formalismen}
 \label{sec:af}
 
-In diesem Abschnitt werden \emph{Abstrakte Argumentations Formalismen}~\cite{dung:1995:acceptability},
+In diesem Kapitel werden \emph{Abstrakte Argumentations Formalismen}~\cite{dung:1995:acceptability},
 Semantiken und labelling basierte Sematiken vorgestellt. 
 Außerdem wird das Konzept der \emph{bedingten Unabhängigkeit} eingeführt. 
 Schlussendlich werden \emph{Quantifizierte Boolesche Formeln} vorgestellt. 
@@ -29,7 +29,21 @@ wobei $A$ eine Menge von Argumenten und
 \section{Semantiken}
 \label{sec:af-semantiken}
 
-Die Semantiken eines AF bestimmen, welche Argumente akzeptiert werden~\cite{dung:1995:acceptability}. 
+Die Frage, welche Argumente oder Argumentmengen in einem Argumentationsszenario als überzeugend gelten sollen, 
+wird mit dem Konzept der Extension beantwortet.
+Eine Extension ist eine Menge von Argumenten, die zusammen gewünschte Eigenschaften erfüllen. 
+Sie also aufgrund ihrer strukturellen Eigenschaften überzeugend macht~\cite{dung:1995:acceptability}. 
+
+\begin{Definition}
+      \label{def:extension}
+      Eine Extension $E \subseteq A$ ist eine Auswahl der Argumentmenge $A$, die bestimmte Eigenschaften erfüllt.
+\end{Definition}
+
+\begin{Definition}
+      \label{def:semantik}
+      Eine Semantik $\sigma$ ist eine Funktion, die jedem AF F eine Menge an Extensionen zuordnet. Es gilt: $\sigma(F) \subseteq 2^{A}$
+\end{Definition}
+
 Dabei lässt zwischen extension-basierten und labelling-basierten Semantiken unterscheiden.
 Extension-basierte Semantiken definieren die Akzeptanz von Argumenten durch die Auswahl von Mengen von Argumenten, 
 die bestimmte Eigenschaften erfüllen.
