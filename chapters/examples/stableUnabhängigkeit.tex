@@ -1,0 +1,47 @@
+\chapter{\textit{stable}-Unabhängigkeit}
+\label{ch:stable}
+
+\section{\textit{stable}-Semantik}
+\label{sec:stb}
+
+\section{\textit{stable}-Semantik in aussagenlogischer Darstellung}
+\label{sec:stb-pl}
+
+Im Folgenden wird die \textit{stable} Semantik in einer aussagenlogischen Form präsentiert. 
+Wir erinnern die Definition der \textit{stable} Semantik: Für ein $AF~F$ ist $S \subseteq A$ eine \textit{stable}
+Extension gdw. $S^+ = A/S$.
+
+Da für \textit{stable}-Extensionen das \textit{undecided}-Label nie vergeben wird, beschränken wir uns in der 
+aussagenlogischen Darstellung ebenfalls nur auf die \textit{in}- und \textit{out}-Label.
+
+\begin{Definition}
+    \label{def:stb-lb-pl}
+    Sei \(F=(A,R)\) ein AF. Für jedes Argument
+    \(a \in A\) seien \(i_a\) und \(o_a\) aussagenlogische Variablen mit der
+    Bedeutung
+    \[
+        i_a \equiv \top \Leftrightarrow \lambda(a)=\mathit{in}
+        \qquad\text{und}\qquad
+        o_a \equiv \top \Leftrightarrow \lambda(a)=\mathit{out}.
+    \]
+    Eine aussagenlogische Kodierung der \textit{stable} Semantik lautet:
+    \[
+        \mathrm{stb}_F(I,O)
+        :=
+        \bigwedge_{a\in A}
+        (i_a \Leftrightarrow \neg o_a)
+        \;\wedge\;
+        \bigwedge_{a\in A}
+        \left(
+            o_a
+            \Leftrightarrow
+            \bigvee_{(b,a)\in R} i_b
+        \right).
+    \]
+\end{Definition}
+    Dabei stellt die erste Konjunktion sicher, dass jedes Argument genau
+    eines der beiden Labels \(\mathit{in}\) oder \(\mathit{out}\) erhält.
+    Die zweite Konjunktion kodiert, dass ein Argument genau dann
+    \(\mathit{out}\) gelabelt ist, wenn es von mindestens einem
+    \(\mathit{in}\)-gelabelten Argument angegriffen wird.
+

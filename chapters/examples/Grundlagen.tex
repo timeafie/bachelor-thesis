@@ -7,13 +7,13 @@
 \section{Abstrakte Argumentations Formalismen}
 \label{sec:af}
 
-In diesem Kapitel werden \emph{Abstrakte Argumentations Formalismen}~\cite{dung:1995:acceptability},
+In diesem Kapitel werden \emph{Abstrakte Argumentations Formalismen}~\cite{dung:1995:af},
 Semantiken und labelling basierte Sematiken vorgestellt. 
 Außerdem wird das Konzept der \emph{bedingten Unabhängigkeit} eingeführt. 
 Schlussendlich werden \emph{Quantifizierte Boolesche Formeln} vorgestellt. 
 
 \emph{Abstrakte Argumentations Formalismen} (AF) sind ein zentrales Konzept
-der formalen Argumentationstheorie. Sie wurden von Dung~\cite{dung:1995:acceptability}
+der formalen Argumentationstheorie. Sie wurden von Dung~\cite{dung:1995:af}
 eingeführt, um das grundlegende Prinzip menschlicher Argumentation formal zu erfassen und maschinell nutzbar zu machen.
 Der Grundgedanke von AF ist es, Argumente als abstrakte Einheiten zu betrachten, die durch eine Angriffsrelation miteinander verbunden sind.
 Damit ist die Akzeptanz eines Arguments immer von der Auswertung anderer Argumente abhängig und nicht von der inneren Struktur des Arguments selbst. 
@@ -32,7 +32,7 @@ wobei $A$ eine Menge von Argumenten und
 Die Frage, welche Argumente oder Argumentmengen in einem Argumentationsszenario als überzeugend gelten sollen, 
 wird mit dem Konzept der Extension beantwortet.
 Eine Extension ist eine Menge von Argumenten, die zusammen gewünschte Eigenschaften erfüllen. 
-Sie also aufgrund ihrer strukturellen Eigenschaften überzeugend macht~\cite{dung:1995:acceptability}. 
+Sie also aufgrund ihrer strukturellen Eigenschaften überzeugend macht~\cite{dung:1995:af}. 
 
 \begin{Definition}
       \label{def:extension}
@@ -43,7 +43,9 @@ Sie also aufgrund ihrer strukturellen Eigenschaften überzeugend macht~\cite{dun
       \label{def:semantik}
       Eine Semantik $\sigma$ ist eine Funktion, die jedem AF F eine Menge an Extensionen zuordnet. Es gilt: $\sigma(F) \subseteq 2^{A}$
 \end{Definition}
-
+Test \textcite{darwiche:1997:logical-ci}.
+Rapberger Paper \cite{bluemel:2025:independence-aba}
+Rienstra Paper \cite{rienstra:2020:independence-af}\\
 Dabei lässt zwischen extension-basierten und labelling-basierten Semantiken unterscheiden.
 Extension-basierte Semantiken definieren die Akzeptanz von Argumenten durch die Auswahl von Mengen von Argumenten, 
 die bestimmte Eigenschaften erfüllen.
@@ -152,7 +154,7 @@ und $\text{und}(\mathcal{L})$ für $\{a \mid \mathcal{L}(a) = \text{und}\}$.
       Er beschreibt die Unabhängigkeit von zwei Zufallsvariablen unter der Bedingung, 
       dass eine andere dritte Variable einen bestimmten Wert annimmt.
 
-      Die semi-graphoiden Axiome, nach Pearl~\cite{pearl:2009:causality}, sind eine Reihe von Eigenschaften, 
+      Die semi-graphoiden Axiome, nach Pearl~\cite{pearl:2010}, sind eine Reihe von Eigenschaften, 
       die die konditionale Unabhängigkeitsrelation erfüllt.\par Sie lauten wie folgt:
       \begin{itemize}
             \item Symmetrie: $A \perp B \mid C \implies B \perp A \mid C$
