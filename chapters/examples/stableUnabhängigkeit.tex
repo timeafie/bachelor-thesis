@@ -2,46 +2,154 @@
 \label{ch:stable}
 
 \section{\textit{stable}-Semantik}
-\label{sec:stb}
+\label{sec:st}
 
 \section{\textit{stable}-Semantik in aussagenlogischer Darstellung}
-\label{sec:stb-pl}
+\label{sec:st-pl}
 
 Im Folgenden wird die \textit{stable} Semantik in einer aussagenlogischen Form präsentiert. 
 Wir erinnern die Definition der \textit{stable} Semantik: Für ein $AF~F$ ist $S \subseteq A$ eine \textit{stable}
-Extension gdw. $S^+ = A/S$.
+Extension gdw. $S^+ = A \setminus S$.
 
 Da für \textit{stable}-Extensionen das \textit{undecided}-Label nie vergeben wird, beschränken wir uns in der 
 aussagenlogischen Darstellung ebenfalls nur auf die \textit{in}- und \textit{out}-Label.
 
 \begin{Definition}
-    \label{def:stb-lb-pl}
+    \label{def:st-lb-pl}
     Sei \(F=(A,R)\) ein AF. Für jedes Argument
     \(a \in A\) seien \(i_a\) und \(o_a\) aussagenlogische Variablen mit der
-    Bedeutung
+    Bedeutung:
     \[
         i_a \equiv \top \Leftrightarrow \lambda(a)=\mathit{in}
         \qquad\text{und}\qquad
         o_a \equiv \top \Leftrightarrow \lambda(a)=\mathit{out}.
     \]
+    Wir fassen die Labelling-Variablen zusammen und nummerieren sie:
+    \[
+    I^k = \{i_a^k\mid a \in A\} 
+    \qquad\text{und}\qquad
+    O^k = \{o_a^k\mid a \in A\}
+    \]
+    Daraus ergibt sich die aussagenlogische Kodierung eines Labellings:
+    \[Var(\lambda_k) := I^k \cup O^k\]
+    Wird nur mit einer Menge der Labelling-Variablen gearbeitet, verzichten wir auf die Nummerierung.
+
     Eine aussagenlogische Kodierung der \textit{stable} Semantik lautet:
     \[
-        \mathrm{stb}_F(I,O)
+        \mathrm{st}_{F}^{I, O}
         :=
         \bigwedge_{a\in A}
-        (i_a \Leftrightarrow \neg o_a)
+        (i_a \leftrightarrow \neg o_a)
         \;\wedge\;
         \bigwedge_{a\in A}
-        \left(
+        (
             o_a
-            \Leftrightarrow
+            \leftrightarrow
             \bigvee_{(b,a)\in R} i_b
-        \right).
+        ).
     \]
 \end{Definition}
-    Dabei stellt die erste Konjunktion sicher, dass jedes Argument genau
-    eines der beiden Labels \(\mathit{in}\) oder \(\mathit{out}\) erhält.
-    Die zweite Konjunktion kodiert, dass ein Argument genau dann
-    \(\mathit{out}\) gelabelt ist, wenn es von mindestens einem
-    \(\mathit{in}\)-gelabelten Argument angegriffen wird.
+
+Dabei stellt die erste Konjunktion sicher, dass jedes Argument genau
+eines der beiden Labels \(\mathit{in}\) oder \(\mathit{out}\) erhält.
+Die zweite Konjunktion kodiert, dass ein Argument genau dann
+\(\mathit{out}\) gelabelt ist, wenn es von mindestens einem
+\(\mathit{in}\)-gelabelten Argument angegriffen wird.
+
+Eine Belegung der Variablen in $Var(\lambda_k)$, die $st_F^{I^k, O^k}$ erfüllt, kodiert ein \textit{stable}-Labelling $\lambda_k$ von $F$.
+
+Wir erinnern das Konzept der bedingten Unabhängigkeit für AFs, eingeführt von \citeauthor{rienstra:2020:independence-af}\cite{rienstra:2020:independence-af}.
+
+\begin{Definition}
+    \label{def:BU:AFs}
+    Sei $F = (A,R)$ ein AF, $\sigma$ eine Semantik und $X,Y,Z \subseteq A$ disjunkte Mengen. $X$ ist $\sigma$-unabhängig von $Y$
+    gegeben $Z$ gdw. für alle $\lambda_1, \lambda_2 \in \Lambda_{\sigma}(F)$, wenn $\lambda_1|_Z=\lambda_2|_Z$, dann existiert ein
+    $\lambda_3 \in \Lambda_{\sigma}(F)$ so dass $\lambda_3|_X=\lambda_1|_X$, $\lambda_3|_Y=\lambda_2|_Y$ und $\lambda_3|_Z=\lambda_1|_Z=\lambda_2|_Z$.
+    Wir schreiben $X \bot_{\sigma} Y\mid Z$.
+\end{Definition}
+
+\begin{Proposition}
+    \label{prop:eq-qbf}
+    Sei $F=(A,R)$ ein AF, $\lambda_1, \lambda_2$ Labellings von F und $Var(\lambda_1)=(I^1,O^1), Var(\lambda_2)=(I^2,O^2)$ die dazugehörigen aussagenlogischen Kodierungen. 
+    Für eine Teilmenge $S\subseteq A$ definieren wir die Gleichheit von $Var(\lambda_1)$ und $Var(\lambda_2)$ auf $S$ durch
+    \[
+        \mathrm{Eq}^{1,2}_S
+        :=
+        \bigwedge_{a\in S}
+        \left(
+            (i_a^1 \leftrightarrow i_a^2)
+            \land
+            (o_a^1 \leftrightarrow o_a^2)
+        \right).
+    \]
+    Es gilt:
+    \[
+    \mathrm{Eq}^{1,2}_S \text{ ist wahr} \Longleftrightarrow \lambda_1|_S = \lambda_2|_S.
+    \]
+\end{Proposition}
+
+Der folgende Beweis zeigt die Korrektheit dieser Kodierung.
+
+\begin{proof}
+    \label{pro:eq-qbf}
+    Für jedes \(a\in S\) fordert \(\mathrm{Eq}^{1,2}_S\), dass sowohl
+    \(i_a^1\) und \(i_a^2\) als auch \(o_a^1\) und \(o_a^2\) denselben
+    Wahrheitswert besitzen. Damit weisen \(\lambda_1\) und \(\lambda_2\) jedem
+    Argument \(a\in S\) dasselbe Label zu. 
+    Umgekehrt impliziert \(\lambda_1|_S=\lambda_2|_S\), dass für jedes \(a\in S\) die entsprechenden
+    Variablen \(i_a^1,i_a^2\) sowie \(o_a^1,o_a^2\) übereinstimmen.
+    Somit gilt genau \(\mathrm{Eq}^{1,2}_S\).
+\end{proof}
+
+Mit Hilfe dieser Formeln lässt sich die \textit{stable}-Unabhängigkeit in \textit{QBF} formulieren.
+
+\begin{Proposition}
+    \label{prop:st-ind-qbf}
+    Sei \(F=(A,R)\) ein AF und seien
+    \(X,Y,Z\subseteq A\) paarweise disjunkte Mengen. Für \(k\in\{1,2,3\}\)
+    sei
+    \[
+        Var(\lambda_k)=I^k \cup O^k
+    \]
+    eine Kopie der aussagenlogischen Labelling-Variablen, wobei
+    \[
+        I^k=\{i_a^k \mid a\in A\}
+        \qquad\text{und}\qquad
+        O^k=\{o_a^k \mid a\in A\}.
+    \]
+    Dann wird die stable-Unabhängigkeit von \(X\) und \(Y\) gegeben \(Z\)
+    durch die folgende geschlossene QBF kodiert:
+    \begin{multline*}
+    \Phi^{\mathrm{st}}_F(X,Y \mid Z)
+    :=
+    \forall Var(\lambda_1) \forall Var(\lambda_2)\exists Var(\lambda_3)
+    \left(
+        \left(
+            \mathrm{st}_F(Var(\lambda_1))
+            \land
+            \mathrm{st}_F(Var(\lambda_2))
+            \land
+            \mathrm{Eq}^{1,2}_Z
+        \right)
+        \right. \\
+        \left.
+        \rightarrow
+        \left(
+            \mathrm{st}_F(Var(\lambda_3))
+            \land
+            \mathrm{Eq}^{1,3}_X
+            \land
+            \mathrm{Eq}^{2,3}_Y
+            \land
+            \mathrm{Eq}^{1,3}_Z
+        \right)
+    \right).
+    \end{multline*}
+    Es gilt:
+    \[
+        \Phi^{\mathrm{st}}_F(X,Y \mid Z)~\text{ist wahr}~
+        \quad\Longleftrightarrow\quad
+        X \bot_{\mathrm{st}} Y \mid Z .
+    \]
+\end{Proposition}
 
