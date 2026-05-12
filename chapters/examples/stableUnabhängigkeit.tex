@@ -8,33 +8,37 @@
 \label{sec:st-pl}
 
 Im Folgenden wird die \textit{stable} Semantik in einer aussagenlogischen Form präsentiert. 
-Wir erinnern die Definition der \textit{stable} Semantik: Für ein $AF~F$ ist $S \subseteq A$ eine \textit{stable}
+Wir erinnern die Definition der \textit{stable} Semantik: Für ein $AF~F=(A, R)$ ist $S \subseteq A$ eine \textit{stable}
 Extension gdw. $S^+ = A \setminus S$.
 
 Da für \textit{stable}-Extensionen das \textit{undecided}-Label nie vergeben wird, beschränken wir uns in der 
 aussagenlogischen Darstellung ebenfalls nur auf die \textit{in}- und \textit{out}-Label.
 
 \begin{Definition}
-    \label{def:st-lb-pl}
+    \label{def:lb-pl}
     Sei \(F=(A,R)\) ein AF. Für jedes Argument
     \(a \in A\) seien \(i_a\) und \(o_a\) aussagenlogische Variablen mit der
     Bedeutung:
     \[
-        i_a \equiv \top \Leftrightarrow \lambda(a)=\mathit{in}
-        \qquad\text{und}\qquad
-        o_a \equiv \top \Leftrightarrow \lambda(a)=\mathit{out}.
+        i_a~\text{ist wahr denau dann, wenn}~\lambda(a)=\mathit{in},
     \]
-    Wir fassen die Labelling-Variablen zusammen und nummerieren sie:
+    \[
+        o_a ~\text{ist wahr genau dann, wenn}~\lambda(a)=\mathit{out}.
+    \]
+    Wir fassen die Labelling-Variablen zusammen:
     \[
     I^k = \{i_a^k\mid a \in A\} 
     \qquad\text{und}\qquad
     O^k = \{o_a^k\mid a \in A\}
     \]
-    Daraus ergibt sich die aussagenlogische Kodierung eines Labellings:
-    \[Var(\lambda_k) := I^k \cup O^k\]
+    Die Menge der aussagenlogischen Variablen für die k-te Labelling-Kopie ist
+    \[\operatorname{Var}(\lambda_k) := I^k \cup O^k\]
+    Eine Belegung diesser Variablen kodiert ein Labelling $\lambda_k$.
     Wird nur mit einer Menge der Labelling-Variablen gearbeitet, verzichten wir auf die Nummerierung.
-
-    Eine aussagenlogische Kodierung der \textit{stable} Semantik lautet:
+\end{Definition}
+Mithilfe dieser Notation lässt sich die \textit{stable}-Semantik kodieren.
+\begin{Definition}
+        Eine aussagenlogische Kodierung der \textit{stable}-Semantik lautet:
     \[
         \mathrm{st}_{F}^{I, O}
         :=
@@ -46,6 +50,13 @@ aussagenlogischen Darstellung ebenfalls nur auf die \textit{in}- und \textit{out
             o_a
             \leftrightarrow
             \bigvee_{(b,a)\in R} i_b
+        )
+        \;\wedge\;
+        \bigwedge_{a\in A}
+        (
+            i_a
+            \leftrightarrow
+            \bigwedge_{(a,b)\in R} o_b
         ).
     \]
 \end{Definition}
@@ -55,8 +66,10 @@ eines der beiden Labels \(\mathit{in}\) oder \(\mathit{out}\) erhält.
 Die zweite Konjunktion kodiert, dass ein Argument genau dann
 \(\mathit{out}\) gelabelt ist, wenn es von mindestens einem
 \(\mathit{in}\)-gelabelten Argument angegriffen wird.
+Die letzte Konjunktion stellt sicher, dass kein Angreifer eines $\mathit{in}$-Arguments
+ein $\mathit{in}$-Label erhalten darf.
 
-Eine Belegung der Variablen in $Var(\lambda_k)$, die $st_F^{I^k, O^k}$ erfüllt, kodiert ein \textit{stable}-Labelling $\lambda_k$ von $F$.
+Eine Belegung der Variablen in $\operatorname{Var}(\lambda)$, die $st_F^{I, O}$ erfüllt, kodiert ein \textit{stable}-Labelling $\lambda$ von $F$.
 
 Wir erinnern das Konzept der bedingten Unabhängigkeit für AFs, eingeführt von \citeauthor{rienstra:2020:independence-af}\cite{rienstra:2020:independence-af}.
 
@@ -64,14 +77,14 @@ Wir erinnern das Konzept der bedingten Unabhängigkeit für AFs, eingeführt von
     \label{def:BU:AFs}
     Sei $F = (A,R)$ ein AF, $\sigma$ eine Semantik und $X,Y,Z \subseteq A$ disjunkte Mengen. $X$ ist $\sigma$-unabhängig von $Y$
     gegeben $Z$ gdw. für alle $\lambda_1, \lambda_2 \in \Lambda_{\sigma}(F)$, wenn $\lambda_1|_Z=\lambda_2|_Z$, dann existiert ein
-    $\lambda_3 \in \Lambda_{\sigma}(F)$ so dass $\lambda_3|_X=\lambda_1|_X$, $\lambda_3|_Y=\lambda_2|_Y$ und $\lambda_3|_Z=\lambda_1|_Z=\lambda_2|_Z$.
+    $\lambda_3 \in \Lambda_{\sigma}(F)$ sodass $\lambda_3|_X=\lambda_1|_X$, $\lambda_3|_Y=\lambda_2|_Y$ und $\lambda_3|_Z=\lambda_1|_Z=\lambda_2|_Z$.
     Wir schreiben $X \bot_{\sigma} Y\mid Z$.
 \end{Definition}
 
-\begin{Proposition}
+\begin{Lemma}
     \label{prop:eq-qbf}
-    Sei $F=(A,R)$ ein AF, $\lambda_1, \lambda_2$ Labellings von F und $Var(\lambda_1)=(I^1,O^1), Var(\lambda_2)=(I^2,O^2)$ die dazugehörigen aussagenlogischen Kodierungen. 
-    Für eine Teilmenge $S\subseteq A$ definieren wir die Gleichheit von $Var(\lambda_1)$ und $Var(\lambda_2)$ auf $S$ durch
+    Sei $F=(A,R)$ ein AF, $\lambda_1, \lambda_2 \in \Lambda_{\sigma}(F)$ und $\operatorname{Var}(\lambda_1), \operatorname{Var}(\lambda_2)$ die dazugehörigen Belegungen der aussagenlogischen Variablen. 
+    Für eine Teilmenge $S\subseteq A$ lässt sich die Gleichheit von $\operatorname{Var}(\lambda_1)$ und $\operatorname{Var}(\lambda_2)$ auf $S$ durch folgende Formel beschreiben.
     \[
         \mathrm{Eq}^{1,2}_S
         :=
@@ -82,26 +95,29 @@ Wir erinnern das Konzept der bedingten Unabhängigkeit für AFs, eingeführt von
             (o_a^1 \leftrightarrow o_a^2)
         \right).
     \]
-    Es gilt:
-    \[
-    \mathrm{Eq}^{1,2}_S \text{ ist wahr} \Longleftrightarrow \lambda_1|_S = \lambda_2|_S.
-    \]
-\end{Proposition}
+\end{Lemma}
 
 Der folgende Beweis zeigt die Korrektheit dieser Kodierung.
 
 \begin{proof}
     \label{pro:eq-qbf}
+    \[
+        \mathrm{Eq}^{1,2}_S \text{ ist wahr} \Longrightarrow \lambda_1|_S = \lambda_2|_S.
+    \]
     Für jedes \(a\in S\) fordert \(\mathrm{Eq}^{1,2}_S\), dass sowohl
     \(i_a^1\) und \(i_a^2\) als auch \(o_a^1\) und \(o_a^2\) denselben
     Wahrheitswert besitzen. Damit weisen \(\lambda_1\) und \(\lambda_2\) jedem
-    Argument \(a\in S\) dasselbe Label zu. 
+    Argument \(a\in S\) dasselbe Label zu.
+    \[
+        \mathrm{Eq}^{1,2}_S \text{ ist wahr} \Longleftarrow \lambda_1|_S = \lambda_2|_S.
+    \] 
     Umgekehrt impliziert \(\lambda_1|_S=\lambda_2|_S\), dass für jedes \(a\in S\) die entsprechenden
     Variablen \(i_a^1,i_a^2\) sowie \(o_a^1,o_a^2\) übereinstimmen.
+
     Somit gilt genau \(\mathrm{Eq}^{1,2}_S\).
 \end{proof}
 
-Mit Hilfe dieser Formeln lässt sich die \textit{stable}-Unabhängigkeit in \textit{QBF} formulieren.
+Auf Grundlage dieses Kodierungen lässt sich die \textit{stable}-Unabhängigkeit als \textit{QBF} ausdrücken.
 
 \begin{Proposition}
     \label{prop:st-ind-qbf}
@@ -109,7 +125,7 @@ Mit Hilfe dieser Formeln lässt sich die \textit{stable}-Unabhängigkeit in \tex
     \(X,Y,Z\subseteq A\) paarweise disjunkte Mengen. Für \(k\in\{1,2,3\}\)
     sei
     \[
-        Var(\lambda_k)=I^k \cup O^k
+        \operatorname{Var}(\lambda_k)=I^k \cup O^k
     \]
     eine Kopie der aussagenlogischen Labelling-Variablen, wobei
     \[
@@ -117,17 +133,17 @@ Mit Hilfe dieser Formeln lässt sich die \textit{stable}-Unabhängigkeit in \tex
         \qquad\text{und}\qquad
         O^k=\{o_a^k \mid a\in A\}.
     \]
-    Dann wird die stable-Unabhängigkeit von \(X\) und \(Y\) gegeben \(Z\)
+    Dann wird die stable-Unabhängigkeit von \(X\) und \(Y\) gegeben \(Z\) ($X \bot_{\mathrm{st}} Y \mid Z$)
     durch die folgende geschlossene QBF kodiert:
     \begin{multline*}
     \Phi^{\mathrm{st}}_F(X,Y \mid Z)
     :=
-    \forall Var(\lambda_1) \forall Var(\lambda_2)\exists Var(\lambda_3)
+    \forall \operatorname{Var}(\lambda_1), \operatorname{Var}(\lambda_2)\exists \operatorname{Var}(\lambda_3)
     \left(
         \left(
-            \mathrm{st}_F(Var(\lambda_1))
+            \mathrm{st}_F(\operatorname{Var}(\lambda_1))
             \land
-            \mathrm{st}_F(Var(\lambda_2))
+            \mathrm{st}_F(\operatorname{Var}(\lambda_2))
             \land
             \mathrm{Eq}^{1,2}_Z
         \right)
@@ -135,7 +151,7 @@ Mit Hilfe dieser Formeln lässt sich die \textit{stable}-Unabhängigkeit in \tex
         \left.
         \rightarrow
         \left(
-            \mathrm{st}_F(Var(\lambda_3))
+            \mathrm{st}_F(\operatorname{Var}(\lambda_3))
             \land
             \mathrm{Eq}^{1,3}_X
             \land
@@ -145,11 +161,115 @@ Mit Hilfe dieser Formeln lässt sich die \textit{stable}-Unabhängigkeit in \tex
         \right)
     \right).
     \end{multline*}
-    Es gilt:
-    \[
-        \Phi^{\mathrm{st}}_F(X,Y \mid Z)~\text{ist wahr}~
-        \quad\Longleftrightarrow\quad
-        X \bot_{\mathrm{st}} Y \mid Z .
-    \]
 \end{Proposition}
+
+\begin{proof}
+    Wir zeigen, dass die QBF
+    \(\Phi^{\mathrm{st}}_F(X,Y\mid Z)\) genau dann wahr ist, wenn
+    \(X \bot_{\mathrm{st}} Y \mid Z\) gilt.
+
+    Zunächst nehmen wir an, dass
+    \(\Phi^{\mathrm{st}}_F(X,Y\mid Z)\) wahr ist. Seien
+    \(\lambda_1,\lambda_2 \in \Lambda_{\mathrm{st}}(F)\) beliebige
+    stable Labellings mit
+    \[
+        \lambda_1|_Z = \lambda_2|_Z.
+    \]
+    Die zugehörigen Belegungen der Variablenmengen
+    \(\operatorname{Var}(\lambda_1)\) und
+    \(\operatorname{Var}(\lambda_2)\) erfüllen dann
+    \[
+        \mathrm{st}_F(I^1,O^1)
+        \land
+        \mathrm{st}_F(I^2,O^2)
+        \land
+        \mathrm{Eq}^{1,2}_Z.
+    \]
+    Damit ist das Antezedens der Implikation in
+    \(\Phi^{\mathrm{st}}_F(X,Y\mid Z)\) wahr. Da die QBF wahr ist,
+    gibt es eine Belegung von \(\operatorname{Var}(\lambda_3)\), sodass
+    auch das Konsequens wahr ist, also
+    \[
+        \mathrm{st}_F(I^3,O^3)
+        \land
+        \mathrm{Eq}^{1,3}_X
+        \land
+        \mathrm{Eq}^{2,3}_Y
+        \land
+        \mathrm{Eq}^{1,3}_Z
+    \]
+    gilt. Aus \(\mathrm{st}_F(I^3,O^3)\) folgt, dass die Belegung ein
+    stable Labelling \(\lambda_3\in\Lambda_{\mathrm{st}}(F)\) kodiert.
+    Aus den Gleichheitsformeln folgt
+    \[
+        \lambda_3|_X=\lambda_1|_X,\qquad
+        \lambda_3|_Y=\lambda_2|_Y,\qquad
+        \lambda_3|_Z=\lambda_1|_Z.
+    \]
+    Also existiert für beliebige passende \(\lambda_1,\lambda_2\) ein
+    solches \(\lambda_3\). Damit gilt
+    \[
+        X \bot_{\mathrm{st}} Y \mid Z.
+    \]
+
+    Für die umgekehrte Richtung nehmen wir an, dass
+    \(X \bot_{\mathrm{st}} Y \mid Z\) gilt. Wir zeigen, dass die QBF
+    wahr ist. Betrachte dazu eine beliebige Belegung der universell
+    quantifizierten Variablen
+    \[
+        \operatorname{Var}(\lambda_1)
+        \quad\text{und}\quad
+        \operatorname{Var}(\lambda_2).
+    \]
+    Falls das Antezedens
+    \[
+        \mathrm{st}_F(I^1,O^1)
+        \land
+        \mathrm{st}_F(I^2,O^2)
+        \land
+        \mathrm{Eq}^{1,2}_Z
+    \]
+    falsch ist, ist die Implikation unabhängig von der Wahl von
+    \(\operatorname{Var}(\lambda_3)\) wahr.
+
+    Sei also das Antezedens wahr. Dann kodieren die Belegungen von
+    \(\operatorname{Var}(\lambda_1)\) und \(\operatorname{Var}(\lambda_2)\)
+    zwei stable Labellings
+    \[
+        \lambda_1,\lambda_2\in\Lambda_{\mathrm{st}}(F)
+    \]
+    mit
+    \[
+        \lambda_1|_Z=\lambda_2|_Z.
+    \]
+    Wegen der Annahme \(X \bot_{\mathrm{st}} Y \mid Z\) existiert ein
+    stable Labelling \(\lambda_3\in\Lambda_{\mathrm{st}}(F)\), sodass
+    \[
+        \lambda_3|_X=\lambda_1|_X,\qquad
+        \lambda_3|_Y=\lambda_2|_Y,\qquad
+        \lambda_3|_Z=\lambda_1|_Z=\lambda_2|_Z.
+    \]
+    Wähle nun die Belegung von \(\operatorname{Var}(\lambda_3)\), die
+    genau dieses Labelling \(\lambda_3\) kodiert. Dann ist
+    \(\mathrm{st}_F(I^3,O^3)\) wahr und die Gleichheitsformeln
+    \[
+        \mathrm{Eq}^{1,3}_X,\qquad
+        \mathrm{Eq}^{2,3}_Y,\qquad
+        \mathrm{Eq}^{1,3}_Z
+    \]
+    sind ebenfalls wahr. Damit ist das Konsequens der Implikation
+    erfüllt.
+
+    Da dies für jede Belegung der universell quantifizierten Variablen
+    gilt, ist die QBF
+    \[
+        \Phi^{\mathrm{st}}_F(X,Y\mid Z)
+    \]
+    wahr. Insgesamt folgt
+    \[
+        \Phi^{\mathrm{st}}_F(X,Y\mid Z)\text{ ist wahr}
+        \quad\Longleftrightarrow\quad
+        X\bot_{\mathrm{st}}Y\mid Z.
+    \]
+\end{proof}
 
