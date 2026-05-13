@@ -1,12 +1,6 @@
 \chapter{\textit{stable}-Unabhängigkeit}
 \label{ch:stable}
 
-\section{\textit{stable}-Semantik}
-\label{sec:st}
-
-\section{\textit{stable}-Semantik in aussagenlogischer Darstellung}
-\label{sec:st-pl}
-
 Im Folgenden wird die \textit{stable} Semantik in einer aussagenlogischen Form präsentiert. 
 Wir erinnern die Definition der \textit{stable} Semantik: Für ein $AF~F=(A, R)$ ist $S \subseteq A$ eine \textit{stable}
 Extension gdw. $S^+ = A \setminus S$.
@@ -20,20 +14,20 @@ aussagenlogischen Darstellung ebenfalls nur auf die \textit{in}- und \textit{out
     \(a \in A\) seien \(i_a\) und \(o_a\) aussagenlogische Variablen mit der
     Bedeutung:
     \[
-        i_a~\text{ist wahr denau dann, wenn}~\lambda(a)=\mathit{in},
+        i_a~\text{ist wahr genau dann, wenn}~\lambda(a)=\mathit{in},
     \]
     \[
         o_a ~\text{ist wahr genau dann, wenn}~\lambda(a)=\mathit{out}.
     \]
-    Wir fassen die Labelling-Variablen zusammen:
+    Wir fassen die Labelling-Variablen zusammen
     \[
     I^k = \{i_a^k\mid a \in A\} 
     \qquad\text{und}\qquad
-    O^k = \{o_a^k\mid a \in A\}
+    O^k = \{o_a^k\mid a \in A\}.
     \]
     Die Menge der aussagenlogischen Variablen für die k-te Labelling-Kopie ist
-    \[\operatorname{Var}(\lambda_k) := I^k \cup O^k\]
-    Eine Belegung diesser Variablen kodiert ein Labelling $\lambda_k$.
+    \[\operatorname{Var}(\lambda_k) := I^k \cup O^k.\]
+    Eine Belegung dieser Variablen kodiert ein Labelling $\lambda_k$.
     Wird nur mit einer Menge der Labelling-Variablen gearbeitet, verzichten wir auf die Nummerierung.
 \end{Definition}
 Mithilfe dieser Notation lässt sich die \textit{stable}-Semantik kodieren.
@@ -56,7 +50,7 @@ Mithilfe dieser Notation lässt sich die \textit{stable}-Semantik kodieren.
         (
             i_a
             \leftrightarrow
-            \bigwedge_{(a,b)\in R} o_b
+            \bigwedge_{(b,a)\in R} o_b
         ).
     \]
 \end{Definition}
@@ -66,8 +60,7 @@ eines der beiden Labels \(\mathit{in}\) oder \(\mathit{out}\) erhält.
 Die zweite Konjunktion kodiert, dass ein Argument genau dann
 \(\mathit{out}\) gelabelt ist, wenn es von mindestens einem
 \(\mathit{in}\)-gelabelten Argument angegriffen wird.
-Die letzte Konjunktion stellt sicher, dass kein Angreifer eines $\mathit{in}$-Arguments
-ein $\mathit{in}$-Label erhalten darf.
+Die dritte Konjunktion kodiert, dass ein Argument genau dann \(\mathit{in}\) ist, wenn alle seine Angreifer \(\mathit{out}\) sind.
 
 Eine Belegung der Variablen in $\operatorname{Var}(\lambda)$, die $st_F^{I, O}$ erfüllt, kodiert ein \textit{stable}-Labelling $\lambda$ von $F$.
 
@@ -95,29 +88,29 @@ Wir erinnern das Konzept der bedingten Unabhängigkeit für AFs, eingeführt von
             (o_a^1 \leftrightarrow o_a^2)
         \right).
     \]
+    Es gilt
+    \[
+        \mathrm{Eq}^{1,2}_S \text{ ist wahr}
+        \quad \Longleftrightarrow \quad
+        \lambda_1|_S = \lambda_2|_S.
+    \]
 \end{Lemma}
 
 Der folgende Beweis zeigt die Korrektheit dieser Kodierung.
 
 \begin{proof}
     \label{pro:eq-qbf}
-    \[
-        \mathrm{Eq}^{1,2}_S \text{ ist wahr} \Longrightarrow \lambda_1|_S = \lambda_2|_S.
-    \]
+    Sei \(\mathrm{Eq}^{1,2}_S\) wahr.
     Für jedes \(a\in S\) fordert \(\mathrm{Eq}^{1,2}_S\), dass sowohl
     \(i_a^1\) und \(i_a^2\) als auch \(o_a^1\) und \(o_a^2\) denselben
     Wahrheitswert besitzen. Damit weisen \(\lambda_1\) und \(\lambda_2\) jedem
     Argument \(a\in S\) dasselbe Label zu.
-    \[
-        \mathrm{Eq}^{1,2}_S \text{ ist wahr} \Longleftarrow \lambda_1|_S = \lambda_2|_S.
-    \] 
+    \newline
     Umgekehrt impliziert \(\lambda_1|_S=\lambda_2|_S\), dass für jedes \(a\in S\) die entsprechenden
     Variablen \(i_a^1,i_a^2\) sowie \(o_a^1,o_a^2\) übereinstimmen.
-
-    Somit gilt genau \(\mathrm{Eq}^{1,2}_S\).
 \end{proof}
 
-Auf Grundlage dieses Kodierungen lässt sich die \textit{stable}-Unabhängigkeit als \textit{QBF} ausdrücken.
+Auf Grundlage dieser Kodierungen lässt sich die \textit{stable}-Unabhängigkeit als \textit{QBF} ausdrücken.
 
 \begin{Proposition}
     \label{prop:st-ind-qbf}
@@ -171,7 +164,7 @@ Auf Grundlage dieses Kodierungen lässt sich die \textit{stable}-Unabhängigkeit
     Zunächst nehmen wir an, dass
     \(\Phi^{\mathrm{st}}_F(X,Y\mid Z)\) wahr ist. Seien
     \(\lambda_1,\lambda_2 \in \Lambda_{\mathrm{st}}(F)\) beliebige
-    stable Labellings mit
+    \textit{stable}-Labellings mit
     \[
         \lambda_1|_Z = \lambda_2|_Z.
     \]
@@ -188,7 +181,7 @@ Auf Grundlage dieses Kodierungen lässt sich die \textit{stable}-Unabhängigkeit
     Damit ist das Antezedens der Implikation in
     \(\Phi^{\mathrm{st}}_F(X,Y\mid Z)\) wahr. Da die QBF wahr ist,
     gibt es eine Belegung von \(\operatorname{Var}(\lambda_3)\), sodass
-    auch das Konsequens wahr ist, also
+    auch die Konsequenz wahr ist. Also gilt
     \[
         \mathrm{st}_F(I^3,O^3)
         \land
@@ -196,10 +189,10 @@ Auf Grundlage dieses Kodierungen lässt sich die \textit{stable}-Unabhängigkeit
         \land
         \mathrm{Eq}^{2,3}_Y
         \land
-        \mathrm{Eq}^{1,3}_Z
+        \mathrm{Eq}^{1,3}_Z.
     \]
-    gilt. Aus \(\mathrm{st}_F(I^3,O^3)\) folgt, dass die Belegung ein
-    stable Labelling \(\lambda_3\in\Lambda_{\mathrm{st}}(F)\) kodiert.
+    Aus \(\mathrm{st}_F(I^3,O^3)\) folgt, dass die Belegung ein
+    \textit{stable}-Labelling \(\lambda_3\in\Lambda_{\mathrm{st}}(F)\) kodiert.
     Aus den Gleichheitsformeln folgt
     \[
         \lambda_3|_X=\lambda_1|_X,\qquad
@@ -234,7 +227,7 @@ Auf Grundlage dieses Kodierungen lässt sich die \textit{stable}-Unabhängigkeit
 
     Sei also das Antezedens wahr. Dann kodieren die Belegungen von
     \(\operatorname{Var}(\lambda_1)\) und \(\operatorname{Var}(\lambda_2)\)
-    zwei stable Labellings
+    zwei \textit{stable}--Labellings
     \[
         \lambda_1,\lambda_2\in\Lambda_{\mathrm{st}}(F)
     \]
@@ -243,7 +236,7 @@ Auf Grundlage dieses Kodierungen lässt sich die \textit{stable}-Unabhängigkeit
         \lambda_1|_Z=\lambda_2|_Z.
     \]
     Wegen der Annahme \(X \bot_{\mathrm{st}} Y \mid Z\) existiert ein
-    stable Labelling \(\lambda_3\in\Lambda_{\mathrm{st}}(F)\), sodass
+    \textit{stable}-Labelling \(\lambda_3\in\Lambda_{\mathrm{st}}(F)\), sodass
     \[
         \lambda_3|_X=\lambda_1|_X,\qquad
         \lambda_3|_Y=\lambda_2|_Y,\qquad
@@ -273,3 +266,50 @@ Auf Grundlage dieses Kodierungen lässt sich die \textit{stable}-Unabhängigkeit
     \]
 \end{proof}
 
+\begin{Corollary}
+    \label{cor:ind-st-in-pi2p}
+    Das Entscheidungsproblem \(\textit{Ind}_{\mathrm{st}}\) liegt in
+    \(\Pi_2^\text{P}\).
+\end{Corollary}
+
+\begin{proof}
+    Sei eine Instanz von \(\textit{Ind}_{\mathrm{st}}\) gegeben durch ein
+    AF \(F=(A,R)\) und paarweise disjunkte Mengen \(X,Y,Z\subseteq A\).
+    Nach Proposition~\ref{prop:st-ind-qbf} gilt
+    \[
+        X\bot_{\mathrm{st}}Y\mid Z
+        \quad\Longleftrightarrow\quad
+        \Phi^{\mathrm{st}}_F(X,Y\mid Z)\text{ ist wahr}.
+    \]
+    Damit reduziert das Entscheidungsproblem \(\textit{Ind}_{\mathrm{st}}\)
+    auf die Wahrheitsprüfung der QBF
+    \(\Phi^{\mathrm{st}}_F(X,Y\mid Z)\).
+
+    Die Formel \(\Phi^{\mathrm{st}}_F(X,Y\mid Z)\) hat die Quantorenstruktur
+    \[
+        \forall \operatorname{Var}(\lambda_1)\, ,
+        \operatorname{Var}(\lambda_2)\,
+        \exists \operatorname{Var}(\lambda_3)\,\psi,
+    \]
+    wobei \(\psi\) eine quantorenfreie aussagenlogische Formel ist.
+    Damit liegt insbesondere die folgende Form vor
+    \[
+        \forall x \exists y\,\psi.
+    \]
+    Die Konstruktion von \(\Phi^{\mathrm{st}}_F(X,Y\mid Z)\) ist
+    polynomial in der Größe von \(F\), da für jedes Argument nur endlich
+    viele Labelling-Variablen eingeführt werden und die Formeln
+    \(\mathrm{st}_F(I^k,O^k)\) sowie \(\mathrm{Eq}^{i,j}_S\) polynomial
+    groß sind.
+
+    Das Erfüllbarkeitsproblem für QBFs der Form
+    \[
+        \forall x\exists y\,\psi
+    \]
+    liegt in \(\Pi_2^\text{P}\). Da jede Instanz von
+    \(\textit{Ind}_{\mathrm{st}}\) in Polynomialzeit auf eine solche QBF
+    reduziert werden kann, folgt
+    \[
+        \textit{Ind}_{\mathrm{st}} \in \Pi_2^\text{P}.
+    \]
+\end{proof}
