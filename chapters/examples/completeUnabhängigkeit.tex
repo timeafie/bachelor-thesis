@@ -1,0 +1,157 @@
+\chapter{\textit{complete}-Unabhängigkeit}
+\label{ch:complete}
+
+In diesem Kapitel wird das Entscheidungsproblem \(Ind_{co}\) untersucht. 
+Zuerst erfolgt eine komplexitätstheoretische Einordnung, dann wird die eine \(labelling\)-basierte 
+Kodierung der \textit{complete}-Semantik in aussagenlogischer Form vorgestellt. 
+Dieses wird anschließend verwendet, um eine \textit{QBF}-Kodierung für \(Ind_{co}\) zu formulieren.
+
+\section{Komplexität}
+
+\section{Aussagenlogische Kodierung der \textit{complete}-Semantik}
+Wir erinnern die Definition der \textit{complete}-Semantik. Sei \(F = (A,R)\) ein AF und sei \(S \subseteq A\) eine \textit{admissible}-Extension von \(F\).
+\(S\) ist eine \textit{complete}-Extension genau dann, wenn für jedes Argument \(a \in A\), das \(S\) verteidigt, \(a \in S\) gilt.
+
+\begin{Definition}
+    \label{def:vars}
+    Sei \(F = (A,R)\) ein AF. Für jedes Argument \(a \in A\) seien \(i_a,o_a,u_a\) aussagenlogische Variablen mit der Bedeutung
+    \begin{align*}
+        & i_a \text{ ist wahr genau dann, wenn } \lambda(a)=\mathit{in},\\
+        & o_a \text{ ist wahr genau dann, wenn } \lambda(a)=\mathit{out},\\
+        & u_a \text{ ist wahr genau dann, wenn } \lambda(a)=\mathit{und}.
+    \end{align*}
+
+    Für die \(k\)-te Kopie der Labelling-Variablen schreiben wir
+    \begin{align*}
+        & I^k=\{i_a^k\mid a\in A\},\\
+        & O^k=\{o_a^k\mid a\in A\},\\
+        & U^k=\{u_a^k\mid a\in A\}.
+    \end{align*}
+\end{Definition}
+
+\begin{Definition}
+    \label{def:pl-one}
+    Sei \(F=(A,R)\) ein AF und seien \(I,O,U\) wie gewohnt definiert.
+    Für \(a\in A\) definieren wir
+    \[
+        \mathrm{one}_a(I,O,U)
+        :=
+        (i_a \lor o_a \lor u_a)
+        \land
+        \Bigl(
+            (\neg i_a \lor \neg o_a)
+            \land
+            (\neg i_a \lor \neg u_a)
+            \land
+            (\neg u_a \lor \neg o_a)
+        \Bigr).
+    \]
+\end{Definition}
+
+Die Formel \(\mathrm{one}_a(I,O,U)\) stellt sicher, dass dem Argument
+\(a\) genau eines der drei Labels \(\mathit{in}\), \(\mathit{out}\)
+oder \(\mathit{und}\) zugewiesen wird. Die erste Disjunktion fordert,
+dass mindestens eines der drei Labels gilt. Die übrigen Konjunktionen
+schließen aus, dass zwei verschiedene Labels gleichzeitig gelten.
+
+
+
+\begin{Definition}
+    \label{def:co-pl}
+     Sei \(F = (A,R)\) ein AF und seien \(I, O, U\) wie zuvor definiert. 
+     Eine aussagenlogische Kodierung eines \textit{complete}-Labellings lautet
+     \[
+     \mathrm{co}_F(I, O, U)
+        :=
+        \bigwedge_{a\in A}
+        (
+            \mathrm{one}_a(I,O,U)
+        )
+        \land 
+        \bigwedge_{a\in A}
+        (
+            i_a
+            \leftrightarrow
+            \bigwedge_{(b,a)\in R} o_b
+        )
+        \land
+        \bigwedge_{a\in A}
+        (
+            o_a
+            \leftrightarrow
+            \bigvee_{(b,a)\in R} i_b
+        ).
+     \]
+\end{Definition}
+
+\begin{Lemma}
+    \label{lem:co-pl-correct}
+    Sei \(F=(A,R)\) ein AF und sei \(\nu\) eine Belegung der Variablen
+    \(I\cup O\cup U\). Falls für jedes \(a\in A\) genau eine der
+    Variablen \(i_a,o_a,u_a\) unter \(\nu\) wahr ist, induziert \(\nu\)
+    ein Labelling \(\lambda_\nu:A\to
+    \{\mathit{in},\mathit{out},\mathit{und}\}\) durch
+    \[
+        \lambda_\nu(a)=
+        \begin{cases}
+            \mathit{in}, & \text{falls } \nu(i_a)=\top,\\
+            \mathit{out}, & \text{falls } \nu(o_a)=\top,\\
+            \mathit{und}, & \text{falls } \nu(u_a)=\top.
+        \end{cases}
+    \]
+    Dann gilt:
+    \[
+        \nu\models \mathrm{co}_F(I,O,U)
+        \quad\Longleftrightarrow\quad
+        \lambda_\nu
+        \text{ ist ein \textit{complete}-Labelling von } F.
+    \]
+\end{Lemma}
+
+\begin{proof}
+
+\end{proof}
+
+\section{QBF-Kodierung der \textit{complete}-Unabhängigkeit}
+Wir erinnern das Entscheidungsproblem \(Ind_{co}\).
+
+\begin{Definition}
+    Sei \(F=(A,R)\) ein AF und seien \(X,Y,Z\subseteq A\) paarweise disjunkte Mengen.
+    Für \(k \in \{1,2,3\}\) sei \(\mathcal{L}^k = I^k \cup O^k \cup U^k\) 
+    \begin{multline*}
+    \Phi^{\mathrm{co}}_F(X,Y \mid Z)
+    :=
+    \forall \mathcal{L}^1 \mathcal{L}^2
+    \exists \mathcal{L}^3
+    \left(
+        \left(
+            \mathrm{co}_F(\mathcal{L}^1)
+            \land
+            \mathrm{co}_F(\mathcal{L}^2)
+            \land
+            \mathrm{Eq}^{1,2}_Z
+        \right)
+        \right. \\
+        \left.
+        \rightarrow
+        \left(
+            \mathrm{co}_F(\mathcal{L}^3)
+            \land
+            \mathrm{Eq}^{1,3}_X
+            \land
+            \mathrm{Eq}^{2,3}_Y
+            \land
+            \mathrm{Eq}^{1,3}_Z
+        \right)
+    \right).
+    \end{multline*}
+\end{Definition}
+
+\begin{Lemma}
+    Es gilt:
+    \[
+        \Phi^{\mathrm{co}}_F(X,Y \mid Z)\text{ ist wahr}
+        \quad\Longleftrightarrow\quad
+        X \bot_{\mathrm{co}} Y \mid Z.
+    \]
+\end{Lemma}
