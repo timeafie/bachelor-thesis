@@ -27,6 +27,8 @@ Wir erinnern die Definition der \textit{complete}-Semantik. Sei \(F = (A,R)\) ei
         & O^k=\{o_a^k\mid a\in A\},\\
         & U^k=\{u_a^k\mid a\in A\}.
     \end{align*}
+
+    Ist im Kontext klar, von welcher Kopie wir sprechen, verzichten wir auf die Nummerierung. 
 \end{Definition}
 
 \begin{Definition}
@@ -117,7 +119,7 @@ Wir erinnern das Entscheidungsproblem \(Ind_{co}\).
 
 \begin{Definition}
     Sei \(F=(A,R)\) ein AF und seien \(X,Y,Z\subseteq A\) paarweise disjunkte Mengen.
-    Für \(k \in \{1,2,3\}\) sei \(\mathcal{L}^k = I^k \cup O^k \cup U^k\) 
+    Für \(k \in \{1,2,3\}\) sei \(\mathcal{L}^k = I^k \cup O^k \cup U^k\).
     \begin{multline*}
     \Phi^{\mathrm{co}}_F(X,Y \mid Z)
     :=
@@ -147,11 +149,15 @@ Wir erinnern das Entscheidungsproblem \(Ind_{co}\).
     \end{multline*}
 \end{Definition}
 
-\begin{Lemma}
+\begin{Proposition}
     Es gilt:
     \[
         \Phi^{\mathrm{co}}_F(X,Y \mid Z)\text{ ist wahr}
         \quad\Longleftrightarrow\quad
         X \bot_{\mathrm{co}} Y \mid Z.
     \]
-\end{Lemma}
+\end{Proposition}
+
+\begin{proof}
+    
+\end{proof}
