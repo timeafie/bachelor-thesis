@@ -1,5 +1,48 @@
 \chapter{\textit{stable}-Unabhängigkeit}
 \label{ch:stable}
+In diesem Kapitel betrachten wir die \textit{stable}-Semantik. Sie dient als erster konkreter Fall, 
+an dem die Komplexität von bedingter Unabhängigkeit in Argumentationssystemen und deren Kodierung 
+als QBF untersucht werden. Die späteren Kapitel zu \textit{complete}- und \textit{preferred}-
+Unabhängigkeit bauen auf dieser Vorgehensweise auf.
+
+Für ein Argumentationssystem \(F=(A,R)\) beschreibt ein
+\textit{stable}-Labelling eine vollständige Bewertung aller Argumente.
+Jedes Argument ist entweder akzeptiert oder verworfen, denn undecided-Argumente treten nicht
+auf. Die bedingte Unabhängigkeit
+\[
+    X \bot_{\mathrm{st}} Y \mid Z
+\]
+fragt dann, ob die möglichen \textit{stable}-Bewertungen der Argumente in \(X\)
+und \(Y\) unabhängig voneinander kombiniert werden können, sobald die Bewertung
+der Argumente in \(Z\) festgelegt ist. Informell bedeutet dies: Wenn zwei
+\textit{stable}-Labellings auf \(Z\) übereinstimmen, dann muss es ein weiteres
+\textit{stable}-Labelling geben, das die Bewertung von \(X\) aus dem ersten
+Labelling und die Bewertung von \(Y\) aus dem zweiten Labelling gemeinsam
+realisiert.
+
+Formal betrachten wir in diesem Kapitel das folgende Entscheidungsproblem:
+\[
+\textit{Ind}_{\mathrm{st}}:\quad
+\begin{array}{ll}
+\text{Input:}  & \text{AF } F=(A,R),\ \text{disjunkte Mengen } X,Y,Z \subseteq A \\
+\text{Output:} & \text{TRUE} \Longleftrightarrow X \bot_{\mathrm{st}} Y \mid Z.
+\end{array}
+\]
+
+Das Kapitel ist in drei Schritte gegliedert. Zunächst wird die
+komplexitätstheoretische Einordnung von \(\textit{Ind}_{\mathrm{st}}\)
+betrachtet. 
+
+Anschließend wird eine aussagenlogische Kodierung der \textit{stable}-Semantik
+angegeben. Diese Kodierung beschreibt, wann eine Belegung der verwendeten
+Labelling-Variablen tatsächlich einem \textit{stable}-Labelling des gegebenen
+Argumentationsframeworks entspricht. Sie bildet die Grundlage für die spätere
+QBF-Formulierung.
+
+Im dritten Schritt wird die bedingte Unabhängigkeit selbst als QBF kodiert.
+Dazu werden mehrere Kopien der Labelling-Variablen verwendet, um die drei
+Labellings aus der Definition von \(X \bot_{\mathrm{st}} Y \mid Z\) formal
+darzustellen.
 
 \section{Komplexität}
 \begin{Theorem}
@@ -8,18 +51,30 @@
     \(\Pi_2^\text{P}\).
 \end{Theorem}
 
-Rein formal handelt es sich um das folgende Entscheidungsproblem.
-\begin{description}
-    \item[]$\textit{Ind}_{\mathrm{st}}$
-    \item[Input:] AF $F=(A,R)$, disjunkte Mengen $X,Y,Z \subseteq A$
-    \item[Output:] TRUE $\Leftrightarrow X \bot_{\mathrm{st}} Y \mid Z$
-\end{description}
 
-Wir skizzieren den Beweis, angelehnt an \cite{bluemel:2025:independence-aba}. 
+Wir skizzieren den Beweis, wie er zuerst in \cite{bluemel:2025:independence-aba} formuliert wurde. 
 
 \begin{proof}
 Zunächst charakterisieren wir das Problem, um anschließend mit dem Komplement arbeiten zu können. 
+Für alle Paare \(\lambda_1, \lambda_2 \in \varLambda_{st}(F)\), die auf der Teilmenge $Z$ übereinstimmen, 
+gibt es ein drittes \textit{stable}-Labelling $\lambda_3$. Dieses muss auf der Teilmenge $X$ mit $\lambda_1$, 
+auf $Y$ mit $\lambda_2$ und auf $Z$ mit beiden genannten Labellings übereinstimmen.
 
+Wir betrachten nun das Komplement. Dieses fragt, ob es zwei
+\textit{stable}-Labellings \(\lambda_1,\lambda_2\in\Lambda_{\mathrm{st}}(F)\)
+gibt, die auf \(Z\) übereinstimmen, für die aber kein
+\textit{stable}-Labelling \(\lambda_3\) mit den genannten Eigenschaften
+existiert.
+
+Dieses komplementäre Problem liegt in \(\Sigma_2^{P}\). 
+Zuerst raten wir zwei Labellingkandidaten \(\lambda_1, \lambda_2\). Die Überprüfung, dass es sich um \textit{stable}-Labellings handelt, ist in 
+Polynomialzeit möglich. 
+Anschließend fragen wir das NP-Orakel, ob ein Labelling $\lambda_3$ mit den geforderten Eigenschaften existiert. 
+Also ein \textit{stable}-Labelling \(\lambda_3\), das auf $X$ mit $\lambda_1$ und auf $Y$ sowie $Z$ mit $\lambda_2$ übereinstimmt.
+Antwortet das Orakel mit Nein,so ist das geratene Paar \((\lambda_1,\lambda_2)\) ein Zeuge für das Komplement der Unabhängigkeit.
+ 
+Damit gilt \(\overline{\textit{Ind}_{\mathrm{st}}} \in \Sigma_2^{P}\). Folglich liegt das ursprüngliche Problem in der Komplementklasse:
+\( \textit{Ind}_{\mathrm{st}}\in \mathrm{co}\Sigma_2^P=\Pi_2^P.\)
 \end{proof}
 
 \section{Aussagenlogische Kodierung der \textit{stable}-Semantik}
