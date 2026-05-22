@@ -28,6 +28,11 @@ Wir erinnern die Definition der \textit{complete}-Semantik. Sei \(F = (A,R)\) ei
         & U^k=\{u_a^k\mid a\in A\}.
     \end{align*}
 
+    Und fassen sie zusammen als
+    \[
+        \mathcal{L}^k := I^k \cup O^k \cup U^k.
+    \]
+
     Ist im Kontext klar, von welcher Kopie wir sprechen, verzichten wir auf die Nummerierung. 
 \end{Definition}
 
@@ -36,7 +41,7 @@ Wir erinnern die Definition der \textit{complete}-Semantik. Sei \(F = (A,R)\) ei
     Sei \(F=(A,R)\) ein AF und seien \(I,O,U\) wie gewohnt definiert.
     Für \(a\in A\) definieren wir
     \[
-        \mathrm{one}_a(I,O,U)
+        \mathrm{one}_a(\mathcal{L})
         :=
         (i_a \lor o_a \lor u_a)
         \land
@@ -60,14 +65,14 @@ schließen aus, dass zwei verschiedene Labels gleichzeitig gelten.
 
 \begin{Definition}
     \label{def:co-pl}
-     Sei \(F = (A,R)\) ein AF und seien \(I, O, U\) wie zuvor definiert. 
+     Sei \(F = (A,R)\) ein AF und sei \(\mathcal{L} = (I \cup O \cup U)\) wie zuvor definiert. 
      Eine aussagenlogische Kodierung eines \textit{complete}-Labellings lautet
      \[
-     \mathrm{co}_F(I, O, U)
+     \mathrm{co}_F(\mathcal{L})
         :=
         \bigwedge_{a\in A}
         (
-            \mathrm{one}_a(I,O,U)
+            \mathrm{one}_a(\mathcal{L})
         )
         \land 
         \bigwedge_{a\in A}
@@ -103,7 +108,7 @@ schließen aus, dass zwei verschiedene Labels gleichzeitig gelten.
     \]
     Dann gilt:
     \[
-        \nu\models \mathrm{co}_F(I,O,U)
+        \nu\models \mathrm{co}_F(\mathcal{L})
         \quad\Longleftrightarrow\quad
         \lambda_\nu
         \text{ ist ein \textit{complete}-Labelling von } F.
@@ -111,15 +116,16 @@ schließen aus, dass zwei verschiedene Labels gleichzeitig gelten.
 \end{Lemma}
 
 \begin{proof}
-
+    \label{pr:co-pl-correct}
 \end{proof}
 
 \section{QBF-Kodierung der \textit{complete}-Unabhängigkeit}
 Wir erinnern das Entscheidungsproblem \(Ind_{co}\).
 
 \begin{Definition}
+    \label{def:co-ind-qbf}
     Sei \(F=(A,R)\) ein AF und seien \(X,Y,Z\subseteq A\) paarweise disjunkte Mengen.
-    Für \(k \in \{1,2,3\}\) sei \(\mathcal{L}^k = I^k \cup O^k \cup U^k\).
+    Für \(k \in \{1,2,3\}\) sei \(\mathcal{L}^k = I^k \cup O^k \cup U^k\) jeweils eine Kopie der \textit{labelling}-Variablen. Wir definieren $Ind_{co}$ als QBF wie folgt. 
     \begin{multline*}
     \Phi^{\mathrm{co}}_F(X,Y \mid Z)
     :=
@@ -150,6 +156,7 @@ Wir erinnern das Entscheidungsproblem \(Ind_{co}\).
 \end{Definition}
 
 \begin{Proposition}
+    \label{prop:co-ind-qbf-correct}
     Es gilt:
     \[
         \Phi^{\mathrm{co}}_F(X,Y \mid Z)\text{ ist wahr}
@@ -159,5 +166,5 @@ Wir erinnern das Entscheidungsproblem \(Ind_{co}\).
 \end{Proposition}
 
 \begin{proof}
-    
+    \label{pr:co-ind-qbf-correct}
 \end{proof}

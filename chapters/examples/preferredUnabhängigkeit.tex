@@ -10,16 +10,16 @@ Wir erinnern zuerst die Definition der \textit{preferred}-Semantik. Um die nachf
 zu vereinfachen, 
 nutzen wir als Ausgangspunkt die \textit{complete}-Semantik. Sei \(F=(A,R)\) ein AF 
 und seien \(S, S' \subseteq A\) \textit{complete}-Extensionen von \(F\). $S$ ist eine \textit{preferred}-Extension
-genau dann, wenn für jedes $S'$ $S' \subseteq S$ gilt.
+genau dann, wenn für jedes $S' \subseteq S$ gilt.
 
-Um die \textit{preferred}-Semantik zu definieren müssen wir also eine Aussage über die Menge aller \textit{complete}-
+Um die \textit{preferred}-Semantik zu definieren müssen wir  eine Aussage über die Menge aller \textit{complete}-
 Extensionen treffen. 
 
 \begin{Definition}
     \label{def:geq-pl}
-    Seien \(I \text{ und } I'\) zwei Kopien eines aussagenlogischen Labellings und \(F=(A,R)\) ein AF. Wir definieren
+    Sei \(F=(A,R)\) ein AF  und \(I \text{ und } I'\) zwei Kopien eines aussagenlogischen Labellings von $F$. Wir definieren
     \[
-    (I \geq I')
+    I \geq I'
     := 
     \bigwedge_{a \in A}
     (
@@ -36,7 +36,7 @@ Extensionen treffen.
 
 \end{Lemma}
 
-Wir nutzen die in ~\ref{def:vars} eingeführten aussagenlogischen Variablen und die in ~\ref{def:pl-one} definierte
+Wir nutzen die in \ref{def:vars} eingeführten aussagenlogischen Variablen und die in \ref{def:pl-one} definierte
 Formel, um die \textit{preferred}-Labellings aussagenlogisch zu kodieren. 
 
 \begin{Definition}
@@ -47,16 +47,24 @@ Formel, um die \textit{preferred}-Labellings aussagenlogisch zu kodieren.
     \mathrm{prf}_F(\mathcal{L})
     :=
     \forall \mathcal{L'}
-    (
+    \bigl(
+        \mathrm{co}_F(\mathcal{L}) 
+        \land 
         (
-            \mathrm{co}_F(\mathcal{L}) 
-            \land 
             \mathrm{co}_F(\mathcal{L'})
-        )
-        \rightarrow
-        I \geq I'
-    )
+            \rightarrow
+            I \geq I'
+        ) 
+    \bigr)
     \]
 \end{Definition}
+
+\begin{Lemma}
+    \label{lem:prf-pl-correct}
+\end{Lemma}
+
+\begin{proof}
+    \label{pr:prf-pl-correct}
+\end{proof}
 
 \section{QBF-Kodierung der \textit{preferred}-Unabhängigkeit}

@@ -1,6 +1,27 @@
 \chapter{\textit{stable}-Unabhängigkeit}
 \label{ch:stable}
 
+\section{Komplexität}
+\begin{Theorem}
+    \label{cor:ind-st-in-pi2p}
+    Das Entscheidungsproblem \(\textit{Ind}_{\mathrm{st}}\) liegt in
+    \(\Pi_2^\text{P}\).
+\end{Theorem}
+
+Rein formal handelt es sich um das folgende Entscheidungsproblem.
+\begin{description}
+    \item[]$\textit{Ind}_{\mathrm{st}}$
+    \item[Input:] AF $F=(A,R)$, disjunkte Mengen $X,Y,Z \subseteq A$
+    \item[Output:] TRUE $\Leftrightarrow X \bot_{\mathrm{st}} Y \mid Z$
+\end{description}
+
+Wir skizzieren den Beweis, angelehnt an \cite{bluemel:2025:independence-aba}. 
+
+\begin{proof}
+Zunächst charakterisieren wir das Problem, um anschließend mit dem Komplement arbeiten zu können. 
+
+\end{proof}
+
 \section{Aussagenlogische Kodierung der \textit{stable}-Semantik}
 \label{sec:st-pl}
 
@@ -22,8 +43,8 @@ ist \(S\) eine \textit{stable} Extension genau dann, wenn
 
 Da in \textit{stable}-Labellings kein \(\mathit{undecided}\)-Label
 vorkommt, genügt es, nur die \(\mathit{in}\)-gelabelten Argumente
-aussagenlogisch zu kodieren. Ein Argument, dessen \(in\)-Variable falsch
-ist, wird entsprechend als \(\mathit{out}\) interpretiert.
+aussagenlogisch zu kodieren. Ein Argument, dessen \(in\)-Variable den Wahrheitswert falsch
+trägt, wird entsprechend als \(\mathit{out}\) interpretiert.
 
 \begin{Definition}
     \label{def:in-vars}
@@ -49,7 +70,6 @@ ist, wird entsprechend als \(\mathit{out}\) interpretiert.
 \begin{Definition}
     \label{def:st-pl}
     Sei \(F=(A,R)\) ein AF und sei \(I = \{i_a \mid a\in A\}.\)
-
     Die aussagenlogische Kodierung der
     \textit{stable}-Semantik ist definiert durch
     \[
@@ -146,16 +166,16 @@ Wir verwenden die folgende Definition bedingter Unabhängigkeit für AFs nach \c
     Wir schreiben $X \bot_{\sigma} Y\mid Z$.
 \end{Definition}
 
-\begin{Lemma}
-    \label{lem:eq-qbf}
-    Sei \(F=(A,R)\) ein AF und seien
-    \(\lambda_j,\lambda_k \in \Lambda_{\mathrm{st}}(F)\)
-    \textit{stable}-Labellings von \(F\). Sei
+\begin{Definition}
+    \label{def:eq-qbf}
+    Sei \(F=(A,R)\) ein AF und seien \(j,k\) zwei Indizes für
+    Labelling-Kopien. Für \(\ell\in\{j,k\}\) sei
     \[
-        I^l=\{i_a^l \mid a\in A\}
+        I^\ell := \{i_a^\ell \mid a\in A\}
     \]
-    die zugehörige Variablenmenge des \(l\)-ten Labellings.
-    Für eine Teilmenge \(S\subseteq A\) definieren wir
+    die Variablenmenge der \(\ell\)-ten Labelling-Kopie. Für eine
+    Teilmenge \(S\subseteq A\) definieren wir die Gleichheit der
+    \(j\)-ten und \(k\)-ten Labelling-Kopie auf \(S\) durch
     \[
         \mathrm{Eq}^{j,k}_S
         :=
@@ -164,12 +184,18 @@ Wir verwenden die folgende Definition bedingter Unabhängigkeit für AFs nach \c
             i_a^j \leftrightarrow i_a^k
         \right).
     \]
-    Unter Belegungen von \(I^j\cup I^k\), die \(\lambda_j\) und
-    \(\lambda_k\) kodieren, gilt:
+\end{Definition}
+
+\begin{Lemma}
+    \label{lem:eq-qbf-correct}
+    Seien \(\lambda_j,\lambda_k\in\Lambda_{\mathrm{st}}(F)\)
+    \textit{stable}-Labellings von \(F\). Unter Belegungen von
+    \(I^j\cup I^k\), die \(\lambda_j\) und \(\lambda_k\) kodieren, gilt
+    für jede Teilmenge \(S\subseteq A\):
     \[
         \mathrm{Eq}^{j,k}_S \text{ ist wahr}
-        \quad \Longleftrightarrow \quad
-        \lambda_j|_S = \lambda_k|_S.
+        \quad\Longleftrightarrow\quad
+        \lambda_j|_S=\lambda_k|_S.
     \]
 \end{Lemma}
 
@@ -186,36 +212,33 @@ Wir verwenden die folgende Definition bedingter Unabhängigkeit für AFs nach \c
 
 Auf Grundlage der Formeln \(st_F\) und \(\mathrm{Eq}^{j,k}_S\) lässt sich die \textit{stable}-Unabhängigkeit als \textit{QBF} ausdrücken.
 
-\begin{Proposition}
-    \label{prop:st-ind-qbf}
+\begin{Definition}
+    \label{def:st-ind-qbf}
     Sei \(F=(A,R)\) ein AF und seien
     \(X,Y,Z\subseteq A\) paarweise disjunkte Mengen. Für
     \(k\in\{1,2,3\}\) sei
-    \[
-        I^k=\{i_a^k \mid a\in A\}
-    \]
+    \( I^k := \{i_a^k \mid a\in A\}\)
     eine Kopie der aussagenlogischen Labelling-Variablen.
 
-    Dann wird die \textit{stable}-Unabhängigkeit von \(X\) und \(Y\)
-    gegeben \(Z\), also \(X \bot_{\mathrm{st}} Y \mid Z\), durch die
-    folgende geschlossene QBF kodiert:
-    \begin{multline*}
-    \Phi^{\mathrm{st}}_F(X,Y \mid Z)
+    Die QBF zur Kodierung von \textit{stable}-Unabhängigkeit ist definiert
+    durch
+    \[
+    \Phi^{\mathrm{st}}_F(X,Y\mid Z)
     :=
-    \forall I^1, I^2
-    \exists I^3
+    \forall I^1 \forall I^2 \exists I^3
     \left(
-        \left(
+    \begin{aligned}
+        &
+        \bigl(
             \mathrm{st}_F(I^1)
             \land
             \mathrm{st}_F(I^2)
             \land
             \mathrm{Eq}^{1,2}_Z
-        \right)
-        \right. \\
-        \left.
-        \rightarrow
-        \left(
+        \bigr)
+        \\
+        &\rightarrow
+        \bigl(
             \mathrm{st}_F(I^3)
             \land
             \mathrm{Eq}^{1,3}_X
@@ -223,14 +246,20 @@ Auf Grundlage der Formeln \(st_F\) und \(\mathrm{Eq}^{j,k}_S\) lässt sich die \
             \mathrm{Eq}^{2,3}_Y
             \land
             \mathrm{Eq}^{1,3}_Z
-        \right)
+        \bigr)
+    \end{aligned}
     \right).
-    \end{multline*}
-    Es gilt:
+    \]
+\end{Definition}
+
+\begin{Proposition}
+    \label{prop:st-ind-qbf-correct}
+    Sei \(F=(A,R)\) ein AF und seien
+    \(X,Y,Z\subseteq A\) paarweise disjunkte Mengen. Dann gilt:
     \[
-        \Phi^{\mathrm{st}}_F(X,Y \mid Z)\text{ ist wahr}
+        \Phi^{\mathrm{st}}_F(X,Y\mid Z)\text{ ist wahr}
         \quad\Longleftrightarrow\quad
-        X \bot_{\mathrm{st}} Y \mid Z.
+        X\bot_{\mathrm{st}}Y\mid Z.
     \]
 \end{Proposition}
 
@@ -318,40 +347,4 @@ Auf Grundlage der Formeln \(st_F\) und \(\mathrm{Eq}^{j,k}_S\) lässt sich die \
     Somit ist die Konsequens wahr. Da dies für jede Belegung der
     universell quantifizierten Variablen gilt, ist
     \(\Phi^{\mathrm{st}}_F(X,Y\mid Z)\) wahr.
-\end{proof}
-
-\section{Komplexität}
-\begin{Corollary}
-    \label{cor:ind-st-in-pi2p}
-    Das Entscheidungsproblem \(\textit{Ind}_{\mathrm{st}}\) liegt in
-    \(\Pi_2^\text{P}\).
-\end{Corollary}
-
-\begin{proof}
-    Sei eine Instanz von \(\textit{Ind}_{\mathrm{st}}\) gegeben durch ein
-    AF \(F=(A,R)\) und paarweise disjunkte Mengen \(X,Y,Z\subseteq A\).
-    Nach Proposition~\ref{prop:st-ind-qbf} gilt
-    \[
-        X\bot_{\mathrm{st}}Y\mid Z
-        \quad\Longleftrightarrow\quad
-        \Phi^{\mathrm{st}}_F(X,Y\mid Z)\text{ ist wahr}.
-    \]
-    Damit existiert eine Reduktion von \(\textit{Ind}_{\mathrm{st}}\)
-    auf das Wahrheitsproblem der QBF
-    \(\Phi^{\mathrm{st}}_F(X,Y\mid Z)\).
-
-    Die Formel \(\Phi^{\mathrm{st}}_F(X,Y\mid Z)\) hat die Quantorenstruktur \(\forall U\exists V\,\psi\)
-    wobei \(U\) und \(V\) Mengen von aussagenlogischen Variablen sind und \(\psi\) eine quantorenfreie aussagenlogische Formel ist.
-
-    Die Konstruktion von \(\Phi^{\mathrm{st}}_F(X,Y\mid Z)\) ist
-    polynomial in der Größe von \(F\). Insgesamt werden \(3|A|\) Labelling-Variablen eingeführt. Die Formel
-    \(\mathrm{st}_F(I^k)\) hat eine Größe, die polynomial in \(|A| + |R| \) liegt. Außerdem ist \(\mathrm{Eq}^{i,j}_S\) linear in \(|S|\).
-
-    Das Wahrheitsproblem für QBFs der Form \(\forall U\exists V\,\psi\)
-    liegt in \(\Pi_2^\text{P}\). Da jede Instanz von
-    \(\textit{Ind}_{\mathrm{st}}\) in Polynomialzeit auf eine solche QBF
-    reduziert werden kann, folgt
-    \[
-        \textit{Ind}_{\mathrm{st}} \in \Pi_2^\text{P}.
-    \]
 \end{proof}
