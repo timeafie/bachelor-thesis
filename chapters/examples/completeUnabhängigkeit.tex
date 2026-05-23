@@ -1,12 +1,45 @@
 \chapter{\textit{complete}-Unabhängigkeit}
 \label{ch:complete}
 
-In diesem Kapitel wird das Entscheidungsproblem \(Ind_{co}\) untersucht. 
-Zuerst erfolgt eine komplexitätstheoretische Einordnung, dann wird die eine \(labelling\)-basierte 
-Kodierung der \textit{complete}-Semantik in aussagenlogischer Form vorgestellt. 
-Dieses wird anschließend verwendet, um eine \textit{QBF}-Kodierung für \(Ind_{co}\) zu formulieren.
+\section{Einleitung}
+\label{sec:co-ci-einleitung}
+In diesem Kapitel betrachten wir die bedingte Unabhängigkeit unter der
+\textit{complete}-Semantik. Die \textit{complete}-Semantik erlaubt
+neben akzeptierten und verworfenen Argumenten auch undecided-Argumente und ist
+damit allgemeiner als die \textit{stable}-Semantik.
+
+Die bedingte Unabhängigkeit \(X \bot_{\mathrm{co}} Y \mid Z\)
+fragt, ob die möglichen \textit{complete}-Bewertungen der Argumente in \(X\)
+und \(Y\) unabhängig voneinander kombiniert werden können, sobald die Bewertung
+der Argumente in \(Z\) festgelegt ist.
+Formal betrachten wir in diesem Kapitel das folgende Entscheidungsproblem:
+\[
+\begin{array}{ll}
+\textit{Ind}_{\mathrm{co}}\\
+\text{Input:}  & \text{AF } F=(A,R),\ \text{disjunkte Mengen } X,Y,Z \subseteq A \\
+\text{Output:} & \text{TRUE} \Longleftrightarrow X \bot_{\mathrm{co}} Y \mid Z.
+\end{array}
+\]
+
+Das Kapitel ist in drei Schritte gegliedert. Zunächst wird die
+komplexitätstheoretische Einordnung von \(\textit{Ind}_{\mathrm{co}}\)
+betrachtet. Anschließend wird eine aussagenlogische Kodierung der
+\textit{complete}-Semantik angegeben. Diese beschreibt, wann eine Belegung der
+Labelling-Variablen einem \textit{complete}-Labelling des gegebenen
+Argumentationssystems entspricht. Im letzten Schritt wird diese Kodierung
+verwendet, um die bedingte Unabhängigkeit
+\(X \bot_{\mathrm{co}} Y \mid Z\) als QBF zu formulieren.
 
 \section{Komplexität}
+\begin{Theorem}
+    \label{th:ind-co-is-pi2p-c}
+    Das Entscheidungsproblem \(\textit{Ind}_{\mathrm{co}}\) ist
+    \(\Pi_2^\text{P}\)-vollständig.
+\end{Theorem}
+
+\begin{proof}
+    Der Zugehörigkeitsbeweis verhält sich analog zu \(\textit{Ind}_{\mathrm{st}}\) \ref{pr:ind-st-is-pi2p-c-correct}.
+\end{proof}
 
 \section{Aussagenlogische Kodierung der \textit{complete}-Semantik}
 Wir erinnern die Definition der \textit{complete}-Semantik. Sei \(F = (A,R)\) ein AF und sei \(S \subseteq A\) eine \textit{admissible}-Extension von \(F\).
@@ -16,26 +49,17 @@ Wir erinnern die Definition der \textit{complete}-Semantik. Sei \(F = (A,R)\) ei
     \label{def:vars}
     Sei \(F = (A,R)\) ein AF. Für jedes Argument \(a \in A\) seien \(i_a,o_a,u_a\) aussagenlogische Variablen mit der Bedeutung
     \begin{align*}
-        & i_a \text{ ist wahr genau dann, wenn } \lambda(a)=\mathit{in},\\
-        & o_a \text{ ist wahr genau dann, wenn } \lambda(a)=\mathit{out},\\
-        & u_a \text{ ist wahr genau dann, wenn } \lambda(a)=\mathit{und}.
+        & i_a \text{ ist wahr}\Longleftrightarrow \lambda(a)=\mathit{in},\\
+        & o_a \text{ ist wahr}\Longleftrightarrow \lambda(a)=\mathit{out},\\
+        & u_a \text{ ist wahr}\Longleftrightarrow \lambda(a)=\mathit{und}.
     \end{align*}
 
     Für die \(k\)-te Kopie der Labelling-Variablen schreiben wir
-    \begin{align*}
-        & I^k=\{i_a^k\mid a\in A\},\\
-        & O^k=\{o_a^k\mid a\in A\},\\
-        & U^k=\{u_a^k\mid a\in A\}.
-    \end{align*}
-
-    Und fassen sie zusammen als
-    \[
-        \mathcal{L}^k := I^k \cup O^k \cup U^k.
-    \]
+    \[ I^k=\{i_a^k\mid a\in A\}, O^k=\{o_a^k\mid a\in A\}, U^k=\{u_a^k\mid a\in A\}.\]
+    Und fassen sie zusammen als \(\mathcal{L}^k := I^k \cup O^k \cup U^k.\)
 
     Ist im Kontext klar, von welcher Kopie wir sprechen, verzichten wir auf die Nummerierung. 
 \end{Definition}
-
 \begin{Definition}
     \label{def:pl-one}
     Sei \(F=(A,R)\) ein AF und seien \(I,O,U\) wie gewohnt definiert.
@@ -55,7 +79,7 @@ Wir erinnern die Definition der \textit{complete}-Semantik. Sei \(F = (A,R)\) ei
     \]
 \end{Definition}
 
-Die Formel \(\mathrm{one}_a(I,O,U)\) stellt sicher, dass dem Argument
+Die Formel \(\mathrm{one}_a(\mathcal{L})\) stellt sicher, dass dem Argument
 \(a\) genau eines der drei Labels \(\mathit{in}\), \(\mathit{out}\)
 oder \(\mathit{und}\) zugewiesen wird. Die erste Disjunktion fordert,
 dass mindestens eines der drei Labels gilt. Die übrigen Konjunktionen
@@ -94,7 +118,7 @@ schließen aus, dass zwei verschiedene Labels gleichzeitig gelten.
 \begin{Lemma}
     \label{lem:co-pl-correct}
     Sei \(F=(A,R)\) ein AF und sei \(\nu\) eine Belegung der Variablen
-    \(I\cup O\cup U\). Falls für jedes \(a\in A\) genau eine der
+    \(\mathcal{L}= I\cup O\cup U\). Falls für jedes \(a\in A\) genau eine der
     Variablen \(i_a,o_a,u_a\) unter \(\nu\) wahr ist, induziert \(\nu\)
     ein Labelling \(\lambda_\nu:A\to
     \{\mathit{in},\mathit{out},\mathit{und}\}\) durch
@@ -117,10 +141,71 @@ schließen aus, dass zwei verschiedene Labels gleichzeitig gelten.
 
 \begin{proof}
     \label{pr:co-pl-correct}
+    Nach Voraussetzung ist für jedes
+    \(a\in A\) genau eine der Variablen \(i_a,o_a,u_a\) unter \(\nu\) wahr.
+    Somit ist das durch \(\nu\) induzierte Labelling \(\lambda_\nu\)
+    wohldefiniert.
+
+    Sei zunächst \(\nu\models \mathrm{co}_F(\mathcal L)\). Dann erfüllt \(\nu\) insbesondere
+    für jedes Argument \(a\in A\) die Bedingungen der aussagenlogischen
+    Kodierung der \textit{complete}-Semantik. Diese besagen:
+    \[
+        i_a \leftrightarrow \bigwedge_{b\in \operatorname{Att}(a)} o_b \qquad \text{und} \qquad o_a \leftrightarrow \bigvee_{b\in \operatorname{Att}(a)} i_b.
+    \]
+    Falls also \(\lambda_\nu(a)=\mathit{in}\), gilt \(\nu(i_a)=\top\).
+    Wegen der ersten Äquivalenz folgt, dass für alle Angreifer
+    \(b\in\operatorname{Att}(a)\) \(\nu(o_b)=\top\) gilt. Nach Definition von
+    \(\lambda_\nu\) bedeutet dies \(\lambda_\nu(b)=\mathit{out}\). Umgekehrt
+    folgt aus \(\lambda_\nu(b)=\mathit{out}\) für alle Angreifer \(b\) wegen
+    derselben Äquivalenz, dass \(\nu(i_a)=\top\), also
+    \(\lambda_\nu(a)=\mathit{in}\).
+
+    Analog gilt wegen der zweiten Äquivalenz:
+    \(\lambda_\nu(a)=\mathit{out}\) genau dann, wenn es einen Angreifer
+    \(b\in\operatorname{Att}(a)\) mit \(\lambda_\nu(b)=\mathit{in}\) gibt.
+
+    Da für jedes Argument genau eines der drei Labels \(\mathit{in}\),
+    \(\mathit{out}\) und \(\mathit{und}\) vergeben wird, erhält \(a\) genau dann
+    das Label \(\mathit{und}\), wenn weder die Bedingung für
+    \(\mathit{in}\) noch die Bedingung für \(\mathit{out}\) erfüllt ist.
+    Damit erfüllt \(\lambda_\nu\) für jedes Argument die Bedingungen eines
+    \textit{complete}-Labellings.
+
+    Sei nun umgekehrt \(\lambda_\nu\) ein
+    \textit{complete}-Labelling von \(F\). Dann gilt für jedes Argument
+    \(a\in A\):
+    \[
+        \lambda_\nu(a)=\mathit{in}
+        \quad\Longleftrightarrow\quad
+        \lambda_\nu(b)=\mathit{out}
+        \text{ für alle } b\in\operatorname{Att}(a),
+    \]
+    sowie
+    \[
+        \lambda_\nu(a)=\mathit{out}
+        \quad\Longleftrightarrow\quad
+        \text{es gibt ein } b\in\operatorname{Att}(a)
+        \text{ mit } \lambda_\nu(b)=\mathit{in}.
+    \]
+    Nach Definition des durch \(\nu\) induzierten Labellings entspricht
+    \(\lambda_\nu(a)=\mathit{in}\) genau der Aussage \(\nu(i_a)=\top\),
+    \(\lambda_\nu(a)=\mathit{out}\) genau der Aussage \(\nu(o_a)=\top\), und
+    \(\lambda_\nu(a)=\mathit{und}\) genau der Aussage \(\nu(u_a)=\top\).
+
+    Daher erfüllt \(\nu\) für jedes \(a\in A\) die in
+    \(\mathrm{co}_F(\mathcal L)\) enthaltenen Äquivalenzen
+    \[
+        i_a \leftrightarrow \bigwedge_{b\in \operatorname{Att}(a)} o_b
+        \qquad\text{und}\qquad
+        o_a \leftrightarrow \bigvee_{b\in \operatorname{Att}(a)} i_b.
+    \]
+    Zusammen mit der Voraussetzung, dass für jedes Argument genau eine der
+    Variablen \(i_a,o_a,u_a\) wahr ist, erfüllt \(\nu\) somit die gesamte
+    Kodierung \(\mathrm{co}_F(\mathcal L)\). Also gilt
+    \(\nu\models \mathrm{co}_F(\mathcal L)\).
 \end{proof}
 
 \section{QBF-Kodierung der \textit{complete}-Unabhängigkeit}
-Wir erinnern das Entscheidungsproblem \(Ind_{co}\).
 
 \begin{Definition}
     \label{def:co-ind-qbf}
@@ -167,4 +252,5 @@ Wir erinnern das Entscheidungsproblem \(Ind_{co}\).
 
 \begin{proof}
     \label{pr:co-ind-qbf-correct}
+    Analog zu \ref{pr:st-ind-qbf-correct}.
 \end{proof}

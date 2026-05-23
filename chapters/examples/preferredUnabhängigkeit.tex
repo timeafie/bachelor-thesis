@@ -1,9 +1,45 @@
 \chapter{\textit{preferred}-Unabhängigkeit}
 \label{ch:preferred}
+\section{Einleitung}
+\label{sec:pr-ci-einleitung}
 
-Einleitung in Kapitel 
+In diesem Kapitel betrachten wir die bedingte Unabhängigkeit unter
+\textit{preferred}-Semantik. Nachdem zuvor die \textit{stable}- und
+\textit{complete}-Unabhängigkeit untersucht wurden, wird die entwickelte
+Vorgehensweise nun auf \textit{preferred}-Labellings übertragen.
+
+Die \textit{preferred}-Semantik kann als Verfeinerung der \textit{complete}-Semantik verstanden werden.
+Ein \textit{preferred}-Labelling ist ein \textit{complete}-Labelling, dessen
+Menge der akzeptierten Argumente bezüglich Mengeninklusion maximal ist. Dadurch
+entsteht gegenüber der \textit{complete}-Semantik eine zusätzliche Maximalitätsbedingung.
+
+Die bedingte Unabhängigkeit \( X \bot_{\mathrm{pr}} Y \mid Z\)
+fragt, ob die möglichen \textit{preferred}-Bewertungen der Argumente in \(X\)
+und \(Y\) unabhängig voneinander kombiniert werden können, sobald die Bewertung
+der Argumente in \(Z\) festgelegt ist. 
+Formal betrachten wir in diesem Kapitel das folgende Entscheidungsproblem:
+\[
+\begin{array}{ll}
+\textit{Ind}_{\mathrm{pr}}\\
+\text{Input:}  & \text{AF } F=(A,R),\ \text{disjunkte Mengen } X,Y,Z \subseteq A \\
+\text{Output:} & \text{TRUE} \Longleftrightarrow X \bot_{\mathrm{pr}} Y \mid Z.
+\end{array}
+\]
+
+Das Kapitel ist in drei Schritte gegliedert. Zunächst wird die
+komplexitätstheoretische Einordnung von \(\textit{Ind}_{\mathrm{pr}}\)
+betrachtet. Anschließend wird eine aussagenlogische beziehungsweise
+QBF-gestützte Kodierung der \textit{preferred}-Semantik angegeben, wobei die
+Maximalität der akzeptierten Argumente berücksichtigt werden muss. Im letzten
+Schritt wird diese Kodierung verwendet, um die bedingte Unabhängigkeit
+\(X \bot_{\mathrm{pr}} Y \mid Z\) als QBF zu formulieren.
 
 \section{Komplexität}
+\begin{Theorem}
+    \label{th:ind-pr-is-pi3p-c}
+    Das Entscheidungsproblem \(\textit{Ind}_{\mathrm{pr}}\) ist
+    \(\Pi_3^\text{P}\)-vollständig.
+\end{Theorem}
 
 \section{Aussagenlogische Kodierung der \textit{preferred}-Semantik}
 Wir erinnern zuerst die Definition der \textit{preferred}-Semantik. Um die nachfolgende Kodierung 
@@ -17,45 +53,72 @@ Extensionen treffen.
 
 \begin{Definition}
     \label{def:geq-pl}
-    Sei \(F=(A,R)\) ein AF  und \(I \text{ und } I'\) zwei Kopien eines aussagenlogischen Labellings von $F$. Wir definieren
+    Sei \(F=(A,R)\) ein AF und seien
+    \(I=\{i_a\mid a\in A\}\) und \(I'=\{i'_a\mid a\in A\}\)
+    zwei Kopien aussagenlogischer Variablen. Wir definieren
     \[
-    I \geq I'
-    := 
-    \bigwedge_{a \in A}
-    (
-        i'_a \rightarrow i_a
-    )
+        I \geq I'
+        :=
+        \bigwedge_{a\in A}(i'_a \rightarrow i_a).
     \]
 \end{Definition}
 
 \begin{Lemma}
     \label{lem:geq-pl-correct}
-    Sei 
-
-    Dann gilt: 
-
+    Sei \(F=(A,R)\) ein AF und seien \(S,S'\subseteq A\).
+    Sei \(\nu\) eine Belegung der Variablen \(I\cup I'\), wobei
+    \(I=\{i_a\mid a\in A\}\) die Menge \(S\) und
+    \(I'=\{i'_a\mid a\in A\}\) die Menge \(S'\) kodiert, d.\,h. für alle
+    \(a\in A\) gilt:
+    \[
+        \nu(i_a)=\top \Longleftrightarrow a\in S
+        \qquad\text{und}\qquad
+        \nu(i'_a)=\top \Longleftrightarrow a\in S'.
+    \]
+    Dann gilt:
+    \[
+        S \supseteq S'
+        \quad\Longleftrightarrow\quad
+        \nu \models I \geq I'.
+    \]
 \end{Lemma}
 
-Wir nutzen die in \ref{def:vars} eingeführten aussagenlogischen Variablen und die in \ref{def:pl-one} definierte
-Formel, um die \textit{preferred}-Labellings aussagenlogisch zu kodieren. 
+\begin{proof}
+    Sei zunächst \(S\supseteq S'\). Dann gilt für
+    jedes \(a\in A\): Falls \(a\in S'\), so auch \(a\in S\). Nach der
+    Kodierung bedeutet dies: Falls \(i'_a\) wahr ist, dann ist auch \(i_a\)
+    wahr. Also ist für jedes \(a\in A\) die Implikation \(i'_a \rightarrow i_a\)
+    erfüllt. Damit gilt \(I \geq I'.\)
+
+    Gelte nun \(I\geq I'\). Dann ist für jedes
+    \(a\in A\) die Implikation \(i'_a \rightarrow i_a\)
+    erfüllt. Sei \(a\in S'\). Nach der Kodierung ist dann \(i'_a\) wahr.
+    Wegen \(i'_a\rightarrow i_a\) ist auch \(i_a\) wahr. Also gilt
+    \(a\in S\). Damit folgt \(S'\subseteq S\).
+\end{proof}
+
+Wir nutzen die in \ref{def:vars} eingeführten aussagenlogischen Variablen und die in \ref{def:pl-one}, \ref{def:co-pl} definierten
+Formeln, um die \textit{preferred}-Labellings aussagenlogisch zu kodieren. 
 
 \begin{Definition}
     \label{def:prf-pl}
-    Sei \(F = (A,R)\) ein AF und seien \(I, O, U\) wie zuvor definiert. 
-    Eine aussagenlogische Kodierung eines \textit{preferred}-Labellings lautet
+    Sei \(F=(A,R)\) ein AF und seien
+    \(\mathcal{L}=(I,O,U)\) sowie
+    \(\mathcal{L}'=(I',O',U')\) Kopien der Labelling-Variablen.
+    Die QBF-Kodierung eines \textit{preferred}-Labellings lautet
     \[
     \mathrm{prf}_F(\mathcal{L})
     :=
-    \forall \mathcal{L'}
-    \bigl(
-        \mathrm{co}_F(\mathcal{L}) 
-        \land 
-        (
-            \mathrm{co}_F(\mathcal{L'})
-            \rightarrow
-            I \geq I'
-        ) 
-    \bigr)
+    \mathrm{co}_F(\mathcal{L})
+    \land
+    \forall \mathcal{L}'
+    \Bigl(
+        \mathrm{co}_F(\mathcal{L}')
+        \land
+        I' \geq I
+        \rightarrow
+        I \geq I'
+    \Bigr).
     \]
 \end{Definition}
 
