@@ -40,31 +40,38 @@ Schritt wird diese Kodierung verwendet, um die bedingte Unabhängigkeit
     Das Entscheidungsproblem \(\textit{Ind}_{\mathrm{pr}}\) ist
     \(\Pi_3^\text{P}\)-vollständig.
 \end{Theorem}
+\textcite{bluemel:2025:independence-aba}.
 
-\section{Aussagenlogische Kodierung der \textit{preferred}-Semantik}
+\begin{proof}
+    \label{pr:ind-pr-is-pi3p-c-correct}
+\end{proof}
+
+\section{QBF-Kodierung der \textit{preferred}-Semantik}
 Wir erinnern zuerst die Definition der \textit{preferred}-Semantik. Um die nachfolgende Kodierung 
 zu vereinfachen, 
 nutzen wir als Ausgangspunkt die \textit{complete}-Semantik. Sei \(F=(A,R)\) ein AF 
 und seien \(S, S' \subseteq A\) \textit{complete}-Extensionen von \(F\). $S$ ist eine \textit{preferred}-Extension
 genau dann, wenn für jedes $S' \subseteq S$ gilt.
 
-Um die \textit{preferred}-Semantik zu definieren müssen wir  eine Aussage über die Menge aller \textit{complete}-
+Um die \textit{preferred}-Semantik zu definieren, müssen wir eine Aussage über die Menge aller \textit{complete}-
 Extensionen treffen. 
 
 \begin{Definition}
-    \label{def:geq-pl}
+    \label{def:lt-pl}
     Sei \(F=(A,R)\) ein AF und seien
     \(I=\{i_a\mid a\in A\}\) und \(I'=\{i'_a\mid a\in A\}\)
     zwei Kopien aussagenlogischer Variablen. Wir definieren
     \[
-        I \geq I'
+        I < I'
         :=
-        \bigwedge_{a\in A}(i'_a \rightarrow i_a).
+            \bigwedge_{a\in A}(i_a \rightarrow i'_a)
+        \land
+            \bigvee_{a\in A}(i'_a \land \neg i_a).
     \]
 \end{Definition}
 
 \begin{Lemma}
-    \label{lem:geq-pl-correct}
+    \label{lem:lt-pl-correct}
     Sei \(F=(A,R)\) ein AF und seien \(S,S'\subseteq A\).
     Sei \(\nu\) eine Belegung der Variablen \(I\cup I'\), wobei
     \(I=\{i_a\mid a\in A\}\) die Menge \(S\) und
@@ -77,28 +84,37 @@ Extensionen treffen.
     \]
     Dann gilt:
     \[
-        S \supseteq S'
+        S \subset S'
         \quad\Longleftrightarrow\quad
-        \nu \models I \geq I'.
+        \nu \models I < I'.
     \]
 \end{Lemma}
 
 \begin{proof}
-    Sei zunächst \(S\supseteq S'\). Dann gilt für
-    jedes \(a\in A\): Falls \(a\in S'\), so auch \(a\in S\). Nach der
-    Kodierung bedeutet dies: Falls \(i'_a\) wahr ist, dann ist auch \(i_a\)
-    wahr. Also ist für jedes \(a\in A\) die Implikation \(i'_a \rightarrow i_a\)
-    erfüllt. Damit gilt \(I \geq I'.\)
+    Sei zunächst \(S\subset S'\). Dann gilt für jedes \(a\in A\), dass
+    falls \(a\in S\), so auch \(a\in S'\). Nach der Kodierung bedeutet dies:
+    Falls \(i_a\) wahr ist, dann ist auch \(i'_a\) wahr. Also ist für jedes
+    \(a\in A\) die Implikation \(i_a \rightarrow i'_a\) erfüllt.
 
-    Gelte nun \(I\geq I'\). Dann ist für jedes
-    \(a\in A\) die Implikation \(i'_a \rightarrow i_a\)
-    erfüllt. Sei \(a\in S'\). Nach der Kodierung ist dann \(i'_a\) wahr.
-    Wegen \(i'_a\rightarrow i_a\) ist auch \(i_a\) wahr. Also gilt
-    \(a\in S\). Damit folgt \(S'\subseteq S\).
+    Da die Inklusion echt ist, gibt es außerdem ein Argument
+    \(a\in S'\setminus S\). Für dieses Argument gilt nach der Kodierung
+    \(\nu(i'_a)=\top\) und \(\nu(i_a)=\bot\). Also ist \(i'_a \land \neg i_a\)
+    wahr. Damit ist auch \(\bigvee_{a\in A}(i'_a \land \neg i_a)\)
+    erfüllt. 
+    Insgesamt folgt \(\nu\models I<I'\).
+
+    Gelte nun umgekehrt \(\nu\models I<I'\). Aus \(\bigwedge_{a\in A}(i_a \rightarrow i'_a)\)
+    folgt: Für jedes \(a\in A\) gilt, dass aus \(a\in S\) auch
+    \(a\in S'\) folgt. Also gilt \(S\subseteq S'\).
+    Aus \(\bigvee_{a\in A}(i'_a \land \neg i_a)\)
+    folgt, dass es ein \(a\in A\) gibt mit \(\nu(i'_a)=\top\) und
+    \(\nu(i_a)=\bot\). Nach der Kodierung bedeutet dies
+    \(a\in S'\) und \(a\notin S\). Also ist die Inklusion echt.
+    Damit gilt \(S\subset S'\).
 \end{proof}
 
 Wir nutzen die in \ref{def:vars} eingeführten aussagenlogischen Variablen und die in \ref{def:pl-one}, \ref{def:co-pl} definierten
-Formeln, um die \textit{preferred}-Labellings aussagenlogisch zu kodieren. 
+Formeln, um die \textit{preferred}-Labellings in QBF zu kodieren. 
 
 \begin{Definition}
     \label{def:prf-pl}
@@ -113,21 +129,145 @@ Formeln, um die \textit{preferred}-Labellings aussagenlogisch zu kodieren.
     \land
     \forall \mathcal{L}'
     \Bigl(
-        \mathrm{co}_F(\mathcal{L}')
-        \land
-        I' \geq I
-        \rightarrow
-        I \geq I'
+        \mathrm{co}_F(\mathcal{L}') \rightarrow \neg (I < I')
     \Bigr).
     \]
 \end{Definition}
 
 \begin{Lemma}
     \label{lem:prf-pl-correct}
+    Sei \(F=(A,R)\) ein AF und sei \(\nu\) eine Belegung der Variablen
+    \(\mathcal{L}=I\cup O\cup U\), die ein Labelling
+    \(\lambda_\nu\) von \(F\) induziert. Dann gilt:
+    \[
+        \nu \models \mathrm{prf}_F(\mathcal{L})
+        \quad\Longleftrightarrow\quad
+        \lambda_\nu
+        \text{ ist ein \textit{preferred}-Labelling von } F.
+    \]
 \end{Lemma}
 
 \begin{proof}
     \label{pr:prf-pl-correct}
+    Sei zunächst
+    \(\nu \models \mathrm{prf}_F(\mathcal{L})\). Dann gilt wegen der
+    Definition von \(\mathrm{prf}_F(\mathcal{L})\) insbesondere
+    \(\nu \models \mathrm{co}_F(\mathcal{L}).\)
+    Nach Lemma~\ref{lem:co-pl-correct} ist \(\lambda_\nu\) also ein
+    \textit{complete}-Labelling von \(F\).
+    Es bleibt zu zeigen, dass \(\lambda_\nu\) bezüglich der Menge der
+    akzeptierten Argumente maximal ist. Angenommen, dies wäre nicht der Fall.
+    Dann gäbe es ein \textit{complete}-Labelling \(\lambda'\) von \(F\) mit
+    \(\mathit{in}(\lambda_\nu) \subset \mathit{in}(\lambda').\)
+    Sei \(\nu'\) die zu \(\lambda'\) gehörige Belegung der Variablen
+    \(\mathcal{L}'\). 
+    Nach Lemma~\ref{lem:co-pl-correct} gilt
+    \( \nu' \models \mathrm{co}_F(\mathcal{L}').\)
+    Außerdem gilt nach Lemma~\ref{lem:lt-pl-correct}
+    \( \nu \cup \nu' \models I < I'.\)
+    Damit wäre für diese Belegung von \(\mathcal{L}'\) die Implikation
+    \( \mathrm{co}_F(\mathcal{L}') \rightarrow \neg(I<I')\)
+    verletzt. Das widerspricht
+    \( \nu \models
+        \forall \mathcal{L}'
+        \bigl(
+            \mathrm{co}_F(\mathcal{L}') \rightarrow \neg(I<I')
+        \bigr).\)
+    Also existiert kein \textit{complete}-Labelling mit echt größerer
+    In-Menge. Damit ist \(\lambda_\nu\) ein \textit{preferred}-Labelling.
+
+    Sei nun umgekehrt \(\lambda_\nu\) ein
+    \textit{preferred}-Labelling von \(F\). Dann ist \(\lambda_\nu\)
+    insbesondere ein \textit{complete}-Labelling. Nach
+    Lemma~\ref{lem:co-pl-correct} gilt daher
+    \( \nu \models \mathrm{co}_F(\mathcal{L}).\)
+    Es bleibt die universelle Bedingung zu zeigen. Sei dazu \(\nu'\) eine
+    beliebige Belegung der Variablen \(\mathcal{L}'\). Falls
+    \( \nu' \not\models \mathrm{co}_F(\mathcal{L}')\)
+    gilt, ist die Implikation trivial erfüllt. Sei also
+    \( \nu' \models \mathrm{co}_F(\mathcal{L}').\)
+    Dann induziert \(\nu'\) nach Lemma~\ref{lem:co-pl-correct} ein
+    \textit{complete}-Labelling \(\lambda'\) von \(F\).
+    Da \(\lambda_\nu\) preferred ist, gibt es kein \textit{complete}-Labelling,
+    dessen In-Menge die In-Menge von \(\lambda_\nu\) echt enthält. Also gilt
+    nicht \( \mathit{in}(\lambda_\nu) \subset \mathit{in}(\lambda').\)
+    Nach Lemma~\ref{lem:lt-pl-correct} folgt daraus
+    \( \nu\cup\nu' \models \neg(I<I').\)
+    Somit ist für jede Belegung von \(\mathcal{L}'\) die Implikation
+    \(\mathrm{co}_F(\mathcal{L}') \rightarrow \neg(I<I')\)
+    erfüllt. Daher gilt
+    \(
+        \nu \models
+        \forall \mathcal{L}'
+        \bigl(
+            \mathrm{co}_F(\mathcal{L}') \rightarrow \neg(I<I')
+        \bigr).
+    \)
+    Zusammen mit
+    \(\nu\models \mathrm{co}_F(\mathcal{L})\) folgt
+    \( \nu \models \mathrm{prf}_F(\mathcal{L}).\)
 \end{proof}
 
 \section{QBF-Kodierung der \textit{preferred}-Unabhängigkeit}
+
+\begin{Definition}
+    \label{def:prf-ind-qbf}
+    Sei \(F=(A,R)\) ein AF und seien \(X,Y,Z\subseteq A\) paarweise
+    disjunkte Mengen. Für \(k\in\{1,2,3\}\) sei
+    \( \mathcal{L}^k = I^k \cup O^k \cup U^k\)
+    jeweils eine Kopie der Labelling-Variablen. Zusätzlich seien
+    \(\widehat{\mathcal{L}}^k = \widehat I^k \cup \widehat O^k \cup \widehat U^k\)
+    weitere Kopien der Labelling-Variablen, welche zur Kodierung der 
+    \textit{preferred} dienen.
+
+    Die QBF-Kodierung der \textit{preferred}-Unabhängigkeit lautet:
+    \begin{multline*}
+    \Phi^{\mathrm{prf}}_F(X,Y \mid Z)
+    :=
+    \forall \mathcal{L}^1
+    \forall \mathcal{L}^2
+    \exists \mathcal{L}^3
+    \exists \widehat{\mathcal{L}}^1
+    \exists \widehat{\mathcal{L}}^2
+    \forall \widehat{\mathcal{L}}^3
+    \Biggl(
+    \\
+    \Bigl(
+        \mathrm{co}_F(\mathcal{L}^1)
+        \land
+        \mathrm{co}_F(\mathcal{L}^2)
+        \land
+        \mathrm{Eq}^{1,2}_Z
+        \land
+        \neg\bigl(
+            \mathrm{co}_F(\widehat{\mathcal{L}}^1)
+            \land
+            (I^1 < \widehat I^1)
+        \bigr)
+        \land
+        \neg\bigl(
+            \mathrm{co}_F(\widehat{\mathcal{L}}^2)
+            \land
+            (I^2 < \widehat I^2)
+        \bigr)
+    \Bigr)
+    \\
+    \rightarrow
+    \Bigl(
+        \mathrm{co}_F(\mathcal{L}^3)
+        \land
+        \mathrm{Eq}^{1,3}_X
+        \land
+        \mathrm{Eq}^{2,3}_Y
+        \land
+        \mathrm{Eq}^{1,3}_Z
+        \land
+        \neg\bigl(
+            \mathrm{co}_F(\widehat{\mathcal{L}}^3)
+            \land
+            (I^3 < \widehat I^3)
+        \bigr)
+    \Bigr)
+    \Biggr).
+    \end{multline*}
+\end{Definition}

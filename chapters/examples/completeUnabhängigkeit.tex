@@ -5,8 +5,7 @@
 \label{sec:co-ci-einleitung}
 In diesem Kapitel betrachten wir die bedingte Unabhängigkeit unter der
 \textit{complete}-Semantik. Die \textit{complete}-Semantik erlaubt
-neben akzeptierten und verworfenen Argumenten auch undecided-Argumente und ist
-damit allgemeiner als die \textit{stable}-Semantik.
+neben akzeptierten und verworfenen Argumenten auch undecided-Argumente.
 
 Die bedingte Unabhängigkeit \(X \bot_{\mathrm{co}} Y \mid Z\)
 fragt, ob die möglichen \textit{complete}-Bewertungen der Argumente in \(X\)
@@ -23,10 +22,14 @@ Formal betrachten wir in diesem Kapitel das folgende Entscheidungsproblem:
 
 Das Kapitel ist in drei Schritte gegliedert. Zunächst wird die
 komplexitätstheoretische Einordnung von \(\textit{Ind}_{\mathrm{co}}\)
-betrachtet. Anschließend wird eine aussagenlogische Kodierung der
+betrachtet. 
+
+Anschließend wird eine aussagenlogische Kodierung der
 \textit{complete}-Semantik angegeben. Diese beschreibt, wann eine Belegung der
 Labelling-Variablen einem \textit{complete}-Labelling des gegebenen
-Argumentationssystems entspricht. Im letzten Schritt wird diese Kodierung
+Argumentationssystems entspricht. 
+
+Im letzten Schritt wird diese Kodierung
 verwendet, um die bedingte Unabhängigkeit
 \(X \bot_{\mathrm{co}} Y \mid Z\) als QBF zu formulieren.
 
@@ -55,32 +58,36 @@ Wir erinnern die Definition der \textit{complete}-Semantik. Sei \(F = (A,R)\) ei
     \end{align*}
 
     Für die \(k\)-te Kopie der Labelling-Variablen schreiben wir
-    \[ I^k=\{i_a^k\mid a\in A\}, O^k=\{o_a^k\mid a\in A\}, U^k=\{u_a^k\mid a\in A\}.\]
+    \[ I^k=\{i_a^k\mid a\in A\},~O^k=\{o_a^k\mid a\in A\},~U^k=\{u_a^k\mid a\in A\}.\]
     Und fassen sie zusammen als \(\mathcal{L}^k := I^k \cup O^k \cup U^k.\)
 
-    Ist im Kontext klar, von welcher Kopie wir sprechen, verzichten wir auf die Nummerierung. 
+    Wir verzichten auf die Nummerierung, wenn im Kontext klar ist, von welcher Variablenmenge gesprochen wird. 
 \end{Definition}
+
 \begin{Definition}
     \label{def:pl-one}
     Sei \(F=(A,R)\) ein AF und seien \(I,O,U\) wie gewohnt definiert.
     Für \(a\in A\) definieren wir
     \[
-        \mathrm{one}_a(\mathcal{L})
+        \mathrm{one}_F(\mathcal{L})
         :=
-        (i_a \lor o_a \lor u_a)
-        \land
-        \Bigl(
-            (\neg i_a \lor \neg o_a)
+        \bigwedge_{a \in A}
+        \bigl(
+            (i_a \lor o_a \lor u_a)
             \land
-            (\neg i_a \lor \neg u_a)
-            \land
-            (\neg u_a \lor \neg o_a)
-        \Bigr).
+            \Bigl(
+                (\neg i_a \lor \neg o_a)
+                \land
+                (\neg i_a \lor \neg u_a)
+                \land
+                (\neg u_a \lor \neg o_a)
+            \Bigr)
+        \bigr).
     \]
 \end{Definition}
 
-Die Formel \(\mathrm{one}_a(\mathcal{L})\) stellt sicher, dass dem Argument
-\(a\) genau eines der drei Labels \(\mathit{in}\), \(\mathit{out}\)
+Die Formel \(\mathrm{one}_a(\mathcal{L})\) stellt sicher, dass jedem Argument
+\(a \in A\) genau eines der drei Labels \(\mathit{in}\), \(\mathit{out}\)
 oder \(\mathit{und}\) zugewiesen wird. Die erste Disjunktion fordert,
 dass mindestens eines der drei Labels gilt. Die übrigen Konjunktionen
 schließen aus, dass zwei verschiedene Labels gleichzeitig gelten.
@@ -146,12 +153,11 @@ schließen aus, dass zwei verschiedene Labels gleichzeitig gelten.
     Somit ist das durch \(\nu\) induzierte Labelling \(\lambda_\nu\)
     wohldefiniert.
 
-    Sei zunächst \(\nu\models \mathrm{co}_F(\mathcal L)\). Dann erfüllt \(\nu\) insbesondere
+    Sei zunächst \(\nu\models \mathrm{co}_F(\mathcal L)\). Dann erfüllt \(\nu\)
     für jedes Argument \(a\in A\) die Bedingungen der aussagenlogischen
     Kodierung der \textit{complete}-Semantik. Diese besagen:
-    \[
-        i_a \leftrightarrow \bigwedge_{b\in \operatorname{Att}(a)} o_b \qquad \text{und} \qquad o_a \leftrightarrow \bigvee_{b\in \operatorname{Att}(a)} i_b.
-    \]
+    \(i_a \leftrightarrow \bigwedge_{b\in \operatorname{Att}(a)} o_b\) und
+    \(o_a \leftrightarrow \bigvee_{b\in \operatorname{Att}(a)} i_b.\)
     Falls also \(\lambda_\nu(a)=\mathit{in}\), gilt \(\nu(i_a)=\top\).
     Wegen der ersten Äquivalenz folgt, dass für alle Angreifer
     \(b\in\operatorname{Att}(a)\) \(\nu(o_b)=\top\) gilt. Nach Definition von
@@ -159,11 +165,9 @@ schließen aus, dass zwei verschiedene Labels gleichzeitig gelten.
     folgt aus \(\lambda_\nu(b)=\mathit{out}\) für alle Angreifer \(b\) wegen
     derselben Äquivalenz, dass \(\nu(i_a)=\top\), also
     \(\lambda_\nu(a)=\mathit{in}\).
-
     Analog gilt wegen der zweiten Äquivalenz:
     \(\lambda_\nu(a)=\mathit{out}\) genau dann, wenn es einen Angreifer
     \(b\in\operatorname{Att}(a)\) mit \(\lambda_\nu(b)=\mathit{in}\) gibt.
-
     Da für jedes Argument genau eines der drei Labels \(\mathit{in}\),
     \(\mathit{out}\) und \(\mathit{und}\) vergeben wird, erhält \(a\) genau dann
     das Label \(\mathit{und}\), wenn weder die Bedingung für
@@ -173,32 +177,23 @@ schließen aus, dass zwei verschiedene Labels gleichzeitig gelten.
 
     Sei nun umgekehrt \(\lambda_\nu\) ein
     \textit{complete}-Labelling von \(F\). Dann gilt für jedes Argument
-    \(a\in A\):
-    \[
-        \lambda_\nu(a)=\mathit{in}
-        \quad\Longleftrightarrow\quad
+    \(a\in A\): \(\lambda_\nu(a)=\mathit{in}
+        \Longleftrightarrow
         \lambda_\nu(b)=\mathit{out}
-        \text{ für alle } b\in\operatorname{Att}(a),
-    \]
-    sowie
-    \[
-        \lambda_\nu(a)=\mathit{out}
-        \quad\Longleftrightarrow\quad
+        \text{ für alle } b\in\operatorname{Att}(a),\)
+    sowie \(\lambda_\nu(a)=\mathit{out}
+        \Longleftrightarrow
         \text{es gibt ein } b\in\operatorname{Att}(a)
-        \text{ mit } \lambda_\nu(b)=\mathit{in}.
-    \]
+        \text{ mit } \lambda_\nu(b)=\mathit{in}.\)
     Nach Definition des durch \(\nu\) induzierten Labellings entspricht
     \(\lambda_\nu(a)=\mathit{in}\) genau der Aussage \(\nu(i_a)=\top\),
-    \(\lambda_\nu(a)=\mathit{out}\) genau der Aussage \(\nu(o_a)=\top\), und
+    \(\lambda_\nu(a)=\mathit{out}\) genau der Aussage \(\nu(o_a)=\top\) und
     \(\lambda_\nu(a)=\mathit{und}\) genau der Aussage \(\nu(u_a)=\top\).
-
     Daher erfüllt \(\nu\) für jedes \(a\in A\) die in
     \(\mathrm{co}_F(\mathcal L)\) enthaltenen Äquivalenzen
-    \[
-        i_a \leftrightarrow \bigwedge_{b\in \operatorname{Att}(a)} o_b
-        \qquad\text{und}\qquad
-        o_a \leftrightarrow \bigvee_{b\in \operatorname{Att}(a)} i_b.
-    \]
+    \(i_a \leftrightarrow \bigwedge_{b\in \operatorname{Att}(a)} o_b\)
+    und
+    \(o_a \leftrightarrow \bigvee_{b\in \operatorname{Att}(a)} i_b.\)
     Zusammen mit der Voraussetzung, dass für jedes Argument genau eine der
     Variablen \(i_a,o_a,u_a\) wahr ist, erfüllt \(\nu\) somit die gesamte
     Kodierung \(\mathrm{co}_F(\mathcal L)\). Also gilt
@@ -206,6 +201,50 @@ schließen aus, dass zwei verschiedene Labels gleichzeitig gelten.
 \end{proof}
 
 \section{QBF-Kodierung der \textit{complete}-Unabhängigkeit}
+
+Um die Gleichheit auf dreiwertigen \textit{Labellings} zu kodieren nutzen wir folgende 
+Definition. 
+
+\begin{Definition}
+    \label{def:eq-qbf-3l}
+    Sei \(F=(A,R)\) ein AF und seien \(j,k\) zwei Indizes für
+    Labelling-Kopien. Für \(\ell\in\{j,k\}\) seien 
+    \(I^\ell=\{i_a^\ell\mid a\in A\},~O^\ell=\{o_a^\ell \mid a\in A\},~ 
+    U^\ell=\{u_a^\ell \mid a\in A\} \)
+    und \(\mathcal{L}^\ell := I^\ell\cup O^\ell\cup U^\ell \)
+    die Variablenmenge der \(\ell\)-ten Labelling-Kopie. Für eine
+    Teilmenge \(S\subseteq A\) definieren wir die Gleichheit der
+    \(j\)-ten und \(k\)-ten Labelling-Kopie auf \(S\) durch
+    \[
+        \mathrm{Eq}^{j,k}_S
+        :=
+        \bigwedge_{a\in S}
+        \left(
+            (i_a^j \leftrightarrow i_a^k)
+            \land 
+            (o_a^j \leftrightarrow o_a^k)
+            \land
+            (u_a^j \leftrightarrow u_a^k)
+        \right).
+    \]
+\end{Definition}
+
+\begin{Lemma}
+    \label{le:eq-qbf-3l-correct}
+    Seien \(\lambda_j,\lambda_k\in\Lambda_{\mathrm{co}}(F)\)
+    \textit{complete}-Labellings von \(F\). Unter Belegungen von
+    \(\mathcal{L}^j\cup \mathcal{L}^k\), die \(\lambda_j\) und 
+    \(\lambda_k\) kodieren, gilt für jede Teilmenge \(S\subseteq A\):
+    \[
+        \mathrm{Eq}^{j,k}_S \text{ ist wahr}
+        \quad\Longleftrightarrow\quad
+        \lambda_j|_S=\lambda_k|_S.
+    \]
+\end{Lemma}
+
+\begin{proof}
+    Analog zu \ref{pr:eq-qbf-correct}.
+\end{proof}
 
 \begin{Definition}
     \label{def:co-ind-qbf}

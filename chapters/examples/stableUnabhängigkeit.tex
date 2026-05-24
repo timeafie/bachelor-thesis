@@ -18,11 +18,7 @@ auf.
 Die bedingte Unabhängigkeit \( X \bot_{\mathrm{st}} Y \mid Z\)
 fragt dann, ob die möglichen \textit{stable}-Bewertungen der Argumente in \(X\)
 und \(Y\) unabhängig voneinander kombiniert werden können, sobald die Bewertung
-der Argumente in \(Z\) festgelegt ist. Informell bedeutet dies: Wenn zwei
-\textit{stable}-Labellings auf \(Z\) übereinstimmen, muss es ein weiteres
-\textit{stable}-Labelling geben, das die Bewertung von \(X\) aus dem ersten
-Labelling und die Bewertung von \(Y\) aus dem zweiten Labelling gemeinsam
-realisiert.
+der Argumente in \(Z\) festgelegt ist.
 
 Formal betrachten wir in diesem Kapitel das folgende Entscheidungsproblem:
 \[
@@ -40,10 +36,9 @@ betrachtet.
 Anschließend wird eine aussagenlogische Kodierung der \textit{stable}-Semantik
 angegeben. Diese Kodierung beschreibt, wann eine Belegung der verwendeten
 Labelling-Variablen tatsächlich einem \textit{stable}-Labelling des gegebenen
-Argumentationssystems entspricht. Sie bildet die Grundlage für die spätere
-QBF-Formulierung.
+Argumentationssystems entspricht. 
 
-Im dritten Schritt wird die bedingte Unabhängigkeit selbst als QBF kodiert.
+Im dritten Schritt wird die \textit{stable}-Unabhängigkeit selbst als QBF kodiert.
 Dazu werden mehrere Kopien der Labelling-Variablen verwendet, um die drei
 Labellings aus der Definition von \(X \bot_{\mathrm{st}} Y \mid Z\) formal
 darzustellen.
@@ -82,6 +77,8 @@ Wir skizzieren den Beweis, wie er zuerst von \textcite{bluemel:2025:independence
     
     Damit gilt \(\overline{\textit{Ind}_{\mathrm{st}}} \in \Sigma_2^{P}\). Folglich liegt das ursprüngliche Problem in der Komplementklasse. 
     Es gilt \( \textit{Ind}_{\mathrm{st}}\in \mathrm{co}\Sigma_2^P=\Pi_2^P.\)
+
+    Vollständigkeit:
 \end{proof}
 
 \section{Aussagenlogische Kodierung der \textit{stable}-Semantik}
@@ -93,15 +90,9 @@ aussagenlogischen Form kodiert. Ziel ist es, die Menge der
 beschreiben. Diese Kodierung bildet anschließend die Grundlage für die
 QBF-Formulierung der \textit{stable}-Unabhängigkeit.
 
-Wir verwenden die folgende Charakterisierung der \textit{stable}-Semantik.
-Sei \(F=(A,R)\) ein AF und sei \(S\subseteq A\). Für
-\[
-    S^+ := \{b\in A \mid \exists a\in S : (a,b)\in R\}
-\]
-ist \(S\) eine \textit{stable} Extension genau dann, wenn
-\[
-    S^+ = A\setminus S.
-\]
+Wir erinnern die Charakterisierung der \textit{stable}-Semantik.
+Sei \(F=(A,R)\) ein AF und sei \(S\subseteq A\). Für \(S^+ := \{b\in A \mid \exists a\in S : (a,b)\in R\}\)
+ist \(S\) eine \textit{stable} Extension genau dann, wenn \(S^+ = A\setminus S.\)
 
 Da in \textit{stable}-Labellings kein \(\mathit{undecided}\)-Label
 vorkommt, genügt es, nur die \(\mathit{in}\)-gelabelten Argumente
@@ -213,6 +204,8 @@ Wir verwenden die folgende Definition bedingter Unabhängigkeit für AFs nach \c
     Wir schreiben $X \bot_{\sigma} Y\mid Z$.
 \end{Definition}
 
+Zentraler Punkt der Definition der bedingten Unabhängigkeit ist die Gleichheit zweier \textit{Labellings}
+auf einer Auswahl von Argumenten. 
 \begin{Definition}
     \label{def:eq-qbf}
     Sei \(F=(A,R)\) ein AF und seien \(j,k\) zwei Indizes für
@@ -244,6 +237,7 @@ Wir verwenden die folgende Definition bedingter Unabhängigkeit für AFs nach \c
 \end{Lemma}
 
 \begin{proof}
+    \label{pr:eq-qbf-correct}
     Für \(a\in S\) gilt unter den kodierenden Belegungen
     \(i_a^j\leftrightarrow i_a^k\) genau dann, wenn
     \(\lambda_j(a)=\mathit{in}\) genau dann gilt, wenn
@@ -254,7 +248,7 @@ Wir verwenden die folgende Definition bedingter Unabhängigkeit für AFs nach \c
     übereinstimmen.
 \end{proof}
 
-Auf Grundlage der aussagenlogischen Kodierung der \textit{stable}-Labellings
+Auf Grundlage der aussagenlogischen Kodierung des \textit{stable}-Labellings
 \ref{def:st-pl} und der Gleichheit auf einer Teilmenge der aussagenlogischen Variablen \ref{def:eq-qbf} 
 lässt sich die \textit{stable}-Unabhängigkeit als \textit{QBF} ausdrücken.
 
