@@ -4,27 +4,92 @@
 \chapter{Grundlagen}
 \label{ch:grundlagen}
 
-\section{Abstrakte Argumentations Formalismen}
+\section{Einleitung}
+\label{sec:grundlagen-einleitung}
+
+Dieses Kapitel bietet einen kurzen Einstieg in die zentralen Konzepte, auf denen
+die weitere Arbeit aufbaut. Zu Beginn werden die von \textcite{dung:1995:af}
+eingeführten \emph{Argumentationssysteme} vorgestellt. 
+
+Anschließend werden verschiedene Semantiken betrachtet, mit denen sich die
+Akzeptanz von Argumenten bestimmen lässt. Neben der extensionsbasierten Sicht
+wird insbesondere die labellingbasierte Darstellung eingeführt, da sie im
+weiteren Verlauf der Arbeit die Grundlage für die logische Kodierung der
+Unabhängigkeitsbegriffe bildet.
+
+Darauf aufbauend wird das Konzept der \emph{bedingten Unabhängigkeit}
+vorgestellt. Dieses beschreibt allgemein, wann zwei Mengen von Objekten
+unabhängig voneinander betrachtet werden können, sofern eine dritte Menge bereits
+festgelegt ist. In den späteren Kapiteln wird dieser Begriff auf
+Argumentationssysteme übertragen.
+
+Abschließend werden \emph{Quantifizierte Boolesche Formeln} eingeführt. Sie
+bilden das formale Werkzeug, mit dem die Unabhängigkeitsbegriffe für 
+verschiedene Argumentationssemantiken kodiert werden können.
+
+\section{Argumentationssysteme}
 \label{sec:af}
 
-In diesem Kapitel werden \emph{Abstrakte Argumentations Formalismen}~\cite{dung:1995:af},
-Semantiken und labelling basierte Sematiken vorgestellt. 
-Außerdem wird das Konzept der \emph{bedingten Unabhängigkeit} eingeführt. 
-Schlussendlich werden \emph{Quantifizierte Boolesche Formeln} vorgestellt. 
+\emph{Argumentationssysteme} (engl. \emph{Argumentation Framework}, AF)
+sind ein zentrales Konzept der formalen Argumentationstheorie. Sie wurden von
+Dung~\cite{dung:1995:af} eingeführt, um argumentative Strukturen abstrakt zu
+modellieren. Der Grundgedanke besteht darin, Argumente als abstrakte Einheiten
+zu betrachten, die durch eine Angriffsrelation miteinander verbunden sind.
+Die Akzeptanz eines Arguments hängt damit nicht von seiner inneren Struktur ab,
+sondern davon, wie es zu anderen Argumenten im System in Beziehung steht.
 
-\emph{Abstrakte Argumentations Formalismen} (AF) sind ein zentrales Konzept
-der formalen Argumentationstheorie. Sie wurden von Dung~\cite{dung:1995:af}
-eingeführt, um das grundlegende Prinzip menschlicher Argumentation formal zu erfassen und maschinell nutzbar zu machen.
-Der Grundgedanke von AF ist es, Argumente als abstrakte Einheiten zu betrachten, die durch eine Angriffsrelation miteinander verbunden sind.
-Damit ist die Akzeptanz eines Arguments immer von der Auswertung anderer Argumente abhängig und nicht von der inneren Struktur des Arguments selbst. 
+Dies führt zu folgender Definition.
 
 \begin{Definition}
     \label{def:af}
-Ein \emph{Abstrakter Argumentations Formalismus} (AF) ist ein Paar $F = (A, R)$, 
-wobei $A$ eine Menge von Argumenten und
- $R \subseteq A \times A$ eine binäre Angriffsrelation auf $A$ ist.
- Für ein AF $F = (A, R)$ repräsentiert $A_F$ die Menge der Argumente von $F$ und $R_F$ die Angriffsrelation von $F$.
+    Ein \emph{Argumentationssystem} (AF) ist ein Paar \(F=(A,R)\), wobei
+    \(A\) eine Menge von Argumenten und
+    \(R\subseteq A\times A\) eine binäre Angriffsrelation auf \(A\) ist.
+    Für \((a,b)\in R\) sagen wir, dass \(a\) das Argument \(b\) angreift,
+    und schreiben auch \(a\rightarrow b\).
 \end{Definition}
+
+Im Folgenden interessiert insbesondere, welche Argumente andere Argumente
+angreifen und welche Argumente durch eine Menge von Argumenten verteidigt
+werden. Dazu führen wir zunächst folgende Notation ein.
+
+\begin{Definition}
+    \label{attack-object-subject}
+    Sei \(F=(A,R)\) ein AF, sei \(S\subseteq A\) und sei \(a\in A\). Wir
+    definieren:
+    \[
+        a^+ = \{b\in A \mid (a,b)\in R\},
+    \]
+    \[
+        a^- = \{b\in A \mid (b,a)\in R\},
+    \]
+    \[
+        S^+ = \{b\in A \mid \exists a\in S:(a,b)\in R\},
+    \]
+    \[
+        S^- = \{b\in A \mid \exists a\in S:(b,a)\in R\}.
+    \]
+\end{Definition}
+
+Dabei bezeichnet \(a^+\) die Menge aller Argumente, die von \(a\) angegriffen
+werden, und \(a^-\) die Menge aller Angreifer von \(a\). Die Mengen \(S^+\)
+und \(S^-\) übertragen diese Notation auf Mengen von Argumenten.
+
+Mit dieser Notation lässt sich Verteidigung wie folgt definieren.
+
+\begin{Definition}
+    \label{def:defense}
+    Sei \(F=(A,R)\) ein AF. Ein Argument \(a\in A\) heißt
+    \emph{verteidigt} durch eine Menge \(S\subseteq A\), genau dann wenn
+    für jeden Angreifer \(b\in a^-\) ein Argument \(c\in S\) existiert, sodass
+      \(b\in c^+\) gilt.
+\end{Definition}
+
+Insbesondere kann auch die leere Menge ein Argument verteidigen. Dies ist genau
+dann der Fall, wenn das Argument keine Angreifer besitzt, also \(a^-=\{\}\)
+gilt.
+
+
 
 \section{Semantiken}
 \label{sec:af-semantiken}
@@ -73,28 +138,11 @@ Für eine Menge von Argumenten formalisieren wir das Konzept des Angriffs wie fo
       Die Menge aller Angreifer von $S$ definieren wir als $S^{-} = \{b \in A \mid b \rightarrow S\}$.
 \end{Definition}
 
-Wir fassen formal zusammen.
-
-\begin{Definition}
-      \label{attack-object-subject}
-      Sei $F = (A, R)$ ein AF, eine Menge $S$ mit $S \subseteq A$ und $a$ ein Argument mit $a \in A$. Wir schreiben:
-\begin{itemize}
-      \item $a^{+} = \{b \in A \mid a \rightarrow b\}$
-      \item $a^{-} = \{b \in A \mid b \rightarrow a\}$
-      \item $S^{+} = \{b \in A \mid a \rightarrow b \text{ für ein } a \in S\}$
-      \item $S^{-} = \{b \in A \mid b \rightarrow a \text{ für ein } a \in S\}$
-\end{itemize}
-\end{Definition}
 
 Neben des expliziten Konzepts des Angriffs, transportiert die Angriffsrelation implizit auch die Idee der \emph{Verteidigung}.
 Soll ein einzelnes Argument Teil unserer ausgewählten Menge sein, so sollte es
 gegen Angriffe von außen geschützt sein. Diese Eigenschaft definieren wir wie folgt:
-\begin{Definition}
-    \label{def:defense}
-    Sei $F = (A, R)$ ein AF. Ein Argument $a \in A$ heißt \emph{verteidigt} durch eine Menge $S \subseteq A$, 
-    genau dann wenn für jedes Argument $b \in A$ mit $b \rightarrow a$ gilt, dass es ein Argument $c \in S$ gibt, so dass $c \rightarrow b$ gilt.
 
-\end{Definition}
 
 
 Basis aller Semantiken ist die \emph{Konfliktfreiheit}. Eine Menge an Argumenten soll ein Argumentationsszenario nur "überleben", 
@@ -190,4 +238,3 @@ und $\text{und}(\mathcal{L})$ für $\{a \mid \mathcal{L}(a) = \text{und}\}$.
       \quad \text{als Abkürzung für}\quad
       \forall X \forall Y \varphi
       \]
-
