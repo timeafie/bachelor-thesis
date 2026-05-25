@@ -45,8 +45,7 @@ Dies führt zu folgender Definition.
     Ein \emph{Argumentationssystem} (AF) ist ein Paar \(F=(A,R)\), wobei
     \(A\) eine Menge von Argumenten und
     \(R\subseteq A\times A\) eine binäre Angriffsrelation auf \(A\) ist.
-    Für \((a,b)\in R\) sagen wir, dass \(a\) das Argument \(b\) angreift,
-    und schreiben auch \(a\rightarrow b\).
+    Für \((a,b)\in R\) sagen wir, dass \(a\) das Argument \(b\) \emph{angreift}.
 \end{Definition}
 
 Im Folgenden interessiert insbesondere, welche Argumente andere Argumente
@@ -75,7 +74,7 @@ Dabei bezeichnet \(a^+\) die Menge aller Argumente, die von \(a\) angegriffen
 werden, und \(a^-\) die Menge aller Angreifer von \(a\). Die Mengen \(S^+\)
 und \(S^-\) übertragen diese Notation auf Mengen von Argumenten.
 
-Mit dieser Notation lässt sich Verteidigung wie folgt definieren.
+Mit dieser Notation lässt sich das Konzept der Verteidigung wie folgt definieren.
 
 \begin{Definition}
     \label{def:defense}
@@ -89,59 +88,44 @@ Insbesondere kann auch die leere Menge ein Argument verteidigen. Dies ist genau
 dann der Fall, wenn das Argument keine Angreifer besitzt, also \(a^-=\{\}\)
 gilt.
 
+Die Frage, welche Argumente in einem Argumentationsszenario als überzeugend gelten sollen, 
+wird mit dem Konzept der \emph{Argumentationssemantiken} beantwortet.
+Eine jede Semantik lässt sich dabei aus einer \emph{labelling}- und einer \emph{extensions}-basierten 
+Perspektive formulieren. 
 
-
-\section{Semantiken}
-\label{sec:af-semantiken}
-
-Die Frage, welche Argumente oder Argumentmengen in einem Argumentationsszenario als überzeugend gelten sollen, 
-wird mit dem Konzept der Extension beantwortet.
-Eine Extension ist eine Menge von Argumenten, die zusammen gewünschte Eigenschaften erfüllen. 
-Sie also aufgrund ihrer strukturellen Eigenschaften überzeugend macht~\cite{dung:1995:af}. 
+Der naheliegende Ansatz sich aus der Argumentmenge eine Auswahl an Argumenten herauszusuchen, die gemeinsam das
+Argumentationsszenario \enquote{überzeugende}, führt zum \emph{extensions}-basierten Ansatz. 
+Eine \emph{Extension} ist dann genau die ausgewählte Argumentmenge. Je nach Semantik werden dann unterschiedliche 
+und auch mehrere Kriterien gleichzeitig verwandt, um Menge an Argumenten auszuwählen. 
 
 \begin{Definition}
       \label{def:extension}
-      Eine Extension $E \subseteq A$ ist eine Auswahl der Argumentmenge $A$, die bestimmte Eigenschaften erfüllt.
+      Eine \emph{Extension} $E \subseteq A$ ist eine Auswahl der Argumentmenge $A$, die bestimmte Eigenschaften erfüllt.
 \end{Definition}
 
 \begin{Definition}
       \label{def:semantik}
-      Eine Semantik $\sigma$ ist eine Funktion, die jedem AF F eine Menge an Extensionen zuordnet. Es gilt: $\sigma(F) \subseteq 2^{A}$
+      Eine \emph{extensions}-basierte Semantik $\sigma$ ist eine Funktion, die jedem AF F eine Menge an Extensionen zuordnet. 
+      Es gilt: $\sigma(F) \subseteq 2^{A}$
 \end{Definition}
-Test \textcite{darwiche:1997:logical-ci}.
-Rapberger Paper \cite{bluemel:2025:independence-aba}
-Rienstra Paper \cite{rienstra:2020:independence-af}\\
-Dabei lässt zwischen extension-basierten und labelling-basierten Semantiken unterscheiden.
-Extension-basierte Semantiken definieren die Akzeptanz von Argumenten durch die Auswahl von Mengen von Argumenten, 
-die bestimmte Eigenschaften erfüllen.
-Labelling-basierte Semantiken hingegen ordnen jedem Argument ein Label zu, das seinen Akzeptanzstatus festhält.
 
-Im Folgenden wird der Unterschied der beiden Ansätze anhand einiger grundlegender Sematiken erläutert.
+Der \emph{labelling}-basierte Ansatz ordnet jedem Argument ein eindeutiges Labelling zu.
+Im Rahmen dieser Arbeit verwenden wir die \emph{Labels}: \emph{in, out} und \emph{und}, wobei \emph{in}
+die Akzeptanz und \emph{out} den Ausschluss eines Arguments ausdrückt. Das Label \emph{und} erhält
+ein Argument, wenn es weder einen Grund gibt es zu akzeptieren noch es zu verwerfen. 
 
-\subsection{Extension-basierte Semantiken}
+Eine \emph{labelling}-basierte Semantik ist dann eine Funktion, die Argumenten ein \emph{Labelling} 
+zuordnet, um schlussendlich eine \enquote{überzeugende} Auswahl an Argumenten mit dem \emph{in-Label} zu erhalten. 
 
-Die Definition einer extension-basierten Sematik basiert lediglich auf der Festlegung von bestimmten Eigenschaften, die eine Menge von 
-Argumenten erfüllen muss, um als akzeptabel zu gelten.
-
-Angriff
 \begin{Definition}
-      \label{def:attack-single-argument}
-      Sei $F = (A, R)$ ein AF. Ein Argument $b \in A$ heißt \emph{Angreifer} auf ein Argument $a \in A$, genau dann wenn $(b, a) \in R$ gilt.
-      Wir schreiben: $b \rightarrow a$ für $(b, a) \in R$. Und definieren die Menge aller Angreifer von $a$ als $a^{-} = \{b \in A \mid b \rightarrow a\}$.
-\end{Definition}
-Für eine Menge von Argumenten formalisieren wir das Konzept des Angriffs wie folgt:
-\begin{Definition}
-      \label{def:attack-set-arguments}
-      Sei $F = (A, R)$ ein AF. Ein Argument $b \in A$ heißt \emph{Angreifer} auf eine Menge von Argumenten $S \subseteq A$, 
-      genau dann wenn es ein Argument $a \in S$ gibt, so dass $(b, a) \in R$ gilt.
-      Wir schreiben: $b \rightarrow S$ für $b \in A$, $a \in S$, $S \subseteq A$ und $(b, a) \in R$. 
-      Die Menge aller Angreifer von $S$ definieren wir als $S^{-} = \{b \in A \mid b \rightarrow S\}$.
+      \label{def:labelling}
+      Sei $F = (A, R)$ ein AF. Ein \emph{Labelling} von $F$ ist eine Funktion
+      $\lambda : A \rightarrow\{\text{\emph{in, out, und}}\}$, die jedem Argument
+      genau eines von drei Labeln zuordnet: \emph{in, out} oder \emph{und}.
 \end{Definition}
 
-
-Neben des expliziten Konzepts des Angriffs, transportiert die Angriffsrelation implizit auch die Idee der \emph{Verteidigung}.
-Soll ein einzelnes Argument Teil unserer ausgewählten Menge sein, so sollte es
-gegen Angriffe von außen geschützt sein. Diese Eigenschaft definieren wir wie folgt:
+\section{Semantiken}
+\label{sec:af-semantiken}
 
 
 
@@ -170,17 +154,11 @@ Insbesondere ist damit ein Argument, das sich selbst angreift, nicht \emph{konfl
 \end{itemize}
 \end{Definition}
 
-\subsection{Labelling-basierte Semantiken}
-\label{sec:af-labelling}
+
 Eine weitere Möglichkeit, die Akzeptanz von Argumenten zu bestimmen, 
 ist der labelling-basierte Ansatz, 
 der von Caminada~\cite{caminada:2009:logical-account} eingeführt wurde.
-\begin{Definition}
-  \label{def:labelling}
-  Sei $F = (A, R)$ ein AF. Ein \emph{labelling} von $F$ ist eine Funktion
-  $\mathcal{L} : A \rightarrow \{\text{in}, \text{out}, \text{und}\}$, die jedem Argument
-  eines von drei Labeln zuordnet: \texttt{in}, \texttt{out} oder \texttt{und}.
-\end{Definition}
+
 
 Wir verwenden $\text{in}(\mathcal{L})$ für $\{a \mid \mathcal{L}(a) = \text{in}\}$, 
 $\text{out}(\mathcal{L})$ für $\{a \mid \mathcal{L}(a) = \text{out}\}$ 
