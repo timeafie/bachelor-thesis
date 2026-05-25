@@ -46,6 +46,8 @@ Dies führt zu folgender Definition.
     \(A\) eine Menge von Argumenten und
     \(R\subseteq A\times A\) eine binäre Angriffsrelation auf \(A\) ist.
     Für \((a,b)\in R\) sagen wir, dass \(a\) das Argument \(b\) \emph{angreift}.
+    Ferner schreiben wir $A_F$ und $R_F$, um die Zugehörigkeit zum AF F auszudrücken.
+    Ist dies im Kontext klar, verzichten wir auf diese Kennzeichnung. 
 \end{Definition}
 
 Im Folgenden interessiert insbesondere, welche Argumente andere Argumente
@@ -94,13 +96,14 @@ Eine jede Semantik lässt sich dabei aus einer \emph{labelling}- und einer \emph
 Perspektive formulieren. 
 
 Der naheliegende Ansatz sich aus der Argumentmenge eine Auswahl an Argumenten herauszusuchen, die gemeinsam das
-Argumentationsszenario \enquote{überzeugende}, führt zum \emph{extensions}-basierten Ansatz. 
-Eine \emph{Extension} ist dann genau die ausgewählte Argumentmenge. Je nach Semantik werden dann unterschiedliche 
-und auch mehrere Kriterien gleichzeitig verwandt, um Menge an Argumenten auszuwählen. 
+Argumentationsszenario \enquote{überleben}, führt zum \emph{extensions}-basierten Ansatz. 
+Eine \emph{Extension} ist dann genau die ausgewählte Argumentmenge. Je nach Semantik werden unterschiedliche 
+und auch mehrere Kriterien gleichzeitig verwandt, um eine Menge von Argumenten auszuwählen. 
 
 \begin{Definition}
       \label{def:extension}
-      Eine \emph{Extension} $E \subseteq A$ ist eine Auswahl der Argumentmenge $A$, die bestimmte Eigenschaften erfüllt.
+      Eine \emph{Extension} ist eine Menge \(E\subseteq A\), die bezüglich einer
+      gegebenen Semantik bestimmte Akzeptanzbedingungen erfüllt.
 \end{Definition}
 
 \begin{Definition}
@@ -110,7 +113,7 @@ und auch mehrere Kriterien gleichzeitig verwandt, um Menge an Argumenten auszuw�
 \end{Definition}
 
 Der \emph{labelling}-basierte Ansatz ordnet jedem Argument ein eindeutiges Labelling zu.
-Im Rahmen dieser Arbeit verwenden wir die \emph{Labels}: \emph{in, out} und \emph{und}, wobei \emph{in}
+Im Rahmen dieser Arbeit verwenden wir die \emph{Labels}: \emph{in, out} und \emph{und}. Wobei \emph{in}
 die Akzeptanz und \emph{out} den Ausschluss eines Arguments ausdrückt. Das Label \emph{und} erhält
 ein Argument, wenn es weder einen Grund gibt es zu akzeptieren noch es zu verwerfen. 
 
@@ -122,6 +125,26 @@ zuordnet, um schlussendlich eine \enquote{überzeugende} Auswahl an Argumenten m
       Sei $F = (A, R)$ ein AF. Ein \emph{Labelling} von $F$ ist eine Funktion
       $\lambda : A \rightarrow\{\text{\emph{in, out, und}}\}$, die jedem Argument
       genau eines von drei Labeln zuordnet: \emph{in, out} oder \emph{und}.
+\end{Definition}
+
+\begin{Definition}
+      \label{def:labelling-set-of-all}
+      Sei $F = (A,R)$ ein AF und $\sigma$ eine \emph{labelling}-basierte Semantik.
+      Für die Menge aller $\sigma$-\emph{Labellings} von $F$ schreiben wir $\varLambda_{\sigma}(F)$
+\end{Definition}
+
+\begin{Definition}
+      \label{def:labelling-rest}
+      Sei $F=(A,R)$ ein AF, $X \subseteq A$ und $\lambda$ ein beliebiges \emph{Labelling} von $F$.
+      Mit $\lambda|_X$ beschreiben wir die Restriktion von $\lambda$ auf $X$.
+\end{Definition}
+
+
+\begin{Definition}
+      \label{def:labelling-set}
+      Sei $F=(A,R)$ ein AF und $\lambda$ ein \emph{Labelling} von $F$ mit der Menge an \emph{Labels}
+      $\mathit{L}=\{\text{\emph{in, out, und}}\}$.
+      Dann ist für $lab \in \mathit{L}$, $lab(\lambda) = \{a \in A\mid \lambda(a) = lab\}$.
 \end{Definition}
 
 \section{Semantiken}
