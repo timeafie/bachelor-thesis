@@ -18,9 +18,7 @@ weiteren Verlauf der Arbeit die Grundlage für die logische Kodierung der
 Unabhängigkeitsbegriffe bildet.
 
 Darauf aufbauend wird das Konzept der \emph{bedingten Unabhängigkeit}
-vorgestellt. Dieses beschreibt allgemein, wann zwei Mengen von Objekten
-unabhängig voneinander betrachtet werden können, sofern eine dritte Menge bereits
-festgelegt ist. In den späteren Kapiteln wird dieser Begriff auf
+vorgestellt. In den späteren Kapiteln wird dieser Begriff auf
 Argumentationssysteme übertragen.
 
 Abschließend werden \emph{Quantifizierte Boolesche Formeln} eingeführt. Sie
@@ -38,7 +36,10 @@ zu betrachten, die durch eine Angriffsrelation miteinander verbunden sind.
 Die Akzeptanz eines Arguments hängt damit nicht von seiner inneren Struktur ab,
 sondern davon, wie es zu anderen Argumenten im System in Beziehung steht.
 
-Dies führt zu folgender Definition.
+Die grundlegenden Definitionen dieses Abschnitts orientieren sich, sofern nicht
+anders angegeben, an \textcite{handbook__of_formal_argumentation__vol__3:2024}.
+Die labellingbasierte Perspektive sowie die dafür verwendete Notation folgen in
+Anlehnung an \textcite{bluemel:2025:independence-aba}.
 
 \begin{Definition}
     \label{def:af}
@@ -50,7 +51,7 @@ Dies führt zu folgender Definition.
     Ist dies im Kontext klar, verzichten wir auf diese Kennzeichnung. 
 \end{Definition}
 
-Im Folgenden interessiert insbesondere, welche Argumente andere Argumente
+Grundsätzlich interessiert uns insbesondere, welche Argumente andere Argumente
 angreifen und welche Argumente durch eine Menge von Argumenten verteidigt
 werden. Dazu führen wir zunächst folgende Notation ein.
 
@@ -59,17 +60,13 @@ werden. Dazu führen wir zunächst folgende Notation ein.
     Sei \(F=(A,R)\) ein AF, sei \(S\subseteq A\) und sei \(a\in A\). Wir
     definieren:
     \[
-        a^+ = \{b\in A \mid (a,b)\in R\},
-    \]
-    \[
-        a^- = \{b\in A \mid (b,a)\in R\},
-    \]
-    \[
+        a^+ = \{b\in A \mid (a,b)\in R\},~
         S^+ = \{b\in A \mid \exists a\in S:(a,b)\in R\},
     \]
     \[
+        a^- = \{b\in A \mid (b,a)\in R\},~
         S^- = \{b\in A \mid \exists a\in S:(b,a)\in R\}.
-    \]
+      \]
 \end{Definition}
 
 Dabei bezeichnet \(a^+\) die Menge aller Argumente, die von \(a\) angegriffen
@@ -77,17 +74,16 @@ werden, und \(a^-\) die Menge aller Angreifer von \(a\). Die Mengen \(S^+\)
 und \(S^-\) übertragen diese Notation auf Mengen von Argumenten.
 
 Mit dieser Notation lässt sich das Konzept der Verteidigung wie folgt definieren.
-
 \begin{Definition}
     \label{def:defense}
     Sei \(F=(A,R)\) ein AF. Ein Argument \(a\in A\) heißt
     \emph{verteidigt} durch eine Menge \(S\subseteq A\), genau dann wenn
-    für jeden Angreifer \(b\in a^-\) ein Argument \(c\in S\) existiert, sodass
+    für jedes Argument \(b\in a^-\) ein Argument \(c\in S\) existiert, sodass
       \(b\in c^+\) gilt.
 \end{Definition}
 
 Insbesondere kann auch die leere Menge ein Argument verteidigen. Dies ist genau
-dann der Fall, wenn das Argument keine Angreifer besitzt, also \(a^-=\{\}\)
+dann der Fall, wenn ein Argument keinen Angreifer besitzt, also \(a^-=\{\}\)
 gilt.
 
 Die Frage, welche Argumente in einem Argumentationsszenario als überzeugend gelten sollen, 
@@ -99,54 +95,71 @@ Der naheliegende Ansatz sich aus der Argumentmenge eine Auswahl an Argumenten he
 Argumentationsszenario \enquote{überleben}, führt zum \emph{extensions}-basierten Ansatz. 
 Eine \emph{Extension} ist dann genau die ausgewählte Argumentmenge. Je nach Semantik werden unterschiedliche 
 und auch mehrere Kriterien gleichzeitig verwandt, um eine Menge von Argumenten auszuwählen. 
-
 \begin{Definition}
       \label{def:extension}
       Eine \emph{Extension} ist eine Menge \(E\subseteq A\), die bezüglich einer
       gegebenen Semantik bestimmte Akzeptanzbedingungen erfüllt.
 \end{Definition}
-
 \begin{Definition}
       \label{def:semantik}
-      Eine \emph{extensions}-basierte Semantik $\sigma$ ist eine Funktion, die jedem AF F eine Menge an Extensionen zuordnet. 
+      Eine \emph{extensions}-basierte Semantik $\sigma$ ist eine Funktion, die jedem AF \(F\) eine Menge an Extensionen zuordnet. 
       Es gilt: $\sigma(F) \subseteq 2^{A}$
 \end{Definition}
 
-Der \emph{labelling}-basierte Ansatz ordnet jedem Argument ein eindeutiges Labelling zu.
-Im Rahmen dieser Arbeit verwenden wir die \emph{Labels}: \emph{in, out} und \emph{und}. Wobei \emph{in}
-die Akzeptanz und \emph{out} den Ausschluss eines Arguments ausdrückt. Das Label \emph{und} erhält
-ein Argument, wenn es weder einen Grund gibt es zu akzeptieren noch es zu verwerfen. 
+Der \emph{labellingbasierte Ansatz} bewertet jedes Argument einzeln durch ein
+Label. Im Rahmen dieser Arbeit verwenden wir die drei Labels
+\(\mathit{in}\), \(\mathit{out}\) und \(\mathit{und}\). Dabei steht
+\(\mathit{in}\) intuitiv für akzeptierte Argumente und \(\mathit{out}\) für
+verworfene Argumente. Das Label \(\mathit{und}\) beschreibt Argumente, deren
+Status unentschieden bleibt.
 
-Eine \emph{labelling}-basierte Semantik ist dann eine Funktion, die Argumenten ein \emph{Labelling} 
-zuordnet, um schlussendlich eine \enquote{überzeugende} Auswahl an Argumenten mit dem \emph{in-Label} zu erhalten. 
-
+Eine labellingbasierte Semantik ordnet einem AF nicht nur eine einzelne
+Bewertung, sondern eine Menge zulässiger Labellings zu. Ein Labelling ist dabei
+eine Funktion, die jedem Argument genau eines der drei Labels zuweist.
 \begin{Definition}
       \label{def:labelling}
-      Sei $F = (A, R)$ ein AF. Ein \emph{Labelling} von $F$ ist eine Funktion
-      $\lambda : A \rightarrow\{\text{\emph{in, out, und}}\}$, die jedem Argument
-      genau eines von drei Labeln zuordnet: \emph{in, out} oder \emph{und}.
+      Sei \(F=(A,R)\) ein AF. Ein \emph{Labelling} von \(F\) ist eine Funktion
+      \(\lambda : A \to \{\mathit{in},\mathit{out},\mathit{und}\},\)
+      die jedem Argument genau eines der drei Labels
+      \(\mathit{in}\), \(\mathit{out}\) oder \(\mathit{und}\) zuordnet.
 \end{Definition}
 
+Je nach Semantik gelten unterschiedliche Bedingungen dafür, welche Labellings
+als zulässig betrachtet werden. Die Menge aller Labellings, die eine Semantik
+\(\sigma\) einem Argumentationssystem \(F\) zuordnet, wird im Folgenden mit
+\(\Lambda_\sigma(F)\) bezeichnet.
 \begin{Definition}
       \label{def:labelling-set-of-all}
-      Sei $F = (A,R)$ ein AF und $\sigma$ eine \emph{labelling}-basierte Semantik.
-      Für die Menge aller $\sigma$-\emph{Labellings} von $F$ schreiben wir $\varLambda_{\sigma}(F)$
+      Sei \(F=(A,R)\) ein AF und sei \(\sigma\) eine labellingbasierte
+      Semantik. Für die Menge aller \(\sigma\)-Labellings von \(F\) schreiben
+      wir \(\Lambda_\sigma(F).\)
 \end{Definition}
 
+Für die spätere Definition bedingter Unabhängigkeit ist es wichtig, Labellings
+nicht nur auf der gesamten Argumentmenge \(A\), sondern auch auf Teilmengen von
+Argumenten betrachten zu können. Dazu verwenden wir die Einschränkung eines
+Labellings auf eine Teilmenge \(X\subseteq A\).
 \begin{Definition}
       \label{def:labelling-rest}
-      Sei $F=(A,R)$ ein AF, $X \subseteq A$ und $\lambda$ ein beliebiges \emph{Labelling} von $F$.
-      Mit $\lambda|_X$ beschreiben wir die Restriktion von $\lambda$ auf $X$.
-\end{Definition}
+      Sei \(F=(A,R)\) ein AF, sei \(X\subseteq A\) und sei \(\lambda\) ein
+      Labelling von \(F\). Mit \(\lambda|_X\) bezeichnen wir die Einschränkung
+      von \(\lambda\) auf \(X\), also die Funktion \(\lambda|_X : X \to \{\mathit{in},\mathit{out},\mathit{und}\}\)
+      mit \(\lambda|_X(a)=\lambda(a)~ \text{für alle } a\in X.\)
 
+\end{Definition}
+Häufig interessiert nicht nur, welches Label ein einzelnes Argument besitzt,
+sondern auch die Menge aller Argumente mit einem bestimmten Label. Dafür führen
+wir die folgende Notation ein.
 
 \begin{Definition}
       \label{def:labelling-set}
-      Sei $F=(A,R)$ ein AF und $\lambda$ ein \emph{Labelling} von $F$ mit der Menge an \emph{Labels}
-      $\mathit{L}=\{\text{\emph{in, out, und}}\}$.
-      Dann ist für $lab \in \mathit{L}$, $lab(\lambda) = \{a \in A\mid \lambda(a) = lab\}$.
+      Sei \(F=(A,R)\) ein AF, sei
+      \(L=\{\mathit{in},\mathit{out},\mathit{und}\}\)
+      die Menge der Labels und sei \(\lambda\) ein Labelling von \(F\).
+      Für ein Label \(lab\in L\) definieren wir
+      \(lab(\lambda)=\{a\in A\mid \lambda(a)=lab\}.\)
 \end{Definition}
-
+\newpage
 \section{Semantiken}
 \label{sec:af-semantiken}
 
