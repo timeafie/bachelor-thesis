@@ -71,17 +71,13 @@ und
         & o_a \text{ ist wahr}\Longleftrightarrow \lambda(a)=\mathit{out},\\
         & u_a \text{ ist wahr}\Longleftrightarrow \lambda(a)=\mathit{und}.
     \end{align*}
-
-    Für die \(k\)-te Kopie der Labelling-Variablen schreiben wir
-    \[ I^k=\{i_a^k\mid a\in A\},~O^k=\{o_a^k\mid a\in A\},~U^k=\{u_a^k\mid a\in A\}.\]
-    Und fassen sie zusammen als \(\mathcal{L}^k := I^k \cup O^k \cup U^k.\)
-
-    Wir verzichten auf die Nummerierung, wenn im Kontext klar ist, von welcher Variablenmenge gesprochen wird. 
+    Wir schreiben \(I=\{i_a\mid a\in A\},~O=\{o_a\mid a\in A\},~U=\{u_a\mid a\in A\}\)
+    und fassen die Kodierung eines Labellings zusammen als \(\mathcal{L} := I \cup O \cup U.\)
 \end{Definition}
 
 \begin{Definition}
     \label{def:pl-one}
-    Sei \(F=(A,R)\) ein AF und seien \(I,O,U\) wie gewohnt definiert.
+    Sei \(F=(A,R)\) ein AF und \(\mathcal{L}\) die zugehörige Menge an Labellingvariablen.
     Für \(a\in A\) definieren wir
     \[
         \mathrm{one}_F(\mathcal{L})
@@ -111,7 +107,7 @@ schließen aus, dass zwei verschiedene Labels gleichzeitig gelten.
 
 \begin{Definition}
     \label{def:co-pl}
-     Sei \(F = (A,R)\) ein AF und sei \(\mathcal{L} = (I \cup O \cup U)\) wie zuvor definiert. 
+     Sei \(F = (A,R)\) ein AF und sei \(\mathcal{L}\) die zugehörige Menge an Labellingvariablen. 
      Eine aussagenlogische Kodierung eines \textit{complete}-Labellings lautet
      \[
      \mathrm{co}_F(\mathcal{L})
