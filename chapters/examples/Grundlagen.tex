@@ -33,10 +33,8 @@ sind ein zentrales Konzept der formalen Argumentationstheorie. Sie wurden von
 Dung~\cite{dung:1995:af} eingeführt, um argumentative Strukturen abstrakt zu
 modellieren. Der Grundgedanke besteht darin, Argumente als abstrakte Einheiten
 zu betrachten, die durch eine Angriffsrelation miteinander verbunden sind.
-Die Akzeptanz eines Arguments hängt damit nicht von seiner inneren Struktur ab,
-sondern davon, wie es zu anderen Argumenten im System in Beziehung steht.
 
-Die grundlegenden Definitionen dieses Abschnitts orientieren sich, sofern nicht
+Die Definitionen dieses Abschnitts orientieren sich, sofern nicht
 anders angegeben, an \textcite{handbook__of_formal_argumentation__vol__3:2024}.
 Die labellingbasierte Perspektive sowie die dafür verwendete Notation folgen in
 Anlehnung an \textcite{bluemel:2025:independence-aba}.
@@ -147,10 +145,10 @@ Labellings auf eine Teilmenge \(X\subseteq A\).
       mit \(\lambda|_X(a)=\lambda(a)~ \text{für alle } a\in X.\)
 
 \end{Definition}
+
 Häufig interessiert nicht nur, welches Label ein einzelnes Argument besitzt,
 sondern auch die Menge aller Argumente mit einem bestimmten Label. Dafür führen
 wir die folgende Notation ein.
-
 \begin{Definition}
       \label{def:labelling-set}
       Sei \(F=(A,R)\) ein AF, sei
@@ -162,56 +160,65 @@ wir die folgende Notation ein.
 \newpage
 \section{Semantiken}
 \label{sec:af-semantiken}
-
-
-
-Basis aller Semantiken ist die \emph{Konfliktfreiheit}. Eine Menge an Argumenten soll ein Argumentationsszenario nur "überleben", 
-wenn es in sich selbst stimmig ist \cite{handbook__of_formal_argumentation__vol__3:2024}.
-\begin{Definition}
-    \label{def:conflict-free}
-    Sei $F = (A, R)$ ein AF. Eine Menge $S \subseteq A$ heißt \emph{konfliktfrei}, genau dann wenn es keine Argumente $a, b \in S$ gibt, 
-    so dass $a \rightarrow b$ gilt.
-\end{Definition}
-Insbesondere ist damit ein Argument, das sich selbst angreift, nicht \emph{konfliktfrei}.
-
-\begin{Definition}
-      \label{range}
-      Sei $F = (A, R)$ ein AF und $S \subseteq A$. Die \emph{Reichweite} von $S$ ist definiert als $S \cup S^{+}$.
-\end{Definition}
-
-\begin{Definition}
-      \label{semantic-extensions}
-      Sei $F = (A, R)$ ein AF, $S \subseteq A$ und $S$ \emph{konfliktfrei}. $S$ heißt:
-\begin{itemize}
-      \item \emph{admissible}, genau dann wenn jedes Argument in $S$ durch $S$ verteidigt wird.
-      \item \emph{complete}, genau dann wenn jedes Argument, das durch $S$ verteidigt wird, in $S$ enthalten ist.
-      \item \emph{preferred}, genau dann wenn $S$ inhaltsmaximal unter den admissible Mengen ist.
-      \item \emph{stable}, genau dann wenn $S^{+} = A \setminus S$ gilt.
-\end{itemize}
-\end{Definition}
-
-
-Eine weitere Möglichkeit, die Akzeptanz von Argumenten zu bestimmen, 
-ist der labelling-basierte Ansatz, 
-der von Caminada~\cite{caminada:2009:logical-account} eingeführt wurde.
-
-
-Wir verwenden $\text{in}(\mathcal{L})$ für $\{a \mid \mathcal{L}(a) = \text{in}\}$, 
-$\text{out}(\mathcal{L})$ für $\{a \mid \mathcal{L}(a) = \text{out}\}$ 
-und $\text{und}(\mathcal{L})$ für $\{a \mid \mathcal{L}(a) = \text{und}\}$.
+Im Folgenden wird ausschließlich die \emph{labelling}-basierte Perspektive auf Semantiken vorgestellt, da sie Kern der 
+späteren Definition der \emph{bedingten Unabhängigkeit} ist.
 
 \begin{Definition}
       \label{def:complete-labelling}
-      Sei $F = (A, R)$ ein AF und $\mathcal{L} : A \rightarrow \{\text{in}, \text{out}, \text{und}\}$ ein $labelling$
-      von $F$. $\mathcal{L}$ heißt \emph{complete}, wenn für jedes Argument $a \in A$ gilt:
-      \begin{itemize}
-            \item $\mathcal{L}(a) = \text{in}$ gdw. für jedes $b \in A$ mit $(b, a) \in R$ $\mathcal{L}(b) = \text{out}$ gilt.
-            \item $\mathcal{L}(a) = \text{out}$ gdw. es ein $b \in A$ mit $(b, a) \in R$ gibt, für das $\mathcal{L}(b) = \text{in}$ gilt.
-      \end{itemize}
+      Sei $F = (A, R)$ ein AF und $\lambda : A \rightarrow \{\text{in}, \text{out}, \text{und}\}$ ein $labelling$
+      von $F$. $\lambda$ heißt \emph{complete}, wenn für jedes Argument $a \in A$ gilt:
+      \[
+            \begin{alignedat}{2}
+            &\lambda(a)=\mathit{in}
+            &\quad\Longleftrightarrow\quad&
+            \lambda(b)=\mathit{out}
+            \text{ für alle } b\in A \text{ mit } (b,a)\in R,\\
+            &\lambda(a)=\mathit{out}
+            &\quad\Longleftrightarrow\quad&
+            \text{es existiert ein } b\in A \text{ mit } (b,a)\in R
+            \text{ und } \lambda(b)=\mathit{in}.
+            \end{alignedat}
+      \]
+      Wir schreiben \(\Lambda_{co}(F)\) für die Menge aller \emph{complete}-Labellings von $F$.
 \end{Definition}
+Die \emph{complete}-Semantik bietet die Grundlage weiterer Semantiken, welche sich nur in ihren Anforderung an die Labelling-Mengen
+unterscheiden.
+
+\begin{Definition}
+    \label{def:sem-labelling}
+    Sei \(F=(A,R)\) ein AF und sei \(\lambda : A \to \{\mathit{in},\mathit{out},\mathit{und}\}\)
+    ein \textit{complete}-Labelling von \(F\). Dann gilt:
+    \[
+    \begin{alignedat}{2}
+        \bullet\quad
+        &\lambda \text{ heißt } \text{\textit{grounded}}
+        &\quad\Longleftrightarrow\quad&
+        \mathit{und}(\lambda)\text{ ist } \subseteq\text{-maximal unter allen }
+        \lambda'\in\Lambda_{\mathrm{co}}(F),\\
+        \bullet\quad
+        &\lambda \text{ heißt } \text{\textit{preferred}}
+        &\quad\Longleftrightarrow\quad&
+        \mathit{in}(\lambda)\text{ ist } \subseteq\text{-maximal unter allen }
+        \lambda'\in\Lambda_{\mathrm{co}}(F),\\
+        \bullet\quad
+        &\lambda \text{ heißt } \text{\textit{stable}}
+        &\quad\Longleftrightarrow\quad&
+        \mathit{und}(\lambda)=\emptyset.
+    \end{alignedat}
+    \]
+      Wir kürzen \emph{grounded, preferred, stable} mit \emph{gr, pr, st} ab und schreiben für die Menge
+      aller \(\sigma\)-Labellings von $F$ mit \(\sigma \in \{gr, pr, st\}\) \(\Lambda_{\sigma}(F)\).
+\end{Definition}
+
+\newpage
 
 \section{Komplexität}
 \label{sec:komp}
+P und NP voraussetzen.
+Darauf aufbauend polynomielle Hierachie einführen
+
+\newpage
+
 
 \section{Bedingte Unabhängigkeit}
 \label{sec:bu}
@@ -226,8 +233,8 @@ und $\text{und}(\mathcal{L})$ für $\{a \mid \mathcal{L}(a) = \text{und}\}$.
             \item Dekomposition: $A \perp B \cup D \mid C \implies A \perp B \mid C$ 
             \item Schwache Vereinigung: $A \perp B \cup D \mid C \implies A \perp B \mid C \cup D$ 
             \item Kontraktion: $A \perp B \mid C \land A \perp D \mid C \cup B \implies A \perp B \cup D \mid C$
-      \end{itemize}
-
+      \end{itemize}   
+\newpage
 
 \section{Quantified Boolean Formulas}
 \label{sec:qbf}
@@ -255,3 +262,4 @@ und $\text{und}(\mathcal{L})$ für $\{a \mid \mathcal{L}(a) = \text{und}\}$.
       \quad \text{als Abkürzung für}\quad
       \forall X \forall Y \varphi
       \]
+\newpage

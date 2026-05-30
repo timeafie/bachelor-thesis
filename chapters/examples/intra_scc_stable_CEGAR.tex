@@ -1,0 +1,431 @@
+\chapter{Iterative Gegenbeispiel-Konstruktion innerhalb einer SCC}
+\label{ch:intra-scc-cegar}
+
+\section{Problemstellung}
+\label{sec:intra-scc-problem}
+
+In diesem Kapitel betrachten wir den Spezialfall, dass das gesamte
+Argumentationssystem \(F=(A,R)\) aus einer einzigen stark zusammenhängenden
+Komponente besteht und die zu testenden Mengen \(X,Y,Z\subseteq A\) paarweise
+disjunkt innerhalb dieser SCC liegen.
+
+Statt \(\textit{Ind}_{\mathrm{st}}\) direkt über die in
+Kapitel~\ref{ch:stable} angegebene QBF-Kodierung zu entscheiden, verfolgen wir
+hier den Ansatz, ein Gegenbeispiel \emph{iterativ} zu konstruieren. Ein
+Gegenbeispiel zeigt unmittelbar
+\(X\not\bot_{\mathrm{st}} Y \mid Z\); bricht die Konstruktion erfolglos ab,
+gilt umgekehrt \(X \bot_{\mathrm{st}} Y \mid Z\).
+
+\begin{Definition}
+    \label{def:gegenbsp-st}
+    Sei \(F=(A,R)\) ein AF und seien \(X,Y,Z\subseteq A\) paarweise
+    disjunkt. Ein \emph{Gegenbeispiel} zur \textit{stable}-Unabhängigkeit
+    \(X \bot_{\mathrm{st}} Y \mid Z\) ist ein Paar
+    \(\lambda_1,\lambda_2 \in \varLambda_{\mathrm{st}}(F)\) mit
+    \begin{enumerate}
+        \item \(\lambda_1|_Z = \lambda_2|_Z\),
+        \item es existiert kein \(\lambda_3\in\varLambda_{\mathrm{st}}(F)\)
+              mit \(\lambda_3|_X = \lambda_1|_X\) und
+              \(\lambda_3|_{Y\cup Z} = \lambda_2|_{Y\cup Z}\).
+    \end{enumerate}
+\end{Definition}
+
+\section{Triviale Fälle: SCC ist ein einzelner Zykel}
+\label{sec:intra-scc-zykel}
+
+Bevor wir den allgemeinen Algorithmus formulieren, halten wir zwei
+Sonderfälle fest, die in konstanter bzw. linearer Zeit entschieden werden
+können.
+
+Sei \(F=(A,R)\) ein AF mit \(|A|=n\) und \(R\) bestehe genau aus dem Zykel
+\(a_0\to a_1 \to \dots \to a_{n-1} \to a_0\).
+
+\begin{Lemma}
+    \label{lem:zykel-st}
+    \begin{enumerate}
+        \item Ist \(n\) ungerade, so gilt
+              \(\varLambda_{\mathrm{st}}(F)=\emptyset\). Damit ist
+              \(X \bot_{\mathrm{st}} Y \mid Z\) für jedes Tripel
+              \((X,Y,Z)\) vakuum erfüllt.
+        \item Ist \(n\) gerade, so existieren genau zwei
+              \textit{stable}-Labellings: die alternierende Färbung
+              \(\lambda^*\) mit \(\lambda^*(a_i)=\mathit{in}\) für
+              gerades \(i\), und ihre Komplementärfärbung
+              \(\overline{\lambda^*}\). Ein Gegenbeispiel existiert
+              genau dann, wenn
+              \(\lambda^*|_Z = \overline{\lambda^*}|_Z\) und
+              \(\lambda^*|_Y \neq \overline{\lambda^*}|_Y\).
+    \end{enumerate}
+\end{Lemma}
+
+Der gerade Fall verlangt insbesondere, dass entweder \(Z=\emptyset\) ist oder
+\(Z\) nur Argumentpaare \(a_i,a_j\) mit \(i+j\) ungerade enthält. Sobald ein
+einziges \(z\in Z\) festgelegt wird, fixiert es bereits die gesamte
+alternierende Färbung.
+
+\section{Iterativer Algorithmus}
+\label{sec:intra-scc-iter}
+
+Der allgemeine Fall folgt dem Schema eines CEGAR-Loops: Es werden zwei
+partielle Labellings \(\lambda_1,\lambda_2\) simultan aufgebaut, an \(Y\)
+gezielt aufgespalten und außerhalb von \(X\cup Y\cup Z\) unabhängig
+voneinander zu \textit{stable}-Labellings vervollständigt. Anschließend wird
+mit einem einzigen NP-Aufruf geprüft, ob das so erhaltene Paar tatsächlich
+ein Gegenbeispiel im Sinne von Definition~\ref{def:gegenbsp-st} ist.
+
+\subsection{Datenstruktur und Invarianten}
+\label{subsec:intra-scc-invariants}
+
+Wir betrachten zwei partielle Labellings
+\(\lambda_1,\lambda_2 : A \rightharpoonup \{\mathit{in},\mathit{out}\}\).
+Für \(i\in\{1,2\}\) sei \(\mathrm{dom}(\lambda_i)\) die Menge der bereits
+belegten Argumente. Ein Argument \(a\in A\) heißt unter \(\lambda_i\)
+\emph{erzwungen}, wenn die \textit{stable}-Bedingung
+\[
+    \lambda_i(a)=\mathit{in}
+    \quad\Longleftrightarrow\quad
+    \forall (b,a)\in R:\ \lambda_i(b)=\mathit{out}
+\]
+bei gegebenen Werten der Vorgänger einen eindeutigen Wert für \(a\)
+diktiert. Die schrittweise Belegung erzwungener Argumente entspricht
+\emph{Unit Propagation} auf der Kodierung
+\(\mathrm{st}_F(I)\) aus Definition~\ref{def:st-pl}.
+
+Der Loop hält die folgenden Invarianten:
+\begin{description}
+    \item[(C1)] \(\lambda_1\) und \(\lambda_2\) sind auf
+        \(\mathrm{dom}(\lambda_i)\) jeweils mit mindestens einer
+        \textit{stable}-Vervollständigung von \(F\) kompatibel.
+    \item[(C2)] \(\lambda_1|_Z = \lambda_2|_Z\) auf
+        \(\mathrm{dom}(\lambda_1)\cap\mathrm{dom}(\lambda_2)\cap Z\).
+    \item[(C3)] Für mindestens ein \(x\in X\) gilt
+        \(\lambda_1(x)\neq\lambda_2(x)\), sobald die Werte gesetzt
+        sind --- oder \(X=\emptyset\), dann gilt (C3) leer.
+    \item[(C4)] Für mindestens ein \(y\in Y\) gilt
+        \(\lambda_1(y)\neq\lambda_2(y)\).
+\end{description}
+Vollständige stable-Labellings, die (C2)--(C4) erfüllen, sind die
+Gegenbeispiel-Kandidaten; ob sie wirklich ein Gegenbeispiel im Sinne von
+Definition~\ref{def:gegenbsp-st} sind, klärt erst der abschließende
+NP-Aufruf in Schritt~\ref{step:cegar-verify}.
+
+\subsection{Rolle und Notwendigkeit der Invarianten}
+\label{subsec:intra-scc-invariants-discussion}
+
+Die vier Invarianten erfüllen unterschiedliche Aufgaben. (C2)--(C4)
+korrespondieren direkt mit Bestandteilen von
+Definition~\ref{def:gegenbsp-st} und sichern, dass ein Kandidat überhaupt
+als Gegenbeispiel \emph{in Frage kommt}; (C1) ist demgegenüber rein
+operativer Natur und hält den Suchraum auf zulässige
+Vervollständigungen beschränkt. Im Folgenden zeigen wir an je einem
+kleinen Beispiel, was geschähe, wenn eine der Bedingungen verletzt
+würde.
+
+\paragraph{(C1) Erweiterbarkeit auf stable-Labellings.}
+(C1) garantiert, dass jede partielle Belegung, die der Loop hält, noch
+zu mindestens einem \(\lambda_i \in \varLambda_{\mathrm{st}}(F)\)
+fortgesetzt werden kann. Sie wird durch die Unit Propagation in den
+Schritten~\ref{step:cegar-init} und \ref{step:cegar-branch} sowie den
+Konsistenztest in Schritt~\ref{step:cegar-check-c2c3} aufrechterhalten.
+
+\emph{Beispiel.} Sei \(F=(A,R)\) mit \(A=\{a_0,a_1,a_2\}\) und
+\(R=\{(a_0,a_1),(a_1,a_2),(a_2,a_0)\}\) ein ungerader Zykel, und sei
+\(Z=\{a_0\}\) mit \(\zeta(a_0)=\mathit{in}\). Die Unit Propagation
+erzwingt \(\lambda_1(a_1)=\mathit{out}\), \(\lambda_1(a_2)=\mathit{in}\)
+und damit \(\lambda_1(a_0)=\mathit{out}\) im Widerspruch zu \(\zeta\). Ohne
+(C1) bzw. den entsprechenden Konsistenztest würde der Loop diese
+Verzweigung nicht erkennen und Schritt~\ref{step:cegar-complete} liefe
+in ein erst dort sichtbares UNSAT.
+
+\paragraph{(C2) Übereinstimmung auf Z.}
+(C2) realisiert die erste Klausel von Definition~\ref{def:gegenbsp-st}.
+Nur Paare mit identischer Z-Belegung sind im Sinn von
+\(X \bot_{\mathrm{st}} Y\mid Z\) überhaupt vergleichbar.
+
+\emph{Beispiel.} Sei \(F\) ein gerader Zykel
+\(a_0\to a_1\to a_2\to a_3\to a_0\) mit den beiden stable-Labellings
+\(\lambda^*\) und \(\overline{\lambda^*}\). Mit \(Z=\{a_0\}\),
+\(X=\{a_1\}\), \(Y=\{a_2\}\) sind die einzigen beiden stable-Labellings
+\(\lambda^*\) und \(\overline{\lambda^*}\) auf \(Z\) verschieden. Ließe
+man Paare mit \(\lambda_1|_Z\neq \lambda_2|_Z\) zu, würde
+\((\lambda^*,\overline{\lambda^*})\) als Kandidat in
+Schritt~\ref{step:cegar-verify} eingespeist; die dort gestellte Frage
+nach \(\lambda_3\) mit \(\lambda_3|_{Y\cup Z}=\lambda_2|_{Y\cup Z}\)
+fixiert aber bereits implizit \(\lambda_3|_Z\neq\lambda_1|_Z\) und der
+Algorithmus testet die falsche Definition.
+
+\paragraph{(C3) Unterschied auf X.}
+(C3) verhindert triviale Nicht-Gegenbeispiele in die andere Richtung
+als (C4). Die Brücken-Bedingung an \(\lambda_3\) ist asymmetrisch:
+\(\lambda_3|_X = \lambda_1|_X\) und \(\lambda_3|_{Y\cup Z} =
+\lambda_2|_{Y\cup Z}\). Stimmen \(\lambda_1\) und \(\lambda_2\) bereits
+auf \(X\) überein, so erfüllt \(\lambda_3:=\lambda_2\) automatisch
+beide Bedingungen: \(\lambda_3|_X = \lambda_2|_X = \lambda_1|_X\) und
+\(\lambda_3|_{Y\cup Z}=\lambda_2|_{Y\cup Z}\). Damit ist das Paar nie
+Gegenbeispiel und ein NP-Aufruf in Schritt~\ref{step:cegar-verify}
+verschwendete Zeit.
+
+\emph{Beispiel.} Sei \(F\) der gerade Zykel
+\(a_0\to a_1\to a_2\to a_3\to a_0\) mit den beiden stable-Labellings
+\(\lambda^*\) (\(a_0,a_2\mapsto \mathit{in}\)) und
+\(\overline{\lambda^*}\) (\(a_1,a_3\mapsto\mathit{in}\)). Setze
+\(X=\emptyset\), \(Y=\{a_0,a_2\}\), \(Z=\emptyset\). Beide Labellings
+stimmen auf \(X\) trivial überein (\(X=\emptyset\)), unterscheiden
+sich aber auf \(Y\). Schritt~\ref{step:cegar-verify} sucht ein
+\(\lambda_3\) mit \(\lambda_3|_X = \lambda^*|_X = \emptyset\) (leere
+Forderung) und \(\lambda_3|_{Y\cup Z} = \overline{\lambda^*}|_Y\). Die
+Wahl \(\lambda_3:=\overline{\lambda^*}\) erfüllt beides. Folglich ist
+kein Gegenbeispiel möglich; dasselbe Argument gilt allgemein, sobald
+\(\lambda_1|_X=\lambda_2|_X\). (C3) fängt diese Fälle vor
+Schritt~\ref{step:cegar-verify} ab.
+
+\paragraph{(C4) Unterschied auf Y.}
+(C4) sichert dieselbe Nichttrivialität symmetrisch für \(Y\). Ist
+\(\lambda_1|_Y = \lambda_2|_Y\), dann erfüllt \(\lambda_3:=\lambda_1\)
+beide Brücken-Bedingungen: \(\lambda_3|_X = \lambda_1|_X\) trivial und
+\(\lambda_3|_{Y\cup Z} = \lambda_1|_{Y\cup Z} = \lambda_2|_{Y\cup Z}\)
+wegen (C2) und \(\lambda_1|_Y=\lambda_2|_Y\).
+
+\emph{Beispiel.} Sei \(F=(\{a\},\emptyset)\) ein Argument ohne
+Angreifer. Das einzige stable-Labelling ist
+\(\lambda(a)=\mathit{in}\). Mit \(X=Z=\emptyset\), \(Y=\{a\}\) ist die
+einzige Wahl \(\lambda_1=\lambda_2=\lambda\), die (C4) verletzt.
+Schritt~\ref{step:cegar-verify} liefert sofort \(\lambda_3:=\lambda\)
+und damit „kein Gegenbeispiel". Ohne (C4) als explizite Forderung
+würde der Loop diesen Kandidaten dennoch aufzählen --- ein unbegrenzt
+häufiger Leerlauf, weil dasselbe Labellingpaar mehrfach getestet wird,
+ohne dass der Algorithmus Fortschritt macht.
+
+\medskip
+Insgesamt entsprechen (C2)--(C4) den drei notwendigen Bestandteilen
+eines \emph{Gegenbeispiel-Kandidaten} vor der Verifikation; (C1) hält die
+Suche auf legalen Vervollständigungen. Die hinreichende
+Gegenbeispiel-Eigenschaft, also die zweite Klausel von
+Definition~\ref{def:gegenbsp-st}, lässt sich keiner Invariante
+zuschreiben und muss in Schritt~\ref{step:cegar-verify} explizit geprüft
+werden.
+
+\subsection{Ablauf}
+\label{subsec:intra-scc-loop}
+
+\begin{enumerate}
+    \item \label{step:cegar-zeta}
+        \textbf{Z fixieren.} Wähle eine Belegung
+        \(\zeta : Z \to \{\mathit{in},\mathit{out}\}\), die zu mindestens
+        einem \textit{stable}-Labelling von \(F\) erweiterbar ist. Existiert
+        keine solche, so ist \(\varLambda_{\mathrm{st}}(F)=\emptyset\) und
+        \(X \bot_{\mathrm{st}} Y \mid Z\) gilt vakuum.
+
+    \item \label{step:cegar-init}
+        \textbf{Initialisierung.} Setze
+        \(\lambda_1|_Z = \lambda_2|_Z = \zeta\) und propagiere in beiden
+        Labellings alle durch \(\zeta\) erzwungenen Werte.
+
+    \item \label{step:cegar-branch}
+        \textbf{Verzweigung auf \(X\) und \(Y\).} Wähle ein \(y\in Y\),
+        das in beiden Labellings noch offen ist, und setze
+        \(\lambda_1(y):=\mathit{in}\), \(\lambda_2(y):=\mathit{out}\)
+        (oder umgekehrt). Damit ist (C4) sichergestellt. Falls
+        \(X\neq\emptyset\), wähle zusätzlich ein \(x\in X\) und setze
+        \(\lambda_1(x), \lambda_2(x)\) auf unterschiedliche Werte, um
+        (C3) sicherzustellen. Propagiere in \(\lambda_1\) und
+        \(\lambda_2\) getrennt alle daraus folgenden Erzwingungen.
+
+    \item \label{step:cegar-check-c2c3}
+        \textbf{Konsistenztest.} Wird durch die Propagation in einer der
+        beiden Belegungen ein Argument in \(Z\) auf einen Wert gezwungen,
+        der (C2) verletzt, oder ein Argument in \(X\) bzw. \(Y\) so
+        festgelegt, dass (C3) bzw. (C4) nicht mehr erfüllbar ist, so
+        verwerfe die aktuelle Verzweigung und gehe zurück zu
+        Schritt~\ref{step:cegar-branch} mit anderer Wahl.
+
+    \item \label{step:cegar-complete}
+        \textbf{Vervollständigung außerhalb \(X\cup Y\cup Z\).} Erweitere
+        \(\lambda_1\) und \(\lambda_2\) unabhängig voneinander zu
+        vollständigen \textit{stable}-Labellings durch einen SAT-Aufruf auf
+        \(\mathrm{st}_F(I)\). Die beiden Labellings müssen außerhalb von
+        \(X\cup Y\cup Z\) nicht übereinstimmen.
+
+    \item \label{step:cegar-verify}
+        \textbf{Verifikation.} Prüfe per NP-Aufruf, ob ein
+        \(\lambda_3\in\varLambda_{\mathrm{st}}(F)\) mit
+        \(\lambda_3|_X=\lambda_1|_X\) und
+        \(\lambda_3|_{Y\cup Z}=\lambda_2|_{Y\cup Z}\) existiert. Dazu
+        löst man \(\mathrm{st}_F(I)\) mit fixierten \(X\)-, \(Y\)- und
+        \(Z\)-Variablen.
+        \begin{itemize}
+            \item Gibt es kein solches \(\lambda_3\), so ist
+                \((\lambda_1,\lambda_2)\) ein Gegenbeispiel und der
+                Algorithmus terminiert mit
+                \(X \not\bot_{\mathrm{st}} Y\mid Z\).
+            \item Andernfalls verwerfe das Paar und gehe zurück zu
+                Schritt~\ref{step:cegar-branch}.
+        \end{itemize}
+
+    \item \label{step:cegar-exhaust}
+        \textbf{Abbruch.} Sind alle Verzweigungen aus
+        Schritten~\ref{step:cegar-zeta}--\ref{step:cegar-branch}
+        erschöpft, ohne dass Schritt~\ref{step:cegar-verify} ein
+        Gegenbeispiel bestätigt, so gilt
+        \(X \bot_{\mathrm{st}} Y \mid Z\).
+\end{enumerate}
+
+Strukturell ist Schritt~\ref{step:cegar-verify} die teure Verifikation, an
+der das CEGAR-Schema ansetzt: jedes abgelehnte Paar liefert eine
+\emph{Blockierungsklausel}, die dieselbe \((X,Y,Z)\)-Signatur in
+Schritt~\ref{step:cegar-branch} ausschließt.
+
+\section{Heuristische Beschleuniger}
+\label{sec:intra-scc-heur}
+
+Im Worst Case bleibt der Loop aus Abschnitt~\ref{sec:intra-scc-iter} so
+teuer wie \(\textit{Ind}_{\mathrm{st}}\) selbst. Wir notieren drei
+strukturelle Beobachtungen, die in vielen praktischen Instanzen zu einer
+früheren Entscheidung führen.
+
+\subsection{Z-Erreichbarkeitsfilter}
+\label{subsec:heur-z-reach}
+
+Wird in Schritt~\ref{step:cegar-init} jedes \(y\in Y\) bereits durch
+\(\zeta\) deterministisch festgelegt, so kann (C4) für dieses \(\zeta\)
+nicht mehr erfüllt werden. Es genügt, den deterministischen Abschluss von
+\(\zeta\) zu berechnen und zu prüfen, ob \(Y\) vollständig enthalten ist.
+
+\subsection{Eingebettete gerade Zykel}
+\label{subsec:heur-even-cycle}
+
+Existiert ein induzierter gerader Zykel
+\(D \subseteq A\setminus (X\cup Z)\), dessen Argumente ausschließlich aus
+\(D\) angegriffen werden und der \(Y\) schneidet, so kann die
+Verzweigung in Schritt~\ref{step:cegar-branch} deterministisch ersetzt
+werden: \(\lambda_1\) erhält die eine alternierende Färbung von \(D\),
+\(\lambda_2\) die andere. Dies ist die Verallgemeinerung von
+Lemma~\ref{lem:zykel-st}~(2) auf eingebettete Zykel.
+
+\paragraph{Beispiel.}
+Sei \(F=(A,R)\) mit \(A = \{a_0, a_1, a_2, a_3, z\}\) und Angriffen
+\[
+    R = \{(a_0,a_1),(a_1,a_2),(a_2,a_3),(a_3,a_0),(z,z')\},
+\]
+wobei \(\{a_0,a_1,a_2,a_3\}\) den induzierten 4-Zykel \(D\) bildet und
+kein zusätzlicher Angriff von außen auf \(D\) zeigt. Setze
+\(Z=\{z\}\), \(X=\emptyset\), \(Y=\{a_0, a_2\}\).
+
+In \(D\) gibt es genau zwei alternierende Färbungen:
+\[
+    \lambda^*_D : a_0,a_2 \mapsto \mathit{in},\ 
+                  a_1,a_3 \mapsto \mathit{out},
+    \qquad
+    \overline{\lambda^*_D} : a_0,a_2 \mapsto \mathit{out},\ 
+                  a_1,a_3 \mapsto \mathit{in}.
+\]
+Da \(D\) keine externen Angreifer besitzt, sind beide Färbungen mit
+jeder beliebigen \(\zeta\)-Belegung von \(z\) zu vollständigen
+stable-Labellings ergänzbar. Die Heuristik setzt also direkt
+\(\lambda_1|_D := \lambda^*_D\) und
+\(\lambda_2|_D := \overline{\lambda^*_D}\). Damit gilt automatisch
+\(\lambda_1(a_0) \neq \lambda_2(a_0)\) und
+\(\lambda_1(a_2)\neq \lambda_2(a_2)\), insbesondere (C4). Da \(D\) zudem
+\(X\cup Z\) nicht schneidet, sind (C2) und (C3) trivial erfüllt. Statt
+\(2^{|Y|}\) Branches in Schritt~\ref{step:cegar-branch} bleibt nur noch
+der NP-Aufruf in Schritt~\ref{step:cegar-verify} zu erledigen.
+
+\subsection{Lokale Symmetrie}
+\label{subsec:heur-symmetry}
+
+Bevor wir die heuristische Konstruktion angeben, klären wir die
+verwendeten Begriffe.
+
+\begin{Definition}
+    \label{def:af-automorphismus}
+    Sei \(F=(A,R)\) ein AF. Eine Bijektion \(\sigma : A \to A\) heißt
+    \emph{Automorphismus} von \(F\), wenn sie die Angriffsrelation
+    erhält, das heißt
+    \[
+        (a,b)\in R \quad\Longleftrightarrow\quad
+        (\sigma(a),\sigma(b))\in R
+        \qquad \text{für alle } a,b\in A.
+    \]
+    Die Menge \(\mathrm{Aut}(F)\) aller solchen Bijektionen bildet mit
+    der Komposition eine Gruppe.
+\end{Definition}
+
+Anschaulich beschreibt ein Automorphismus eine Umbenennung der
+Argumente, unter der \(F\) als Graph gleich bleibt. Vertauscht etwa
+\(\sigma\) zwei Argumente \(y_1, y_2\) und ist \(F\) auf den
+restlichen Argumenten identisch, so muss zwingend gelten: jeder
+Angreifer von \(y_1\) ist auch Angreifer von \(y_2\), und umgekehrt;
+und \(y_1, y_2\) greifen genau dieselben Argumente an. Symmetrien
+beschreiben damit strukturelle Ununterscheidbarkeit von Argumenten.
+
+\begin{Definition}
+    \label{def:lok-sym}
+    Sei \(F=(A,R)\) ein AF und seien \(X,Y,Z\subseteq A\) paarweise
+    disjunkt. Eine \emph{lokale Symmetrie für} \((X,Y,Z)\) ist ein
+    Automorphismus \(\sigma\in\mathrm{Aut}(F)\) mit
+    \begin{itemize}
+        \item \(\sigma(a)=a\) für alle \(a\in X\cup Z\),
+        \item es gibt \(y_1,y_2\in Y\) mit
+              \(\sigma(y_1)=y_2\) und \(y_1\neq y_2\).
+    \end{itemize}
+\end{Definition}
+
+Die erste Bedingung verlangt, dass \(\sigma\) die ausgezeichneten
+Argumente in \(X\) und \(Z\) punktweise unverändert lässt --- die
+Symmetrie ist also lokal in dem Sinne, dass sie außerhalb von
+\(X\cup Z\) wirkt. Die zweite Bedingung verlangt, dass sie auf \(Y\)
+nichttrivial wirkt; nur so können die zwei Labellings \(\lambda_1\)
+und \(\lambda_2 = \lambda_1\circ\sigma^{-1}\) sich überhaupt auf \(Y\)
+unterscheiden.
+
+\paragraph{Beispiel.}
+Sei \(F=(A,R)\) mit
+\(A=\{x, y_1, y_2, b_1, b_2\}\) und
+\[
+    R = \{(x,y_1),(x,y_2),(b_1,y_1),(b_2,y_2),(y_1,b_1),(y_2,b_2)\}.
+\]
+Die Vertauschung \(\sigma\) mit
+\(\sigma(y_1)=y_2,\ \sigma(y_2)=y_1,\ \sigma(b_1)=b_2,\ \sigma(b_2)=b_1,\
+\sigma(x)=x\) erhält die Angriffsrelation und ist damit ein
+Automorphismus von \(F\). Setzt man \(X=\{x\}\), \(Z=\emptyset\),
+\(Y=\{y_1,y_2\}\), so erfüllt \(\sigma\) Definition~\ref{def:lok-sym}.
+Jedes stable-Labelling \(\lambda_1\), das \(y_1\) und \(y_2\)
+unterschiedlich belegt, liefert mit \(\lambda_2 := \lambda_1\circ\sigma\)
+sofort ein zweites stable-Labelling, das auf \(X\) unverändert bleibt
+und auf \(Y\) genau die beiden Werte vertauscht.
+
+\begin{Lemma}
+    \label{lem:lok-sym-paar}
+    Sei \(\sigma\) eine lokale Symmetrie für \((X,Y,Z)\) und sei
+    \(\lambda_1\in\varLambda_{\mathrm{st}}(F)\) mit
+    \(\lambda_1(y_1)\neq\lambda_1(y_2)\). Dann ist
+    \(\lambda_2 := \lambda_1\circ\sigma^{-1}\) ein
+    \textit{stable}-Labelling von \(F\) mit
+    \(\lambda_1|_{X\cup Z}=\lambda_2|_{X\cup Z}\) und
+    \(\lambda_1|_Y \neq \lambda_2|_Y\).
+\end{Lemma}
+
+\begin{proof}
+    Da \(\sigma\) ein Automorphismus von \(F\) ist, bleibt die
+    Charakterisierung \(S^+ = A\setminus S\) unter \(\sigma\) invariant;
+    also ist \(\lambda_2\) wieder ein \textit{stable}-Labelling. Aus
+    \(\sigma(a)=a\) für \(a\in X\cup Z\) folgt
+    \(\lambda_2(a)=\lambda_1(\sigma^{-1}(a))=\lambda_1(a)\), womit
+    \(\lambda_1|_{X\cup Z}=\lambda_2|_{X\cup Z}\). Auf \(Y\) gilt
+    \(\lambda_2(y_2)=\lambda_1(y_1)\neq\lambda_1(y_2)\) nach
+    Voraussetzung, also unterscheiden sich \(\lambda_1\) und \(\lambda_2\)
+    auf \(Y\).
+\end{proof}
+
+Lemma~\ref{lem:lok-sym-paar} liefert ein Paar
+\((\lambda_1,\lambda_2)\), das die Invarianten (C2)--(C4) ohne
+Verzweigung erfüllt. Die Verifikation in
+Schritt~\ref{step:cegar-verify} bleibt allerdings notwendig, denn die
+Symmetrie garantiert nicht die Nicht-Existenz eines verbindenden
+\(\lambda_3\).
+
+Praktisch lohnt sich der Symmetrie-Test nur dann, wenn die Bestimmung
+der relevanten Automorphismen (z.\,B. über etablierte Implementierungen
+wie \texttt{nauty} oder \texttt{bliss}) deutlich billiger ausfällt als
+einige SAT-Aufrufe in den Schritten~\ref{step:cegar-complete}
+und~\ref{step:cegar-verify}.
