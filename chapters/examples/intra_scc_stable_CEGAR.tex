@@ -66,366 +66,303 @@ alternierende Färbung.
 \section{Iterativer Algorithmus}
 \label{sec:intra-scc-iter}
 
-Der allgemeine Fall folgt dem Schema eines CEGAR-Loops: Es werden zwei
-partielle Labellings \(\lambda_1,\lambda_2\) simultan aufgebaut, an \(Y\)
-gezielt aufgespalten und außerhalb von \(X\cup Y\cup Z\) unabhängig
-voneinander zu \textit{stable}-Labellings vervollständigt. Anschließend wird
-mit einem einzigen NP-Aufruf geprüft, ob das so erhaltene Paar tatsächlich
-ein Gegenbeispiel im Sinne von Definition~\ref{def:gegenbsp-st} ist.
+Der Algorithmus arbeitet ausschließlich auf der aussagenlogischen
+Kodierung \(\mathrm{st}_F(I)\) aus Definition~\ref{def:st-pl}. Statt
+zwei vollständige Labellings konkret aufzubauen, ratet der Algorithmus
+nur die Belegungen auf den ausgezeichneten Mengen \(X\), \(Y\), \(Z\)
+und überlässt jede Realisierbarkeitsfrage einem SAT-Aufruf auf
+\(\mathrm{st}_F(I)\) mit fixierten Assumptions. Es genügt zu wissen,
+\emph{dass} eine Belegung auf \(X\cup Y\cup Z\) zu mindestens einem
+stable-Labelling fortgesetzt werden kann --- die konkrete
+Vervollständigung außerhalb wird nicht benötigt.
 
-\subsection{Datenstruktur und Invarianten}
-\label{subsec:intra-scc-invariants}
+\subsection{Realisierbarkeitsabfrage}
+\label{subsec:intra-scc-realize}
 
-Wir betrachten zwei partielle Labellings
-\(\lambda_1,\lambda_2 : A \rightharpoonup \{\mathit{in},\mathit{out}\}\).
-Für \(i\in\{1,2\}\) sei \(\mathrm{dom}(\lambda_i)\) die Menge der bereits
-belegten Argumente. Ein Argument \(a\in A\) heißt unter \(\lambda_i\)
-\emph{erzwungen}, wenn die \textit{stable}-Bedingung
+Sei \(F=(A,R)\) ein AF, \(W\subseteq A\) eine Teilmenge und
+\(\pi : W \to \{\mathit{in},\mathit{out}\}\) eine Belegung von \(W\).
+Wir schreiben
 \[
-    \lambda_i(a)=\mathit{in}
-    \quad\Longleftrightarrow\quad
-    \forall (b,a)\in R:\ \lambda_i(b)=\mathit{out}
+    \mathrm{realisierbar}(\pi)
+    \quad:\Longleftrightarrow\quad
+    \exists \lambda \in \varLambda_{\mathrm{st}}(F):
+    \lambda|_W = \pi.
 \]
-bei gegebenen Werten der Vorgänger einen eindeutigen Wert für \(a\)
-diktiert. Die schrittweise Belegung erzwungener Argumente entspricht
-\emph{Unit Propagation} auf der Kodierung
-\(\mathrm{st}_F(I)\) aus Definition~\ref{def:st-pl}.
+Diese Abfrage ist ein einzelner SAT-Aufruf auf \(\mathrm{st}_F(I)\) mit
+den Assumptions
+\(\{\, i_a \mid \pi(a) = \mathit{in}\,\} \cup
+\{\, \neg i_a \mid \pi(a) = \mathit{out}\,\}\).
+Die zurückgelieferte vollständige Belegung wird im Algorithmus nicht
+weiter benötigt; einzig die SAT/UNSAT-Antwort zählt.
 
-Der Loop hält die folgenden Invarianten:
-\begin{description}
-    \item[(C1)] \(\lambda_1\) und \(\lambda_2\) sind auf
-        \(\mathrm{dom}(\lambda_i)\) jeweils mit mindestens einer
-        \textit{stable}-Vervollständigung von \(F\) kompatibel.
-    \item[(C2)] \(\lambda_1|_Z = \lambda_2|_Z\) auf
-        \(\mathrm{dom}(\lambda_1)\cap\mathrm{dom}(\lambda_2)\cap Z\).
-    \item[(C3)] Für mindestens ein \(x\in X\) gilt
-        \(\lambda_1(x)\neq\lambda_2(x)\), sobald die Werte gesetzt
-        sind --- oder \(X=\emptyset\), dann gilt (C3) leer.
-    \item[(C4)] Für mindestens ein \(y\in Y\) gilt
-        \(\lambda_1(y)\neq\lambda_2(y)\).
-\end{description}
-Vollständige stable-Labellings, die (C2)--(C4) erfüllen, sind die
-Gegenbeispiel-Kandidaten; ob sie wirklich ein Gegenbeispiel im Sinne von
-Definition~\ref{def:gegenbsp-st} sind, klärt erst der abschließende
-NP-Aufruf in Schritt~\ref{step:cegar-verify}.
+\subsection{Drei Abfragen pro Kandidat}
+\label{subsec:intra-scc-three-queries}
 
-\subsection{Rolle und Notwendigkeit der Invarianten}
+Ein Gegenbeispiel ist nach Definition~\ref{def:gegenbsp-st} festgelegt
+durch eine Z-Belegung \(\zeta\) und zwei Restriktionen
+\(\pi^1_{X\cup Y}, \pi^2_{X\cup Y}\) von \(\lambda_1, \lambda_2\) auf
+\(X\cup Y\) mit
+\begin{itemize}
+    \item \(\pi^1_X \neq \pi^2_X\) und \(\pi^1_Y \neq \pi^2_Y\),
+    \item \(\mathrm{realisierbar}(\zeta \cup \pi^i_{X\cup Y})\) für
+          \(i=1,2\),
+    \item \(\lnot\mathrm{realisierbar}(\zeta \cup \pi^1_X \cup \pi^2_Y)\).
+\end{itemize}
+Die ersten beiden Punkte stellen sicher, dass \(\lambda_1, \lambda_2\)
+als stable-Labellings überhaupt existieren; der dritte Punkt ist die
+eigentliche Gegenbeispiel-Bedingung (die ``Brücken''-Anfrage nach
+\(\lambda_3\) ist unerfüllbar). Pro Kandidat fallen damit genau drei
+SAT-Aufrufe an: zwei SAT-Tests für die Existenz von \(\lambda_1,
+\lambda_2\), ein UNSAT-Test für die Nicht-Existenz von \(\lambda_3\).
+
+\subsection{Algorithmus}
+\label{subsec:intra-scc-algo}
+
+\begin{enumerate}
+    \item \label{step:enum-z}
+        \textbf{Enumeration über \(Z\).} Für jede Belegung
+        \(\zeta : Z \to \{\mathit{in},\mathit{out}\}\):
+
+    \begin{enumerate}
+        \item \label{step:check-z-real}
+            \textbf{Z-Realisierbarkeit.} Prüfe
+            \(\mathrm{realisierbar}(\zeta)\). Ist \(\zeta\) nicht
+            realisierbar, fahre mit dem nächsten \(\zeta\) fort.
+
+        \item \label{step:enum-xy}
+            \textbf{Enumeration über \(X\cup Y\).} Für jedes geordnete
+            Paar
+            \((\pi^1_{X\cup Y}, \pi^2_{X\cup Y})\) mit
+            \(\pi^1_X \neq \pi^2_X\) und \(\pi^1_Y \neq \pi^2_Y\):
+
+        \begin{enumerate}
+            \item \label{step:lambda1}
+                Prüfe \(\mathrm{realisierbar}(\zeta \cup
+                \pi^1_{X\cup Y})\). Falls UNSAT, weiter zum nächsten
+                Paar.
+
+            \item \label{step:lambda2}
+                Prüfe \(\mathrm{realisierbar}(\zeta \cup
+                \pi^2_{X\cup Y})\). Falls UNSAT, weiter zum nächsten
+                Paar.
+
+            \item \label{step:bridge}
+                Prüfe \(\mathrm{realisierbar}(\zeta \cup \pi^1_X \cup
+                \pi^2_Y)\) (\,die Brücken-Anfrage\,). Falls SAT, weiter
+                zum nächsten Paar. Falls UNSAT, gib
+                \((\zeta, \pi^1_{X\cup Y}, \pi^2_{X\cup Y})\) als
+                Gegenbeispiel zurück und terminiere mit
+                \(X \not\bot_{\mathrm{st}} Y \mid Z\).
+        \end{enumerate}
+    \end{enumerate}
+
+    \item \label{step:exhaust}
+        Wurden alle Tripel \((\zeta, \pi^1_{X\cup Y}, \pi^2_{X\cup Y})\)
+        ohne Erfolg durchlaufen, so gilt \(X \bot_{\mathrm{st}} Y \mid Z\).
+\end{enumerate}
+
+Der gesamte Algorithmus besteht aus Schleifen über kombinatorische
+Belegungen und Aufrufen einer einzigen Hilfsroutine
+\(\mathrm{realisierbar}(\cdot)\). Es werden weder partielle Labellings
+verwaltet noch Vervollständigungen außerhalb \(X\cup Y\cup Z\)
+explizit konstruiert. Die strukturelle Information, die in Schritt 8
+(``ein Gegenbeispiel wurde gefunden'') geliefert wird, sind die drei
+Restriktionen \(\zeta\), \(\pi^1_{X\cup Y}\), \(\pi^2_{X\cup Y}\). Aus
+ihnen lässt sich bei Bedarf nachträglich ein konkretes Paar
+\((\lambda_1, \lambda_2)\) durch zwei weitere SAT-Aufrufe gewinnen
+(die Vervollständigungen waren ja in den Schritten~\ref{step:lambda1}
+und~\ref{step:lambda2} schon einmal als SAT-Modelle verfügbar; eine
+Implementierung kann sie zwischenspeichern, wenn sie das Zeugnis
+braucht).
+
+\subsection{Korrektheit}
+\label{subsec:intra-scc-correctness}
+
+\begin{Lemma}
+    \label{lem:algo-korrekt}
+    Der Algorithmus aus \ref{subsec:intra-scc-algo} entscheidet
+    \(\textit{Ind}_{\mathrm{st}}\) korrekt.
+\end{Lemma}
+
+\begin{proof}
+    \emph{Soundness.} Gibt der Algorithmus in Schritt~\ref{step:bridge}
+    ein Gegenbeispiel zurück, so sind nach den Schritten~\ref{step:lambda1}
+    und~\ref{step:lambda2} \(\lambda_1, \lambda_2 \in
+    \varLambda_{\mathrm{st}}(F)\) mit \(\lambda_i|_{X\cup Y} =
+    \pi^i_{X\cup Y}\) und \(\lambda_i|_Z = \zeta\) gegeben. Schritt~7
+    sagt UNSAT, also existiert kein \(\lambda_3 \in
+    \varLambda_{\mathrm{st}}(F)\) mit \(\lambda_3|_X = \pi^1_X =
+    \lambda_1|_X\) und \(\lambda_3|_{Y\cup Z} = \pi^2_Y \cup \zeta =
+    \lambda_2|_{Y\cup Z}\). Damit ist \((\lambda_1, \lambda_2)\) ein
+    Gegenbeispiel im Sinne von Definition~\ref{def:gegenbsp-st}.
+
+    \emph{Completeness.} Angenommen \(X \not\bot_{\mathrm{st}} Y \mid Z\).
+    Dann existiert ein Gegenbeispiel \((\lambda_1, \lambda_2)\) nach
+    Definition~\ref{def:gegenbsp-st}. Sei
+    \(\zeta := \lambda_1|_Z = \lambda_2|_Z\),
+    \(\pi^i_{X\cup Y} := \lambda_i|_{X\cup Y}\). Dann gilt
+    \(\pi^1_X \neq \pi^2_X\) und \(\pi^1_Y \neq \pi^2_Y\) (wäre eine der
+    beiden Gleichheiten erfüllt, ließe sich \(\lambda_3\) trivial wählen
+    --- siehe Diskussion in \ref{subsec:intra-scc-invariants-discussion}).
+    Das Tripel \((\zeta, \pi^1_{X\cup Y}, \pi^2_{X\cup Y})\) wird in der
+    Enumeration in Schritten~\ref{step:enum-z}--\ref{step:enum-xy}
+    erreicht, alle drei Realisierbarkeitsabfragen liefern die im Aufruf
+    erwarteten Ergebnisse, und der Algorithmus terminiert mit dem
+    Gegenbeispiel.
+\end{proof}
+
+\subsection{Notwendigkeit der drei Bedingungen}
 \label{subsec:intra-scc-invariants-discussion}
 
-Die vier Invarianten erfüllen unterschiedliche Aufgaben. (C2)--(C4)
-korrespondieren direkt mit Bestandteilen von
-Definition~\ref{def:gegenbsp-st} und sichern, dass ein Kandidat überhaupt
-als Gegenbeispiel \emph{in Frage kommt}; (C1) ist demgegenüber rein
-operativer Natur und hält den Suchraum auf zulässige
-Vervollständigungen beschränkt. Im Folgenden zeigen wir an je einem
-kleinen Beispiel, was geschähe, wenn eine der Bedingungen verletzt
-würde.
+Die drei Eigenschaften des Tripels \((\zeta, \pi^1_{X\cup Y},
+\pi^2_{X\cup Y})\) --- Z-Gleichheit, X-Unterschied, Y-Unterschied,
+gemeinsame Realisierbarkeit und Unerfüllbarkeit der Brücke --- sind alle
+notwendig. Wir zeigen an je einem Beispiel, was passiert, wenn eine
+davon weggelassen würde.
 
-\paragraph{(C1) Erweiterbarkeit auf stable-Labellings.}
-(C1) garantiert, dass jede partielle Belegung, die der Loop hält, noch
-zu mindestens einem \(\lambda_i \in \varLambda_{\mathrm{st}}(F)\)
-fortgesetzt werden kann. Sie wird durch die Unit Propagation in den
-Schritten~\ref{step:cegar-init} und \ref{step:cegar-branch} sowie den
-Konsistenztest in Schritt~\ref{step:cegar-check-c2c3} aufrechterhalten.
-
-\emph{Beispiel.} Sei \(F=(A,R)\) mit \(A=\{a_0,a_1,a_2\}\) und
-\(R=\{(a_0,a_1),(a_1,a_2),(a_2,a_0)\}\) ein ungerader Zykel, und sei
-\(Z=\{a_0\}\) mit \(\zeta(a_0)=\mathit{in}\). Die Unit Propagation
-erzwingt \(\lambda_1(a_1)=\mathit{out}\), \(\lambda_1(a_2)=\mathit{in}\)
-und damit \(\lambda_1(a_0)=\mathit{out}\) im Widerspruch zu \(\zeta\). Ohne
-(C1) bzw. den entsprechenden Konsistenztest würde der Loop diese
-Verzweigung nicht erkennen und Schritt~\ref{step:cegar-complete} liefe
-in ein erst dort sichtbares UNSAT.
-
-\paragraph{(C2) Übereinstimmung auf Z.}
-(C2) realisiert die erste Klausel von Definition~\ref{def:gegenbsp-st}.
-Nur Paare mit identischer Z-Belegung sind im Sinn von
-\(X \bot_{\mathrm{st}} Y\mid Z\) überhaupt vergleichbar.
-
-\emph{Beispiel.} Sei \(F\) ein gerader Zykel
-\(a_0\to a_1\to a_2\to a_3\to a_0\) mit den beiden stable-Labellings
-\(\lambda^*\) und \(\overline{\lambda^*}\). Mit \(Z=\{a_0\}\),
-\(X=\{a_1\}\), \(Y=\{a_2\}\) sind die einzigen beiden stable-Labellings
-\(\lambda^*\) und \(\overline{\lambda^*}\) auf \(Z\) verschieden. Ließe
-man Paare mit \(\lambda_1|_Z\neq \lambda_2|_Z\) zu, würde
-\((\lambda^*,\overline{\lambda^*})\) als Kandidat in
-Schritt~\ref{step:cegar-verify} eingespeist; die dort gestellte Frage
-nach \(\lambda_3\) mit \(\lambda_3|_{Y\cup Z}=\lambda_2|_{Y\cup Z}\)
-fixiert aber bereits implizit \(\lambda_3|_Z\neq\lambda_1|_Z\) und der
-Algorithmus testet die falsche Definition.
-
-\paragraph{(C3) Unterschied auf X.}
-(C3) verhindert triviale Nicht-Gegenbeispiele in die andere Richtung
-als (C4). Die Brücken-Bedingung an \(\lambda_3\) ist asymmetrisch:
-\(\lambda_3|_X = \lambda_1|_X\) und \(\lambda_3|_{Y\cup Z} =
-\lambda_2|_{Y\cup Z}\). Stimmen \(\lambda_1\) und \(\lambda_2\) bereits
-auf \(X\) überein, so erfüllt \(\lambda_3:=\lambda_2\) automatisch
-beide Bedingungen: \(\lambda_3|_X = \lambda_2|_X = \lambda_1|_X\) und
-\(\lambda_3|_{Y\cup Z}=\lambda_2|_{Y\cup Z}\). Damit ist das Paar nie
-Gegenbeispiel und ein NP-Aufruf in Schritt~\ref{step:cegar-verify}
-verschwendete Zeit.
+\paragraph{Z-Gleichheit.}
+Die Definition von \(X \bot_{\mathrm{st}} Y \mid Z\) vergleicht nur
+stable-Labellings, die auf \(Z\) übereinstimmen. Ließe man Paare mit
+\(\lambda_1|_Z \neq \lambda_2|_Z\) als Kandidaten zu, würde die
+Brücken-Anfrage in Schritt~\ref{step:bridge} eine Z-Belegung
+\(\pi^2_Z\) verlangen, die nicht zu \(\lambda_1|_Z\) passt --- das Paar
+testet damit eine andere Frage als die definierte.
 
 \emph{Beispiel.} Sei \(F\) der gerade Zykel
 \(a_0\to a_1\to a_2\to a_3\to a_0\) mit den beiden stable-Labellings
-\(\lambda^*\) (\(a_0,a_2\mapsto \mathit{in}\)) und
-\(\overline{\lambda^*}\) (\(a_1,a_3\mapsto\mathit{in}\)). Setze
-\(X=\emptyset\), \(Y=\{a_0,a_2\}\), \(Z=\emptyset\). Beide Labellings
-stimmen auf \(X\) trivial überein (\(X=\emptyset\)), unterscheiden
-sich aber auf \(Y\). Schritt~\ref{step:cegar-verify} sucht ein
-\(\lambda_3\) mit \(\lambda_3|_X = \lambda^*|_X = \emptyset\) (leere
-Forderung) und \(\lambda_3|_{Y\cup Z} = \overline{\lambda^*}|_Y\). Die
-Wahl \(\lambda_3:=\overline{\lambda^*}\) erfüllt beides. Folglich ist
-kein Gegenbeispiel möglich; dasselbe Argument gilt allgemein, sobald
-\(\lambda_1|_X=\lambda_2|_X\). (C3) fängt diese Fälle vor
-Schritt~\ref{step:cegar-verify} ab.
+\(\lambda^*\) und \(\overline{\lambda^*}\). Mit \(Z=\{a_0\}\),
+\(X=\{a_1\}\), \(Y=\{a_2\}\) sind die beiden Labellings auf \(Z\)
+verschieden; ohne die Z-Gleichheit als Vorbedingung würde das Paar
+\((\lambda^*, \overline{\lambda^*})\) als Kandidat eingespeist, obwohl
+es im Sinne der Definition gar nicht vergleichbar ist.
 
-\paragraph{(C4) Unterschied auf Y.}
-(C4) sichert dieselbe Nichttrivialität symmetrisch für \(Y\). Ist
-\(\lambda_1|_Y = \lambda_2|_Y\), dann erfüllt \(\lambda_3:=\lambda_1\)
-beide Brücken-Bedingungen: \(\lambda_3|_X = \lambda_1|_X\) trivial und
-\(\lambda_3|_{Y\cup Z} = \lambda_1|_{Y\cup Z} = \lambda_2|_{Y\cup Z}\)
-wegen (C2) und \(\lambda_1|_Y=\lambda_2|_Y\).
+\paragraph{X-Unterschied \texorpdfstring{(\(\pi^1_X \neq \pi^2_X\))}{}.}
+Stimmen \(\lambda_1\) und \(\lambda_2\) auf \(X\) überein, so erfüllt
+\(\lambda_3 := \lambda_2\) automatisch die Brücken-Bedingung:
+\(\lambda_3|_X = \lambda_2|_X = \lambda_1|_X\) und \(\lambda_3|_{Y\cup
+Z} = \lambda_2|_{Y\cup Z}\) trivial.
+Schritt~\ref{step:bridge} liefert in diesem Fall garantiert SAT.
 
-\emph{Beispiel.} Sei \(F=(\{a\},\emptyset)\) ein Argument ohne
-Angreifer. Das einzige stable-Labelling ist
-\(\lambda(a)=\mathit{in}\). Mit \(X=Z=\emptyset\), \(Y=\{a\}\) ist die
-einzige Wahl \(\lambda_1=\lambda_2=\lambda\), die (C4) verletzt.
-Schritt~\ref{step:cegar-verify} liefert sofort \(\lambda_3:=\lambda\)
-und damit „kein Gegenbeispiel". Ohne (C4) als explizite Forderung
-würde der Loop diesen Kandidaten dennoch aufzählen --- ein unbegrenzt
-häufiger Leerlauf, weil dasselbe Labellingpaar mehrfach getestet wird,
-ohne dass der Algorithmus Fortschritt macht.
+\emph{Beispiel.} Sei \(F\) der gerade Zykel
+\(a_0\to a_1\to a_2\to a_3\to a_0\), \(X=\emptyset\),
+\(Y=\{a_0, a_2\}\), \(Z=\emptyset\). Die Stable-Labellings \(\lambda^*\)
+und \(\overline{\lambda^*}\) unterscheiden sich auf \(Y\), stimmen auf
+\(X\) trivial überein. Schritt~\ref{step:bridge} prüft, ob
+\(\overline{\lambda^*}|_Y\) zu einem stable-Labelling erweiterbar
+ist --- ja, durch \(\overline{\lambda^*}\) selbst. Kein Gegenbeispiel.
 
-\medskip
-Insgesamt entsprechen (C2)--(C4) den drei notwendigen Bestandteilen
-eines \emph{Gegenbeispiel-Kandidaten} vor der Verifikation; (C1) hält die
-Suche auf legalen Vervollständigungen. Die hinreichende
-Gegenbeispiel-Eigenschaft, also die zweite Klausel von
-Definition~\ref{def:gegenbsp-st}, lässt sich keiner Invariante
-zuschreiben und muss in Schritt~\ref{step:cegar-verify} explizit geprüft
-werden.
+\paragraph{Y-Unterschied \texorpdfstring{(\(\pi^1_Y \neq \pi^2_Y\))}{}.}
+Symmetrisch: stimmen \(\lambda_1, \lambda_2\) auf \(Y\) überein, ist
+\(\lambda_3 := \lambda_1\) eine Brücke.
 
-\subsection{Ablauf}
-\label{subsec:intra-scc-loop}
+\emph{Beispiel.} \(F=(\{a\}, \emptyset)\), einziges stable-Labelling
+\(\lambda(a) = \mathit{in}\). Mit \(Y=\{a\}\), \(X=Z=\emptyset\) gibt
+es nur ein Paar \((\lambda, \lambda)\), und dieses ist trivialerweise
+durch sich selbst zu brücken. Kein Gegenbeispiel.
 
-\begin{enumerate}
-    \item \label{step:cegar-zeta}
-        \textbf{Z fixieren.} Wähle eine Belegung
-        \(\zeta : Z \to \{\mathit{in},\mathit{out}\}\), die zu mindestens
-        einem \textit{stable}-Labelling von \(F\) erweiterbar ist. Existiert
-        keine solche, so ist \(\varLambda_{\mathrm{st}}(F)=\emptyset\) und
-        \(X \bot_{\mathrm{st}} Y \mid Z\) gilt vakuum.
+\paragraph{Realisierbarkeit von \texorpdfstring{\(\lambda_1\)}{lambda_1} und \texorpdfstring{\(\lambda_2\)}{lambda_2}.}
+\(\lambda_1, \lambda_2\) müssen tatsächlich existieren. Würde man die
+Realisierbarkeitsabfragen in den Schritten~\ref{step:lambda1}
+und~\ref{step:lambda2} weglassen, könnte die Brücken-Anfrage UNSAT
+liefern, obwohl \(\pi^1_{X\cup Y}\) gar kein gültiges stable-Labelling
+fortsetzt --- der Algorithmus würde dann ein ``Pseudo-Gegenbeispiel''
+melden, das die Definition nicht erfüllt.
 
-    \item \label{step:cegar-init}
-        \textbf{Initialisierung.} Setze
-        \(\lambda_1|_Z = \lambda_2|_Z = \zeta\) und propagiere in beiden
-        Labellings alle durch \(\zeta\) erzwungenen Werte.
-
-    \item \label{step:cegar-branch}
-        \textbf{Verzweigung auf \(X\) und \(Y\).} Wähle ein \(y\in Y\),
-        das in beiden Labellings noch offen ist, und setze
-        \(\lambda_1(y):=\mathit{in}\), \(\lambda_2(y):=\mathit{out}\)
-        (oder umgekehrt). Damit ist (C4) sichergestellt. Falls
-        \(X\neq\emptyset\), wähle zusätzlich ein \(x\in X\) und setze
-        \(\lambda_1(x), \lambda_2(x)\) auf unterschiedliche Werte, um
-        (C3) sicherzustellen. Propagiere in \(\lambda_1\) und
-        \(\lambda_2\) getrennt alle daraus folgenden Erzwingungen.
-
-    \item \label{step:cegar-check-c2c3}
-        \textbf{Konsistenztest.} Wird durch die Propagation in einer der
-        beiden Belegungen ein Argument in \(Z\) auf einen Wert gezwungen,
-        der (C2) verletzt, oder ein Argument in \(X\) bzw. \(Y\) so
-        festgelegt, dass (C3) bzw. (C4) nicht mehr erfüllbar ist, so
-        verwerfe die aktuelle Verzweigung und gehe zurück zu
-        Schritt~\ref{step:cegar-branch} mit anderer Wahl.
-
-    \item \label{step:cegar-complete}
-        \textbf{Vervollständigung außerhalb \(X\cup Y\cup Z\).} Erweitere
-        \(\lambda_1\) und \(\lambda_2\) unabhängig voneinander zu
-        vollständigen \textit{stable}-Labellings durch einen SAT-Aufruf auf
-        \(\mathrm{st}_F(I)\). Die beiden Labellings müssen außerhalb von
-        \(X\cup Y\cup Z\) nicht übereinstimmen.
-
-    \item \label{step:cegar-verify}
-        \textbf{Verifikation.} Prüfe per NP-Aufruf, ob ein
-        \(\lambda_3\in\varLambda_{\mathrm{st}}(F)\) mit
-        \(\lambda_3|_X=\lambda_1|_X\) und
-        \(\lambda_3|_{Y\cup Z}=\lambda_2|_{Y\cup Z}\) existiert. Dazu
-        löst man \(\mathrm{st}_F(I)\) mit fixierten \(X\)-, \(Y\)- und
-        \(Z\)-Variablen.
-        \begin{itemize}
-            \item Gibt es kein solches \(\lambda_3\), so ist
-                \((\lambda_1,\lambda_2)\) ein Gegenbeispiel und der
-                Algorithmus terminiert mit
-                \(X \not\bot_{\mathrm{st}} Y\mid Z\).
-            \item Andernfalls verwerfe das Paar und gehe zurück zu
-                Schritt~\ref{step:cegar-branch}.
-        \end{itemize}
-
-    \item \label{step:cegar-exhaust}
-        \textbf{Abbruch.} Sind alle Verzweigungen aus
-        Schritten~\ref{step:cegar-zeta}--\ref{step:cegar-branch}
-        erschöpft, ohne dass Schritt~\ref{step:cegar-verify} ein
-        Gegenbeispiel bestätigt, so gilt
-        \(X \bot_{\mathrm{st}} Y \mid Z\).
-\end{enumerate}
-
-Strukturell ist Schritt~\ref{step:cegar-verify} die teure Verifikation, an
-der das CEGAR-Schema ansetzt: jedes abgelehnte Paar liefert eine
-\emph{Blockierungsklausel}, die dieselbe \((X,Y,Z)\)-Signatur in
-Schritt~\ref{step:cegar-branch} ausschließt.
+\emph{Beispiel.} \(F=(\{a_0, a_1, a_2\}, \{(a_0, a_1), (a_1, a_2),
+(a_2, a_0)\})\) ein ungerader 3-Zykel mit
+\(\varLambda_{\mathrm{st}}(F) = \emptyset\). Mit \(X=\{a_0\}\),
+\(Y=\{a_1\}\), \(Z=\emptyset\) und \(\pi^1_X(a_0) = \mathit{in},
+\pi^1_Y(a_1) = \mathit{in}\) ist die Brücken-Anfrage UNSAT (es gibt
+kein einziges stable-Labelling), aber dasselbe gilt für \(\lambda_1\):
+das ``Gegenbeispiel'' wäre nur Artefakt des Vakuum-Falls. CI gilt hier
+vakuum.
 
 \section{Heuristische Beschleuniger}
 \label{sec:intra-scc-heur}
 
-Im Worst Case bleibt der Loop aus Abschnitt~\ref{sec:intra-scc-iter} so
-teuer wie \(\textit{Ind}_{\mathrm{st}}\) selbst. Wir notieren drei
-strukturelle Beobachtungen, die in vielen praktischen Instanzen zu einer
-früheren Entscheidung führen.
+Der Algorithmus aus Abschnitt~\ref{subsec:intra-scc-algo} ist im
+Worst Case so teuer wie \(\textit{Ind}_{\mathrm{st}}\) selbst. In der
+Praxis lassen sich aber viele Tripel
+\((\zeta, \pi^1_{X\cup Y}, \pi^2_{X\cup Y})\) ohne SAT-Aufruf
+verwerfen. Im Folgenden notieren wir drei strukturelle Filter, die
+sich direkt vor den Realisierbarkeitsabfragen anwenden lassen.
 
-\subsection{Z-Erreichbarkeitsfilter}
-\label{subsec:heur-z-reach}
+\subsection{Bessere Startpunkte für \texorpdfstring{\(\zeta\)}{zeta}}
+\label{subsec:heur-z-pick}
 
-Wird in Schritt~\ref{step:cegar-init} jedes \(y\in Y\) bereits durch
-\(\zeta\) deterministisch festgelegt, so kann (C4) für dieses \(\zeta\)
-nicht mehr erfüllt werden. Es genügt, den deterministischen Abschluss von
-\(\zeta\) zu berechnen und zu prüfen, ob \(Y\) vollständig enthalten ist.
+Die Wahl der Reihenfolge in der \(\zeta\)-Enumeration in
+Schritt~\ref{step:enum-z} ist für die Korrektheit irrelevant, aber für
+das Auffinden eines Gegenbeispiels nicht. Drei Heuristiken bieten sich
+an:
+\begin{itemize}
+    \item \emph{Wenig erzwingende \(\zeta\) zuerst.}
+        Berechne für jedes \(\zeta\) den deterministischen Abschluss
+        unter \(\mathrm{st}_F(I)\). Belegungen, die viele Argumente
+        außerhalb \(Z\) fixieren, lassen wenig Freiheit für
+        \(X\)- bzw. \(Y\)-Variationen. Ein \(\zeta\), dessen Abschluss
+        \(X\cup Y\) nicht trifft, ist ein vielversprechender Kandidat
+        für ein Gegenbeispiel.
+    \item \emph{Z-Belegungen, die \(X\cup Y\) komplett fixieren,
+        überspringen.}
+        Wird durch Propagation jedes Argument in \(X\) oder jedes in
+        \(Y\) deterministisch festgelegt, so existiert für dieses
+        \(\zeta\) entweder kein \(\pi^1, \pi^2\) mit unterschiedlichen
+        \(X\)-Werten, oder keines mit unterschiedlichen \(Y\)-Werten ---
+        in beiden Fällen kein Gegenbeispiel. Schritt~\ref{step:enum-xy}
+        kann übersprungen werden.
+    \item \emph{Vakuum-Fall global prüfen.}
+        Ist \(\mathrm{realisierbar}(\emptyset)\) bereits UNSAT, so ist
+        \(\varLambda_{\mathrm{st}}(F)=\emptyset\) und
+        \(X \bot_{\mathrm{st}} Y \mid Z\) gilt vakuum. Dies kann vor
+        der gesamten \(\zeta\)-Enumeration einmalig geprüft werden.
+\end{itemize}
 
-\subsection{Eingebettete gerade Zykel}
-\label{subsec:heur-even-cycle}
+\subsection{Filter auf strukturell unmögliche Kombinationen}
+\label{subsec:heur-xy-incompat}
 
-Existiert ein induzierter gerader Zykel
-\(D \subseteq A\setminus (X\cup Z)\), dessen Argumente ausschließlich aus
-\(D\) angegriffen werden und der \(Y\) schneidet, so kann die
-Verzweigung in Schritt~\ref{step:cegar-branch} deterministisch ersetzt
-werden: \(\lambda_1\) erhält die eine alternierende Färbung von \(D\),
-\(\lambda_2\) die andere. Dies ist die Verallgemeinerung von
-Lemma~\ref{lem:zykel-st}~(2) auf eingebettete Zykel.
+In Schritt~\ref{step:enum-xy} werden alle
+\((\pi^1_{X\cup Y}, \pi^2_{X\cup Y})\)-Paare aufgezählt. Viele lassen
+sich aus rein graphentheoretischen Gründen verwerfen, ohne den
+SAT-Solver zu bemühen.
 
-\paragraph{Beispiel.}
-Sei \(F=(A,R)\) mit \(A = \{a_0, a_1, a_2, a_3, z\}\) und Angriffen
-\[
-    R = \{(a_0,a_1),(a_1,a_2),(a_2,a_3),(a_3,a_0),(z,z')\},
-\]
-wobei \(\{a_0,a_1,a_2,a_3\}\) den induzierten 4-Zykel \(D\) bildet und
-kein zusätzlicher Angriff von außen auf \(D\) zeigt. Setze
-\(Z=\{z\}\), \(X=\emptyset\), \(Y=\{a_0, a_2\}\).
+\begin{itemize}
+    \item \emph{Direkte Angriffe zwischen \(X\) und \(Y\).} Gilt
+        \((x,y)\in R\) mit \(x\in X, y\in Y\), so erzwingt
+        \(\pi(x)=\mathit{in}\) sofort \(\pi(y)=\mathit{out}\) in jeder
+        stable-Belegung; umgekehrt erlaubt \(\pi(x)=\mathit{out}\)
+        beide Werte für \(y\) nur, wenn \(y\) andere Angreifer hat. Pro
+        Paar \((x,y)\) lassen sich solche Implikationen vorberechnen
+        und auf jede Belegung \(\pi\) direkt prüfen.
+    \item \emph{Konflikte innerhalb \(X\cup Y\).} Existieren Angriffe
+        \((a,b)\) mit \(a, b\in X\cup Y\) und \(\pi(a)=\pi(b)=
+        \mathit{in}\), ist \(\pi\) sofort nicht realisierbar
+        (Konfliktfreiheit verletzt).
+    \item \emph{Eingebettete gerade Zykel.} Existiert ein induzierter
+        gerader Zykel \(D \subseteq A\setminus(X\cup Z)\) ohne externe
+        Angreifer, der \(Y\) schneidet, so liefert er deterministisch
+        zwei Y-verschiedene Realisierungen für \(\pi^1, \pi^2\) --- die
+        beiden alternierenden Färbungen von \(D\). Statt alle
+        \(2^{|Y|}\) Belegungen durchzuprobieren genügt es, dieses Paar
+        explizit zu konstruieren und nur die Brücken-Anfrage in
+        Schritt~\ref{step:bridge} laufen zu lassen.
+\end{itemize}
 
-In \(D\) gibt es genau zwei alternierende Färbungen:
-\[
-    \lambda^*_D : a_0,a_2 \mapsto \mathit{in},\ 
-                  a_1,a_3 \mapsto \mathit{out},
-    \qquad
-    \overline{\lambda^*_D} : a_0,a_2 \mapsto \mathit{out},\ 
-                  a_1,a_3 \mapsto \mathit{in}.
-\]
-Da \(D\) keine externen Angreifer besitzt, sind beide Färbungen mit
-jeder beliebigen \(\zeta\)-Belegung von \(z\) zu vollständigen
-stable-Labellings ergänzbar. Die Heuristik setzt also direkt
-\(\lambda_1|_D := \lambda^*_D\) und
-\(\lambda_2|_D := \overline{\lambda^*_D}\). Damit gilt automatisch
-\(\lambda_1(a_0) \neq \lambda_2(a_0)\) und
-\(\lambda_1(a_2)\neq \lambda_2(a_2)\), insbesondere (C4). Da \(D\) zudem
-\(X\cup Z\) nicht schneidet, sind (C2) und (C3) trivial erfüllt. Statt
-\(2^{|Y|}\) Branches in Schritt~\ref{step:cegar-branch} bleibt nur noch
-der NP-Aufruf in Schritt~\ref{step:cegar-verify} zu erledigen.
+\subsection{Realisierbarkeitsabfrage nutzt nur SAT/UNSAT}
+\label{subsec:heur-no-completion}
 
-\subsection{Lokale Symmetrie}
-\label{subsec:heur-symmetry}
+Die Hilfsroutine \(\mathrm{realisierbar}(\pi)\) ist als reine
+Wahrheitswertanfrage formuliert: das SAT-Modell außerhalb
+\(X\cup Y\cup Z\) wird vom Algorithmus nicht weiterverwendet. Eine
+Implementierung mit inkrementellem SAT-Solver (Assumptions statt
+Klausel-Reset) liefert die Antwort in der Größenordnung einer
+Konflikt\-analyse pro Aufruf und hält die Solverzustände zwischen den
+drei Anfragen warm. Damit fallen die meisten Realisierbarkeitsabfragen
+deutlich billiger aus als ein voller QBF-Aufruf, weil weder
+Quantorenstruktur noch innere Schleifen wie beim QBF-Solver
+durchlaufen werden müssen.
 
-Bevor wir die heuristische Konstruktion angeben, klären wir die
-verwendeten Begriffe.
+Eine Implementierung kann das Modell aus den Schritten~\ref{step:lambda1}
+und~\ref{step:lambda2} zwischenspeichern, falls am Ende ein konkretes
+Paar \((\lambda_1, \lambda_2)\) als Zeugnis ausgegeben werden soll.
+Für die Entscheidungsfrage selbst sind die Modelle entbehrlich.
 
-\begin{Definition}
-    \label{def:af-automorphismus}
-    Sei \(F=(A,R)\) ein AF. Eine Bijektion \(\sigma : A \to A\) heißt
-    \emph{Automorphismus} von \(F\), wenn sie die Angriffsrelation
-    erhält, das heißt
-    \[
-        (a,b)\in R \quad\Longleftrightarrow\quad
-        (\sigma(a),\sigma(b))\in R
-        \qquad \text{für alle } a,b\in A.
-    \]
-    Die Menge \(\mathrm{Aut}(F)\) aller solchen Bijektionen bildet mit
-    der Komposition eine Gruppe.
-\end{Definition}
-
-Anschaulich beschreibt ein Automorphismus eine Umbenennung der
-Argumente, unter der \(F\) als Graph gleich bleibt. Vertauscht etwa
-\(\sigma\) zwei Argumente \(y_1, y_2\) und ist \(F\) auf den
-restlichen Argumenten identisch, so muss zwingend gelten: jeder
-Angreifer von \(y_1\) ist auch Angreifer von \(y_2\), und umgekehrt;
-und \(y_1, y_2\) greifen genau dieselben Argumente an. Symmetrien
-beschreiben damit strukturelle Ununterscheidbarkeit von Argumenten.
-
-\begin{Definition}
-    \label{def:lok-sym}
-    Sei \(F=(A,R)\) ein AF und seien \(X,Y,Z\subseteq A\) paarweise
-    disjunkt. Eine \emph{lokale Symmetrie für} \((X,Y,Z)\) ist ein
-    Automorphismus \(\sigma\in\mathrm{Aut}(F)\) mit
-    \begin{itemize}
-        \item \(\sigma(a)=a\) für alle \(a\in X\cup Z\),
-        \item es gibt \(y_1,y_2\in Y\) mit
-              \(\sigma(y_1)=y_2\) und \(y_1\neq y_2\).
-    \end{itemize}
-\end{Definition}
-
-Die erste Bedingung verlangt, dass \(\sigma\) die ausgezeichneten
-Argumente in \(X\) und \(Z\) punktweise unverändert lässt --- die
-Symmetrie ist also lokal in dem Sinne, dass sie außerhalb von
-\(X\cup Z\) wirkt. Die zweite Bedingung verlangt, dass sie auf \(Y\)
-nichttrivial wirkt; nur so können die zwei Labellings \(\lambda_1\)
-und \(\lambda_2 = \lambda_1\circ\sigma^{-1}\) sich überhaupt auf \(Y\)
-unterscheiden.
-
-\paragraph{Beispiel.}
-Sei \(F=(A,R)\) mit
-\(A=\{x, y_1, y_2, b_1, b_2\}\) und
-\[
-    R = \{(x,y_1),(x,y_2),(b_1,y_1),(b_2,y_2),(y_1,b_1),(y_2,b_2)\}.
-\]
-Die Vertauschung \(\sigma\) mit
-\(\sigma(y_1)=y_2,\ \sigma(y_2)=y_1,\ \sigma(b_1)=b_2,\ \sigma(b_2)=b_1,\
-\sigma(x)=x\) erhält die Angriffsrelation und ist damit ein
-Automorphismus von \(F\). Setzt man \(X=\{x\}\), \(Z=\emptyset\),
-\(Y=\{y_1,y_2\}\), so erfüllt \(\sigma\) Definition~\ref{def:lok-sym}.
-Jedes stable-Labelling \(\lambda_1\), das \(y_1\) und \(y_2\)
-unterschiedlich belegt, liefert mit \(\lambda_2 := \lambda_1\circ\sigma\)
-sofort ein zweites stable-Labelling, das auf \(X\) unverändert bleibt
-und auf \(Y\) genau die beiden Werte vertauscht.
-
-\begin{Lemma}
-    \label{lem:lok-sym-paar}
-    Sei \(\sigma\) eine lokale Symmetrie für \((X,Y,Z)\) und sei
-    \(\lambda_1\in\varLambda_{\mathrm{st}}(F)\) mit
-    \(\lambda_1(y_1)\neq\lambda_1(y_2)\). Dann ist
-    \(\lambda_2 := \lambda_1\circ\sigma^{-1}\) ein
-    \textit{stable}-Labelling von \(F\) mit
-    \(\lambda_1|_{X\cup Z}=\lambda_2|_{X\cup Z}\) und
-    \(\lambda_1|_Y \neq \lambda_2|_Y\).
-\end{Lemma}
-
-\begin{proof}
-    Da \(\sigma\) ein Automorphismus von \(F\) ist, bleibt die
-    Charakterisierung \(S^+ = A\setminus S\) unter \(\sigma\) invariant;
-    also ist \(\lambda_2\) wieder ein \textit{stable}-Labelling. Aus
-    \(\sigma(a)=a\) für \(a\in X\cup Z\) folgt
-    \(\lambda_2(a)=\lambda_1(\sigma^{-1}(a))=\lambda_1(a)\), womit
-    \(\lambda_1|_{X\cup Z}=\lambda_2|_{X\cup Z}\). Auf \(Y\) gilt
-    \(\lambda_2(y_2)=\lambda_1(y_1)\neq\lambda_1(y_2)\) nach
-    Voraussetzung, also unterscheiden sich \(\lambda_1\) und \(\lambda_2\)
-    auf \(Y\).
-\end{proof}
-
-Lemma~\ref{lem:lok-sym-paar} liefert ein Paar
-\((\lambda_1,\lambda_2)\), das die Invarianten (C2)--(C4) ohne
-Verzweigung erfüllt. Die Verifikation in
-Schritt~\ref{step:cegar-verify} bleibt allerdings notwendig, denn die
-Symmetrie garantiert nicht die Nicht-Existenz eines verbindenden
-\(\lambda_3\).
-
-Praktisch lohnt sich der Symmetrie-Test nur dann, wenn die Bestimmung
-der relevanten Automorphismen (z.\,B. über etablierte Implementierungen
-wie \texttt{nauty} oder \texttt{bliss}) deutlich billiger ausfällt als
-einige SAT-Aufrufe in den Schritten~\ref{step:cegar-complete}
-und~\ref{step:cegar-verify}.
