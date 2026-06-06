@@ -1,0 +1,385 @@
+\chapter{Singleton bedingte Unabhängigkeit}
+\label{ch:singl-ci}
+
+\section{Problemstellung}
+\label{sec:singl-ci-def}
+Im Folgenden betrachten wir eine eingeschränkte Variante des Entscheidungsproblems
+der \textit{stable}-Unabhängigkeit. Sei \(F=(A,R)\) ein AF, seien
+\(x,y\in A\) zwei verschiedene Argumente und sei
+\(Z\subseteq A\setminus\{x,y\}\). Damit sind
+\(X=\{x\}\), \(Y=\{y\}\) und \(Z\) paarweise disjunkt. Zu entscheiden ist, ob
+\[
+    \{x\}\bot_{\mathrm{st}}\{y\}\mid Z
+\]
+gilt. Das zugehörige Entscheidungsproblem lautet:
+\[
+\begin{array}{ll}
+\textit{SingInd}_{\mathrm{st}}\\[2mm]
+\text{Input:}  & \text{AF } F=(A,R),\ \text{Argumente } x,y\in A
+                 \text{ mit } x\neq y,\ \text{und } Z\subseteq A\setminus\{x,y\}.\\[1mm]
+\text{Output:} & \text{TRUE} \Longleftrightarrow
+                 \{x\}\bot_{\mathrm{st}}\{y\}\mid Z.
+\end{array}
+\]
+Dabei bedeutet \(\{x\}\bot_{\mathrm{st}}\{y\}\mid Z\), dass für alle
+\(\lambda_1,\lambda_2\in\Lambda_{\mathrm{st}}(F)\) mit
+\(\lambda_1|_Z=\lambda_2|_Z\) ein \(\lambda_3\in\Lambda_{\mathrm{st}}(F)\)
+existiert, sodass
+\[
+    \lambda_3(x)=\lambda_1(x),\qquad
+    \lambda_3(y)=\lambda_2(y),\qquad
+    \lambda_3|_Z=\lambda_1|_Z
+\]
+gilt.
+
+\section{Theoretische Grundlage}
+\label{sec:singl-ci-theorie}
+
+Bevor wir den Algorithmus angeben, charakterisieren wir die
+\textit{stable}-Unabhängigkeit im Singleton-Fall durch eine einfache
+kombinatorische Bedingung. Sie bildet die Grundlage für die Korrektheit des
+Algorithmus und rechtfertigt die spätere Beschränkung auf wenige
+Kandidatenfälle.
+
+\begin{Definition}
+    \label{def:singl-realisierbar}
+    Sei \(F=(A,R)\) ein AF, seien \(x,y\in A\) verschieden und sei
+    \(Z\subseteq A\setminus\{x,y\}\). Für eine Belegung
+    \(\eta:Z\to L_{\mathrm{st}}\) mit
+    \(L_{\mathrm{st}}=\{\mathit{in},\mathit{out}\}\) definieren wir die Menge
+    der unter \(\eta\) realisierbaren \((x,y)\)-Labelpaare durch
+    \[
+        R_\eta
+        :=
+        \bigl\{
+        (\lambda(x),\lambda(y))
+        \;\big|\;
+        \lambda\in\Lambda_{\mathrm{st}}(F),\ \lambda|_Z=\eta
+        \bigr\}
+        \subseteq L_{\mathrm{st}}^2.
+    \]
+    Die Belegung \(\eta\) heißt \emph{realisierbar}, falls
+    \(R_\eta\neq\emptyset\), falls also ein
+    \(\lambda\in\Lambda_{\mathrm{st}}(F)\) mit \(\lambda|_Z=\eta\) existiert.
+\end{Definition}
+
+Eine Menge \(S\subseteq L_{\mathrm{st}}^2\) nennen wir \emph{Produktrechteck},
+wenn \(P,Q\subseteq L_{\mathrm{st}}\) mit \(S=P\times Q\) existieren.
+Gleichwertig ist \(S\) genau dann ein Produktrechteck, wenn aus
+\((\alpha_1,\beta_1),(\alpha_2,\beta_2)\in S\) stets
+\((\alpha_1,\beta_2)\in S\) folgt.
+
+\begin{Proposition}
+    \label{prop:singl-rechteck}
+    Sei \(F=(A,R)\) ein AF, seien \(x,y\in A\) verschieden und sei
+    \(Z\subseteq A\setminus\{x,y\}\). Dann gilt
+    \(\{x\}\bot_{\mathrm{st}}\{y\}\mid Z\) genau dann, wenn \(R_\eta\) für jede
+    realisierbare Belegung \(\eta:Z\to L_{\mathrm{st}}\) ein Produktrechteck
+    ist.
+\end{Proposition}
+
+\begin{proof}
+    \label{pr:singl-rechteck}
+    ``\(\Rightarrow\)'': Es gelte \(\{x\}\bot_{\mathrm{st}}\{y\}\mid Z\), und
+    sei \(\eta\) realisierbar. Seien
+    \((\alpha_1,\beta_1),(\alpha_2,\beta_2)\in R_\eta\). Dann existieren
+    \(\lambda_1,\lambda_2\in\Lambda_{\mathrm{st}}(F)\) mit
+    \(\lambda_1|_Z=\lambda_2|_Z=\eta\) sowie \(\lambda_1(x)=\alpha_1\),
+    \(\lambda_1(y)=\beta_1\), \(\lambda_2(x)=\alpha_2\) und
+    \(\lambda_2(y)=\beta_2\). Wegen \(\lambda_1|_Z=\lambda_2|_Z\) liefert die
+    Unabhängigkeit nach Definition~\ref{def:BU:AFs} ein
+    \(\lambda_3\in\Lambda_{\mathrm{st}}(F)\) mit
+    \(\lambda_3(x)=\lambda_1(x)=\alpha_1\),
+    \(\lambda_3(y)=\lambda_2(y)=\beta_2\) und \(\lambda_3|_Z=\eta\). Also ist
+    \((\alpha_1,\beta_2)\in R_\eta\), und \(R_\eta\) ist ein Produktrechteck.
+
+    ``\(\Leftarrow\)'': Seien
+    \(\lambda_1,\lambda_2\in\Lambda_{\mathrm{st}}(F)\) mit
+    \(\lambda_1|_Z=\lambda_2|_Z=:\eta\). Dann ist \(\eta\) realisierbar, und es
+    gilt \((\lambda_1(x),\lambda_1(y)),(\lambda_2(x),\lambda_2(y))\in R_\eta\).
+    Da \(R_\eta\) ein Produktrechteck ist, folgt
+    \((\lambda_1(x),\lambda_2(y))\in R_\eta\); es existiert also ein
+    \(\lambda_3\in\Lambda_{\mathrm{st}}(F)\) mit \(\lambda_3|_Z=\eta\),
+    \(\lambda_3(x)=\lambda_1(x)\) und \(\lambda_3(y)=\lambda_2(y)\). Da
+    \(\lambda_1,\lambda_2\) mit \(\lambda_1|_Z=\lambda_2|_Z\) beliebig waren,
+    gilt \(\{x\}\bot_{\mathrm{st}}\{y\}\mid Z\).
+\end{proof}
+
+Wegen \(|L_{\mathrm{st}}|=2\) lässt sich die Rechteckbedingung weiter
+konkretisieren. Wir betrachten die beiden Diagonalen
+\[
+    D_1=\{(\mathit{in},\mathit{in}),(\mathit{out},\mathit{out})\},
+    \qquad
+    D_2=\{(\mathit{in},\mathit{out}),(\mathit{out},\mathit{in})\}.
+\]
+
+\begin{Lemma}
+    \label{lem:singl-diagonale}
+    Eine Menge \(R\subseteq L_{\mathrm{st}}^2\) ist genau dann \emph{kein}
+    Produktrechteck, wenn eine Diagonale
+    \(D=\{(\alpha_1,\beta_1),(\alpha_2,\beta_2)\}\in\{D_1,D_2\}\) mit
+    \(D\subseteq R\) existiert, der ein Kreuzpaar fehlt, d.\,h. mit
+    \((\alpha_1,\beta_2)\notin R\) oder \((\alpha_2,\beta_1)\notin R\).
+\end{Lemma}
+
+\begin{proof}
+    \label{pr:singl-diagonale}
+    Enthält \(R\) eine Diagonale \(D\) ohne ein Kreuzpaar, so verletzt \(R\)
+    die Produktbedingung und ist kein Rechteck. Ist umgekehrt \(R\) kein
+    Produktrechteck, so existieren
+    \((\alpha_1,\beta_1),(\alpha_2,\beta_2)\in R\) mit
+    \((\alpha_1,\beta_2)\notin R\). Aus
+    \((\alpha_1,\beta_1)\neq(\alpha_1,\beta_2)\) folgt \(\beta_1\neq\beta_2\),
+    aus \((\alpha_1,\beta_2)\neq(\alpha_2,\beta_2)\) folgt
+    \(\alpha_1\neq\alpha_2\). Wegen \(|L_{\mathrm{st}}|=2\) bilden
+    \((\alpha_1,\beta_1),(\alpha_2,\beta_2)\) eine der Diagonalen
+    \(D_1,D_2\), und \((\alpha_1,\beta_2)\) ist ein fehlendes Kreuzpaar.
+\end{proof}
+
+Proposition~\ref{prop:singl-rechteck} und Lemma~\ref{lem:singl-diagonale}
+zeigen zusammen: Ein Gegenbeispiel zur Unabhängigkeit besteht genau aus einer
+realisierbaren Belegung \(\eta\) und einer Diagonalen \(D\subseteq R_\eta\),
+der ein Kreuzpaar fehlt. Dies rechtfertigt die Beschränkung auf
+Kandidatenfälle mit \(\alpha_1\neq\alpha_2\) und \(\beta_1\neq\beta_2\): nur
+solche Fälle können eine Rechteckverletzung bezeugen. Stimmen die Labels von
+\(x\) (bzw. \(y\)) in beiden Labellings überein, so ist \(\lambda_3:=\lambda_2\)
+(bzw. \(\lambda_3:=\lambda_1\)) bereits ein Zeuge der Unabhängigkeit.
+
+\begin{Corollary}
+    \label{cor:singl-fixlabel}
+    Nimmt \(x\) oder \(y\) unter allen \(\lambda\in\Lambda_{\mathrm{st}}(F)\)
+    nur ein einziges Label an, so gilt \(\{x\}\bot_{\mathrm{st}}\{y\}\mid Z\)
+    für jedes \(Z\subseteq A\setminus\{x,y\}\).
+\end{Corollary}
+
+\begin{proof}
+    \label{pr:singl-fixlabel}
+    Nimmt \(x\) nur das Label \(\alpha\) an, so ist für jede realisierbare
+    \(\eta\) jedes Paar in \(R_\eta\) von der Gestalt \((\alpha,\cdot)\). Damit
+    ist \(R_\eta=\{\alpha\}\times Q\) mit
+    \(Q=\{\,b\in L_{\mathrm{st}}\mid(\alpha,b)\in R_\eta\,\}\) ein
+    Produktrechteck, und die Behauptung folgt mit
+    Proposition~\ref{prop:singl-rechteck}. Der Fall für \(y\) verläuft
+    symmetrisch.
+\end{proof}
+
+\section{CEGAR-style Algorithmus}
+\label{cegar-alg}
+
+\subsection{Realisierbarkeitsabfragen}
+\label{subsec:singl-realize}
+
+Sei \(F=(A,R)\) ein AF, seien \(X=\{x\}\), \(Y=\{y\}\) mit \(x\neq y\) und sei
+\(Z\subseteq A\setminus\{x,y\}\). Für \(k\in\{1,2,3\}\) bezeichne
+\(\mathcal L^k\) eine Kopie der Labelling-Variablen, und für ein Argument
+\(a\in A\) sowie ein Label \(\ell\in L_{\mathrm{st}}\) schreibe
+\(\mathrm{Fix}^k_a(\ell)\) für die Formel, die \(a\) in der \(k\)-ten Kopie auf
+\(\ell\) festlegt.
+
+Alle Anfragen werden als Erfüllbarkeitstests auf der Kodierung
+\(\mathrm{st}_F\) aus Definition~\ref{def:st-pl} mit fixierten Assumptions
+gestellt. Wir fassen die wiederkehrende Grundabfrage zusammen: Für eine
+Teilbelegung \(\pi:W\to L_{\mathrm{st}}\) mit \(W\subseteq A\) sei
+\[
+    \mathrm{realisierbar}(\pi)
+    \quad:\Longleftrightarrow\quad
+    \mathrm{st}_F(\mathcal L^3)\land
+    \bigwedge_{a\in W}\mathrm{Fix}^3_a(\pi(a))
+    \text{ ist erfüllbar}.
+\]
+Nach Lemma~\ref{lem:st-pl-correct} gilt \(\mathrm{realisierbar}(\pi)\) genau
+dann, wenn ein \(\lambda\in\Lambda_{\mathrm{st}}(F)\) mit \(\lambda|_W=\pi\)
+existiert; einzig die SAT/UNSAT-Antwort wird benötigt. Insbesondere ist
+\(\mathrm{realisierbar}(\emptyset)\) genau dann wahr, wenn
+\(\Lambda_{\mathrm{st}}(F)\neq\emptyset\). Da alle Anfragen dieselbe
+Basisformel teilen und sich nur in Assumptions sowie hinzugefügten
+Blocking-Klauseln unterscheiden, lassen sie sich inkrementell mit einem
+einzigen SAT-Solver beantworten.
+
+\subsection{Algorithmus}
+\label{subsec:singl-algo}
+
+Nach Proposition~\ref{prop:singl-rechteck} ist zu prüfen, ob \(R_\eta\) für
+jede realisierbare Belegung \(\eta\) ein Produktrechteck ist. Nach
+Lemma~\ref{lem:singl-diagonale} genügt es, die beiden Diagonalen
+\(D_1,D_2\) zu betrachten und für jede gemeinsam realisierbare Diagonale ein
+fehlendes Kreuzpaar zu suchen.
+
+\begin{enumerate}
+    \item \textbf{Globale Erfüllbarkeit.} Ist
+    \(\mathrm{realisierbar}(\emptyset)\) falsch, so gilt
+    \(\Lambda_{\mathrm{st}}(F)=\emptyset\). Damit ist
+    \(\{x\}\bot_{\mathrm{st}}\{y\}\mid Z\) vakuos erfüllt; der Algorithmus
+    antwortet, dass Unabhängigkeit gilt.
+
+    \item \textbf{Fixed-Label-Vortest.} Prüfe für \(a\in\{x,y\}\) und
+    \(\ell\in L_{\mathrm{st}}\) jeweils \(\mathrm{realisierbar}(a\mapsto\ell)\).
+    Nimmt \(x\) oder \(y\) nur ein einziges Label an, so gilt nach
+    Korollar~\ref{cor:singl-fixlabel} Unabhängigkeit. Dieser Test kostet
+    höchstens vier SAT-Aufrufe und entscheidet ganze Instanzklassen vorab.
+
+    \item \textbf{Diagonalenumeration.} Für jede Diagonale
+    \(D=\{(\alpha_1,\beta_1),(\alpha_2,\beta_2)\}\in\{D_1,D_2\}\):
+    \begin{enumerate}
+        \item Setze \(B:=\top\) und bilde
+        \[
+        \begin{aligned}
+            C^{12}_{D}
+            :=\ &
+            \mathrm{st}_F(\mathcal L^1)\land\mathrm{st}_F(\mathcal L^2)
+            \land\mathrm{Fix}^1_x(\alpha_1)\land\mathrm{Fix}^1_y(\beta_1)\\
+            &\land\mathrm{Fix}^2_x(\alpha_2)\land\mathrm{Fix}^2_y(\beta_2)
+            \land\mathrm{Eq}^{1,2}_Z.
+        \end{aligned}
+        \]
+        \item \textbf{Gemeinsame \(Z\)-Belegung suchen.} Solange
+        \(C^{12}_{D}\land B\) erfüllbar ist, wähle ein Modell und lies die
+        gemeinsame Belegung \(\eta=\lambda_1|_Z=\lambda_2|_Z\) ab. Nach
+        Konstruktion gilt \(D\subseteq R_\eta\).
+        \item \textbf{Kreuzpaare prüfen.} Ist
+        \[
+            \neg\,\mathrm{realisierbar}\bigl(\{x\mapsto\alpha_1,\,y\mapsto\beta_2\}\cup\eta\bigr)
+            \quad\text{oder}\quad
+            \neg\,\mathrm{realisierbar}\bigl(\{x\mapsto\alpha_2,\,y\mapsto\beta_1\}\cup\eta\bigr),
+        \]
+        so fehlt \(R_\eta\) ein Kreuzpaar; nach
+        Lemma~\ref{lem:singl-diagonale} ist \(R_\eta\) kein Produktrechteck.
+        Der Algorithmus gibt das Gegenbeispiel \((\eta,D)\) zurück und
+        terminiert mit \(\{x\}\not\bot_{\mathrm{st}}\{y\}\mid Z\).
+        \item \textbf{Blocking.} Sind beide Kreuzpaare realisierbar, so ist
+        \(R_\eta=L_{\mathrm{st}}^2\) ein Produktrechteck. Schließe \(\eta\)
+        durch die Blocking-Klausel
+        \[
+            \mathrm{Block}(\eta):=\bigvee_{z\in Z}\neg\,\mathrm{Fix}^1_z(\eta(z))
+        \]
+        aus, setze \(B:=B\land\mathrm{Block}(\eta)\) und fahre mit der
+        nächsten gemeinsamen \(Z\)-Belegung fort.
+    \end{enumerate}
+
+    \item \textbf{Abschluss.} Wurden beide Diagonalen ohne Gegenbeispiel
+    durchlaufen, so ist nach Proposition~\ref{prop:singl-rechteck} jede
+    realisierbare Belegung ein Produktrechteck, und es gilt
+    \(\{x\}\bot_{\mathrm{st}}\{y\}\mid Z\).
+\end{enumerate}
+
+Dabei verwenden wir die Konvention \(\bigvee\emptyset=\bot\). Im Fall
+\(Z=\emptyset\) ist \(\mathrm{Block}(\eta)=\bot\), sodass jede Diagonale nach
+genau einer Iteration abbricht.
+
+\subsection{Korrektheit und Terminierung}
+\label{subsec:singl-korrekt}
+
+\begin{Lemma}
+    \label{lem:singl-korrekt}
+    Der Algorithmus aus Abschnitt~\ref{subsec:singl-algo} entscheidet
+    \(\textit{SingInd}_{\mathrm{st}}\) korrekt und terminiert.
+\end{Lemma}
+
+\begin{proof}
+    \label{pr:singl-korrekt}
+    \emph{Korrektheit bei Gegenbeispiel.} Gibt der Algorithmus in
+    Schritt~3(c) ein Gegenbeispiel \((\eta,D)\) zurück, so wurde \(\eta\) als
+    gemeinsame \(Z\)-Belegung mit \(D\subseteq R_\eta\) gefunden, und ein
+    Kreuzpaar fehlt in \(R_\eta\). Nach Lemma~\ref{lem:singl-diagonale} ist
+    \(R_\eta\) kein Produktrechteck; mit Proposition~\ref{prop:singl-rechteck}
+    folgt \(\{x\}\not\bot_{\mathrm{st}}\{y\}\mid Z\).
+
+    \emph{Korrektheit bei Unabhängigkeit.} Meldet der Algorithmus
+    Unabhängigkeit, so liegt einer von drei Fällen vor:
+    \(\Lambda_{\mathrm{st}}(F)=\emptyset\) (Schritt~1, vakuos erfüllt), ein
+    fixiertes Label nach Korollar~\ref{cor:singl-fixlabel} (Schritt~2) oder
+    der erschöpfende Durchlauf beider Diagonalen (Schritt~4). Im letzten Fall
+    enthält kein \(R_\eta\) eine Diagonale ohne Kreuzpaar; nach
+    Lemma~\ref{lem:singl-diagonale} ist jedes \(R_\eta\) ein Produktrechteck,
+    und Proposition~\ref{prop:singl-rechteck} liefert
+    \(\{x\}\bot_{\mathrm{st}}\{y\}\mid Z\).
+
+    \emph{Vollständigkeit.} Gilt \(\{x\}\not\bot_{\mathrm{st}}\{y\}\mid Z\), so
+    existiert nach Proposition~\ref{prop:singl-rechteck} eine realisierbare
+    Belegung \(\eta^\ast\), für die \(R_{\eta^\ast}\) kein Produktrechteck ist.
+    Nach Lemma~\ref{lem:singl-diagonale} gibt es eine Diagonale
+    \(D\subseteq R_{\eta^\ast}\) mit fehlendem Kreuzpaar. Im Durchlauf dieser
+    Diagonalen erfüllt \(\eta^\ast\) die Formel \(C^{12}_{D}\); geblockt werden
+    ausschließlich Belegungen mit \(R_\eta=L_{\mathrm{st}}^2\), also nicht
+    \(\eta^\ast\). Folglich erreicht die Enumeration \(\eta^\ast\) (oder zuvor
+    ein anderes Gegenbeispiel), und die Kreuzpaarprüfung schlägt fehl.
+
+    \emph{Terminierung.} In jeder Iteration der Enumerationsschleife wird
+    entweder terminiert oder genau eine realisierbare gemeinsame
+    \(Z\)-Belegung durch \(\mathrm{Block}(\eta)\) dauerhaft ausgeschlossen.
+    Davon gibt es höchstens \(2^{|Z|}\); die äußere Schleife über die beiden
+    Diagonalen ist endlich.
+\end{proof}
+
+\begin{Corollary}
+    \label{cor:singl-aufrufe}
+    Sei \(N\) die Anzahl der in Schritt~3 insgesamt aufgezählten gemeinsamen
+    \(Z\)-Belegungen. Der Algorithmus benötigt \(N+O(1)\) Enumerationsabfragen
+    und höchstens \(2N+O(1)\) weitere Realisierbarkeitsabfragen. Im
+    schlechtesten Fall ist \(N\in O(2^{|Z|})\).
+\end{Corollary}
+
+\begin{proof}
+    \label{pr:singl-aufrufe}
+    Globale Erfüllbarkeit und Fixed-Label-Vortest verursachen höchstens fünf
+    Aufrufe. Jede der \(N\) aufgezählten Belegungen kostet eine
+    \(C^{12}\)-Abfrage und höchstens zwei Kreuzpaarabfragen; pro Diagonale
+    kommt eine abschließende UNSAT-Abfrage hinzu. Die Schranke
+    \(N\in O(2^{|Z|})\) folgt aus der Zahl möglicher \(Z\)-Belegungen.
+\end{proof}
+
+Die exponentielle Schranke ist der \(\Pi_2^{\mathrm P}\)-Härte des Problems
+geschuldet (Theorem~\ref{th:ind-st-is-pi2p-c}). Die folgenden Heuristiken
+zielen darauf, die Zahl \(N\) der aufgezählten Belegungen sowie die Kosten der
+Einzelaufrufe zu senken.
+
+\subsection{Heuristiken zur Gegenbeispielsuche}
+\label{subsec:singl-heuristiken}
+
+Die folgenden Heuristiken senken Anzahl bzw. Kosten der SAT-Aufrufe, ohne die
+Korrektheit zu beeinflussen.
+
+\paragraph{Inkrementelles SAT mit Assumptions.}
+Sämtliche Anfragen teilen die Basisformel \(\mathrm{st}_F\) (bzw. ihre beiden
+Kopien) und unterscheiden sich nur in Assumptions und Blocking-Klauseln. Ein
+einziger persistenter Solver über alle Diagonalen und Belegungen hinweg
+erlaubt die Wiederverwendung gelernter Klauseln und vermeidet wiederholtes
+Aufbauen der Formel.
+
+\paragraph{Blocking über UNSAT-Cores.}
+Ist eine Kreuzpaarabfrage unter den Assumptions einer Belegung \(\eta\)
+unerfüllbar, liefert der Solver einen UNSAT-Core, also eine Teilmenge der
+\(\eta\)-Literale, die den Widerspruch bereits erzwingt. Dessen Negation
+blockt nicht nur \(\eta\), sondern alle Belegungen mit derselben
+konfliktären Teilbelegung und beschneidet den Suchraum oft deutlich stärker
+als das punktweise \(\mathrm{Block}(\eta)\).
+
+\paragraph{Verallgemeinertes Blocking.}
+Statt nur \(\eta\) auszuschließen, kann aus dem Modell einer erfüllbaren
+Kreuzpaarprüfung eine ganze Familie unkritischer Belegungen abgeleitet werden,
+etwa durch Weglassen von Literalen, die für die Realisierbarkeit der
+Kreuzpaare irrelevant sind. Dies entspricht der Verfeinerungsphase eines
+echten CEGAR-Verfahrens für die \(\exists\forall\)-Struktur des Problems.
+
+\paragraph{Globales Backbone von \(Z\).}
+Argumente \(z\in Z\), die über alle \textit{stable}-Labellings hinweg dasselbe
+Label tragen (das \emph{Backbone} von \(\mathrm{st}_F\)), sind in jeder
+gemeinsamen \(Z\)-Belegung fixiert. Wird dieses Backbone einmal vorab
+berechnet, lässt sich die Enumeration auf die variablen Argumente
+\(Z_{\mathrm{var}}\subseteq Z\) beschränken und die Blocking-Klauseln
+verkürzen. Im Gegensatz zu einer kandidatenweisen Determinismusanalyse fällt
+dieser Aufwand nur einmal an.
+
+\paragraph{SCC-Vorverarbeitung.}
+Zerfällt \(F\) in mehrere starke Zusammenhangskomponenten, propagieren
+\textit{stable}-Labels entlang des SCC-DAG. Argumente außerhalb der für \(x\),
+\(y\) und \(Z\) relevanten Komponenten sind häufig bereits fixiert, wodurch
+sich die Formeln verkleinern. Bildet das relevante Fragment einen einzelnen
+geraden Zykel, ist die Frage ohne SAT-Aufruf in linearer Zeit entscheidbar.
+
+\paragraph{Reihenfolge der Abfragen.}
+Innerhalb eines Diagonaldurchlaufs sollte zuerst das voraussichtlich
+diskriminierende Kreuzpaar geprüft werden, um ein Gegenbeispiel früh zu
+finden. Durch \emph{phase saving} im Solver lassen sich strukturell
+unterschiedliche \(Z\)-Belegungen schneller erreichen, was \(N\) in der Praxis
+senkt.
