@@ -7,10 +7,7 @@ Im Folgenden betrachten wir eine eingeschränkte Variante des Entscheidungsprobl
 der \textit{stable}-Unabhängigkeit. Sei \(F=(A,R)\) ein AF, seien
 \(x,y\in A\) zwei verschiedene Argumente und sei
 \(Z\subseteq A\setminus\{x,y\}\). Damit sind
-\(X=\{x\}\), \(Y=\{y\}\) und \(Z\) paarweise disjunkt. Zu entscheiden ist, ob
-\[
-    \{x\}\bot_{\mathrm{st}}\{y\}\mid Z
-\]
+\(X=\{x\}\), \(Y=\{y\}\) und \(Z\) paarweise disjunkt. Zu entscheiden ist, ob \(\{x\}\bot_{\mathrm{st}}\{y\}\mid Z\)
 gilt. Das zugehörige Entscheidungsproblem lautet:
 \[
 \begin{array}{ll}
@@ -25,11 +22,9 @@ Dabei bedeutet \(\{x\}\bot_{\mathrm{st}}\{y\}\mid Z\), dass für alle
 \(\lambda_1,\lambda_2\in\Lambda_{\mathrm{st}}(F)\) mit
 \(\lambda_1|_Z=\lambda_2|_Z\) ein \(\lambda_3\in\Lambda_{\mathrm{st}}(F)\)
 existiert, sodass
-\[
-    \lambda_3(x)=\lambda_1(x),\qquad
-    \lambda_3(y)=\lambda_2(y),\qquad
-    \lambda_3|_Z=\lambda_1|_Z
-\]
+    \(\lambda_3(x)=\lambda_1(x),~
+    \lambda_3(y)=\lambda_2(y),~
+    \lambda_3|_Z=\lambda_1|_Z\)
 gilt.
 
 \section{Theoretische Grundlage}
@@ -169,32 +164,44 @@ solche Fälle können eine Rechteckverletzung bezeugen. Stimmen die Labels von
 \subsection{Realisierbarkeitsabfragen}
 \label{subsec:singl-realize}
 
-Sei \(F=(A,R)\) ein AF, seien \(X=\{x\}\), \(Y=\{y\}\) mit \(x\neq y\) und sei
-\(Z\subseteq A\setminus\{x,y\}\). Für \(k\in\{1,2,3\}\) bezeichne
-\(\mathcal L^k\) eine Kopie der Labelling-Variablen, und für ein Argument
-\(a\in A\) sowie ein Label \(\ell\in L_{\mathrm{st}}\) schreibe
-\(\mathrm{Fix}^k_a(\ell)\) für die Formel, die \(a\) in der \(k\)-ten Kopie auf
-\(\ell\) festlegt.
+Der Algorithmus stützt sich auf eine einzige Hilfsabfrage, die prüft, ob sich
+eine vorgegebene Teilbelegung zu einem \textit{stable}-Labelling fortsetzen
+lässt; alle übrigen Schritte sind Schleifen über kombinatorische Belegungen.
 
-Alle Anfragen werden als Erfüllbarkeitstests auf der Kodierung
-\(\mathrm{st}_F\) aus Definition~\ref{def:st-pl} mit fixierten Assumptions
-gestellt. Wir fassen die wiederkehrende Grundabfrage zusammen: Für eine
-Teilbelegung \(\pi:W\to L_{\mathrm{st}}\) mit \(W\subseteq A\) sei
+Für ein Argument \(a\in A\) und ein Label \(\ell\in L_{\mathrm{st}}\) schreiben
+wir \(\mathrm{Fix}_a(\ell)\) für das Literal, das \(a\) auf \(\ell\) festlegt:
+\[
+    \mathrm{Fix}_a(\mathit{in}):=i_a,
+    \qquad
+    \mathrm{Fix}_a(\mathit{out}):=\neg i_a,
+\]
+wobei \(i_a\) die \textit{in}-Variable aus Definition~\ref{def:st-pl} ist. Für
+eine Teilbelegung \(\pi:W\to L_{\mathrm{st}}\) mit \(W\subseteq A\) definieren
+wir die \emph{Realisierbarkeitsabfrage}
 \[
     \mathrm{realisierbar}(\pi)
     \quad:\Longleftrightarrow\quad
-    \mathrm{st}_F(\mathcal L^3)\land
-    \bigwedge_{a\in W}\mathrm{Fix}^3_a(\pi(a))
-    \text{ ist erfüllbar}.
+    \mathrm{st}_F(\mathcal L)\land
+    \bigwedge_{a\in W}\mathrm{Fix}_a(\pi(a))
+    \text{ ist erfüllbar,}
 \]
+wobei \(\mathcal L=\{i_a\mid a\in A\}\) eine Kopie der Labelling-Variablen ist.
 Nach Lemma~\ref{lem:st-pl-correct} gilt \(\mathrm{realisierbar}(\pi)\) genau
 dann, wenn ein \(\lambda\in\Lambda_{\mathrm{st}}(F)\) mit \(\lambda|_W=\pi\)
-existiert; einzig die SAT/UNSAT-Antwort wird benötigt. Insbesondere ist
-\(\mathrm{realisierbar}(\emptyset)\) genau dann wahr, wenn
-\(\Lambda_{\mathrm{st}}(F)\neq\emptyset\). Da alle Anfragen dieselbe
-Basisformel teilen und sich nur in Assumptions sowie hinzugefügten
-Blocking-Klauseln unterscheiden, lassen sie sich inkrementell mit einem
-einzigen SAT-Solver beantworten.
+existiert. Praktisch ist dies ein einzelner SAT-Aufruf auf
+\(\mathrm{st}_F(\mathcal L)\) mit den Assumptions
+\(\{\,i_a\mid \pi(a)=\mathit{in}\,\}\cup
+\{\,\neg i_a\mid \pi(a)=\mathit{out}\,\}\); einzig die SAT/UNSAT-Antwort wird
+benötigt. Insbesondere ist \(\mathrm{realisierbar}(\emptyset)\) genau dann
+wahr, wenn \(\Lambda_{\mathrm{st}}(F)\neq\emptyset\).
+
+Für die Enumeration gemeinsamer \(Z\)-Belegungen verwenden wir zusätzlich zwei
+Kopien \(\mathcal L^1,\mathcal L^2\) der Labelling-Variablen. Wir schreiben
+\(\mathrm{Fix}^k_a(\ell)\) für das entsprechende Literal über \(\mathcal L^k\)
+(also \(i_a^k\) bzw. \(\neg i_a^k\)) und verwenden die Gleichheitsformel
+\(\mathrm{Eq}^{1,2}_Z\) aus Definition~\ref{def:eq-qbf}. Da alle Abfragen
+dieselbe Kodierung \(\mathrm{st}_F\) teilen und sich nur in Assumptions und
+Blocking-Klauseln unterscheiden, lassen sie sich inkrementell beantworten.
 
 \subsection{Algorithmus}
 \label{subsec:singl-algo}

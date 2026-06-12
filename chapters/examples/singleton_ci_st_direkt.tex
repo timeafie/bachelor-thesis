@@ -1,0 +1,314 @@
+\chapter{Singleton-Unabhängigkeit: direkte Gegenbeispiel-Variante}
+\label{ch:singl-ci-direkt}
+
+\section{Idee}
+\label{sec:singl-direkt-idee}
+
+Dieses Kapitel behandelt dasselbe Entscheidungsproblem
+\(\textit{SingInd}_{\mathrm{st}}\) wie Kapitel~\ref{ch:singl-ci}, wählt aber
+einen unmittelbar an der Definition der Unabhängigkeit orientierten Zugang.
+Statt die Lösungsstruktur abstrakt über \emph{Produktrechtecke}
+(Kapitel~\ref{ch:singl-ci}) zu beschreiben, argumentieren wir direkt mit den
+drei Labellings \(\lambda_1,\lambda_2,\lambda_3\) aus
+Definition~\ref{def:BU:AFs} und der Frage, ob sich zu einem Paar
+\(\lambda_1,\lambda_2\) stets ein ``kreuzendes'' drittes Labelling
+\(\lambda_3\) finden lässt.
+
+Beide Kapitel beschreiben am Ende denselben Algorithmus und führen zu
+denselben SAT-Aufrufen; sie unterscheiden sich nur in der Art, wie die
+Korrektheit begründet wird. Abschnitt~\ref{sec:singl-direkt-vergleich} stellt
+die beiden Sichtweisen explizit gegenüber. Wir verwenden durchgehend
+\(L_{\mathrm{st}}=\{\mathit{in},\mathit{out}\}\), \(X=\{x\}\), \(Y=\{y\}\) mit
+\(x\neq y\) und \(Z\subseteq A\setminus\{x,y\}\).
+
+\section{Gegenbeispiele im Singleton-Fall}
+\label{sec:singl-direkt-gegenbsp}
+
+Wir erinnern an die Definition der bedingten Unabhängigkeit
+(Definition~\ref{def:BU:AFs}): \(\{x\}\bot_{\mathrm{st}}\{y\}\mid Z\) bedeutet,
+dass zu \emph{je} zwei \textit{stable}-Labellings \(\lambda_1,\lambda_2\), die
+auf \(Z\) übereinstimmen, ein drittes \textit{stable}-Labelling \(\lambda_3\)
+existiert, das auf \(x\) mit \(\lambda_1\), auf \(y\) mit \(\lambda_2\) und auf
+\(Z\) mit beiden übereinstimmt. Die Verneinung dieser Aussage führt
+unmittelbar auf den Begriff des Gegenbeispiels.
+
+\begin{Definition}
+    \label{def:singl-direkt-gegenbsp}
+    Sei \(F=(A,R)\) ein AF, seien \(x,y\in A\) verschieden und sei
+    \(Z\subseteq A\setminus\{x,y\}\). Ein \emph{Gegenbeispiel} zu
+    \(\{x\}\bot_{\mathrm{st}}\{y\}\mid Z\) ist ein Paar
+    \(\lambda_1,\lambda_2\in\Lambda_{\mathrm{st}}(F)\) mit
+    \begin{enumerate}
+        \item \(\lambda_1|_Z=\lambda_2|_Z\) und
+        \item es existiert kein \(\lambda_3\in\Lambda_{\mathrm{st}}(F)\) mit
+              \[
+                  \lambda_3(x)=\lambda_1(x),\qquad
+                  \lambda_3(y)=\lambda_2(y),\qquad
+                  \lambda_3|_Z=\lambda_1|_Z.
+              \]
+    \end{enumerate}
+    Das in Bedingung~2 gesuchte Labelling \(\lambda_3\) nennen wir die zu
+    \((\lambda_1,\lambda_2)\) gehörige \emph{Kreuzkombination}.
+\end{Definition}
+
+Anschaulich übernimmt die Kreuzkombination das \(x\)-Label vom ersten und das
+\(y\)-Label vom zweiten Labelling, während die Bedingung \(Z\) unverändert
+bleibt. Ein Gegenbeispiel ist also genau ein auf \(Z\) übereinstimmendes Paar,
+dessen Kreuzkombination sich nicht zu einem \textit{stable}-Labelling
+ergänzen lässt.
+
+\begin{Proposition}
+    \label{prop:singl-direkt}
+    Es gilt \(\{x\}\bot_{\mathrm{st}}\{y\}\mid Z\) genau dann, wenn kein
+    Gegenbeispiel im Sinne von Definition~\ref{def:singl-direkt-gegenbsp}
+    existiert.
+\end{Proposition}
+
+\begin{proof}
+    \label{pr:singl-direkt}
+    Dies ist die wörtliche Verneinung von Definition~\ref{def:BU:AFs} im Fall
+    \(X=\{x\}\), \(Y=\{y\}\). Unabhängigkeit besagt, dass zu jedem auf \(Z\)
+    übereinstimmenden Paar \(\lambda_1,\lambda_2\) eine Kreuzkombination
+    existiert. Ein Gegenbeispiel ist genau ein Paar, für das dies fehlschlägt.
+    Folglich gilt Unabhängigkeit genau dann, wenn es kein solches Paar gibt.
+\end{proof}
+
+Die folgende Beobachtung schränkt die Suche stark ein: In einem Gegenbeispiel
+müssen sich \(\lambda_1\) und \(\lambda_2\) sowohl auf \(x\) als auch auf \(y\)
+unterscheiden. Stimmen sie auf einem der beiden Argumente überein, so ist die
+Kreuzkombination trivial vorhanden.
+
+\newpage
+
+\begin{Lemma}
+    \label{lem:singl-direkt-opposite}
+    Ist \((\lambda_1,\lambda_2)\) ein Gegenbeispiel, so gilt
+    \(\lambda_1(x)\neq\lambda_2(x)\) und \(\lambda_1(y)\neq\lambda_2(y)\).
+\end{Lemma}
+
+\begin{proof}
+    \label{pr:singl-direkt-opposite}
+    Angenommen \(\lambda_1(x)=\lambda_2(x)\). Dann erfüllt
+    \(\lambda_3:=\lambda_2\) bereits alle Bedingungen an die
+    Kreuzkombination, denn
+    \[
+        \lambda_3(x)=\lambda_2(x)=\lambda_1(x),\quad
+        \lambda_3(y)=\lambda_2(y),\quad
+        \lambda_3|_Z=\lambda_2|_Z=\lambda_1|_Z.
+    \]
+    Damit wäre \((\lambda_1,\lambda_2)\) kein Gegenbeispiel, im Widerspruch
+    zur Annahme. Also \(\lambda_1(x)\neq\lambda_2(x)\). Der Fall für \(y\)
+    folgt symmetrisch mit \(\lambda_3:=\lambda_1\).
+\end{proof}
+
+Da \(L_{\mathrm{st}}\) nur die beiden Werte \(\mathit{in}\) und
+\(\mathit{out}\) besitzt, legt Lemma~\ref{lem:singl-direkt-opposite} die Labels
+von \(x\) und \(y\) in einem Gegenbeispiel bis auf Vertauschung von
+\(\lambda_1\) und \(\lambda_2\) auf genau zwei \emph{Konfigurationen} fest:
+\[
+\begin{aligned}
+    \text{(K1)}\quad &
+    \lambda_1(x)=\mathit{in},\ \lambda_1(y)=\mathit{in},
+    &\quad
+    \lambda_2(x)=\mathit{out},\ \lambda_2(y)=\mathit{out};\\
+    \text{(K2)}\quad &
+    \lambda_1(x)=\mathit{in},\ \lambda_1(y)=\mathit{out},
+    &\quad
+    \lambda_2(x)=\mathit{out},\ \lambda_2(y)=\mathit{in}.
+\end{aligned}
+\]
+In Konfiguration~(K1) lautet die gesuchte Kreuzkombination
+\(\lambda_3(x)=\mathit{in}\), \(\lambda_3(y)=\mathit{out}\); in~(K2) ist es
+\(\lambda_3(x)=\mathit{in}\), \(\lambda_3(y)=\mathit{in}\). Da die Definition
+der Unabhängigkeit über \emph{alle} geordneten Paare \((\lambda_1,\lambda_2)\)
+quantifiziert, muss zusätzlich die durch Vertauschen von \(\lambda_1\) und
+\(\lambda_2\) entstehende Kreuzkombination realisierbar sein --- in~(K1) also
+auch \(\lambda_3(x)=\mathit{out}\), \(\lambda_3(y)=\mathit{in}\). Ein
+Gegenbeispiel liegt vor, sobald für eine gemeinsame \(Z\)-Belegung eine dieser
+beiden Kreuzkombinationen fehlt.
+
+\section{Algorithmus}
+\label{sec:singl-direkt-algo}
+
+\subsection{Realisierbarkeitsabfragen}
+\label{subsec:singl-direkt-realize}
+
+Das Verfahren stützt sich auf eine einzige
+Hilfsabfrage. Für ein Argument \(a\in A\) und ein Label
+\(\ell\in L_{\mathrm{st}}\) schreiben wir \(\mathrm{Fix}_a(\ell)\) für das
+Literal, das \(a\) auf \(\ell\) festlegt, also \(\mathrm{Fix}_a(\mathit{in}):=
+i_a\) und \(\mathrm{Fix}_a(\mathit{out}):=\neg i_a\) mit der \textit{in}-Variable
+\(i_a\) aus Definition~\ref{def:st-pl}. Für eine Teilbelegung
+\(\pi:W\to L_{\mathrm{st}}\) mit \(W\subseteq A\) sei
+\[
+    \mathrm{realisierbar}(\pi)
+    \quad\Longleftrightarrow\quad
+    \mathrm{st}_F(\mathcal L)\land
+    \bigwedge_{a\in W}\mathrm{Fix}_a(\pi(a))
+    \text{ ist erfüllbar.}
+\]
+Nach Lemma~\ref{lem:st-pl-correct} gilt \(\mathrm{realisierbar}(\pi)\) genau
+dann, wenn ein \(\lambda\in\Lambda_{\mathrm{st}}(F)\) mit \(\lambda|_W=\pi\)
+existiert. Für die Aufzählung gemeinsamer \(Z\)-Belegungen verwenden wir
+zwei Kopien \(\mathcal L^1,\mathcal L^2\) der Labelling-Variablen mit den
+zugehörigen Literalen \(\mathrm{Fix}^1_a(\ell)\), \(\mathrm{Fix}^2_a(\ell)\)
+und der Gleichheitsformel \(\mathrm{Eq}^{1,2}_Z\) aus
+Definition~\ref{def:eq-qbf}.
+
+\subsection{Verfahren}
+\label{subsec:singl-direkt-verfahren}
+
+Der Algorithmus sucht ein Gegenbeispiel, indem er für jede der beiden
+Konfigurationen die gemeinsamen \(Z\)-Belegungen aufzählt und jeweils prüft,
+ob eine Kreuzkombination fehlt.
+
+\begin{enumerate}
+    \item \textbf{Globale Erfüllbarkeit.} Ist
+    \(\mathrm{realisierbar}(\emptyset)\) falsch, so gilt
+    \(\Lambda_{\mathrm{st}}(F)=\emptyset\). Dann gibt es keine zwei Labellings
+    \(\lambda_1,\lambda_2\), also kein Gegenbeispiel, und
+    \(\{x\}\bot_{\mathrm{st}}\{y\}\mid Z\) ist vakuos erfüllt.
+
+    \item \textbf{Fixed-Label-Vortest.} Prüfe für \(a\in\{x,y\}\) und
+    \(\ell\in L_{\mathrm{st}}\) jeweils \(\mathrm{realisierbar}(a\mapsto\ell)\).
+    Nimmt \(x\) oder \(y\) unter allen \textit{stable}-Labellings nur ein
+    einziges Label an, so ist \(\lambda_1(x)\neq\lambda_2(x)\) (bzw.
+    \(\lambda_1(y)\neq\lambda_2(y)\)) unmöglich. Nach
+    Lemma~\ref{lem:singl-direkt-opposite} kann dann kein Gegenbeispiel
+    existieren, und es gilt \(\{x\}\bot_{\mathrm{st}}\{y\}\mid Z\).
+
+    \item \textbf{Enumeration der Konfigurationen.} Für jede Konfiguration
+    \[
+        K=\bigl((\alpha_1,\beta_1),(\alpha_2,\beta_2)\bigr)\in\{\text{(K1)},\text{(K2)}\}
+    \]
+    mit den oben festgelegten Labels:
+    \begin{enumerate}
+        \item Setze \(B:=\top\) und bilde die Formel, die
+        \(\lambda_1,\lambda_2\) in die Konfiguration \(K\) zwingt und ihre
+        Gleichheit auf \(Z\) erzwingt:
+        \[
+        \begin{aligned}
+            C^{12}_{K}
+            :=\ &
+            \mathrm{st}_F(\mathcal L^1)\land\mathrm{st}_F(\mathcal L^2)
+            \land\mathrm{Fix}^1_x(\alpha_1)\land\mathrm{Fix}^1_y(\beta_1)\\
+            &\land\mathrm{Fix}^2_x(\alpha_2)\land\mathrm{Fix}^2_y(\beta_2)
+            \land\mathrm{Eq}^{1,2}_Z.
+        \end{aligned}
+        \]
+        \item \textbf{Gemeinsame \(Z\)-Belegung suchen.} Solange
+        \(C^{12}_{K}\land B\) erfüllbar ist, wähle ein Modell und lies die
+        gemeinsame Belegung \(\eta=\lambda_1|_Z=\lambda_2|_Z\) ab. 
+        \item \textbf{Kreuzkombinationen prüfen.} Ist
+        \[
+            \neg\,\mathrm{realisierbar}\bigl(\{x\mapsto\alpha_1,\,y\mapsto\beta_2\}\cup\eta\bigr)
+            \ \text{ oder }\
+            \neg\,\mathrm{realisierbar}\bigl(\{x\mapsto\alpha_2,\,y\mapsto\beta_1\}\cup\eta\bigr),
+        \]
+        so fehlt eine der beiden Kreuzkombinationen. Damit ist
+        \((\lambda_1,\lambda_2)\) ein Gegenbeispiel; der Algorithmus gibt es
+        zurück und terminiert mit \(\{x\}\not\bot_{\mathrm{st}}\{y\}\mid Z\).
+        \item \textbf{Blocking.} Sind beide Kreuzkombinationen realisierbar,
+        so ist \(\eta\) für diese Konfiguration kein Gegenbeispiel. Schließe
+        \(\eta\) durch die Blocking-Klausel
+        \[
+            \mathrm{Block}(\eta):=\bigvee_{z\in Z}\neg\,\mathrm{Fix}^1_z(\eta(z))
+        \]
+        aus, setze \(B:=B\land\mathrm{Block}(\eta)\) und fahre mit der
+        nächsten gemeinsamen \(Z\)-Belegung fort.
+    \end{enumerate}
+
+    \item \textbf{Abschluss.} Wurden beide Konfigurationen ohne Gegenbeispiel
+    durchlaufen, so existiert nach Lemma~\ref{lem:singl-direkt-opposite}
+    überhaupt kein Gegenbeispiel.
+\end{enumerate}
+
+Wir verwenden \(\bigvee\emptyset=\bot\); im Fall
+\(Z=\emptyset\) bricht daher jede Konfiguration nach genau einer Iteration ab.
+
+\subsection{Korrektheit und Terminierung}
+\label{subsec:singl-direkt-korrekt}
+
+\begin{Lemma}
+    \label{lem:singl-direkt-korrekt}
+    Der Algorithmus aus Abschnitt~\ref{subsec:singl-direkt-verfahren}
+    entscheidet \(\textit{SingInd}_{\mathrm{st}}\) korrekt und terminiert.
+\end{Lemma}
+
+\begin{proof}
+    \label{pr:singl-direkt-korrekt}
+    \emph{Korrektheit bei Gegenbeispiel.} Gibt der Algorithmus in Schritt~3(c)
+    ein Paar zurück, so existieren nach Schritt~3(b) zwei
+    \textit{stable}-Labellings \(\lambda_1,\lambda_2\) mit \(\lambda_1|_Z=
+    \lambda_2|_Z=\eta\) in Konfiguration \(K\), und eine der beiden
+    Kreuzkombinationen ist unrealisierbar. Damit existiert kein passendes
+    \(\lambda_3\), das Paar ist ein Gegenbeispiel nach
+    Definition~\ref{def:singl-direkt-gegenbsp}, und mit
+    Proposition~\ref{prop:singl-direkt} folgt
+    \(\{x\}\not\bot_{\mathrm{st}}\{y\}\mid Z\).
+
+    \emph{Korrektheit bei Unabhängigkeit.} Meldet der Algorithmus
+    Unabhängigkeit, so liegt einer von drei Fällen vor:
+    \(\Lambda_{\mathrm{st}}(F)=\emptyset\) (Schritt~1), ein fixiertes Label
+    (Schritt~2, Lemma~\ref{lem:singl-direkt-opposite}) oder der erschöpfende
+    Durchlauf beider Konfigurationen (Schritt~4). In allen Fällen existiert
+    kein Gegenbeispiel, sodass Proposition~\ref{prop:singl-direkt}
+    \(\{x\}\bot_{\mathrm{st}}\{y\}\mid Z\) liefert.
+
+    \emph{Vollständigkeit.} Gilt \(\{x\}\not\bot_{\mathrm{st}}\{y\}\mid Z\), so
+    existiert nach Proposition~\ref{prop:singl-direkt} ein Gegenbeispiel
+    \((\lambda_1,\lambda_2)\). Nach Lemma~\ref{lem:singl-direkt-opposite}
+    unterscheiden sich \(\lambda_1,\lambda_2\) auf \(x\) und auf \(y\); sie
+    realisieren also (bis auf Vertauschung) eine der Konfigurationen \(K\) mit
+    gemeinsamer Belegung \(\eta^\ast:=\lambda_1|_Z\). Im Durchlauf dieser
+    Konfiguration erfüllt \(\eta^\ast\) die Formel \(C^{12}_{K}\); geblockt
+    werden ausschließlich Belegungen, deren Kreuzkombinationen beide
+    realisierbar sind, also nicht \(\eta^\ast\). Die Enumeration erreicht somit
+    \(\eta^\ast\) (oder zuvor ein anderes Gegenbeispiel), und die Prüfung in
+    Schritt~3(c) schlägt fehl.
+
+    \emph{Terminierung.} Jede Iteration der Enumerationsschleife terminiert
+    entweder oder schließt durch \(\mathrm{Block}(\eta)\) genau eine
+    realisierbare gemeinsame \(Z\)-Belegung dauerhaft aus. Davon gibt es
+    höchstens \(2^{|Z|}\); die äußere Schleife über die beiden Konfigurationen
+    ist endlich.
+\end{proof}
+
+Die Heuristiken zur Beschleunigung der Gegenbeispielsuche --- inkrementelles
+SAT, Blocking über UNSAT-Cores, verallgemeinertes Blocking, das globale
+Backbone von \(Z\), SCC-Vorverarbeitung sowie eine günstige Reihenfolge der
+Abfragen --- gelten unverändert; sie sind in
+Abschnitt~\ref{subsec:singl-heuristiken} beschrieben.
+
+\section{Vergleich beider Charakterisierungen}
+\label{sec:singl-direkt-vergleich}
+
+Beide Kapitel entscheiden \(\textit{SingInd}_{\mathrm{st}}\) mit demselben
+Verfahren; sie unterscheiden sich allein in der theoretischen Begründung.
+
+\begin{itemize}
+    \item \textbf{Produktrechteck-Sicht (Kapitel~\ref{ch:singl-ci}).} Für jede
+    realisierbare \(Z\)-Belegung \(\eta\) wird die Menge \(R_\eta\) der unter
+    \(\eta\) möglichen \((x,y)\)-Labelpaare betrachtet. Unabhängigkeit gilt
+    genau dann, wenn jedes \(R_\eta\) ein Produktrechteck \(P\times Q\) ist.
+    Diese Sicht ist kompakt und macht die kombinatorische Struktur explizit,
+    ist aber von der ursprünglichen Definition abstrahiert.
+
+    \item \textbf{Gegenbeispiel-Sicht (dieses Kapitel).} Es wird direkt nach
+    einem Paar \((\lambda_1,\lambda_2)\) ohne Kreuzkombination gesucht. Diese
+    Sicht liest sich unmittelbar aus Definition~\ref{def:BU:AFs} ab und ist
+    näher an der Implementierung, benennt die kombinatorische Gesamtstruktur
+    aber nicht explizit.
+\end{itemize}
+
+Die beiden Sichten sind äquivalent und übersetzen sich Schritt für Schritt
+ineinander. Eine \emph{Diagonale} \(D_1=\{(\mathit{in},\mathit{in}),
+(\mathit{out},\mathit{out})\}\) bzw. \(D_2=\{(\mathit{in},\mathit{out}),
+(\mathit{out},\mathit{in})\}\), der in \(R_\eta\) ein Kreuzpaar fehlt,
+entspricht genau einer Konfiguration~(K1) bzw.~(K2), deren Kreuzkombination
+unrealisierbar ist. Eine fehlende Rechteck-Ecke \((\alpha_1,\beta_2)\notin
+R_\eta\) ist dasselbe wie eine fehlende Kreuzkombination \(\lambda_3\) mit
+\(\lambda_3(x)=\alpha_1\), \(\lambda_3(y)=\beta_2\). Folglich erzeugen beide
+Algorithmen für jede Eingabe dieselbe Folge von Realisierbarkeitsabfragen und
+haben dieselbe Aufrufkomplexität (vgl.
+Korollar~\ref{cor:singl-aufrufe}).
