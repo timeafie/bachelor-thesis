@@ -1,0 +1,71 @@
+\chapter{Berechnungstheoretische Vorteile bestimmter Graphklassen zur Bestimmung bedingter Unabhängigkeit}
+\label{ch:graphclasses}
+
+Die folgenden Abschnitte orientieren sich an \cite{handbook__of_formal_argumentation__vol__3:2024}.
+
+\section{Azyklische AFs}
+\label{sec:acyc-afs}
+
+Für azyklische AFs fällt jedes existierende \emph{stable}-Labelling mit dem eindeutig bestimmten \emph{grounded}-Labelling zusammen. 
+Folglich besitzt ein azyklisches AF höchstens ein \emph{stable}-Labelling. 
+Dadurch ist die bedingte Unabhängigkeit bezüglich der \emph{stable}-Semantik für beliebige paarweise disjunkte Argumentmengen 
+stets erfüllt.
+
+\begin{Proposition}
+\label{prop:acyc-af-ci-st-top}
+    Sei F=(A,R) ein azyklisches AF. Dann ist
+    \(\textit{Ind}_{\mathrm{st}}(F) \) immer wahr.
+\end{Proposition}
+
+\begin{proof}
+    \label{pr:acyc-af-ci-st-top-true}
+    Seien \( X,Y,Z \subseteq A\) paarweise disjunkt. Besitzt \(F\) kein
+    \emph{stable}-Labelling, so ist die universell quantifizierte
+    Unabhängigkeitsbedingung vakuos erfüllt.
+
+    Andernfalls existiert aufgrund der Azyklizität genau ein
+    \emph{stable}-Labelling \(\lambda\), das mit dem
+    \emph{grounded}-Labelling übereinstimmt. Für beliebige
+    \(\lambda_1,\lambda_2\in\Lambda_{\mathrm{st}}(F)\) gilt daher
+    \(\lambda_1=\lambda_2=\lambda\). Mit \(\lambda_3:=\lambda\) können
+    somit die Belegungen von \(X\), \(Y\) und \(Z\) wie in der Definition
+    der bedingten Unabhängigkeit gefordert kombiniert werden. Daher gilt
+    \(X\bot_{\mathrm{st}}Y\mid Z\) und folglich
+    \(\operatorname{Ind}_{\mathrm{st}}(F)\).
+\end{proof}
+
+\section{Geradezykelfreie AFs}
+\label{sec:even-cycle-free-afs}
+
+Für AFs ohne gerade Zykel ist allein das \emph{grounded}-Labelling ein Kandidat, ein \emph{stable}-Labelling zu sein. 
+Damit existiert ebenfalls maximal ein \emph{stable}-Labelling. 
+
+\begin{Proposition}
+\label{prop:even-cycle-free-af-ci-st-top}
+    Sei F=(A,R) ein AF ohne gerade Zyklen. Dann ist
+    \(\textit{Ind}_{\mathrm{st}}(F) \) immer wahr.
+\end{Proposition}
+
+\begin{proof}
+    Analog zu \ref{pr:acyc-af-ci-st-top-true}.
+\end{proof}
+
+
+\section{Ungeradezykelfreie AFs}
+\label{sec:odd-cycle-free-afs}
+
+Für die Berechnung von \emph{stable}-Labellings gibt es in dieser Graphklasse keine berechnungstheoretischen Vorteile. 
+
+
+\section{Bipartite AFs}
+\label{sec:bi-afs}
+
+Als Spezialfall eines ungeradezykelfreien AFs gibt es für die Berechnung von \emph{stable}-Labellings in bipartiten AFs keine
+berechnungstheoretischen Vorteile. 
+
+
+\section{Symmetrische AFs}
+\label{sec:sym-afs}
+
+Beobachtung: Je mehr Angriffe im AF, desto häufiger nicht bedingt unabhängig.
+
