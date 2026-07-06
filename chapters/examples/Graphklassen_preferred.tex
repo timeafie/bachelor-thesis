@@ -1,0 +1,485 @@
+\chapter{Graphklassen unter \textit{preferred}-Unabh\"angigkeit}
+\label{ch:graphclasses-preferred}
+
+\section{Einleitung}
+\label{sec:gcp-einleitung}
+
+Die Kapitel~\ref{ch:graphclasses} und~\ref{ch:graphclasses-empirical} haben die
+bedingte Unabh\"angigkeit unter der \textit{stable}-Semantik aus theoretischer
+und empirischer Sicht nach Graphklassen aufgeschl\"usselt. Dieses Kapitel
+\"ubertr\"agt die Fragestellung auf die \textit{preferred}-Semantik. Wir
+verzichten dabei bewusst auf eine empirische Untersuchung und konzentrieren uns
+auf konkrete, beweisbare Aussagen.
+
+Gegen\"uber der \textit{stable}-Semantik weist die
+\textit{preferred}-Semantik drei Eigenschaften auf, die das Bild verschieben:
+\begin{enumerate}
+    \item \textbf{Existenz.} Jedes (endliche) AF besitzt mindestens ein
+    \textit{preferred}-Labelling, w\"ahrend
+    \(\Lambda_{\mathrm{st}}(F)=\emptyset\) m\"oglich ist
+    \cite{dung:1995:af}. Der in Kapitel~\ref{ch:graphclasses-empirical}
+    pr\"agende Fall \enquote{vakuose Unabh\"angigkeit mangels Labellings}
+    entf\"allt damit f\"ur die \textit{preferred}-Semantik vollst\"andig.
+    \item \textbf{Maximalit\"at.} Ein \textit{preferred}-Labelling ist ein
+    \textit{complete}-Labelling mit \(\subseteq\)-maximaler In-Menge
+    (Definition~\ref{def:sem-labelling}). Diese zus\"atzliche Bedingung
+    erschwert die Kodierung (Kapitel~\ref{ch:preferred}).
+    \item \textbf{Komplexit\"at.} Das Entscheidungsproblem
+    \(\textit{Ind}_{\mathrm{pr}}\) ist \(\Pi_3^{\mathrm P}\)-vollst\"andig
+    (Theorem~\ref{th:ind-pr-is-pi3p-c}) und damit eine Stufe der polynomiellen
+    Hierarchie h\"oher angesiedelt als \(\textit{Ind}_{\mathrm{st}}\)
+    (Theorem~\ref{th:ind-st-is-pi2p-c}).
+\end{enumerate}
+
+Wir erinnern an die Definition der bedingten Unabh\"angigkeit
+(Definition~\ref{def:BU:AFs}), angewandt auf \(\sigma=\mathrm{pr}\):
+\(X\bot_{\mathrm{pr}}Y\mid Z\) gilt genau dann, wenn zu je zwei
+\textit{preferred}-Labellings \(\lambda_1,\lambda_2\in\Lambda_{\mathrm{pr}}(F)\)
+mit \(\lambda_1|_Z=\lambda_2|_Z\) ein
+\(\lambda_3\in\Lambda_{\mathrm{pr}}(F)\) mit \(\lambda_3|_X=\lambda_1|_X\),
+\(\lambda_3|_Y=\lambda_2|_Y\) und \(\lambda_3|_Z=\lambda_1|_Z\) existiert.
+
+Der Aufbau des Kapitels folgt der Beobachtung, dass sich die
+\textit{preferred}-Semantik auf mehreren wichtigen Graphklassen entweder auf
+ein \emph{einziges} Labelling reduziert oder mit der \textit{stable}-Semantik
+\emph{zusammenf\"allt}. Abschnitt~\ref{sec:gcp-mittel} stellt dazu zwei
+allgemeine Beweismittel bereit; die folgenden Abschnitte wenden sie klassenweise
+an.
+
+\section{Zwei \"ubergreifende Beweismittel}
+\label{sec:gcp-mittel}
+
+\subsection{Das Transferlemma}
+\label{subsec:gcp-transfer}
+
+Die bedingte Unabh\"angigkeit h\"angt nach Definition~\ref{def:BU:AFs}
+ausschlie\ss lich von der Menge \(\Lambda_\sigma(F)\) der Labellings ab, nicht
+von der Semantik \(\sigma\) selbst. Stimmen zwei Semantiken auf \(F\) in ihren
+Labellingmengen \"uberein, so stimmen sie auch in s\"amtlichen
+Unabh\"angigkeitsurteilen \"uberein.
+
+\begin{Lemma}[Transferlemma]
+    \label{lem:gcp-transfer}
+    Sei \(F=(A,R)\) ein AF und seien \(\sigma,\tau\) zwei Semantiken mit
+    \(\Lambda_\sigma(F)=\Lambda_\tau(F)\). Dann gilt f\"ur alle paarweise
+    disjunkten Mengen \(X,Y,Z\subseteq A\):
+    \[
+        X\bot_\sigma Y\mid Z
+        \quad\Longleftrightarrow\quad
+        X\bot_\tau Y\mid Z.
+    \]
+\end{Lemma}
+
+\begin{proof}
+    Die definierende Bedingung von \(X\bot_\sigma Y\mid Z\) quantifiziert allein
+    \"uber Elemente von \(\Lambda_\sigma(F)\): \enquote{f\"ur alle
+    \(\lambda_1,\lambda_2\in\Lambda_\sigma(F)\) mit \(\lambda_1|_Z=\lambda_2|_Z\)
+    existiert \(\lambda_3\in\Lambda_\sigma(F)\) mit \dots}. Ersetzt man
+    \(\Lambda_\sigma(F)\) durch die nach Voraussetzung identische Menge
+    \(\Lambda_\tau(F)\), so geht die Aussage Wort f\"ur Wort in die definierende
+    Bedingung von \(X\bot_\tau Y\mid Z\) \"uber. Beide Seiten sind also
+    \"aquivalent.
+\end{proof}
+
+Das Transferlemma ist das zentrale Werkzeug dieses Kapitels: Wann immer eine
+Graphklasse \(\Lambda_{\mathrm{pr}}(F)=\Lambda_{\mathrm{st}}(F)\) erzwingt,
+\"ubertragen sich \emph{s\"amtliche} Ergebnisse aus den
+Kapiteln~\ref{ch:graphclasses} und~\ref{ch:graphclasses-empirical} unver\"andert
+auf die \textit{preferred}-Semantik.
+
+\subsection{Eindeutigkeit und fixierte Labels}
+\label{subsec:gcp-eindeutig}
+
+Das zweite Beweismittel verallgemeinert die f\"ur die \textit{stable}-Semantik
+formulierte Proposition~\ref{prop:gce-leq1-indep} auf die
+\textit{preferred}-Semantik.
+
+\begin{Proposition}
+    \label{prop:gcp-unique-indep}
+    Sei \(F=(A,R)\) ein AF mit \(|\Lambda_{\mathrm{pr}}(F)|=1\). Dann gilt
+    \(X\bot_{\mathrm{pr}}Y\mid Z\) f\"ur alle paarweise disjunkten Mengen
+    \(X,Y,Z\subseteq A\).
+\end{Proposition}
+
+\begin{proof}
+    Sei \(\Lambda_{\mathrm{pr}}(F)=\{\lambda\}\). F\"ur jedes Paar
+    \(\lambda_1,\lambda_2\in\Lambda_{\mathrm{pr}}(F)\) gilt dann
+    \(\lambda_1=\lambda_2=\lambda\). Mit \(\lambda_3:=\lambda\) sind
+    \(\lambda_3|_X=\lambda_1|_X\), \(\lambda_3|_Y=\lambda_2|_Y\) und
+    \(\lambda_3|_Z=\lambda_1|_Z\) unmittelbar erf\"ullt. Damit gilt
+    \(X\bot_{\mathrm{pr}}Y\mid Z\).
+\end{proof}
+
+Anders als bei der \textit{stable}-Semantik ist hier
+\(\Lambda_{\mathrm{pr}}(F)\neq\emptyset\) stets gesichert
+\cite{dung:1995:af}. Die Bedingung \(|\Lambda_{\mathrm{pr}}(F)|\leq 1\) ist
+daher gleichbedeutend mit \(|\Lambda_{\mathrm{pr}}(F)|=1\); einen vakuosen Fall
+gibt es nicht. Dieser Unterschied wird in
+Abschnitt~\ref{sec:gcp-scc} wieder aufgegriffen.
+
+Oft gen\"ugt bereits, dass die fraglichen Argumente \"uber alle
+\textit{preferred}-Labellings hinweg dasselbe Label tragen. Wir erinnern an das
+eindeutig bestimmte \textit{grounded}-Labelling \(\lambda_{\mathrm{gr}}\) und
+die bekannte Tatsache, dass es das informationsminimale
+\textit{complete}-Labelling ist: F\"ur jedes
+\(\lambda\in\Lambda_{\mathrm{co}}(F)\) gilt
+\(\mathit{in}(\lambda_{\mathrm{gr}})\subseteq\mathit{in}(\lambda)\) und
+\(\mathit{out}(\lambda_{\mathrm{gr}})\subseteq\mathit{out}(\lambda)\)
+\cite{dung:1995:af,handbook__of_formal_argumentation__vol__3:2024}. Da
+\(\Lambda_{\mathrm{pr}}(F)\subseteq\Lambda_{\mathrm{co}}(F)\), \"ubertr\"agt
+sich dies auf alle \textit{preferred}-Labellings.
+
+\begin{Proposition}
+    \label{prop:gcp-fixed-label}
+    Sei \(F=(A,R)\) ein AF und seien \(X,Y,Z\subseteq A\) paarweise disjunkt.
+    Tr\"agt jedes Argument \(a\in X\) unter allen
+    \(\lambda\in\Lambda_{\mathrm{pr}}(F)\) dasselbe Label, so gilt
+    \(X\bot_{\mathrm{pr}}Y\mid Z\). Insbesondere gilt dies, falls
+    \(X\subseteq \mathit{in}(\lambda_{\mathrm{gr}})\cup
+    \mathit{out}(\lambda_{\mathrm{gr}})\) ist.
+\end{Proposition}
+
+\begin{proof}
+    Seien \(\lambda_1,\lambda_2\in\Lambda_{\mathrm{pr}}(F)\) mit
+    \(\lambda_1|_Z=\lambda_2|_Z\). W\"ahle \(\lambda_3:=\lambda_2\). Dann gilt
+    \(\lambda_3|_Y=\lambda_2|_Y\) und
+    \(\lambda_3|_Z=\lambda_2|_Z=\lambda_1|_Z\). Da jedes \(a\in X\) unter allen
+    \textit{preferred}-Labellings dasselbe Label tr\"agt, gilt
+    \(\lambda_2(a)=\lambda_1(a)\) f\"ur alle \(a\in X\), also
+    \(\lambda_3|_X=\lambda_2|_X=\lambda_1|_X\). Somit ist \(\lambda_3\) ein
+    Zeuge der Unabh\"angigkeit, und es gilt \(X\bot_{\mathrm{pr}}Y\mid Z\).
+
+    Der Zusatz folgt, weil die Argumente in
+    \(\mathit{in}(\lambda_{\mathrm{gr}})\) unter jedem
+    \textit{preferred}-Labelling \(\mathit{in}\) und die Argumente in
+    \(\mathit{out}(\lambda_{\mathrm{gr}})\) unter jedem
+    \textit{preferred}-Labelling \(\mathit{out}\) sind.
+\end{proof}
+
+Proposition~\ref{prop:gcp-fixed-label} ist das mengenwertige Gegenst\"uck zu
+Korollar~\ref{cor:singl-fixlabel} und erfasst insbesondere den
+\enquote{grounded-Kern} eines AF, also den Teil, der bereits durch die
+\textit{grounded}-Semantik entschieden ist.
+
+\section{Azyklische AFs}
+\label{sec:gcp-acyc}
+
+\begin{Proposition}
+    \label{prop:gcp-acyc-indep}
+    Sei \(F=(A,R)\) ein azyklisches AF. Dann ist \(\textit{Ind}_{\mathrm{pr}}(F)\)
+    stets wahr.
+\end{Proposition}
+
+\begin{proof}
+    Ein endliches azyklisches AF ist wohlfundiert und besitzt daher genau ein
+    \textit{complete}-Labelling, das zugleich \textit{grounded},
+    \textit{preferred} und \textit{stable} ist
+    \cite{dung:1995:af}. Folglich gilt \(|\Lambda_{\mathrm{pr}}(F)|=1\), und die
+    Behauptung folgt mit Proposition~\ref{prop:gcp-unique-indep}.
+\end{proof}
+
+Diese Aussage ist das \textit{preferred}-Gegenst\"uck zu
+Proposition~\ref{prop:acyc-af-ci-st-top}. Da das eindeutige Labelling mit dem
+\textit{stable}- und dem \textit{grounded}-Labelling zusammenf\"allt, stimmen
+auf azyklischen AFs s\"amtliche der drei Semantiken in ihren
+Unabh\"angigkeitsurteilen \"uberein.
+
+\section{Geradezykelfreie AFs}
+\label{sec:gcp-even}
+
+F\"ur die \textit{stable}-Semantik wurde in
+Abschnitt~\ref{sec:even-cycle-free-afs} beobachtet, dass in AFs ohne gerade
+Zyklen allein das \textit{grounded}-Labelling als \textit{stable}-Labelling in
+Frage kommt. Strukturell liegt dem die st\"arkere Tatsache zugrunde, dass das
+Vorhandensein eines geraden Zyklus notwendig ist, um \"uberhaupt mehrere
+\textit{complete}-Labellings zu erzeugen; der kleinste Zeuge ist der
+\(2\)-Zyklus \(a\leftrightarrow b\) mit den beiden Labellings
+\(\mathit{in}(\lambda)=\{a\}\) bzw.\ \(\{b\}\).
+
+\begin{Proposition}
+    \label{prop:gcp-even-indep}
+    Sei \(F=(A,R)\) ein AF ohne gerade Zyklen. Dann gilt
+    \(|\Lambda_{\mathrm{co}}(F)|=1\); das eindeutige
+    \textit{complete}-Labelling ist das \textit{grounded}-Labelling und zugleich
+    das eindeutige \textit{preferred}-Labelling. Insbesondere ist
+    \(\textit{Ind}_{\mathrm{pr}}(F)\) stets wahr.
+\end{Proposition}
+
+\begin{proof}
+    Nach \cite{handbook__of_formal_argumentation__vol__3:2024} besitzt ein
+    endliches AF ohne gerade Zyklen genau ein \textit{complete}-Labelling.
+    Dieses ist als einziges zugleich \(\subseteq\)-minimal und
+    \(\subseteq\)-maximal in der In-Menge, also \textit{grounded} und
+    \textit{preferred}. Damit gilt \(|\Lambda_{\mathrm{pr}}(F)|=1\), und
+    Proposition~\ref{prop:gcp-unique-indep} liefert die Unabh\"angigkeit.
+\end{proof}
+
+W\"ahrend f\"ur die \textit{stable}-Semantik in dieser Klasse \emph{h\"ochstens}
+ein Labelling existiert (es kann auch keines geben), garantiert die
+\textit{preferred}-Semantik \emph{genau} eines. Die Aussage ist damit das
+sch\"arfere \textit{preferred}-Gegenst\"uck zu
+Proposition~\ref{prop:even-cycle-free-af-ci-st-top}.
+
+\section{Ungeradezykelfreie AFs}
+\label{sec:gcp-odd}
+
+F\"ur die \textit{stable}-Semantik bot diese Klasse keinen
+berechnungstheoretischen Vorteil (Abschnitt~\ref{sec:odd-cycle-free-afs}). F\"ur
+die \textit{preferred}-Semantik liegt der Fall g\"unstiger, weil das Fehlen
+ungerader Zyklen die \textit{preferred}- und die \textit{stable}-Semantik zur
+Deckung bringt.
+
+\begin{Theorem}[Koh\"arenz, \citeauthor{dung:1995:af}]
+    \label{th:gcp-coherent}
+    Sei \(F=(A,R)\) ein endliches AF ohne ungerade Zyklen. Dann ist \(F\)
+    koh\"arent, d.\,h.\ jedes \textit{preferred}-Labelling ist
+    \textit{stable}, und es gilt
+    \[
+        \Lambda_{\mathrm{pr}}(F)=\Lambda_{\mathrm{st}}(F)\neq\emptyset.
+    \]
+\end{Theorem}
+
+\begin{proof}[Beweisidee]
+    Nach \textcite{dung:1995:af} ist jedes AF ohne ungerade Zyklen koh\"arent,
+    es gilt also \(\Lambda_{\mathrm{pr}}(F)\subseteq\Lambda_{\mathrm{st}}(F)\).
+    Umgekehrt ist jedes \textit{stable}-Labelling stets auch \textit{preferred}
+    (eine \(\mathit{und}\)-freie In-Menge ist \(\subseteq\)-maximal), also
+    \(\Lambda_{\mathrm{st}}(F)\subseteq\Lambda_{\mathrm{pr}}(F)\). Zusammen folgt
+    Gleichheit. Die Nichtleerheit ergibt sich daraus, dass jedes AF ohne
+    ungerade Zyklen mindestens ein \textit{stable}-Labelling besitzt
+    \cite{dung:1995:af,handbook__of_formal_argumentation__vol__3:2024}.
+\end{proof}
+
+\begin{Corollary}
+    \label{cor:gcp-odd-transfer}
+    Sei \(F=(A,R)\) ein AF ohne ungerade Zyklen. Dann gilt f\"ur alle paarweise
+    disjunkten \(X,Y,Z\subseteq A\):
+    \[
+        X\bot_{\mathrm{pr}}Y\mid Z
+        \quad\Longleftrightarrow\quad
+        X\bot_{\mathrm{st}}Y\mid Z.
+    \]
+    Insbesondere stimmen \(\textit{Ind}_{\mathrm{pr}}(F)\) und
+    \(\textit{Ind}_{\mathrm{st}}(F)\) \"uberein.
+\end{Corollary}
+
+\begin{proof}
+    Folgt aus Theorem~\ref{th:gcp-coherent} mit dem Transferlemma
+    \ref{lem:gcp-transfer} f\"ur \(\sigma=\mathrm{pr}\) und
+    \(\tau=\mathrm{st}\).
+\end{proof}
+
+Korollar~\ref{cor:gcp-odd-transfer} \"ubertr\"agt s\"amtliche Resultate der
+\textit{stable}-Analyse auf die \textit{preferred}-Semantik. Komplexit\"atstheoretisch
+sinkt damit die obere Schranke f\"ur \(\textit{Ind}_{\mathrm{pr}}\) auf dieser
+Klasse von \(\Pi_3^{\mathrm P}\) auf \(\Pi_2^{\mathrm P}\): Die Frage l\"asst sich
+\"aquivalent als \textit{stable}-Unabh\"angigkeit entscheiden
+(Theorem~\ref{th:ind-st-is-pi2p-c}).
+
+\section{Symmetrische AFs}
+\label{sec:gcp-sym}
+
+Auch symmetrische AFs f\"uhren auf eine Deckung von \textit{preferred}- und
+\textit{stable}-Semantik, allerdings aus einem anderen Grund als im
+ungeradezykelfreien Fall: Symmetrische AFs k\"onnen sehr wohl ungerade Zyklen
+enthalten (etwa das symmetrische Dreieck), sind aber dennoch koh\"arent.
+
+\begin{Theorem}[\citeauthor{handbook__of_formal_argumentation__vol__3:2024}]
+    \label{th:gcp-sym}
+    Sei \(F=(A,R)\) ein endliches, symmetrisches (\(R=R^{-1}\)) und
+    irreflexives (\((a,a)\notin R\) f\"ur alle \(a\)) AF. Dann sind die
+    zul\"assigen Mengen genau die konfliktfreien Mengen, und es gilt
+    \[
+        \Lambda_{\mathrm{pr}}(F)=\Lambda_{\mathrm{st}}(F),
+    \]
+    wobei die \textit{preferred}- und \textit{stable}-Labellings genau den
+    \(\subseteq\)-maximalen konfliktfreien Mengen entsprechen.
+\end{Theorem}
+
+\begin{proof}[Beweisidee]
+    In einem symmetrischen, irreflexiven AF verteidigt jede konfliktfreie Menge
+    \(S\) sich selbst: Greift \(b\) ein \(a\in S\) an, so greift wegen der
+    Symmetrie \(a\) auch \(b\) an, also wird \(a\) durch \(S\) verteidigt.
+    Damit sind zul\"assige und konfliktfreie Mengen identisch, und die
+    \(\subseteq\)-maximalen unter ihnen sind die \textit{preferred}-Extensionen.
+    Eine maximale konfliktfreie Menge greift zudem jedes \"au\ss ere Argument an,
+    ist also \textit{stable}. Daraus folgt
+    \(\Lambda_{\mathrm{pr}}(F)=\Lambda_{\mathrm{st}}(F)\)
+    \cite{handbook__of_formal_argumentation__vol__3:2024}.
+\end{proof}
+
+\begin{Corollary}
+    \label{cor:gcp-sym-transfer}
+    Sei \(F=(A,R)\) ein endliches, symmetrisches und irreflexives AF. Dann gilt
+    f\"ur alle paarweise disjunkten \(X,Y,Z\subseteq A\):
+    \[
+        X\bot_{\mathrm{pr}}Y\mid Z
+        \quad\Longleftrightarrow\quad
+        X\bot_{\mathrm{st}}Y\mid Z.
+    \]
+\end{Corollary}
+
+\begin{proof}
+    Folgt aus Theorem~\ref{th:gcp-sym} mit dem Transferlemma
+    \ref{lem:gcp-transfer}.
+\end{proof}
+
+Damit gelten alle Aussagen aus Abschnitt~\ref{sec:sym-afs} unver\"andert auch
+f\"ur die \textit{preferred}-Semantik. Insbesondere \"ubertragen sich die in
+Kapitel~\ref{ch:graphclasses-empirical} empirisch beobachteten Dichte-Muster
+(Tabelle~\ref{tab:gce-sym}): Mit wachsender Kantenwahrscheinlichkeit \(p\)
+steigt auch die \textit{preferred}-Abh\"angigkeitsrate, da die symmetrisch
+erzeugten Instanzen irreflexiv sind und somit
+\(\Lambda_{\mathrm{pr}}=\Lambda_{\mathrm{st}}\) erf\"ullen.
+
+Als Extremfall halten wir den vollst\"andig gerichteten Graphen fest.
+
+\begin{Corollary}
+    \label{cor:gcp-cdg}
+    Sei \(F=(A,R)\) ein vollst\"andig gerichtetes AF mit \(|A|\geq 2\), und
+    seien \(X,Y,Z\subseteq A\) paarweise disjunkt mit \(X\neq\emptyset\) und
+    \(Y\neq\emptyset\). Dann gilt \(X\not\bot_{\mathrm{pr}}Y\mid Z\).
+\end{Corollary}
+
+\begin{proof}
+    Ein vollst\"andig gerichtetes AF ist symmetrisch und irreflexiv, also gilt
+    nach Theorem~\ref{th:gcp-sym} \(\Lambda_{\mathrm{pr}}(F)=
+    \Lambda_{\mathrm{st}}(F)\). Nach Lemma~\ref{lem:cdg-afs-labellings} sind dies
+    genau die Labellings \(\lambda_a\) mit \(\mathit{in}(\lambda_a)=\{a\}\).
+    Mit Proposition~\ref{prop:cdg-afs-not-st-ci} gilt
+    \(X\not\bot_{\mathrm{st}}Y\mid Z\); das Transferlemma
+    \ref{lem:gcp-transfer} liefert \(X\not\bot_{\mathrm{pr}}Y\mid Z\).
+\end{proof}
+
+\section{Stark verbundene Komponenten und der allgemeine Fall}
+\label{sec:gcp-scc}
+
+F\"ur die \textit{stable}-Semantik war die Klasse der dichten, stark
+zusammenh\"angenden AFs dadurch gekennzeichnet, dass sie h\"aufig \emph{kein}
+\textit{stable}-Labelling besitzt (Abschnitt~\ref{sec:scc-afs} sowie
+Tabelle~\ref{tab:gce-scc}). Solche Instanzen waren \emph{vakuos} unabh\"angig:
+Mangels Labellings ist die Unabh\"angigkeitsbedingung leer erf\"ullt.
+
+F\"ur die \textit{preferred}-Semantik entf\"allt dieses Argument
+vollst\"andig, denn \(\Lambda_{\mathrm{pr}}(F)\neq\emptyset\) ist stets
+gesichert \cite{dung:1995:af}. Die folgende Aussage zeigt, dass die
+vakuose Unabh\"angigkeit der \textit{stable}-Semantik unter der
+\textit{preferred}-Semantik sogar in \emph{echte} Abh\"angigkeit umschlagen
+kann.
+
+\begin{Proposition}
+    \label{prop:gcp-vacuous-vs-dep}
+    Es gibt ein AF \(F=(A,R)\) mit \(\Lambda_{\mathrm{st}}(F)=\emptyset\) und
+    Argumenten \(x,y\in A\), sodass
+    \[
+        \{x\}\bot_{\mathrm{st}}\{y\}\mid\emptyset
+        \qquad\text{(vakuos)},
+        \qquad\text{aber}\qquad
+        \{x\}\not\bot_{\mathrm{pr}}\{y\}\mid\emptyset.
+    \]
+\end{Proposition}
+
+\begin{proof}
+    Wir betrachten das AF \(F=(A,R)\) mit
+    \[
+        A=\{a,b,c,d,e\},\qquad
+        R=\{(a,b),(b,a)\}\cup\{(c,d),(d,e),(e,c)\}.
+    \]
+    Es besteht aus einem \(2\)-Zyklus \(a\leftrightarrow b\) und einem davon
+    unabh\"angigen \(3\)-Zyklus \(c\to d\to e\to c\).
+
+    \emph{Keine \textit{stable}-Labellings.} Ein \textit{stable}-Labelling
+    h\"atte \(\mathit{und}=\emptyset\). Im \(3\)-Zyklus \(c\to d\to e\to c\)
+    m\"usste dann jedes Argument \(\mathit{in}\) oder \(\mathit{out}\) sein; ein
+    solches widerspruchsfreies Labelling existiert f\"ur einen ungeraden Zyklus
+    jedoch nicht. Also gilt \(\Lambda_{\mathrm{st}}(F)=\emptyset\), und
+    \(\{x\}\bot_{\mathrm{st}}\{y\}\mid\emptyset\) ist f\"ur beliebige \(x,y\)
+    vakuos erf\"ullt.
+
+    \emph{Genau zwei \textit{preferred}-Labellings.} Die Argumente
+    \(c,d,e\) werden in jedem \textit{complete}-Labelling \(\mathit{und}\)
+    gelabelt, da der ungerade Zyklus keine andere widerspruchsfreie Bewertung
+    zul\"asst. Im \(2\)-Zyklus \(a\leftrightarrow b\) gibt es bei
+    \(\subseteq\)-maximaler In-Menge genau die beiden Wahlen
+    \(\mathit{in}(\lambda)=\{a\}\) oder \(\mathit{in}(\lambda)=\{b\}\). Somit
+    ist \(\Lambda_{\mathrm{pr}}(F)=\{\lambda_a,\lambda_b\}\) mit
+    \[
+        \lambda_a:\ a\mapsto\mathit{in},\ b\mapsto\mathit{out},\quad
+        \lambda_b:\ a\mapsto\mathit{out},\ b\mapsto\mathit{in},
+    \]
+    und \(c,d,e\mapsto\mathit{und}\) in beiden F\"allen.
+
+    \emph{Abh\"angigkeit.} W\"ahle \(x:=a\) und \(y:=b\). Wegen
+    \(Z=\emptyset\) gilt \(\lambda_a|_Z=\lambda_b|_Z\) trivial. Ein Zeuge
+    \(\lambda_3\in\Lambda_{\mathrm{pr}}(F)\) m\"usste
+    \(\lambda_3(a)=\lambda_a(a)=\mathit{in}\) und
+    \(\lambda_3(b)=\lambda_b(b)=\mathit{in}\) erf\"ullen. Ein solches Labelling
+    mit \(a,b\) gleichzeitig \(\mathit{in}\) existiert wegen \((a,b)\in R\)
+    nicht. Also gilt \(\{a\}\not\bot_{\mathrm{pr}}\{b\}\mid\emptyset\).
+\end{proof}
+
+Proposition~\ref{prop:gcp-vacuous-vs-dep} belegt, dass sich die
+\"ubergreifenden Muster der \textit{stable}-Analyse nicht naiv \"ubertragen
+lassen. Insbesondere gilt das in Kapitel~\ref{ch:graphclasses-empirical}
+beobachtete Muster \enquote{kaum Labellings, daher unabh\"angig} f\"ur die
+\textit{preferred}-Semantik gerade \emph{nicht}: Wo die \textit{stable}-Semantik
+mangels Labellings schweigt, kann die \textit{preferred}-Semantik eine echte
+Abh\"angigkeit aufdecken.
+
+F\"ur den allgemeinen Fall bleibt damit das Kriterium aus
+Proposition~\ref{prop:gcp-unique-indep} bzw.\
+Proposition~\ref{prop:gcp-fixed-label} ma\ss geblich: Generische
+Unabh\"angigkeit liegt vor, wenn nur ein einziges
+\textit{preferred}-Labelling existiert oder die fraglichen Argumente \"uber alle
+\textit{preferred}-Labellings hinweg festgelegt sind. Au\ss erhalb der
+strukturell verstandenen Klassen bleibt das Problem mit
+\(\Pi_3^{\mathrm P}\)-Vollst\"andigkeit (Theorem~\ref{th:ind-pr-is-pi3p-c})
+allerdings echt schwerer als im \textit{stable}-Fall.
+
+\section{Zusammenfassung}
+\label{sec:gcp-zusammenfassung}
+
+Tabelle~\ref{tab:gcp-overview} fasst die beweisbaren Aussagen dieses Kapitels
+zusammen. Zwei Beweismittel tragen die gesamte Analyse: das Transferlemma
+\ref{lem:gcp-transfer}, das Klassen mit
+\(\Lambda_{\mathrm{pr}}=\Lambda_{\mathrm{st}}\) auf die bereits verstandene
+\textit{stable}-Analyse zur\"uckf\"uhrt, und das Eindeutigkeitskriterium
+\ref{prop:gcp-unique-indep}, das Klassen mit einem einzigen
+\textit{preferred}-Labelling abdeckt.
+
+\begin{table}[htbp]
+    \myfloatalign
+    \begin{tabularx}{\textwidth}{lXl} \toprule
+        Klasse & Struktur der \textit{preferred}-Labellings &
+        Resultat \\ \midrule
+        azyklisch & genau eines (\(=\mathrm{gr}=\mathrm{st}\)) &
+            stets unabh\"angig \\
+        geradezyklenfrei & genau eines (\(=\mathrm{gr}\)) &
+            stets unabh\"angig \\
+        ungeradezyklenfrei & \(\Lambda_{\mathrm{pr}}=\Lambda_{\mathrm{st}}
+            \neq\emptyset\) & \(\textit{Ind}_{\mathrm{pr}}\equiv
+            \textit{Ind}_{\mathrm{st}}\) \\
+        symmetrisch (irreflexiv) & \(\Lambda_{\mathrm{pr}}=\Lambda_{\mathrm{st}}
+            =\) max.\ konfliktfrei & \(\textit{Ind}_{\mathrm{pr}}\equiv
+            \textit{Ind}_{\mathrm{st}}\) \\
+        vollst\"andig gerichtet & Singletons \(\{a\}\) &
+            abh\"angig (\(X,Y\neq\emptyset\)) \\
+        SCC / allgemein & stets \(\neq\emptyset\); keine Vakuit\"at &
+            Kriterium \(|\Lambda_{\mathrm{pr}}|=1\) \\
+        \bottomrule
+    \end{tabularx}
+    \caption[Graphklassen unter \textit{preferred}-Unabh\"angigkeit]{Beweisbare
+    Aussagen zur \textit{preferred}-Unabh\"angigkeit nach Graphklassen.}
+    \label{tab:gcp-overview}
+\end{table}
+
+Die wichtigste qualitative Erkenntnis betrifft die stark zusammenh\"angenden
+Komponenten: W\"ahrend die \textit{stable}-Semantik dort h\"aufig vakuos
+unabh\"angig war, sichert die garantierte Existenz von
+\textit{preferred}-Labellings, dass dieselben Instanzen echte Abh\"angigkeiten
+aufweisen k\"onnen (Proposition~\ref{prop:gcp-vacuous-vs-dep}). Komplexit\"atstheoretisch
+spiegelt sich dies in der h\"oheren Einordnung von
+\(\textit{Ind}_{\mathrm{pr}}\) (\(\Pi_3^{\mathrm P}\)) wider, die nur auf den
+strukturell beherrschten Klassen --- azyklisch und geradezyklenfrei
+(trivial entscheidbar) sowie ungeradezyklenfrei und symmetrisch (Reduktion auf
+\(\Pi_2^{\mathrm P}\)) --- nachweislich sinkt.

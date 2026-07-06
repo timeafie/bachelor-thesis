@@ -55,17 +55,174 @@ Damit existiert ebenfalls maximal ein \emph{stable}-Labelling.
 \label{sec:odd-cycle-free-afs}
 
 Für die Berechnung von \emph{stable}-Labellings gibt es in dieser Graphklasse keine berechnungstheoretischen Vorteile. 
-
-
-\section{Bipartite AFs}
-\label{sec:bi-afs}
-
-Als Spezialfall eines ungeradezykelfreien AFs gibt es für die Berechnung von \emph{stable}-Labellings in bipartiten AFs keine
-berechnungstheoretischen Vorteile. 
-
+Allerdings fallen die \emph{stable}- und die \emph{preferred}-Labellings zusammen. 
 
 \section{Symmetrische AFs}
 \label{sec:sym-afs}
 
-Beobachtung: Je mehr Angriffe im AF, desto häufiger nicht bedingt unabhängig.
+In diesem Abschnitt betrachten wir Argumentationssysteme mit besonders hoher
+Angriffsdichte. Die zugrunde liegende Beobachtung ist, dass zusätzliche Angriffe
+die Kombinierbarkeit von Labellings einschränken können. Dadurch treten
+Verletzungen bedingter Unabhängigkeit häufiger auf. Als Extremfall betrachten
+wir zunächst vollständig gerichtete Argumentationssysteme.
 
+\subsection{Vollständig gerichtete Graphen}
+\label{subsec:cdg-afs}
+
+Wir nennen ein AF \(F=(A,R)\) \emph{vollständig gerichtet}, wenn für alle
+verschiedenen Argumente \(a,b\in A\) sowohl \((a,b)\in R\) als auch
+\((b,a)\in R\) gilt. Jedes Argument greift also jedes andere Argument an.
+
+Das folgende Lemma beschreibt die Struktur der \textit{stable}-Labellings in
+vollständig gerichteten AFs.
+
+\begin{Lemma}
+    \label{lem:cdg-afs-labellings}
+    Sei \(F=(A,R)\) ein vollständig gerichtetes AF mit \(A\neq\emptyset\).
+    Dann gilt
+    \[
+        |\Lambda_{\mathrm{st}}(F)|=|A|.
+    \]
+\end{Lemma}
+
+\begin{proof}
+    Für jedes Argument \(a\in A\) definieren wir ein Labelling \(\lambda_a\)
+    durch
+    \[
+        \mathit{in}(\lambda_a)=\{a\}
+        \qquad\text{und}\qquad
+        \mathit{out}(\lambda_a)=A\setminus\{a\}.
+    \]
+    Da \(a\) jedes Argument aus \(A\setminus\{a\}\) angreift, ist jedes
+    Argument mit Label \(\mathit{out}\) von einem Argument mit Label
+    \(\mathit{in}\) angegriffen. Zugleich wird \(a\) von keinem Argument mit
+    Label \(\mathit{in}\) angegriffen, da \(a\) das einzige Argument mit Label
+    \(\mathit{in}\) ist. Somit ist \(\lambda_a\) ein
+    \textit{stable}-Labelling von \(F\). Da jedes \(a\in A\) ein solches
+    Labelling liefert, folgt
+    \[
+        |\Lambda_{\mathrm{st}}(F)|\geq |A|.
+    \]
+
+    Umgekehrt sei \(\lambda\in\Lambda_{\mathrm{st}}(F)\). Da
+    \(\lambda\) ein \textit{stable}-Labelling ist, gilt
+    \(\mathit{und}(\lambda)=\emptyset\). Außerdem kann
+    \(\mathit{in}(\lambda)\) nicht leer sein: Wäre
+    \(\mathit{in}(\lambda)=\emptyset\), so hätte kein Argument mit Label
+    \(\mathit{out}\) einen Angreifer mit Label \(\mathit{in}\), im Widerspruch
+    zur \textit{stable}-Bedingung.
+
+    Es bleibt zu zeigen, dass höchstens ein Argument mit Label
+    \(\mathit{in}\) existieren kann. Angenommen, es gäbe zwei verschiedene
+    Argumente \(a,b\in A\) mit
+    \[
+        \lambda(a)=\mathit{in}
+        \qquad\text{und}\qquad
+        \lambda(b)=\mathit{in}.
+    \]
+    Da \(F\) vollständig gerichtet ist, gilt \((a,b)\in R\). Damit wird ein
+    Argument mit Label \(\mathit{in}\) von einem Argument mit Label
+    \(\mathit{in}\) angegriffen. Dies widerspricht der Bedingung, dass ein
+    Argument genau dann \(\mathit{in}\) ist, wenn alle seine Angreifer
+    \(\mathit{out}\) sind. Also enthält jedes \textit{stable}-Labelling genau
+    ein Argument mit Label \(\mathit{in}\).
+
+    Folglich sind die \textit{stable}-Labellings von \(F\) genau die
+    Labellings \(\lambda_a\) mit \(a\in A\). Daher gilt
+    \[
+        |\Lambda_{\mathrm{st}}(F)|=|A|.
+    \]
+\end{proof}
+
+Insbesondere existiert für jedes \(a\in A\) genau ein
+\textit{stable}-Labelling \(\lambda_a\) mit
+\[
+    \mathit{in}(\lambda_a)=\{a\}.
+\]
+Damit kann jedes einzelne Argument in einem \textit{stable}-Labelling
+akzeptiert werden, aber niemals gemeinsam mit einem anderen Argument.
+
+\begin{Proposition}
+    \label{prop:cdg-afs-not-st-ci}
+    Sei \(F=(A,R)\) ein vollständig gerichtetes AF mit \(|A|\geq 2\).
+    Seien \(X,Y,Z\subseteq A\) paarweise disjunkt mit
+    \(X\neq\emptyset\) und \(Y\neq\emptyset\). Dann gilt
+    \[
+        X\not\bot_{\mathrm{st}}Y\mid Z.
+    \]
+\end{Proposition}
+
+\begin{proof}
+    Da \(X\) und \(Y\) nichtleer sind, wählen wir Argumente
+    \(x\in X\) und \(y\in Y\). Wegen der paarweisen Disjunktheit gilt
+    \(x\neq y\) sowie \(x,y\notin Z\).
+
+    Nach Lemma~\ref{lem:cdg-afs-labellings} existieren
+    \textit{stable}-Labellings \(\lambda_x,\lambda_y\in
+    \Lambda_{\mathrm{st}}(F)\) mit
+    \[
+        \mathit{in}(\lambda_x)=\{x\}
+        \qquad\text{und}\qquad
+        \mathit{in}(\lambda_y)=\{y\}.
+    \]
+    Da weder \(x\) noch \(y\) in \(Z\) liegt, erhalten alle Argumente aus
+    \(Z\) in beiden Labellings das Label \(\mathit{out}\). Also gilt
+    \[
+        \lambda_x|_Z=\lambda_y|_Z.
+    \]
+
+    Angenommen, \(X\bot_{\mathrm{st}}Y\mid Z\) würde gelten. Dann müsste es
+    nach Definition der bedingten Unabhängigkeit ein
+    \(\lambda_3\in\Lambda_{\mathrm{st}}(F)\) geben mit
+    \[
+        \lambda_3|_X=\lambda_x|_X,
+        \qquad
+        \lambda_3|_Y=\lambda_y|_Y,
+        \qquad
+        \lambda_3|_Z=\lambda_x|_Z.
+    \]
+    Insbesondere folgt daraus
+    \[
+        \lambda_3(x)=\mathit{in}
+        \qquad\text{und}\qquad
+        \lambda_3(y)=\mathit{in}.
+    \]
+    Dies ergibt allerdings sofort einen Widerspruch, da \((a,b) \in R\) ist und somit ein mit dem \(\mathit{in}\)-\emph{Label} versehenes Argument ein weiteres mit
+    dem \(\mathit{in}\)-\emph{Label} versehenes Argument angreifen würde.  
+
+    Also kann kein solches \(\lambda_3\) existieren. Damit gilt
+    \[
+        X\not\bot_{\mathrm{st}}Y\mid Z.
+    \]
+\end{proof}
+
+\subsection{Variable Kantenwahrscheinlichkeiten}
+
+\begin{table}[htbp]
+    \myfloatalign
+    \centering
+    \begin{tabular}{l r r} \toprule
+        \(p\) & \multicolumn{2}{c}{Singleton-Enumeration} \\
+        \cmidrule(lr){2-3}
+              & Paare & unabh.\ Anteil \\ \midrule
+        \(0{,}1\) & 4\,950 & 90{,}1\,\% \\
+        \(0{,}3\) & 4\,950 & 71{,}2\,\% \\
+        \(0{,}5\) & 4\,950 & 50{,}5\,\% \\
+        \(0{,}8\) & 4\,950 & 19{,}3\,\% \\
+        \(0{,}9\) & 4\,950 & 9{,}6\,\% \\
+        \(1{,}0\) & 4\,950 & 0\,\%  \\
+        \bottomrule
+    \end{tabular}
+    \caption[Unabh\"angigkeitsrate symmetrischer AFs nach Kantenwahrscheinlichkeit]{Anteil
+    unabh\"angiger Anfragen in symmetrischen AFs in Abh\"angigkeit von der
+    Kantenwahrscheinlichkeit \(p\). Die Singleton-Enumeration testet
+    ersch\"opfend alle \(\binom{n}{2}\) Paare eines Repr\"asentanten (\(n=100\)).}
+    \label{tab:gce-sym}
+\end{table}
+Umso verbundener der Graph, umso geringer der Anteil an unabhängigen Paaren. 
+
+
+\section{Stark verbundene Komponenten}
+\label{sec:scc-afs}
+
+Kaum \emph{stable}-Labellings vorhanden. 

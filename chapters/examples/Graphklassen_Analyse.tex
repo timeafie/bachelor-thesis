@@ -1,0 +1,432 @@
+\chapter{Empirische Analyse der Graphklassen unter \textit{stable}-Unabh\"angigkeit}
+\label{ch:graphclasses-empirical}
+
+\section{Einleitung}
+\label{sec:gce-einleitung}
+
+Kapitel~\ref{ch:graphclasses} hat gezeigt, dass einzelne Graphklassen aus
+\emph{berechnungstheoretischer} Sicht sehr unterschiedlich auf die Frage nach
+\textit{stable}-Unabh\"angigkeit reagieren: F\"ur azyklische und
+geradezykelfreie AFs ist die Antwort strukturell vorbestimmt, w\"ahrend
+vollst\"andig gerichtete (und allgemeiner dichte symmetrische) AFs nahezu jede
+Anfrage abh\"angig machen. Dieses Kapitel erg\"anzt die theoretische
+Einordnung um eine \emph{empirische} Analyse. Ziel ist es, die einzelnen
+Klassen anhand konkreter Messdaten genau zu untersuchen und die dabei
+wiederkehrenden Muster herauszuarbeiten.
+
+Wir betrachten dazu die Entscheidung von
+\(\textit{Ind}_{\mathrm{st}}\) bzw. der Singleton-Variante
+\(\textit{SingInd}_{\mathrm{st}}\) (Kapitel~\ref{ch:singl-ci}) auf
+Instanzfamilien, die jeweils eine Graphklasse repr\"asentieren. Die zugrunde
+liegende Definition bedingter Unabh\"angigkeit ist
+Definition~\ref{def:BU:AFs}; wir verwenden durchg\"angig die Konvention, dass
+ein positives Ergebnis (SAT) \emph{Unabh\"angigkeit} und ein negatives Ergebnis
+(UNSAT) \emph{Abh\"angigkeit} bedeutet.
+
+Die Leitfragen des Kapitels lauten:
+\begin{enumerate}
+    \item Wie h\"aufig tritt Abh\"angigkeit in den einzelnen Klassen \"uberhaupt
+    auf?
+    \item Welche strukturellen Gr\"o\ss en --- insbesondere die Anzahl der
+    \textit{stable}-Labellings und die Angriffsdichte --- bestimmen diese
+    H\"aufigkeit?
+    \item L\"asst sich aus den klassenspezifischen Beobachtungen ein
+    \"ubergreifendes Muster ableiten, das die theoretischen Resultate aus
+    Kapitel~\ref{ch:graphclasses} erkl\"art und vorhersagt?
+\end{enumerate}
+
+\section{Versuchsaufbau}
+\label{sec:gce-aufbau}
+
+\subsection{Messgr\"o\ss en und Werkzeugkette}
+\label{subsec:gce-werkzeug}
+
+Alle Messungen beruhen auf der in Kapitel~\ref{ch:stable} entwickelten
+aussagenlogischen Kodierung \(\mathrm{st}_F\) (Definition~\ref{def:st-pl}) der
+\textit{stable}-Semantik. Eine Anfrage \((F,X,Y,Z)\) wird in die QBF
+\(\Phi^{\mathrm{st}}_F(X,Y\mid Z)\) \"ubersetzt und an den L\"oser QuAbS
+\"ubergeben; im Singleton-Fall \(X=\{x\}\), \(Y=\{y\}\) wird zus\"atzlich das
+inkrementelle CEGAR-Verfahren aus Kapitel~\ref{ch:singl-ci} verwendet. Zu
+jeder Instanz wird die L\"oserantwort (SAT/UNSAT/TIMEOUT) sowie die Laufzeit
+protokolliert.
+
+Eine zentrale Begleitgr\"o\ss e ist die \emph{Anzahl der
+\textit{stable}-Labellings} \(|\Lambda_{\mathrm{st}}(F)|\). Da diese Zahl
+exponentiell gro\ss{} werden kann, erfassen wir sie nur in der Dreiteilung
+\[
+    n_{\mathrm{st}}(F)\in\{\,0,\ 1,\ {\geq}2\,\},
+\]
+also \enquote{keine}, \enquote{genau eine} oder \enquote{mindestens zwei}
+\textit{stable}-Labellings. Diese Dreiteilung l\"asst sich mit zwei rein
+existentiellen Erf\"ullbarkeitsabfragen bestimmen: Eine Abfrage pr\"uft die
+Existenz \emph{mindestens einer}, die zweite die Existenz \emph{zweier
+verschiedener} \textit{stable}-Labellings. Wie wir in
+Abschnitt~\ref{subsec:gce-anker} pr\"azisieren, ist \(n_{\mathrm{st}}(F)\) der
+entscheidende Pr\"adiktor f\"ur das Auftreten von Abh\"angigkeit.
+
+\subsection{Messmodi}
+\label{subsec:gce-modi}
+
+Wir verwenden zwei komplement\"are Messmodi:
+
+\begin{description}
+    \item[Zufallsanfragen.] Pro Instanz wird eine zuf\"allige, reproduzierbar
+    geseedete Singleton-Anfrage \(X=\{x\}\), \(Y=\{y\}\) mit \(Z=\emptyset\)
+    gestellt und zus\"atzlich \(n_{\mathrm{st}}(F)\) bestimmt. Dieser Modus
+    deckt viele Instanzen und mehrere Seeds je Parametrisierung ab und erlaubt
+    es, Abh\"angigkeit mit \(n_{\mathrm{st}}\) zu korrelieren.
+
+    \item[Ersch\"opfende Singleton-Enumeration.] F\"ur ausgew\"ahlte
+    Repr\"asentanten wird \emph{jedes} ungeordnete Argumentpaar
+    \(\{a\},\{b\}\) mit \(a<b\) und \(Z=\emptyset\) getestet. Bei \(n\)
+    Argumenten sind das \(\binom{n}{2}\) Anfragen. Dieser Modus liefert ein
+    vollst\"andiges Abh\"angigkeitsprofil einer Instanz und ist daher
+    unempfindlich gegen\"uber der zuf\"alligen Wahl einzelner Paare.
+\end{description}
+
+Der Sonderfall \(Z=\emptyset\) ist f\"ur die Singleton-Enumeration bewusst
+gew\"ahlt: Nach den Algorithmen aus Kapitel~\ref{ch:singl-ci} und
+Kapitel~\ref{ch:singl-ci-direkt} bricht die Enumeration der gemeinsamen
+\(Z\)-Belegungen wegen \(\mathrm{Block}(\eta)=\bot\) nach genau einer
+Iteration je Konfiguration ab. Die Einzelabfragen sind dadurch sehr g\"unstig,
+was die quadratische Zahl an Paaren \"uberhaupt erst handhabbar macht.
+
+\subsection{Instanzfamilien}
+\label{subsec:gce-instanzen}
+
+Tabelle~\ref{tab:gce-familien} fasst die untersuchten Graphklassen und ihre
+Erzeugung zusammen. Die symmetrischen AFs werden parametrisch \"uber die
+Kantenwahrscheinlichkeit \(p\) erzeugt: Jedes ungeordnete Argumentpaar wird mit
+Wahrscheinlichkeit \(p\) durch einen wechselseitigen Angriff verbunden. Der
+Grenzfall \(p=1\) liefert genau die vollst\"andig gerichteten AFs aus
+Abschnitt~\ref{subsec:cdg-afs}. Die mit \enquote{st} bezeichneten Instanzen
+sind durch Teilstichproben (Subsampling) realer Wettbewerbsinstanzen der
+ICCMA'25 entstanden und dienen als Stellvertreter f\"ur \enquote{allgemeine},
+nicht eigens konstruierte AFs.
+
+\begin{table}[htbp]
+    \myfloatalign
+    \begin{tabularx}{\textwidth}{lX} \toprule
+        Klasse & Erzeugung / Eigenschaft \\ \midrule
+        azyklisch            & ohne gerichtete Zyklen; h\"ochstens ein
+                               \textit{stable}-Labelling \\
+        geradezykelfrei      & ohne Zyklen gerader L\"ange; h\"ochstens ein
+                               \textit{stable}-Labelling \\
+        ungeradezykelfrei    & ohne Zyklen ungerader L\"ange; stets mindestens
+                               ein \textit{stable}-Labelling \\
+        SCC-strukturiert     & dichte, stark zusammenh\"angende Komponenten
+                               unterschiedlicher Gr\"o\ss e \\
+        symmetrisch \((p)\)  & wechselseitige Angriffe mit Wahrscheinlichkeit
+                               \(p\in\{0{,}1;0{,}3;0{,}5;0{,}8;0{,}9;1{,}0\}\) \\
+        st (ICCMA-Subsample) & Teilstichproben realer Wettbewerbsinstanzen \\
+        \bottomrule
+    \end{tabularx}
+    \caption[Untersuchte Graphklassen]{Untersuchte Graphklassen und ihre
+    Erzeugung. Die symmetrischen AFs sind \"uber die Kantenwahrscheinlichkeit
+    \(p\) parametrisiert; \(p=1\) entspricht dem vollst\"andig gerichteten AF.}
+    \label{tab:gce-familien}
+\end{table}
+
+Die Klassen \enquote{geradezykelfrei} und \enquote{ungeradezykelfrei} werden im
+Folgenden vor allem theoretisch eingeordnet, da sie sich bereits durch das
+Kriterium \(n_{\mathrm{st}}(F)\) vollst\"andig erkl\"aren lassen.
+
+\section{Ein theoretischer Ankerpunkt}
+\label{subsec:gce-anker}
+
+Bevor wir die Klassen einzeln betrachten, halten wir ein Resultat fest, das
+sich als roter Faden durch alle Messungen zieht. Es verallgemeinert
+Proposition~\ref{prop:acyc-af-ci-st-top} von azyklischen AFs auf jede Instanz
+mit h\"ochstens einem \textit{stable}-Labelling.
+
+\begin{Proposition}
+    \label{prop:gce-leq1-indep}
+    Sei \(F=(A,R)\) ein AF mit \(|\Lambda_{\mathrm{st}}(F)|\leq 1\). Dann gilt
+    \(X\bot_{\mathrm{st}}Y\mid Z\) f\"ur alle paarweise disjunkten Mengen
+    \(X,Y,Z\subseteq A\).
+\end{Proposition}
+
+\begin{proof}
+    Ist \(\Lambda_{\mathrm{st}}(F)=\emptyset\), so ist die
+    \"uber alle Paare quantifizierte Unabh\"angigkeitsbedingung aus
+    Definition~\ref{def:BU:AFs} vakuos erf\"ullt. Ist
+    \(\Lambda_{\mathrm{st}}(F)=\{\lambda\}\), so gilt f\"ur jedes Paar
+    \(\lambda_1,\lambda_2\in\Lambda_{\mathrm{st}}(F)\) bereits
+    \(\lambda_1=\lambda_2=\lambda\). Mit \(\lambda_3:=\lambda\) sind
+    \(\lambda_3|_X=\lambda_1|_X\), \(\lambda_3|_Y=\lambda_2|_Y\) und
+    \(\lambda_3|_Z=\lambda_1|_Z\) trivial erf\"ullt. Also gilt
+    \(X\bot_{\mathrm{st}}Y\mid Z\).
+\end{proof}
+
+Damit ist \(n_{\mathrm{st}}(F)\geq 2\) eine \emph{notwendige} Bedingung f\"ur
+Abh\"angigkeit. Sie ist nicht hinreichend: Auch bei vielen
+\textit{stable}-Labellings kann jede konkrete Anfrage unabh\"angig sein
+(vgl.\ Korollar~\ref{cor:singl-fixlabel}). Die folgende Analyse zeigt, dass
+dieser eine Schwellenwert den gr\"o\ss ten Teil der klassenspezifischen
+Unterschiede bereits erkl\"art.
+
+\section{Klassenweise Analyse}
+\label{sec:gce-klassen}
+
+\subsection{Azyklische und geradezykelfreie AFs}
+\label{subsec:gce-acyc}
+
+F\"ur diese beiden Klassen gilt nach
+Proposition~\ref{prop:acyc-af-ci-st-top} bzw.
+Proposition~\ref{prop:even-cycle-free-af-ci-st-top} stets
+\(|\Lambda_{\mathrm{st}}(F)|\leq 1\). Mit
+Proposition~\ref{prop:gce-leq1-indep} ist jede Anfrage unabh\"angig, und zwar
+unabh\"angig von der Wahl von \(X\), \(Y\) und \(Z\). Empirisch sind diese
+Klassen daher uninteressant im Wortsinn: Es gibt nichts zu finden, weil
+Abh\"angigkeit strukturell ausgeschlossen ist. In der Auswertung treten sie
+nicht als eigene Messreihe auf, sondern als der theoretisch verstandene
+Randfall \(n_{\mathrm{st}}\leq 1\), der in
+Abschnitt~\ref{sec:gce-muster} quantitativ best\"atigt wird.
+
+\subsection{Ungeradezykelfreie AFs}
+\label{subsec:gce-odd}
+
+Ungeradezykelfreie AFs besitzen stets mindestens ein
+\textit{stable}-Labelling, k\"onnen aber auch mehrere besitzen. Anders als bei
+den beiden vorigen Klassen gibt es daher keine strukturelle Garantie f\"ur
+Unabh\"angigkeit; das Kriterium \(n_{\mathrm{st}}\leq 1\) greift hier im
+Allgemeinen nicht. Berechnungstheoretisch bietet die Klasse keinen Vorteil
+(Abschnitt~\ref{sec:odd-cycle-free-afs}): Die Bestimmung der
+\textit{stable}-Labellings bleibt so schwer wie im allgemeinen Fall, und damit
+verbleibt auch \(\textit{Ind}_{\mathrm{st}}\) auf dem vollen
+Schwierigkeitsniveau aus Theorem~\ref{th:ind-st-is-pi2p-c}. Die folgenden,
+empirisch erschlossenen Klassen lassen sich als konkrete Auspr\"agungen
+innerhalb dieses allgemeinen Rahmens lesen.
+
+\subsection{Stark zusammenh\"angende, dichte Komponenten (SCC)}
+\label{subsec:gce-scc}
+
+Die SCC-strukturierten Instanzen sind dicht und stark zusammenh\"angend und
+umfassen Gr\"o\ss en von einigen hundert bis mehreren tausend Argumenten. Das
+empirische Bild ist eindeutig: Die \"uberw\"altigende Mehrheit dieser Instanzen
+besitzt \emph{gar kein} \textit{stable}-Labelling.
+
+\begin{table}[htbp]
+    \myfloatalign
+    \begin{tabularx}{\textwidth}{Xcccc} \toprule
+        & \(n_{\mathrm{st}}=0\) & \(n_{\mathrm{st}}=1\) &
+          \(n_{\mathrm{st}}\geq2\) & unbestimmt \\ \midrule
+        Anzahl Instanzen & 18 & 0 & 1 & 1 \\
+        \bottomrule
+    \end{tabularx}
+    \caption[Stabile Labellings in SCC-Instanzen]{Verteilung von
+    \(n_{\mathrm{st}}\) \"uber die 20 ausgewerteten SCC-Instanzen. Die Spalte
+    \enquote{unbestimmt} z\"ahlt eine Instanz, deren Z\"ahlabfrage in das
+    Zeitlimit lief.}
+    \label{tab:gce-scc}
+\end{table}
+
+Wie Tabelle~\ref{tab:gce-scc} zeigt, haben 18 der 20 Instanzen kein
+\textit{stable}-Labelling; mit Proposition~\ref{prop:gce-leq1-indep} sind sie
+damit vakuos unabh\"angig. Entsprechend lieferte \emph{keine} der
+ausgewerteten SCC-Anfragen ein abh\"angiges Ergebnis. Dieses Verhalten
+best\"atigt die in Abschnitt~\ref{sec:scc-afs} formulierte Beobachtung, dass in
+dieser Klasse kaum \textit{stable}-Labellings vorhanden sind. Anschaulich
+erzeugen die in dichten Komponenten allgegenw\"artigen ungeraden Angriffszyklen
+\enquote{Konflikte ohne Ausweg}: Sie verhindern, dass ein widerspruchsfreies,
+alle Argumente entscheidendes Labelling existiert.
+
+Eine praktische Konsequenz betrifft die Laufzeit. Zwar ist jede Antwort
+\enquote{unabh\"angig}, doch der Existenznachweis
+\(\Lambda_{\mathrm{st}}(F)=\emptyset\) ist auf sehr gro\ss en Instanzen
+keineswegs gratis: Die wenigen beobachteten Zeit\"uberschreitungen traten
+ausschlie\ss lich bei den gr\"o\ss ten SCC-Instanzen (mehrere tausend
+Argumente) auf. Die \emph{Antwort} ist also strukturell vorbestimmt, ihre
+\emph{Verifikation} jedoch nicht zwingend billig.
+
+\subsection{Symmetrische AFs: Angriffsdichte als Stellschraube}
+\label{subsec:gce-sym}
+
+Die symmetrischen AFs bilden den aufschlussreichsten Teil der Analyse, weil
+sich \"uber die Kantenwahrscheinlichkeit \(p\) ein einziger struktureller
+Parameter gezielt variieren l\"asst. Nahezu alle erzeugten Instanzen besitzen
+mindestens zwei \textit{stable}-Labellings (224 von 225 ausgewerteten
+Instanzen), sodass die notwendige Bedingung aus
+Proposition~\ref{prop:gce-leq1-indep} praktisch durchg\"angig erf\"ullt ist.
+Die Klasse ist damit der ideale Pr\"ufstein f\"ur die Frage, \emph{wie oft}
+Abh\"angigkeit tats\"achlich auftritt, sobald sie strukturell m\"oglich ist.
+
+\begin{table}[htbp]
+    \myfloatalign
+    \begin{tabularx}{\textwidth}{Xcccc} \toprule
+        \(p\) & \multicolumn{2}{c}{Singleton-Enumeration} &
+                \multicolumn{2}{c}{Zufallsanfragen} \\
+        \cmidrule(lr){2-3}\cmidrule(lr){4-5}
+              & Paare & abh.\ Anteil & Anfragen & abh.\ Anteil \\ \midrule
+        \(0{,}1\) & 4\,950 & 9{,}9\,\%  & 90 & 10{,}0\,\% \\
+        \(0{,}3\) & 4\,950 & 28{,}8\,\% & 20 & 35{,}0\,\% \\
+        \(0{,}5\) & 1\,225 & 51{,}3\,\% & 44 & 61{,}4\,\% \\
+        \(0{,}8\) & 4\,950 & 80{,}7\,\% & 10 & 60{,}0\,\% \\
+        \(0{,}9\) & 4\,950 & 90{,}4\,\% & 10 & 90{,}0\,\% \\
+        \(1{,}0\) & ---    & ---        & 49 & 100{,}0\,\% \\
+        \bottomrule
+    \end{tabularx}
+    \caption[Abh\"angigkeitsrate symmetrischer AFs nach Dichte]{Anteil
+    abh\"angiger Anfragen in symmetrischen AFs in Abh\"angigkeit von der
+    Kantenwahrscheinlichkeit \(p\). Die Singleton-Enumeration testet
+    ersch\"opfend alle \(\binom{n}{2}\) Paare eines Repr\"asentanten (\(n=100\),
+    f\"ur \(p=0{,}5\) ein Repr\"asentant mit \(n=50\)); die Zufallsanfragen
+    aggregieren mehrere Instanzen und Seeds.}
+    \label{tab:gce-sym}
+\end{table}
+
+Tabelle~\ref{tab:gce-sym} zeigt das zentrale Ergebnis: Der Anteil abh\"angiger
+Anfragen w\"achst \emph{monoton} mit der Dichte \(p\). In der ersch\"opfenden
+Enumeration steigt er von \(9{,}9\,\%\) bei \(p=0{,}1\) \"uber rund die H\"alfte
+bei \(p=0{,}5\) auf \(90{,}4\,\%\) bei \(p=0{,}9\). Die unabh\"angig erhobenen
+Zufallsanfragen best\"atigen denselben Verlauf und kulminieren bei \(p=1\) in
+einer Abh\"angigkeitsrate von \(100\,\%\). Letzteres ist kein Zufall, sondern
+exakt die Aussage von Proposition~\ref{prop:cdg-afs-not-st-ci}: Im
+vollst\"andig gerichteten AF kann jedes Argument nur \emph{allein}
+akzeptiert werden, weshalb sich die Akzeptanz zweier verschiedener Argumente
+niemals kombinieren l\"asst. Die symmetrische Familie interpoliert somit
+stetig zwischen dem \enquote{leichten} Randfall d\"unner Graphen und dem
+vollst\"andig abh\"angigen Extremfall.
+
+Die strukturelle Erkl\"arung liefert Abschnitt~\ref{sec:sym-afs}: Jeder
+zus\"atzliche (wechselseitige) Angriff schr\"ankt die Kombinierbarkeit von
+Labellings ein. Mehr Kanten bedeuten mehr Paare \((\lambda_1,\lambda_2)\),
+deren \enquote{Kreuzkombination} \(\lambda_3\) durch einen Konflikt blockiert
+wird --- und genau ein solches Paar ist nach
+Kapitel~\ref{ch:singl-ci-direkt} ein Gegenbeispiel zur Unabh\"angigkeit.
+
+\subsection{Allgemeine AFs (ICCMA-Subsamples)}
+\label{subsec:gce-st}
+
+Die st-Instanzen repr\"asentieren \enquote{nat\"urlich} vorkommende AFs, die
+nicht auf eine bestimmte zyklische Eigenschaft hin konstruiert sind. Ihr
+Verhalten liegt erwartungsgem\"a\ss{} zwischen den Extremen.
+
+\begin{table}[htbp]
+    \myfloatalign
+    \begin{tabularx}{\textwidth}{Xcccc} \toprule
+        & \(n_{\mathrm{st}}=0\) & \(n_{\mathrm{st}}=1\) &
+          \(n_{\mathrm{st}}\geq2\) & unbestimmt \\ \midrule
+        Anzahl Anfragen & 9 & 24 & 71 & 4 \\
+        \bottomrule
+    \end{tabularx}
+    \caption[Stabile Labellings in st-Instanzen]{Verteilung von
+    \(n_{\mathrm{st}}\) \"uber die ausgewerteten st-Zufallsanfragen. Ein Drittel
+    der Instanzen besitzt h\"ochstens ein \textit{stable}-Labelling und ist
+    damit nach Proposition~\ref{prop:gce-leq1-indep} garantiert unabh\"angig.}
+    \label{tab:gce-st}
+\end{table}
+
+Tabelle~\ref{tab:gce-st} zeigt eine breite Streuung von \(n_{\mathrm{st}}\):
+33 von 108 Anfragen entfallen auf Instanzen mit \(n_{\mathrm{st}}\leq 1\), die
+nach Proposition~\ref{prop:gce-leq1-indep} unabh\"angig sind. Insgesamt waren
+die st-Zufallsanfragen ganz \"uberwiegend unabh\"angig (102 SAT gegen\"uber nur
+2 UNSAT, bei 4 Zeit\"uberschreitungen); beide abh\"angigen F\"alle traten auf
+Instanzen mit \(n_{\mathrm{st}}\geq2\) auf.
+
+Das vollst\"andige Abh\"angigkeitsprofil zweier Repr\"asentanten unterstreicht,
+dass Abh\"angigkeit in dieser Klasse zwar selten, aber real ist. F\"ur die
+Instanz \texttt{st\_156} sind von \(12\,090\) getesteten Paaren \(4{,}5\,\%\)
+abh\"angig; f\"ur \texttt{st\_211} sind es von \(22\,155\) Paaren
+\(10{,}6\,\%\). Reale AFs verhalten sich also eher wie d\"unne symmetrische
+Graphen (kleiner \(p\)) als wie dichte: Die meisten Argumentpaare sind
+unabh\"angig, einzelne lokale Konfliktstrukturen erzeugen jedoch gezielte
+Abh\"angigkeiten.
+
+Bemerkenswert ist schlie\ss lich die Laufzeitspreizung innerhalb der Klasse.
+W\"ahrend die meisten Anfragen praktisch sofort entschieden werden, traten
+sowohl die Zeit\"uberschreitungen als auch deutliche Ausrei\ss er (eine Instanz
+mit Laufzeiten im Bereich von rund zwei bis vier Minuten) gerade hier auf. Die
+\(\Pi_2^{\mathrm P}\)-H\"arte aus Theorem~\ref{th:ind-st-is-pi2p-c} wird damit
+nicht von den konstruierten Extremklassen, sondern von den
+\enquote{allgemeinen} Instanzen sichtbar gemacht.
+
+\section{\"Ubergreifende Muster}
+\label{sec:gce-muster}
+
+Aus der klassenweisen Analyse lassen sich vier wiederkehrende Muster
+verdichten.
+
+\paragraph{Muster 1: Abh\"angigkeit erfordert mindestens zwei
+\textit{stable}-Labellings.}
+\"Uber alle Klassen hinweg ist \(n_{\mathrm{st}}(F)\geq 2\) ausnahmslos
+notwendig f\"ur ein abh\"angiges Ergebnis. Tabelle~\ref{tab:gce-master}
+schl\"usselt die Zufallsanfragen nach \(n_{\mathrm{st}}\) auf: In keiner
+einzigen Anfrage mit \(n_{\mathrm{st}}\leq 1\) trat Abh\"angigkeit auf, was
+Proposition~\ref{prop:gce-leq1-indep} exakt widerspiegelt. Erst im Regime
+\(n_{\mathrm{st}}\geq2\) wird Abh\"angigkeit \"uberhaupt m\"oglich --- und dann
+auch h\"aufig.
+
+\begin{table}[htbp]
+    \myfloatalign
+    \begin{tabularx}{\textwidth}{Xccc} \toprule
+        \(n_{\mathrm{st}}(F)\) & SAT (unabh.) & UNSAT (abh.) & TIMEOUT \\
+        \midrule
+        \(0\)       &  28 &   0 & 0 \\
+        \(1\)       &  24 &   0 & 0 \\
+        \({\geq}2\) & 185 & 110 & 2 \\
+        \bottomrule
+    \end{tabularx}
+    \caption[Abh\"angigkeit nach Anzahl stabiler Labellings]{Zufallsanfragen
+    aufgeschl\"usselt nach \(n_{\mathrm{st}}(F)\). Abh\"angigkeit (UNSAT) tritt
+    ausschlie\ss lich bei \(n_{\mathrm{st}}\geq2\) auf.}
+    \label{tab:gce-master}
+\end{table}
+
+\paragraph{Muster 2: Angriffsdichte steuert die H\"aufigkeit.}
+Sobald gen\"ugend \textit{stable}-Labellings vorhanden sind, bestimmt die
+Angriffsdichte, \emph{wie oft} Abh\"angigkeit auftritt. Die symmetrische
+Familie macht dies quantitativ greifbar (Tabelle~\ref{tab:gce-sym}): Die
+Abh\"angigkeitsrate w\"achst monoton mit \(p\) und erreicht im dichtesten Fall
+\(100\,\%\). Dichte und Abh\"angigkeit sind damit gleichgerichtet --- ein
+empirisches Gegenst\"uck zur theoretischen Beobachtung aus
+Abschnitt~\ref{sec:sym-afs}, dass zus\"atzliche Angriffe die Kombinierbarkeit
+von Labellings einschr\"anken.
+
+\paragraph{Muster 3: Die Klassen ordnen sich in einem Spektrum an.}
+Die untersuchten Klassen bilden ein durchgehendes Spektrum von
+\enquote{strukturell unabh\"angig} bis \enquote{strukturell abh\"angig}:
+\begin{center}
+\begin{tabularx}{\textwidth}{lX} \toprule
+    unabh\"angiger Pol & azyklisch und geradezyklenfrei
+        (\(n_{\mathrm{st}}\leq1\)); dichte SCC
+        (\(\Lambda_{\mathrm{st}}=\emptyset\)) \\ \midrule
+    Mitte & allgemeine (st) und d\"unne symmetrische AFs \\ \midrule
+    abh\"angiger Pol & dichte symmetrische bis vollst\"andig gerichtete AFs
+        (\(p\to1\)) \\ \bottomrule
+\end{tabularx}
+\end{center}
+Am einen Ende erzwingen \(n_{\mathrm{st}}\leq 1\) (azyklisch, geradezyklenfrei)
+bzw.\ \(\Lambda_{\mathrm{st}}=\emptyset\) (dichte SCC) generische
+Unabh\"angigkeit. Am anderen Ende erzwingt der vollst\"andig gerichtete Graph
+generische Abh\"angigkeit. Reale (st) und d\"unne symmetrische Instanzen liegen
+nahe beim unabh\"angigen Ende, dichte symmetrische Instanzen nahe beim
+abh\"angigen.
+
+\paragraph{Muster 4: Antwort und Aufwand sind zu entkoppeln.}
+Eine strukturell vorbestimmte Antwort bedeutet nicht automatisch eine billige
+Berechnung. Die g\"unstigsten Messungen waren die Singleton-Tests mit
+\(Z=\emptyset\), die nach einer Iteration abbrechen
+(Abschnitt~\ref{subsec:gce-modi}). Die teuersten F\"alle --- Zeit\"uberschreitungen
+und Minuten-Ausrei\ss er --- traten dort auf, wo entweder die Instanzen sehr
+gro\ss{} (SCC) oder strukturell unregelm\"a\ss ig (st) waren. Das praktische
+Schwierigkeitsbild folgt damit nicht der Abh\"angigkeitsrate, sondern der
+Gr\"o\ss e und Regelm\"a\ss igkeit der Instanz.
+
+\section{Zusammenfassung}
+\label{sec:gce-zusammenfassung}
+
+Die empirische Analyse best\"atigt und pr\"azisiert die theoretische
+Einordnung aus Kapitel~\ref{ch:graphclasses}. Der einzelne Pr\"adiktor
+\(n_{\mathrm{st}}(F)\) trennt die Klassen sauber in ein Regime garantierter
+Unabh\"angigkeit (\(n_{\mathrm{st}}\leq 1\): azyklisch, geradezyklenfrei, fast
+alle SCC-Instanzen) und ein Regime m\"oglicher Abh\"angigkeit
+(\(n_{\mathrm{st}}\geq 2\): symmetrisch, allgemein). Innerhalb des zweiten
+Regimes ist die Angriffsdichte die entscheidende Stellschraube: Die
+symmetrische Familie zeigt einen monotonen Anstieg der Abh\"angigkeitsrate von
+rund einem Zehntel bei \(p=0{,}1\) bis zur vollst\"andigen Abh\"angigkeit bei
+\(p=1\). Allgemeine ICCMA-Instanzen verhalten sich \"ahnlich wie d\"unne
+symmetrische Graphen: \"uberwiegend unabh\"angig, mit vereinzelten, lokal
+erzeugten Abh\"angigkeiten. Schlie\ss lich entkoppeln sich strukturelle Antwort
+und Rechenaufwand --- die \(\Pi_2^{\mathrm P}\)-H\"arte des Problems wird gerade
+auf den allgemeinen, nicht eigens konstruierten Instanzen sichtbar.
