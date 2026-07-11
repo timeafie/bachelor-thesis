@@ -3,35 +3,37 @@
 
 Die folgenden Abschnitte orientieren sich an \cite{handbook__of_formal_argumentation__vol__3:2024}.
 
+Zu Beginn eine Feststellung, die die späteren komplexitätstheoretischen Einordnungen vereinfacht.
+\begin{Lemma}
+\label{lem:at-most-one-labelling-ci}
+    Sei \(F=(A,R)\) ein AF und sei \(\sigma\) eine beliebige Semantik. 
+    Falls \(|\Lambda_\sigma(F)| \leq 1\), dann ist die \(\sigma\)-Unabhängigkeit trivial.
+\end{Lemma}
+
+\begin{proof}
+    Seien \(X,Y,Z \subseteq A\) paarweise disjunkt. Nach Definition gilt \(X \perp_\sigma Y \mid Z\), falls für alle \(\lambda_1,\lambda_2 \in \Lambda_\sigma(F)\) 
+    mit \(\lambda_1|_Z = \lambda_2|_Z\) ein 
+    \(\lambda_3 \in \Lambda_\sigma(F)\) existiert, sodass \(\lambda_3|_X = \lambda_1|_X\), \(\lambda_3|_Y = \lambda_2|_Y\) und \(\lambda_3|_Z = \lambda_1|_Z = \lambda_2|_Z\).
+    Falls \(\Lambda_\sigma(F)=\emptyset\), ist die universelle Quantifikation über \(\lambda_1\) und \(\lambda_2\) leer. Die Aussage gilt daher vakuos.
+    Sei nun \(\Lambda_\sigma(F)=\{\lambda\}\). Dann gilt für alle \(\lambda_1,\lambda_2 \in \Lambda_\sigma(F)\) bereits \(\lambda_1=\lambda_2=\lambda\). 
+    Wähle \(\lambda_3=\lambda\). Dann gilt unmittelbar \(\lambda_3|_X=\lambda_1|_X\), \(\lambda_3|_Y=\lambda_2|_Y\) und \(\lambda_3|_Z=\lambda_1|_Z=\lambda_2|_Z\). 
+    Also gilt \(X \perp_\sigma Y \mid Z\).
+\end{proof}
 \section{Azyklische AFs}
 \label{sec:acyc-afs}
 
-Für azyklische AFs fällt jedes existierende \emph{stable}-Labelling mit dem eindeutig bestimmten \emph{grounded}-Labelling zusammen. 
-Folglich besitzt ein azyklisches AF höchstens ein \emph{stable}-Labelling. 
-Dadurch ist die bedingte Unabhängigkeit bezüglich der \emph{stable}-Semantik für beliebige paarweise disjunkte Argumentmengen 
-stets erfüllt.
-
 \begin{Proposition}
 \label{prop:acyc-af-ci-st-top}
-    Sei F=(A,R) ein azyklisches AF. Dann ist
-    \(\textit{Ind}_{\mathrm{st}}(F) \) immer wahr.
+    \(\sigma\)-Unabhängigkeit für \(\sigma \in {co,st,pr}\) ist trivial in azyklischen AFs.
 \end{Proposition}
 
 \begin{proof}
-    \label{pr:acyc-af-ci-st-top-true}
-    Seien \( X,Y,Z \subseteq A\) paarweise disjunkt. Besitzt \(F\) kein
-    \emph{stable}-Labelling, so ist die universell quantifizierte
-    Unabhängigkeitsbedingung vakuos erfüllt.
+\label{pr:acyc-af-ci-st-top-true}
+    Sei \(F=(A,R)\) ein endlicher azyklischer AF. Für azyklische AFs fallen die \emph{complete}-, \emph{preferred}- und \emph{stable}-Semantik mit der \emph{grounded}-Semantik zusammen. 
+    Da das grounded Labelling eindeutig ist, existiert genau ein Labelling \(\lambda\), sodass \(\Lambda_{co}(F)=\Lambda_{pr}(F)=\Lambda_{st}(F)=\{\lambda\}\).
 
-    Andernfalls existiert aufgrund der Azyklizität genau ein
-    \emph{stable}-Labelling \(\lambda\), das mit dem
-    \emph{grounded}-Labelling übereinstimmt. Für beliebige
-    \(\lambda_1,\lambda_2\in\Lambda_{\mathrm{st}}(F)\) gilt daher
-    \(\lambda_1=\lambda_2=\lambda\). Mit \(\lambda_3:=\lambda\) können
-    somit die Belegungen von \(X\), \(Y\) und \(Z\) wie in der Definition
-    der bedingten Unabhängigkeit gefordert kombiniert werden. Daher gilt
-    \(X\bot_{\mathrm{st}}Y\mid Z\) und folglich
-    \(\operatorname{Ind}_{\mathrm{st}}(F)\).
+    Sei nun \(\sigma \in \{co,st,pr\}\). Dann gilt insbesondere \(|\Lambda_\sigma(F)|=1\). Nach Lemma~\ref{lem:at-most-one-labelling-ci} folgt für alle paarweise disjunkten \(X,Y,Z \subseteq A\), 
+    dass \(X \perp_\sigma Y \mid Z\) gilt.
 \end{proof}
 
 \section{Geradezykelfreie AFs}
@@ -42,21 +44,311 @@ Damit existiert ebenfalls maximal ein \emph{stable}-Labelling.
 
 \begin{Proposition}
 \label{prop:even-cycle-free-af-ci-st-top}
-    Sei F=(A,R) ein AF ohne gerade Zyklen. Dann ist
-    \(\textit{Ind}_{\mathrm{st}}(F) \) immer wahr.
+    \(\sigma\)-Unabhängigkeit für \(\sigma \in {co,st,pr}\) ist trivial in geradezykelfreien AFs.
 \end{Proposition}
 
 \begin{proof}
-    Analog zu \ref{pr:acyc-af-ci-st-top-true}.
+\label{even-cycle-free-af-ci-top-true}
+    Sei \(F=(A,R)\) ein endlicher AF ohne gerade Zyklen. Für diese Klasse fallen die \emph{complete}- und die \emph{preferred}-Semantik mit der \emph{grounded}-Semantik zusammen. 
+    Da das grounded Labelling eindeutig ist, gilt \(|\Lambda_{co}(F)|=1\) und \(|\Lambda_{pr}(F)|=1\).
+
+    Für die \emph{stable}-Semantik ist das grounded Labelling der einzige mögliche Kandidat. 
+    Daher gilt entweder \(\Lambda_{st}(F)=\emptyset\), falls das grounded Labelling nicht stable ist, oder \(\Lambda_{st}(F)=\{\lambda\}\), 
+    falls das grounded Labelling stable ist. In beiden Fällen gilt \(|\Lambda_{st}(F)| \leq 1\).
+
+    Somit gilt für jedes \(\sigma \in \{co,st,pr\}\), dass \(|\Lambda_\sigma(F)| \leq 1\). 
+    Nach Lemma~\ref{lem:at-most-one-labelling-ci} folgt für alle paarweise disjunkten \(X,Y,Z \subseteq A\), dass \(X \perp_\sigma Y \mid Z\) gilt.
 \end{proof}
 
 
 \section{Ungeradezykelfreie AFs}
 \label{sec:odd-cycle-free-afs}
 
-Für die Berechnung von \emph{stable}-Labellings gibt es in dieser Graphklasse keine berechnungstheoretischen Vorteile. 
-Allerdings fallen die \emph{stable}- und die \emph{preferred}-Labellings zusammen. 
+Die \emph{stable}- und die \emph{preferred}-Labellings fallen zusammen. 
 
+\begin{Proposition}
+    \label{prop:ocf-af-ci-st-pi^2}
+    \(stable\)-Unabhängigkeit ist auch in ungeradezykelfreien AFs \(\Pi_2^\text{P}\)-vollständig.
+\end{Proposition}
+
+\begin{proof}
+    \label{pr:ocf-af-ci-st-pi^2-is-correct}
+    Der Zugehörigkeitsbeweis erfolgt analog zum allgemeinen Fall.
+    Auch für die Härte benutzen wir die Konstruktion aus \ref{pr:ind-st-is-pi2p-c-correct}, wobei zu zeigen bleibt, dass es sich um einen ungeradezykelfreien Graphen handelt.
+    Wir betrachten zunächst die stark zusammenhängenden Komponenten von \(F_{\Psi}\). 
+    Für jede universell quantifizierte Variable \(x_i\) bildet das zugehörige Argumentpaar 
+    \(\{x_i,\overline{x_i}\}\) eine stark zusammenhängende Komponente. Entsprechend bildet 
+    für jede existenziell quantifizierte Variable \(y_j\) das Argumentpaar 
+    \(\{y_j,\overline{y_j}\}\) eine stark zusammenhängende Komponente. Darüber hinaus bildet 
+    jedes Klauselargument \(c_k\) eine einelementige stark zusammenhängende Komponente, während 
+    die Argumente \(\varphi\) und \(t\) gemeinsam die stark zusammenhängende Komponente 
+    \(\{\varphi,t\}\) bilden.
+
+    Somit gilt
+       \( \operatorname{SCC}(F_{\Psi})
+        =
+        \bigl\{\{x_i,\overline{x_i}\} \mid x_i \in \{x_0\} \cup X\bigr\}
+        \cup
+        \bigl\{\{y_j,\overline{y_j}\} \mid y_j \in Y\bigr\}
+        \cup
+        \bigl\{\{c_k\} \mid 1 \leq k \leq m\bigr\}
+        \cup
+        \bigl\{\{\varphi,t\}\bigr\}.\)
+
+    Zwischen den stark zusammenhängenden Komponenten verlaufen die Angriffe ausschließlich 
+    in der Richtung \(\text{Variablenargumente} \rightarrow \text{Klauselargumente} \rightarrow \{\varphi,t\}.\)
+    Insbesondere existiert kein Angriff von einem Klauselargument zurück zu einem 
+    Variablenargument und kein Angriff aus der Komponente \(\{\varphi,t\}\) zurück zu einem 
+    Klausel- oder Variablenargument. Der Kondensationsgraph von \(F_{\Psi}\) ist daher azyklisch.
+
+    Jeder gerichtete Zyklus eines Digraphen liegt vollständig innerhalb einer seiner stark 
+    zusammenhängenden Komponenten. Folglich kann jeder gerichtete Zyklus in \(F_{\Psi}\) nur 
+    innerhalb einer der oben beschriebenen Komponenten auftreten.
+
+    Die einzigen nichttrivialen stark zusammenhängenden Komponenten sind die Argumentpaare
+        \(x_i \leftrightarrow \overline{x_i},
+        y_j \leftrightarrow \overline{y_j},
+        \varphi \leftrightarrow t.\)
+
+    Jede dieser Komponenten enthält ausschließlich einen gerichteten Zyklus der Länge \(2\). 
+    Die einelementigen Komponenten \(\{c_k\}\) enthalten keine Zyklen, da die Klauselargumente 
+    sich nicht selbst angreifen.
+
+    Damit besitzt jeder gerichtete Zyklus in \(F_{\Psi}\) gerade Länge. Folglich enthält 
+    \(F_{\Psi}\) keinen gerichteten Zyklus ungerader Länge und ist somit ungeradezykelfrei.
+\end{proof}
+
+\begin{Proposition}
+    \label{prop:ocf-af-ci-pr-pi^2-c}
+    \(preferred\)-Unabhängigkeit ist auch in ungeradezykelfreien AFs \(\Pi_2^\text{P}\)-vollständig .
+\end{Proposition}
+
+\begin{proof}
+    \label{pr:ocf-af-ci-pr-pi^2-c-is-correct}
+    Folgt direkt aus Proposition \ref{prop:ocf-af-ci-st-pi^2} und der Tatsache, dass in ungeradezykelfreien AFs \(\Lambda_{st} = \Lambda_{pr}\).
+\end{proof}
+
+\begin{Proposition}
+    \label{prop:ocf-af-ci-co-pi^2-c}
+    \(complete\)-Unabhängigkeit ist auch in ungeradezykelfreien AFs \(\Pi_2^\text{P}\)-vollständig.
+\end{Proposition}
+
+\begin{proof}
+    \label{pr:ocf-af-ci-co-pi^2-c-is-correct}
+    Wir modifizieren die Konstruktion von \cite{bluemel:2025:independence-aba} wie folgt.
+    Wir reduzieren vom \(\Pi_2^P\)-vollständigen Problem
+    \(\mathrm{QBF}^{2}_{\forall}\). Eine Instanz dieses Problems ist
+    eine quantifizierte boolesche Formel der Form
+    \[
+        \Psi=\forall X\exists Y\,\varphi(X,Y),
+    \]
+    wobei \(\varphi=\bigwedge_{k=1}^{m}C_k\) in konjunktiver
+    Normalform vorliegt. Gefragt ist, ob für jede Belegung der
+    Variablen aus \(X\) eine Belegung der Variablen aus \(Y\)
+    existiert, welche \(\varphi\) erfüllt.
+
+    Wir führen wir eine frische universelle
+    Variable \(x_0\) ein und setzen
+    \[
+        X^{+}=X\cup\{x_0\}
+        \qquad\text{und}\qquad
+        \widehat{\varphi}
+        =
+        \bigwedge_{k=1}^{m}(x_0\lor C_k).
+    \]
+    Damit gilt
+    \[
+        \forall X\exists Y\,\varphi
+        \quad\Longleftrightarrow\quad
+        \forall X^{+}\exists Y\,\widehat{\varphi}.
+    \]
+    Für \(x_0=\bot\) entspricht
+    \(\widehat{\varphi}\) der ursprünglichen Formel, während
+    \(x_0=\top\) jede Klausel erfüllt.
+
+    \begin{figure}[htbp]
+        \myfloatalign
+        \centering
+        \includegraphics[width=0.9\textwidth]{../../Bilder/ocf_co_reduction_diagram(1).pdf}
+        \caption[Reduktion]{Konstruktionsbeispiel Reduktion}
+        \label{fig:ocf-co-reduction}
+    \end{figure}
+
+
+    \paragraph{Konstruktion.}
+    Aus \(\Psi\) konstruieren wir das AF
+    \(F_{\Psi}=(A_{\Psi},R_{\Psi})\) mit
+    \[
+    \begin{split}
+        A_{\Psi}={}&
+        \{x_i,\overline{x_i},d_i\mid x_i\in X^{+}\}
+        \cup
+        \{y_j,\overline{y_j}\mid y_j\in Y\}\\
+        &{}\cup
+        \{c_1,\ldots,c_m,\varphi,t,s,g\}.
+    \end{split}
+    \]
+
+    Die Angriffsmenge wird wie folgt definiert:
+    \[
+    \begin{split}
+        R_{\Psi}={}&
+        \{(x_i,\overline{x_i}),(\overline{x_i},x_i)
+            \mid x_i\in X^{+}\}\\
+        &{}\cup
+        \{(y_j,\overline{y_j}),(\overline{y_j},y_j)
+            \mid y_j\in Y\}\\
+        &{}\cup
+        \{(\ell,c_k)
+            \mid \ell\text{ kommt in der Klausel }
+            x_0\lor C_k\text{ vor}\}\\
+        &{}\cup
+        \{(c_k,\varphi)\mid 1\leq k\leq m\}\\
+        &{}\cup
+        \{(\varphi,t),(t,\varphi)\}\\
+        &{}\cup
+        \{(x_i,d_i),(\overline{x_i},d_i),(d_i,s)
+            \mid x_i\in X^{+}\}\\
+        &{}\cup
+        \{(s,g),(g,\varphi)\}\\
+        &{}\cup
+        \{(g,c_k)\mid 1\leq k\leq m\}.
+    \end{split}
+    \]
+
+    Die Argumente \(d_i\) erkennen, ob das jeweilige Paar
+    \(x_i,\overline{x_i}\) total gelabelt ist. Der globale
+    Schalter \(s\) erhält genau dann das Label \(in\), wenn alle
+    universellen Variablen total gelabelt sind. Das Argument
+    \(g\) deaktiviert im partiellen Fall die eigentliche
+    Formelauswertung.
+
+    Als Instanz von \(co\)-Unabhängigkeit geben wir
+    \[
+        \boxed{
+            \{\varphi\}
+            \perp_{co}
+            X^{+}
+            \mid
+            \{s\}
+        }
+    \]
+    aus. Die Konstruktion ist offensichtlich polynomial in der
+    Größe von \(\Psi\). Im Folgenden zeigen wir
+    \[
+        \Psi\text{ ist gültig}
+        \quad\Longleftrightarrow\quad
+        \{\varphi\}
+        \perp_{co}
+        X^{+}
+        \mid
+        \{s\}
+        \text{ in }F_{\Psi}.
+    \]
+
+    Zunächst gilt in jedem vollständigen Labelling \(\lambda\):
+    \[
+        \lambda(s)=in
+        \quad\Longleftrightarrow\quad
+        \text{alle Variablen aus \(X^{+}\) sind total gelabelt}.
+    \]
+    In diesem Fall gilt \(\lambda(g)=out\). Ist dagegen mindestens
+    eine Variable aus \(X^{+}\) unentschieden, so gilt
+    \(\lambda(s)=\lambda(g)=und\).
+
+    Sei zunächst \(\Psi\) gültig und seien
+    \(\lambda_1,\lambda_2\in\Lambda_{co}(F_{\Psi})\) mit
+    \(\lambda_1(s)=\lambda_2(s)\). Wir konstruieren ein vollständiges
+    Labelling \(\lambda_3\), das das Label von \(\varphi\) aus
+    \(\lambda_1\) und das Labelling von \(X^{+}\) aus \(\lambda_2\)
+    übernimmt.
+
+    Falls \(\lambda_1(s)=\lambda_2(s)=und\), gilt \(g=und\).
+    Daher kann \(\varphi\) nicht mit \(in\), sondern nur mit \(out\)
+    oder \(und\) gelabelt sein. Beide Labels sind unabhängig vom
+    konkreten Labelling von \(X^{+}\) realisierbar: Für
+    \(\varphi=out\) wählen wir \(t=in\), für \(\varphi=und\) wählen
+    wir \(t=und\). Die \(Y\)-Argumente können dabei unentschieden
+    gelabelt werden.
+
+    Falls \(\lambda_1(s)=\lambda_2(s)=in\), kodiert
+    \(\lambda_2|_{X^{+}}\) eine totale Belegung \(\alpha\) von
+    \(X^{+}\), und es gilt \(g=out\). Wegen der Gültigkeit von
+    \(\forall X^{+}\exists Y\,\widehat{\varphi}\) existiert eine
+    Belegung \(\beta\) von \(Y\) mit
+    \(\widehat{\varphi}(\alpha,\beta)=\top\). Wir labeln die
+    \(Y\)-Argumente gemäß \(\beta\). Dadurch wird jedes
+    Klauselargument von einem \(in\)-gelabelten Literal angegriffen
+    und somit mit \(out\) gelabelt. Daher können die drei möglichen
+    Labels von \(\varphi\) durch
+    \[
+        (\varphi,t)\in
+        \{(in,out),(out,in),(und,und)\}
+    \]
+    realisiert werden. Somit existiert in beiden Fällen das
+    erforderliche Labelling \(\lambda_3\), und es gilt
+    \(\{\varphi\}\perp_{co}X^{+}\mid\{s\}\).
+
+    Sei nun \(\Psi\) nicht gültig. Dann existiert eine Belegung
+    \(\alpha\) von \(X\), sodass
+    \[
+        \forall\beta:Y\to\{\top,\bot\}\colon
+        \varphi(\alpha,\beta)=\bot.
+    \]
+    Erweitere \(\alpha\) durch \(x_0=\bot\) zu einer totalen Belegung
+    \(\alpha^{+}\) von \(X^{+}\). Diese ist in einem vollständigen
+    Labelling \(\lambda_2\) mit \(\lambda_2(s)=in\) realisierbar;
+    etwa durch \(t=in\) und \(\varphi=out\).
+
+    Separat existiert ein vollständiges Labelling \(\lambda_1\) mit
+    \(\lambda_1(s)=in\) und \(\lambda_1(\varphi)=in\): Dazu wird
+    \(x_0=in\) gewählt, sodass \(x_0\) alle Klauselargumente angreift
+    und diese mit \(out\) gelabelt werden.
+
+    Angenommen, es existiere ein kombinierendes Labelling
+    \(\lambda_3\) mit
+    \[
+        \lambda_3|_{X^{+}}=\alpha^{+}
+        \qquad\text{und}\qquad
+        \lambda_3(\varphi)=in.
+    \]
+    Da \(s=in\), gilt \(g=out\). Aus \(\varphi=in\) folgt, dass alle
+    Klauselargumente \(c_k\) mit \(out\) gelabelt sind. Somit besitzt
+    jedes \(c_k\) einen \(in\)-gelabelten Literalangreifer. Da
+    \(x_0=out\), ergeben die \(in\)-gelabelten \(Y\)-Literale eine
+    konsistente partielle Belegung, die zu einer totalen Belegung
+    \(\beta\) mit \(\varphi(\alpha,\beta)=\top\) erweitert werden
+    kann. Dies widerspricht der Wahl von \(\alpha\). Folglich
+    existiert kein kombinierendes Labelling und daher
+    \[
+        \{\varphi\}\not\perp_{co}X^{+}\mid\{s\}.
+    \]
+
+    \paragraph{Ungeradezykelfreiheit.}
+    Das konstruierte AF \(F_{\Psi}\) ist ungeradezykelfrei. 
+    Seine einzigen nichttrivialen stark zusammenhängenden Komponenten sind
+    \(\{x_i,\overline{x_i}\}\) für \(x_i\in X^{+}\),
+    \(\{y_j,\overline{y_j}\}\) für \(y_j\in Y\) sowie
+    \(\{\varphi,t\}\).
+    Die Argumente \(d_i\), \(s\), \(g\) und \(c_k\) bilden jeweils
+    einelementige stark zusammenhängende Komponenten.
+
+    Zwischen diesen Komponenten verlaufen die Angriffe ausschließlich in den
+    Richtungen
+    \(\{x_i,\overline{x_i}\}\to d_i\to s\to g\),
+    \(\{x_i,\overline{x_i}\},\{y_j,\overline{y_j}\}\to c_k\),
+    \(g\to c_k\) und
+    \(g,c_k\to\{\varphi,t\}\).
+    Der Kondensationsgraph von \(F_{\Psi}\) ist daher azyklisch.
+    Folglich liegt jeder gerichtete Zyklus vollständig in einer der
+    nichttrivialen Komponenten. Diese enthalten jeweils ausschließlich den
+    Zweierzyklus
+    \(x_i\leftrightarrow\overline{x_i}\),
+    \(y_j\leftrightarrow\overline{y_j}\) beziehungsweise
+    \(\varphi\leftrightarrow t\).
+    Somit besitzt jeder gerichtete Zyklus gerade Länge und
+    \(F_{\Psi}\) ist ungeradezykelfrei.
+\end{proof}
 \section{Symmetrische AFs}
 \label{sec:sym-afs}
 
