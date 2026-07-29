@@ -1,0 +1,390 @@
+\chapter{Empirische Laufzeitanalyse der \textit{stable}-Singleton-Unabh\"angigkeit}
+\label{ch:singleton-z}
+
+\section{Einleitung}
+\label{sec:sz-einleitung}
+
+Kapitel~\ref{ch:graphclasses-empirical} hat empirisch untersucht, \emph{wann}
+Abh\"angigkeit auftritt, und daf\"ur die Anzahl der \textit{stable}-Labellings
+als Pr\"adiktor herausgearbeitet. Dieses Kapitel verschiebt den Blick von der
+\emph{Antwort} auf den \emph{Aufwand}: Es fragt, wie sich die \emph{Laufzeit}
+der Entscheidung von \(\textit{SingInd}_{\mathrm{st}}\) (Kapitel~\ref{ch:singl-ci})
+verh\"alt, wenn die Instanz gr\"o\ss er wird und wenn die Konditionierungsmenge
+\(Z\) w\"achst. W\"ahrend die theoretische Einordnung mit
+Theorem~\ref{th:ind-st-is-pi2p-c} lediglich eine obere Schranke im
+Worst Case liefert, soll hier das \emph{typische} Skalierungsverhalten auf
+strukturell unterschiedlichen Instanzfamilien sichtbar gemacht werden.
+
+Grundlage ist eine systematische Messreihe, die im Folgenden als
+\emph{\texttt{singleton\_z}-Experiment} bezeichnet wird. Sie stellt zu jeder
+Instanz mehrere Singleton-Anfragen \(X=\{x\}\), \(Y=\{y\}\) und variiert dabei
+gezielt die Gr\"o\ss e der Konditionierungsmenge \(Z\). Wir verwenden
+durchg\"angig dieselbe Konvention wie in
+Kapitel~\ref{ch:graphclasses-empirical}: Ein positives L\"oserergebnis (SAT)
+bedeutet \emph{Unabh\"angigkeit}, ein negatives (UNSAT) \emph{Abh\"angigkeit};
+eine Zeit\"uberschreitung (TIMEOUT) liefert keine Entscheidung.
+
+Die Leitfragen des Kapitels lauten:
+\begin{enumerate}
+    \item Von welchen Instanzgr\"o\ss en --- Argumentzahl \(n\), Angriffszahl
+    \(|R|\), Gr\"o\ss e der erzeugten QBF --- h\"angt die Laufzeit am
+    st\"arksten ab?
+    \item Welchen \emph{eigenst\"andigen} Einfluss hat die Gr\"o\ss e der
+    Konditionierungsmenge \(|Z|\), wenn man die \"ubrige Instanzstruktur
+    konstant h\"alt?
+    \item Wo treten die praktisch unl\"osbaren F\"alle (Zeit\"uberschreitungen)
+    auf, und folgt der Aufwand der reinen Instanzgr\"o\ss e oder der
+    Instanzstruktur?
+\end{enumerate}
+
+\section{Versuchsaufbau}
+\label{sec:sz-aufbau}
+
+\subsection{Messgr\"o\ss en und Werkzeugkette}
+\label{subsec:sz-werkzeug}
+
+Jede Anfrage \((F,\{x\},\{y\},Z)\) wird gem\"a\ss{} der aussagenlogischen
+Kodierung \(\mathrm{st}_F\) (Definition~\ref{def:st-pl}) in die QBF
+\(\Phi^{\mathrm{st}}_F(\{x\},\{y\}\mid Z)\) \"ubersetzt und als QCIR-G14-Datei
+direkt an den L\"oser QuAbS \"ubergeben. Anders als bei der ersch\"opfenden
+Enumeration aus Kapitel~\ref{ch:graphclasses-empirical} wird pro Anfrage
+\emph{eine} monolithische QBF gel\"ost. Das Zeitbudget je Anfrage betr\"agt
+\(600\) Sekunden; wird es \"uberschritten, gilt die Anfrage als TIMEOUT.
+
+Zu jeder Anfrage protokollieren wir die L\"oserantwort
+(SAT/UNSAT/TIMEOUT), die reine \emph{L\"osezeit} sowie die davon getrennte
+\emph{Erzeugungszeit} der QBF. Als Gr\"o\ss enma\ss e der Kodierung erfassen wir
+die Zahl der QBF-Variablen, der Gatter und die Dateigr\"o\ss e in Bytes. Die
+Variablenzahl betr\"agt konstruktionsbedingt exakt \(3n\), da die Kodierung
+drei Kopien der Labelling-Variablen (\(\lambda_1,\lambda_2,\lambda_3\))
+enth\"alt; sie ist damit perfekt mit \(n\) korreliert. Auch die Gatterzahl ist
+im Wesentlichen durch \(n\) bestimmt. Wir behandeln daher \(n\), die
+Variablen- und die Gatterzahl als weitgehend austauschbare Gr\"o\ss enma\ss e
+und stellen als eigenst\"andiges Kodierungsma\ss{} die Dateigr\"o\ss e in Bytes
+heraus, die zus\"atzlich die Angriffsdichte widerspiegelt.
+
+\subsection{Konditionierungsmengen}
+\label{subsec:sz-zmengen}
+
+Der eigentliche Untersuchungsgegenstand dieses Experiments ist der Einfluss von
+\(|Z|\). Dazu wird zu jeder Instanz jede Singleton-Anfrage auf vier gestaffelten
+\(Z\)-Niveaus wiederholt:
+\[
+    Z_0=\emptyset,\quad
+    |Z_1|\approx \tfrac{n}{30},\quad
+    |Z_2|\approx \tfrac{n}{15},\quad
+    |Z_3|\approx \tfrac{n}{10}.
+\]
+Die Niveaus sind also gleichm\"a\ss ig zwischen der leeren Menge und der
+Obergrenze \(n/10\) gestaffelt. Die Elemente von \(Z\) werden reproduzierbar
+geseedet und disjunkt zu \(\{x,y\}\) gezogen. Pro Instanz werden f\"unf
+Singleton-Paare gebildet, sodass sich je Instanz \(5\times 4 = 20\) Anfragen
+und insgesamt \(2100\) Anfragen \"uber \(105\) Instanzen ergeben. Der
+Sonderfall \(Z_0=\emptyset\) dient als Referenzniveau, gegen das die
+gr\"o\ss eren \(Z\)-Mengen verglichen werden.
+
+\subsection{Instanzfamilien}
+\label{subsec:sz-familien}
+
+Die \(105\) Instanzen verteilen sich auf sieben Familien mit bewusst
+unterschiedlichem Gr\"o\ss en- und Strukturprofil.
+Tabelle~\ref{tab:sz-familien} fasst sie zusammen. Neben den drei klassischen
+Zufallsgraphmodellen (Barab\'asi--Albert, Erd\H{o}s--R\'enyi,
+Watts--Strogatz) treten gezielt erzeugte AFs (SCC- und Stable-Generator) sowie
+zwei aus anderen Formalismen \"ubersetzte Familien (Planning2AF, ABA2AF)
+hinzu. Auff\"allig ist die enorme Spanne der Angriffszahl: Sie reicht von
+\(|R|=111\) bei kleinen Barab\'asi--Albert-Graphen bis zu \(|R|=314\,530\) bei
+den dichtesten ABA2AF-Instanzen.
+
+\begin{table}[htbp]
+    \myfloatalign
+    \begin{tabularx}{\textwidth}{Xccccc} \toprule
+        Familie & Inst. & Anfr. & \(n\) & \(|R|\) &
+                  SAT / UNSAT / TO (\%) \\ \midrule
+        Barab\'asi--Albert & 20 & 400 & 101--201 & 111--343 &
+            96{,}8 / 3{,}2 / 0{,}0 \\
+        Erd\H{o}s--R\'enyi  & 20 & 400 & 101--502 & 1045--125\,492 &
+            74{,}8 / 0{,}0 / 25{,}2 \\
+        Watts--Strogatz    & 20 & 400 & 100--500 & 600--8000 &
+            85{,}0 / 0{,}0 / 15{,}0 \\
+        SCC-Generator      &  6 & 120 & 280--935 & 3598--15\,708 &
+            100{,}0 / 0{,}0 / 0{,}0 \\
+        Stable-Generator   & 20 & 400 & 156--981 & 858--9725 &
+            59{,}2 / 0{,}8 / 40{,}0 \\
+        Planning2AF        &  5 & 100 & 129--970 & 180--1768 &
+            71{,}0 / 21{,}0 / 8{,}0 \\
+        ABA2AF             & 14 & 280 & 125--564 & 10\,724--314\,530 &
+            100{,}0 / 0{,}0 / 0{,}0 \\ \midrule
+        \textbf{Gesamt}    & 105 & 2100 & 100--981 & 111--314\,530 &
+            82{,}6 / 1{,}8 / 15{,}7 \\
+        \bottomrule
+    \end{tabularx}
+    \caption[Instanzfamilien des \texttt{singleton\_z}-Experiments]{Die sieben
+    Instanzfamilien mit Zahl der Instanzen und Anfragen, den Spannen von
+    Argumentzahl \(n\) und Angriffszahl \(|R|\) sowie der Aufteilung der
+    Antworten in SAT (Unabh\"angigkeit), UNSAT (Abh\"angigkeit) und TIMEOUT.}
+    \label{tab:sz-familien}
+\end{table}
+
+\section{Gesamt\"uberblick}
+\label{sec:sz-ueberblick}
+
+Von den \(2100\) Anfragen wurden \(1771\) innerhalb des Zeitbudgets
+entschieden (\(84{,}3\,\%\)); \(329\) Anfragen (\(15{,}7\,\%\)) f\"uhrten zu
+einer Zeit\"uberschreitung. Unter den entschiedenen Anfragen \"uberwiegt die
+Unabh\"angigkeit deutlich: \(1734\) SAT stehen nur \(37\) UNSAT gegen\"uber.
+Abh\"angigkeit ist im Singleton-Fall also die klare Ausnahme.
+
+Bemerkenswert ist die extreme Spreizung der L\"osezeiten. Der Median der
+gel\"osten Anfragen liegt bei nur \(0{,}077\) Sekunden, das
+\(90\%\)-Quantil jedoch bereits bei \(20{,}4\) Sekunden und die gr\"o\ss te
+gel\"oste Anfrage bei \(561{,}2\) Sekunden, also dicht unterhalb des
+Zeitbudgets. Die Verteilung ist damit stark rechtsschief: Die \"uberwiegende
+Mehrheit der Anfragen ist praktisch sofort entschieden, w\"ahrend eine kleine
+Minderheit den L\"oser bis an die Zeitgrenze belastet.
+Abbildung~\ref{fig:sz-cactus} macht dies als Cactus-Plot sichtbar: Die
+Anfragen sind nach aufsteigender L\"osezeit sortiert; die Kurve verl\"auft \"uber
+weite Strecken flach und knickt erst im letzten Sechstel steil nach oben,
+bevor sie die Timeout-Linie erreicht.
+
+\begin{figure}[htbp]
+    \myfloatalign
+    \includegraphics[width=0.85\textwidth]{../../Code/translate/analysis_singleton_z/cactus.pdf}
+    \caption[Cactus-Plot der L\"osezeiten]{Nach aufsteigender L\"osezeit
+    sortierte Anfragen. Die x-Achse z\"ahlt die innerhalb eines gegebenen
+    Zeitbudgets gel\"osten Anfragen; die gestrichelte Linie markiert das
+    Timeout von \(600\) Sekunden. Der flache Verlauf und der steile Anstieg am
+    rechten Rand belegen die starke Rechtsschiefe der Laufzeitverteilung.}
+    \label{fig:sz-cactus}
+\end{figure}
+
+Die Erzeugung der QBF f\"allt gegen\"uber dem L\"osen praktisch nicht ins
+Gewicht: Ihre Dauer liegt im Median bei \(0{,}065\) Sekunden und \"uberschreitet
+selbst im Maximum nicht \(0{,}533\) Sekunden. Der gesamte messbare Aufwand des
+Verfahrens entf\"allt somit auf den L\"oseschritt, weshalb sich die folgende
+Analyse auf die L\"osezeit konzentriert.
+
+\section{Laufzeit und Instanzgr\"o\ss e}
+\label{sec:sz-groesse}
+
+Um den Einfluss der einzelnen Gr\"o\ss enma\ss e zu quantifizieren, betrachten
+wir den Rangkorrelationskoeffizienten nach Spearman zwischen der L\"osezeit und
+verschiedenen Instanzmerkmalen (nur auf den gel\"osten Anfragen, da
+Zeit\"uberschreitungen zensiert sind). Tabelle~\ref{tab:sz-spearman} fasst die
+Werte zusammen.
+
+\begin{table}[htbp]
+    \myfloatalign
+    \begin{tabularx}{\textwidth}{Xc} \toprule
+        Einflussgr\"o\ss e & Spearman-\(\rho\) \\ \midrule
+        Angriffszahl \(|R|\)          & \(+0{,}73\) \\
+        QBF-Gr\"o\ss e (Bytes)        & \(+0{,}73\) \\
+        Angriffsdichte \(|R|/n\)      & \(+0{,}66\) \\
+        Argumentzahl \(n\)            & \(+0{,}64\) \\
+        QBF-Gatterzahl                & \(+0{,}64\) \\
+        QBF-Erzeugungszeit            & \(+0{,}63\) \\
+        Konditionierungsgr\"o\ss e \(|Z|\) & \(+0{,}35\) \\
+        \bottomrule
+    \end{tabularx}
+    \caption[Rangkorrelationen der L\"osezeit]{Spearman-Rangkorrelation
+    zwischen L\"osezeit und Instanzmerkmalen \"uber die \(1771\) gel\"osten
+    Anfragen. Alle Werte sind hochsignifikant (\(p \ll 0{,}001\)). Die
+    QBF-Variablenzahl ist wegen \(|\mathrm{Vars}| = 3n\) mit \(n\) identisch und
+    daher nicht gesondert aufgef\"uhrt.}
+    \label{tab:sz-spearman}
+\end{table}
+
+Das Bild ist eindeutig: Die \emph{Gr\"o\ss e} der Instanz treibt die Laufzeit.
+Die st\"arksten Zusammenh\"ange zeigen die Angriffszahl \(|R|\) und die davon
+abgeleitete QBF-Dateigr\"o\ss e (\(\rho \approx 0{,}73\)), gefolgt von
+Angriffsdichte, Argumentzahl und Gatterzahl (\(\rho \approx 0{,}64\text{--}0{,}66\)).
+Abbildung~\ref{fig:sz-vs-r} stellt den st\"arksten Einzelzusammenhang dar: Mit
+wachsendem \(|R|\) verschiebt sich die L\"osezeit \"uber mehrere
+Gr\"o\ss enordnungen nach oben.
+
+\begin{figure}[htbp]
+    \myfloatalign
+    \includegraphics[width=0.85\textwidth]{../../Code/translate/analysis_singleton_z/laufzeit_vs_R.pdf}
+    \caption[L\"osezeit \"uber Angriffszahl]{L\"osezeit in Abh\"angigkeit von
+    der Angriffszahl \(|R|\) (beide Achsen logarithmisch), nach Familie
+    gef\"arbt. Zeit\"uberschreitungen sind am oberen Rand markiert. Der
+    Aufw\"artstrend ist deutlich, streut aber \"uber mehrere Gr\"o\ss enordnungen.}
+    \label{fig:sz-vs-r}
+\end{figure}
+
+Diese Korrelationen sind allerdings mit Vorsicht zu lesen, weil die Familien
+unterschiedliche Bereiche des \((n,|R|)\)-Raums besetzen: Die gemessenen
+Zusammenh\"ange vermengen daher reine Gr\"o\ss e und famili\"are Struktur. Ein
+schlagendes Gegenbeispiel liefern die ABA2AF-Instanzen mit den mit Abstand
+gr\"o\ss ten Angriffszahlen (bis \(314\,530\)), die dennoch ausnahmslos und
+z\"ugig entschieden werden. Angriffszahl allein ist folglich kein
+zuverl\"assiger H\"arteindikator --- ein Punkt, auf den
+Abschnitt~\ref{sec:sz-timeouts} zur\"uckkommt.
+
+\section{Einfluss der Konditionierungsgr\"o\ss e}
+\label{sec:sz-zeinfluss}
+
+Die zentrale Frage des Experiments betrifft den eigenst\"andigen Einfluss von
+\(|Z|\). Auf den ersten Blick ist er gering: In Tabelle~\ref{tab:sz-spearman}
+ist \(|Z|\) mit \(\rho \approx 0{,}35\) das schw\"achste der betrachteten
+Merkmale, und die Timeout-Rate steigt \"uber die vier \(Z\)-Niveaus nur
+minimal an (Tabelle~\ref{tab:sz-zlevel}).
+
+\begin{table}[htbp]
+    \myfloatalign
+    \begin{tabularx}{\textwidth}{Xccc} \toprule
+        Niveau & \(|Z|\) & Timeout-Rate & Median-L\"osezeit (norm.) \\ \midrule
+        \(Z_0\) & \(0\)            & \(15{,}2\,\%\) & \(1{,}000\) \\
+        \(Z_1\) & \(\approx n/30\) & \(15{,}2\,\%\) & \(1{,}014\) \\
+        \(Z_2\) & \(\approx n/15\) & \(15{,}8\,\%\) & \(1{,}020\) \\
+        \(Z_3\) & \(\approx n/10\) & \(16{,}4\,\%\) & \(1{,}030\) \\
+        \bottomrule
+    \end{tabularx}
+    \caption[Einfluss der Konditionierungsgr\"o\ss e]{Timeout-Rate und
+    paarweise auf das Referenzniveau \(Z_0\) normierte Median-L\"osezeit je
+    \(Z\)-Niveau. Global w\"achst die Laufzeit mit \(|Z|\) nur um wenige
+    Prozent.}
+    \label{tab:sz-zlevel}
+\end{table}
+
+Die paarweise Betrachtung (Abbildung~\ref{fig:sz-zlevel-gepaart}), die jede
+Instanz mit sich selbst vergleicht und damit die \"ubrige Struktur konstant
+h\"alt, best\"atigt diesen schwachen globalen Effekt: Vom Referenzniveau
+\(Z_0\) zu \(Z_3\) w\"achst der Median der L\"osezeit um lediglich rund
+\(3\,\%\). \"Uber alle Familien gemittelt kostet ein gr\"o\ss eres \(Z\) also
+kaum zus\"atzliche Zeit.
+
+\begin{figure}[htbp]
+    \myfloatalign
+    \includegraphics[width=0.85\textwidth]{../../Code/translate/analysis_singleton_z/zlevel_gepaart.pdf}
+    \caption[Paarweiser Einfluss der Konditionierungsgr\"o\ss e]{Paarweiser
+    Vergleich der L\"osezeit je Instanz \"uber die vier \(Z\)-Niveaus. Da jede
+    Instanz mit sich selbst verglichen wird, ist die \"ubrige Struktur
+    kontrolliert. Der Median (fette Linie) steigt nur schwach an; einzelne
+    Instanzen zeigen jedoch einen deutlichen Anstieg.}
+    \label{fig:sz-zlevel-gepaart}
+\end{figure}
+
+Dieser gemittelte Befund verdeckt jedoch ein famili\"ares Detail.
+Abbildung~\ref{fig:sz-zlevel-familie} schl\"usselt den \(Z\)-Effekt nach
+Familie auf: W\"ahrend die meisten Familien unbeeindruckt bleiben, reagiert die
+Barab\'asi--Albert-Familie klar auf wachsendes \(|Z|\) --- ihre
+L\"osezeitverteilung verschiebt sich mit jedem Niveau erkennbar nach oben.
+Zugleich f\"achert der obere Rand der Verteilung insgesamt auf: Einzelne
+Anfragen werden mit gr\"o\ss erem \(Z\) um bis zu zwei Gr\"o\ss enordnungen
+langsamer. Der Einfluss von \(|Z|\) ist somit nicht global, sondern
+\emph{strukturabh\"angig}: Er materialisiert sich vor allem dort, wo die
+Instanz viele \textit{stable}-Labellings besitzt und die zus\"atzlichen
+Belegungsfreiheitsgrade den Suchraum tats\"achlich vergr\"o\ss ern.
+
+\begin{figure}[htbp]
+    \myfloatalign
+    \includegraphics[width=\textwidth]{../../Code/translate/analysis_singleton_z/laufzeit_nach_zlevel_je_familie.pdf}
+    \caption[Konditionierungsgr\"o\ss e nach Familie]{L\"osezeit je
+    \(Z\)-Niveau, aufgeschl\"usselt nach Instanzfamilie. Die
+    Barab\'asi--Albert-Familie zeigt eine klare Zunahme mit \(|Z|\), w\"ahrend
+    die \"ubrigen Familien nahezu unver\"andert bleiben.}
+    \label{fig:sz-zlevel-familie}
+\end{figure}
+
+\section{Timeouts und Unabh\"angigkeitsergebnis}
+\label{sec:sz-timeouts}
+
+Wo genau liegen die praktisch unl\"osbaren F\"alle? Tabelle~\ref{tab:sz-bins}
+schl\"usselt die Timeout-Rate nach Argument- und Angriffszahl auf.
+
+\begin{table}[htbp]
+    \myfloatalign
+    \begin{tabularx}{\textwidth}{Xc@{\hspace{2em}}Xc} \toprule
+        \(n\)-Klasse & Timeout & \(|R|\)-Klasse & Timeout \\ \midrule
+        \(100\text{--}299\)   & \(0{,}0\,\%\)  & \(<1000\)                   & \(0{,}0\,\%\)  \\
+        \(300\text{--}399\)   & \(12{,}8\,\%\) & \(1000\text{--}2999\)       & \(2{,}1\,\%\)  \\
+        \(400\text{--}499\)   & \(7{,}1\,\%\)  & \(3000\text{--}9999\)       & \(44{,}4\,\%\) \\
+        \(500\text{--}749\)   & \(34{,}8\,\%\) & \(10\,000\text{--}29\,999\) & \(9{,}5\,\%\)  \\
+        \(\geq 750\)          & \(67{,}5\,\%\) & \(30\,000\text{--}99\,999\) & \(42{,}9\,\%\) \\
+                              &               & \(\geq 100\,000\)           & \(0{,}0\,\%\)  \\
+        \bottomrule
+    \end{tabularx}
+    \caption[Timeout-Raten nach Gr\"o\ss enklassen]{Anteil der
+    Zeit\"uberschreitungen nach Argumentzahl \(n\) (links) und Angriffszahl
+    \(|R|\) (rechts). W\"ahrend die Rate mit \(n\) monoton w\"achst, ist sie in
+    \(|R|\) ausgepr\"agt \emph{nicht} monoton.}
+    \label{tab:sz-bins}
+\end{table}
+
+In der Argumentzahl \(n\) verh\"alt sich die Timeout-Rate wie erwartet: Bis
+\(n<300\) tritt praktisch keine Zeit\"uberschreitung auf, jenseits von
+\(n\geq750\) scheitern hingegen zwei Drittel der Anfragen. Die Angriffszahl
+\(|R|\) verh\"alt sich dagegen auff\"allig \emph{nicht} monoton: Die Rate
+steigt zun\"achst auf \(44{,}4\,\%\) im Bereich \(3000\text{--}9999\), f\"allt
+im n\"achsten Bereich auf \(9{,}5\,\%\) zur\"uck und liegt bei den
+allergr\"o\ss ten Instanzen (\(|R|\geq 100\,000\)) wieder bei
+\(0\,\%\). Abbildung~\ref{fig:sz-nr-timeouts} macht diese Verteilung in der
+\((n,|R|)\)-Ebene sichtbar.
+
+\begin{figure}[htbp]
+    \myfloatalign
+    \includegraphics[width=0.85\textwidth]{../../Code/translate/analysis_singleton_z/n_R_timeouts.pdf}
+    \caption[Timeouts in der \((n,|R|)\)-Ebene]{Lage der Anfragen in der Ebene
+    aus Argumentzahl \(n\) und Angriffszahl \(|R|\); Zeit\"uberschreitungen sind
+    hervorgehoben. Die Timeouts konzentrieren sich auf gro\ss e \(n\) bei
+    mittlerem \(|R|\), nicht auf die Instanzen mit den gr\"o\ss ten
+    Angriffszahlen.}
+    \label{fig:sz-nr-timeouts}
+\end{figure}
+
+Die Aufl\"osung liefern die Familien: Der Bereich mittlerer \(|R|\)-Werte wird
+von Erd\H{o}s--R\'enyi- und Stable-Generator-Instanzen dominiert, die mit
+\(25{,}2\,\%\) bzw.\ \(40{,}0\,\%\) die h\"ochsten Timeout-Raten aufweisen
+(Tabelle~\ref{tab:sz-familien}). Die extrem angriffsreichen ABA2AF-Instanzen
+hingegen sind trotz \(|R|\) bis \(314\,530\) strukturell einfach und
+werden ausnahmslos gel\"ost. Genau deshalb bricht der Zusammenhang zwischen
+\(|R|\) und Timeout am oberen Rand zusammen. Praktische H\"arte folgt somit
+nicht der \emph{Gr\"o\ss e}, sondern der \emph{Struktur} der Instanz.
+
+Auch das \emph{Unabh\"angigkeitsergebnis} ist ungleich verteilt. Die
+\(37\) Abh\"angigkeiten (UNSAT) konzentrieren sich fast vollst\"andig auf die
+Planning2AF-Familie (\(21\) F\"alle, \(21\,\%\) ihrer Anfragen) und die
+kleinen, dichten Barab\'asi--Albert-Graphen (\(13\) F\"alle); die \"ubrigen
+drei entfallen auf den Stable-Generator. Die gro\ss en, angriffsreichen
+Familien ABA2AF, SCC-Generator und Erd\H{o}s--R\'enyi liefern hingegen
+ausschlie\ss lich Unabh\"angigkeit oder Zeit\"uberschreitungen. Abh\"angigkeit
+ist im Singleton-Fall also ein Ph\"anomen der kleinen, lokal dichten
+Instanzen und nicht der gro\ss en. Das deckt sich mit dem Befund aus
+Kapitel~\ref{ch:graphclasses-empirical}, wonach Abh\"angigkeit lokale
+Konfliktstrukturen und nicht schiere Gr\"o\ss e voraussetzt.
+
+\section{\"Ubergreifende Muster}
+\label{sec:sz-zusammenfassung}
+
+Aus der Laufzeitanalyse lassen sich drei Muster verdichten.
+
+\paragraph{Muster 1: Die Gr\"o\ss e treibt die Laufzeit, die Struktur die
+H\"arte.} \"Uber alle Anfragen hinweg steigt die L\"osezeit monoton mit den
+Gr\"o\ss enma\ss en \(n\), \(|R|\) und QBF-Bytes
+(\(\rho \approx 0{,}64\text{--}0{,}73\)). Ob eine Anfrage aber \emph{gar nicht}
+mehr entschieden wird, h\"angt nicht von der reinen Gr\"o\ss e ab: Die
+angriffsreichsten Instanzen (ABA2AF) werden s\"amtlich gel\"ost, w\"ahrend
+mittelgro\ss e, aber strukturell verwickelte Instanzen (Erd\H{o}s--R\'enyi,
+Stable-Generator) die Timeouts stellen. Gr\"o\ss e und praktische H\"arte sind
+somit zu entkoppeln.
+
+\paragraph{Muster 2: Die Konditionierungsgr\"o\ss e wirkt nur strukturabh\"angig.}
+Global kostet ein gr\"o\ss eres \(Z\) kaum Zeit --- der Median steigt von
+\(Z_0\) zu \(Z_3\) um rund \(3\,\%\), die Timeout-Rate um gut einen
+Prozentpunkt. Der Effekt konzentriert sich jedoch auf labellingreiche
+Instanzen: In der Barab\'asi--Albert-Familie w\"achst die L\"osezeit sichtbar
+mit \(|Z|\), und der obere Rand der Gesamtverteilung f\"achert deutlich auf.
+Ein gr\"o\ss eres \(Z\) ist also nur dort teuer, wo es den Suchraum
+tats\"achlich erweitert.
+
+\paragraph{Muster 3: Die Laufzeitverteilung ist stark rechtsschief.} Der
+typische Fall ist trivial (Median \(0{,}077\) Sekunden), der Aufwand
+konzentriert sich auf eine kleine Minderheit von Anfragen, die bis an die
+Zeitgrenze reichen. Die theoretische \(\Pi_2^{\mathrm P}\)-H\"arte aus
+Theorem~\ref{th:ind-st-is-pi2p-c} schl\"agt sich empirisch nicht in einer
+gleichm\"a\ss ig hohen Laufzeit nieder, sondern in diesem schweren Schwanz:
+\(84{,}3\,\%\) der Anfragen sind praktisch sofort entschieden, w\"ahrend
+\(15{,}7\,\%\) auch nach zehn Minuten kein Ergebnis liefern. Die QBF-Erzeugung
+selbst ist dabei durchweg vernachl\"assigbar; der gesamte Aufwand entf\"allt
+auf das L\"osen der QBF.
