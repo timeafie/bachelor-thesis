@@ -1,0 +1,1316 @@
+% ****************************************************************************************************
+% Analyse_bipartit_symmetrisch.tex
+%
+% Teil A: Kritische Analyse des \Pi_2^P-Haertebeweises fuer bipartite AFs
+%         (Proposition \ref{prop:bip-st-ind-hard} in Kapitel \ref{ch:graphclasses}).
+% Teil B: Symmetrische irreflexive AFs: Ist \sigma-Unabhaengigkeit dort einfacher?
+%
+% Einbinden ueber \include{chapters/examples/Analyse_bipartit_symmetrisch} in thesis.tex,
+% nach \include{chapters/examples/Graphklassen}.
+% ****************************************************************************************************
+
+\chapter{Analyse des Härtebeweises für bipartite AFs}
+\label{ch:bip-analyse}
+
+\section{Gegenstand und Vorgehen}
+\label{sec:bip-analyse-gegenstand}
+
+Dieses Kapitel untersucht Proposition~\ref{prop:bip-st-ind-hard} aus
+Kapitel~\ref{ch:graphclasses}, also die Behauptung, dass
+\textit{stable}-Unabhängigkeit auch auf bipartiten AFs
+\(\Pi_2^\text{P}\)-vollständig ist. Die Untersuchung erfolgt in drei Schritten.
+Zuerst wird die Konstruktion so rekonstruiert, dass ihre Semantik durch ein
+explizites Strukturlemma erfasst wird (Abschnitt~\ref{sec:bip-analyse-struktur}).
+Anschließend wird die Korrektheit vollständig nachgerechnet
+(Abschnitt~\ref{sec:bip-analyse-korrektheit}) und die
+Graphklassenzugehörigkeit verifiziert
+(Abschnitt~\ref{sec:bip-analyse-bipartit}). Erst danach werden die gefundenen
+Mängel gesammelt (Abschnitt~\ref{sec:bip-analyse-kritik}) und behoben
+(Abschnitt~\ref{sec:bip-analyse-reparatur}).
+
+Das Ergebnis vorweg: \emph{Die Reduktion ist inhaltlich korrekt.} Die
+Beweisführung weist jedoch eine Reihe formaler Mängel auf, von denen einer
+(die unbelegte Ausgangsprobleminstanz) den Beweis in seiner jetzigen Form
+angreifbar macht, während die übrigen die Nachvollziehbarkeit betreffen.
+
+\section{Rekonstruktion der Konstruktion}
+\label{sec:bip-analyse-struktur}
+
+Wir wiederholen die Konstruktion in fixierter Notation. Sei
+\(\Psi=\forall X\exists Y\,\varphi\) mit
+\(\varphi=\bigwedge_{C\in\mathcal{C}}C\) in konjunktiver Normalform, wobei jede
+Klausel \emph{monoton} ist, also entweder ausschließlich positive Literale
+(\(C\in\mathcal{C}^{+}\)) oder ausschließlich negative Literale
+(\(C\in\mathcal{C}^{-}\)) enthält. Sei \(V:=X\cup Y\cup\{p,n\}\) mit zwei
+frischen Variablen \(p,n\). Das AF \(F_\Psi=(A_\Psi,R_\Psi)\) ist gegeben durch
+\[
+\begin{aligned}
+    A_{\Psi}
+    ={}&
+    \{v,\overline{v}\mid v\in V\}
+    \cup
+    \{c_C\mid C\in\mathcal{C}\}
+    \cup
+    \{\varphi^{+},\varphi^{-},t^{+},t^{-}\}
+\end{aligned}
+\]
+und der in Proposition~\ref{prop:bip-st-ind-hard} angegebenen Angriffsmenge
+\(R_\Psi\). Zentral ist die Beobachtung, dass die Argumente \(p\) und
+\(\overline{n}\) genau so wirken, als käme das Literal \(p\) in jeder positiven
+und das Literal \(\neg n\) in jeder negativen Klausel vor. Wir machen das
+explizit und setzen
+\[
+    \widehat{\varphi}
+    :=
+    \bigwedge_{C\in\mathcal{C}^{+}}(p\lor C)
+    \;\land\;
+    \bigwedge_{C\in\mathcal{C}^{-}}(\neg n\lor C).
+\]
+
+\begin{Lemma}
+    \label{lem:bip-qbf-aequiv}
+    Es gilt
+    \(
+        \Psi\text{ ist gültig}
+        \iff
+        \forall (X\cup\{p,n\})\,\exists Y\,\widehat{\varphi}
+        \text{ ist gültig.}
+    \)
+\end{Lemma}
+
+\begin{proof}
+    \enquote{\(\Rightarrow\)}: Seien \(\alpha\) eine Belegung von \(X\) und
+    \(\pi,\nu\) beliebige Wahrheitswerte für \(p\) und \(n\). Da \(\Psi\)
+    gültig ist, existiert \(\beta\) mit \(\varphi(\alpha,\beta)=\top\). Dann ist
+    jede Klausel \(C\in\mathcal{C}\) unter \((\alpha,\beta)\) erfüllt, also erst
+    recht \(p\lor C\) beziehungsweise \(\neg n\lor C\). Somit gilt
+    \(\widehat{\varphi}=\top\).
+
+    \enquote{\(\Leftarrow\)}: Sei \(\alpha\) eine Belegung von \(X\). Wir wählen
+    die Belegung \(p=\bot\) und \(n=\top\). Dann gilt
+    \(\widehat{\varphi}\equiv\varphi\), und die Voraussetzung liefert ein
+    \(\beta\) mit \(\varphi(\alpha,\beta)=\top\).
+\end{proof}
+
+Der Beweis in Kapitel~\ref{ch:graphclasses} argumentiert an mehreren Stellen mit
+Aussagen der Form \enquote{die Argumente \(t^{+}\) und \(t^{-}\) erlauben es,
+die Labels von \(\varphi^{+}\) und \(\varphi^{-}\) unabhängig zu setzen}, ohne
+diese zu beweisen. Das folgende Lemma stellt die vollständige Struktur von
+\(\Lambda_{\mathrm{st}}(F_\Psi)\) bereit und macht alle späteren Schritte
+elementar.
+
+\begin{Lemma}[Strukturlemma]
+    \label{lem:bip-struktur}
+    Sei \(\lambda\) ein Labelling von \(F_\Psi\). Dann ist \(\lambda\) genau
+    dann \textit{stable}, wenn es eine totale Belegung \(\tau:V\to\{\top,\bot\}\)
+    gibt, sodass die folgenden vier Bedingungen gelten.
+    \begin{enumerate}
+        \item Für alle \(v\in V\) ist
+        \(\lambda(v)=\mathit{in}\iff\tau(v)=\top\)
+        und
+        \(\lambda(\overline{v})=\mathit{in}\iff\tau(v)=\bot\).
+        \item Für alle \(C\in\mathcal{C}^{+}\) ist
+        \(\lambda(c_C)=\mathit{out}\) genau dann, wenn \(\tau\models p\lor C\);
+        andernfalls \(\lambda(c_C)=\mathit{in}\). Analog ist für
+        \(C\in\mathcal{C}^{-}\) genau dann \(\lambda(c_C)=\mathit{out}\), wenn
+        \(\tau\models\neg n\lor C\).
+        \item \(\lambda(t^{+})=\mathit{in}\iff\lambda(\varphi^{+})=\mathit{out}\)
+        und \(\lambda(t^{-})=\mathit{in}\iff\lambda(\varphi^{-})=\mathit{out}\).
+        \item \(\lambda(\varphi^{+})=\mathit{in}\) impliziert
+        \(\lambda(c_C)=\mathit{out}\) für alle \(C\in\mathcal{C}^{+}\);
+        \(\lambda(\varphi^{-})=\mathit{in}\) impliziert
+        \(\lambda(c_C)=\mathit{out}\) für alle \(C\in\mathcal{C}^{-}\).
+    \end{enumerate}
+    Umgekehrt liefert jede Wahl von \(\tau\) und jede mit (3) und (4)
+    verträgliche Wahl von \(\lambda(\varphi^{+}),\lambda(\varphi^{-})\)
+    ein \textit{stable}-Labelling. Insbesondere ist
+    \(\lambda(\varphi^{+})=\mathit{out}\) stets realisierbar, und
+    \(\lambda(\varphi^{+})=\mathit{in}\) ist genau dann realisierbar, wenn
+    \(\tau\) alle Klauseln \(p\lor C\) mit \(C\in\mathcal{C}^{+}\) erfüllt.
+\end{Lemma}
+
+\begin{proof}
+    Sei \(\lambda\in\Lambda_{\mathrm{st}}(F_\Psi)\); insbesondere ist
+    \(\mathit{und}(\lambda)=\emptyset\).
+
+    Zu (1): Die einzigen Angreifer von \(v\) sind \(\overline{v}\) und
+    umgekehrt. Wären beide \(\mathit{in}\), so griffe ein
+    \(\mathit{in}\)-Argument ein \(\mathit{in}\)-Argument an. Wären beide
+    \(\mathit{out}\), so besäße \(v\) keinen \(\mathit{in}\)-Angreifer. Also ist
+    genau eines der beiden \(\mathit{in}\), und wir setzen
+    \(\tau(v):=\top\) genau dann, wenn \(\lambda(v)=\mathit{in}\).
+
+    Zu (2): Die Angreifer von \(c_C\) mit \(C\in\mathcal{C}^{+}\) sind genau
+    die Argumente \(v\) mit \(v\in C\) sowie \(p\). Nach (1) ist ein solcher
+    Angreifer genau dann \(\mathit{in}\), wenn das zugehörige Literal unter
+    \(\tau\) wahr ist. Da \(\lambda\) \textit{stable} ist, gilt
+    \(\lambda(c_C)=\mathit{out}\) genau dann, wenn mindestens ein Angreifer
+    \(\mathit{in}\) ist, also genau dann, wenn \(\tau\models p\lor C\). Der Fall
+    \(C\in\mathcal{C}^{-}\) verläuft analog mit den Angreifern \(\overline{v}\)
+    für \(\neg v\in C\) und \(\overline{n}\).
+
+    Zu (3): Der einzige Angreifer von \(t^{+}\) ist \(\varphi^{+}\). Also ist
+    \(t^{+}\) genau dann \(\mathit{out}\), wenn \(\varphi^{+}\) \(\mathit{in}\)
+    ist, und wegen \(\mathit{und}(\lambda)=\emptyset\) genau dann
+    \(\mathit{in}\), wenn \(\varphi^{+}\) \(\mathit{out}\) ist.
+
+    Zu (4): Die Angreifer von \(\varphi^{+}\) sind die \(c_C\) mit
+    \(C\in\mathcal{C}^{+}\) sowie \(t^{+}\). Ist \(\varphi^{+}\)
+    \(\mathit{in}\), so sind alle Angreifer \(\mathit{out}\).
+
+    Für die Umkehrung sei \(\tau\) beliebig und seien
+    \(\lambda(\varphi^{\pm})\) gemäß (3) und (4) gewählt; die übrigen Labels
+    seien durch (1)--(3) festgelegt. Man verifiziert unmittelbar für jedes
+    Argument die \textit{stable}-Bedingung: Argumente \(v,\overline{v}\) sind
+    genau dann \(\mathit{out}\), wenn ihr Partner \(\mathit{in}\) ist;
+    Klauselargumente genau dann, wenn ein Literalargument \(\mathit{in}\) ist;
+    \(t^{\pm}\) genau dann, wenn \(\varphi^{\pm}\) \(\mathit{in}\) ist; und
+    \(\varphi^{+}\) ist entweder \(\mathit{in}\) (dann sind nach (4) alle
+    \(c_C\) und nach (3) auch \(t^{+}\) \(\mathit{out}\)) oder \(\mathit{out}\)
+    (dann ist nach (3) \(t^{+}\) \(\mathit{in}\) und greift \(\varphi^{+}\) an).
+    Es tritt kein \(\mathit{und}\) auf.
+
+    Der Zusatz folgt: \(\lambda(\varphi^{+})=\mathit{out}\) ist wegen
+    \(\lambda(t^{+})=\mathit{in}\) immer zulässig, und
+    \(\lambda(\varphi^{+})=\mathit{in}\) ist nach (4) und (2) genau dann
+    zulässig, wenn \(\tau\) jede Klausel \(p\lor C\), \(C\in\mathcal{C}^{+}\),
+    erfüllt.
+\end{proof}
+
+Lemma~\ref{lem:bip-struktur} zeigt insbesondere: Die Labels von
+\(\varphi^{+}\) und \(\varphi^{-}\) sind \emph{unabhängig voneinander} frei
+wählbar, sobald die jeweiligen Klauselargumente \(\mathit{out}\) sind, da
+\(\varphi^{+},t^{+}\) und \(\varphi^{-},t^{-}\) disjunkte Angreifermengen
+besitzen. Genau diese Aussage benutzt der Originalbeweis, ohne sie zu begründen.
+
+\section{Korrektheit der Reduktion}
+\label{sec:bip-analyse-korrektheit}
+
+\begin{Proposition}
+    \label{prop:bip-korrekt}
+    Es gilt
+    \[
+        \Psi\text{ ist gültig}
+        \quad\Longleftrightarrow\quad
+        \{\varphi^{+},\varphi^{-}\}\bot_{\mathrm{st}}(X\cup\{p,n\})\mid\emptyset
+        \text{ in }F_\Psi.
+    \]
+\end{Proposition}
+
+\begin{proof}
+    Wir schreiben \(\mathcal{X}:=\{\varphi^{+},\varphi^{-}\}\) und
+    \(\mathcal{Y}:=X\cup\{p,n\}\); beide Mengen sind disjunkt, und
+    \(Z=\emptyset\), sodass die Bedingung \(\lambda_1|_Z=\lambda_2|_Z\) aus
+    Definition~\ref{def:BU:AFs} für jedes Paar erfüllt ist. Gesucht ist also
+    stets ein \(\lambda_3\in\Lambda_{\mathrm{st}}(F_\Psi)\) mit
+    \(\lambda_3|_{\mathcal{X}}=\lambda_1|_{\mathcal{X}}\) und
+    \(\lambda_3|_{\mathcal{Y}}=\lambda_2|_{\mathcal{Y}}\).
+
+    \enquote{\(\Rightarrow\)}: Sei \(\Psi\) gültig und seien
+    \(\lambda_1,\lambda_2\in\Lambda_{\mathrm{st}}(F_\Psi)\). Nach
+    Lemma~\ref{lem:bip-struktur} induziert \(\lambda_2\) eine totale Belegung
+    \(\tau_2\) von \(V\); insbesondere legt \(\lambda_2|_{\mathcal{Y}}\) die
+    Werte \(\tau_2|_{X\cup\{p,n\}}\) fest. Nach Lemma~\ref{lem:bip-qbf-aequiv}
+    existiert eine Belegung \(\beta\) von \(Y\), sodass
+    \(\tau_3:=\tau_2|_{X\cup\{p,n\}}\cup\beta\) die Formel
+    \(\widehat{\varphi}\) erfüllt. Wir wählen \(\lambda_3\) als das durch
+    \(\tau_3\) und
+    \(\lambda_3(\varphi^{+}):=\lambda_1(\varphi^{+})\),
+    \(\lambda_3(\varphi^{-}):=\lambda_1(\varphi^{-})\)
+    bestimmte Labelling. Da \(\tau_3\models\widehat{\varphi}\), sind nach
+    Lemma~\ref{lem:bip-struktur}(2) sämtliche Klauselargumente
+    \(\mathit{out}\); damit sind beide Wahlen für \(\varphi^{+}\) und
+    \(\varphi^{-}\) mit (4) verträglich, und \(\lambda_3\) ist
+    \textit{stable}. Nach Konstruktion gilt
+    \(\lambda_3|_{\mathcal{X}}=\lambda_1|_{\mathcal{X}}\) und
+    \(\lambda_3|_{\mathcal{Y}}=\lambda_2|_{\mathcal{Y}}\).
+
+    \enquote{\(\Leftarrow\)}: Sei \(\Psi\) nicht gültig. Dann existiert eine
+    Belegung \(\alpha\) von \(X\), sodass \(\varphi(\alpha,\beta)=\bot\) für
+    jede Belegung \(\beta\) von \(Y\) gilt. Wir wählen:
+    \begin{itemize}
+        \item \(\lambda_1\) als ein beliebiges \textit{stable}-Labelling mit
+        \(\lambda_1(\varphi^{+})=\lambda_1(\varphi^{-})=\mathit{in}\). Ein
+        solches existiert: Man setze \(\tau_1(p)=\top\) und \(\tau_1(n)=\bot\)
+        sowie \(\tau_1\) auf \(X\cup Y\) beliebig. Dann sind alle Klauseln
+        \(p\lor C\) und \(\neg n\lor C\) erfüllt, also nach
+        Lemma~\ref{lem:bip-struktur} alle Klauselargumente \(\mathit{out}\)
+        und beide \(\varphi\)-Argumente \(\mathit{in}\) realisierbar.
+        \item \(\lambda_2\) als ein \textit{stable}-Labelling zur Belegung
+        \(\tau_2:=\alpha\cup\{p\mapsto\bot,\;n\mapsto\top\}\cup\beta_0\) mit
+        beliebigem \(\beta_0\).
+    \end{itemize}
+    Angenommen, es gäbe ein \(\lambda_3\in\Lambda_{\mathrm{st}}(F_\Psi)\) mit
+    \(\lambda_3|_{\mathcal{X}}=\lambda_1|_{\mathcal{X}}\) und
+    \(\lambda_3|_{\mathcal{Y}}=\lambda_2|_{\mathcal{Y}}\). Sei \(\tau_3\) die
+    zugehörige Belegung. Aus
+    \(\lambda_3|_{\mathcal{Y}}=\lambda_2|_{\mathcal{Y}}\) folgt
+    \(\tau_3|_X=\alpha\), \(\tau_3(p)=\bot\) und \(\tau_3(n)=\top\). Aus
+    \(\lambda_3(\varphi^{+})=\lambda_3(\varphi^{-})=\mathit{in}\) folgt mit
+    Lemma~\ref{lem:bip-struktur}(4) und (2), dass \(\tau_3\) sämtliche Klauseln
+    \(p\lor C\) und \(\neg n\lor C\) erfüllt, also
+    \(\tau_3\models\widehat{\varphi}\). Wegen \(\tau_3(p)=\bot\) und
+    \(\tau_3(n)=\top\) gilt aber \(\widehat{\varphi}\equiv\varphi\) unter
+    \(\tau_3\), also \(\varphi(\alpha,\tau_3|_Y)=\top\) im Widerspruch zur Wahl
+    von \(\alpha\). Also existiert kein solches \(\lambda_3\), und es gilt
+    \(\mathcal{X}\not\bot_{\mathrm{st}}\mathcal{Y}\mid\emptyset\).
+\end{proof}
+
+Die Konstruktion ist offensichtlich in Polynomialzeit berechenbar: Sie erzeugt
+\(2|V|+|\mathcal{C}|+4\) Argumente und
+\(\mathcal{O}(|V|+\sum_{C\in\mathcal{C}}|C|)\) Angriffe.
+
+\section{Graphklassenzugehörigkeit}
+\label{sec:bip-analyse-bipartit}
+
+\begin{Proposition}
+    \label{prop:bip-korrekt-bipartit}
+    \(F_\Psi\) ist bipartit.
+\end{Proposition}
+
+\begin{proof}
+    Wir setzen
+    \[
+    \begin{aligned}
+        L:={}& \{v\mid v\in V\}\cup\{c_C\mid C\in\mathcal{C}^{-}\}
+              \cup\{\varphi^{+},t^{-}\},\\
+        R:={}& \{\overline{v}\mid v\in V\}\cup\{c_C\mid C\in\mathcal{C}^{+}\}
+              \cup\{\varphi^{-},t^{+}\}.
+    \end{aligned}
+    \]
+    Offensichtlich gilt \(L\cap R=\emptyset\) und \(L\cup R=A_\Psi\). Für jede
+    Art von Angriff prüft man die Seitenwechsel-Eigenschaft:
+    \((v,\overline{v})\) und \((\overline{v},v)\) verlaufen zwischen \(L\) und
+    \(R\); \((v,c_C)\) mit \(C\in\mathcal{C}^{+}\) sowie \((p,c_C)\) verlaufen
+    von \(L\) nach \(R\); \((\overline{v},c_C)\) mit \(C\in\mathcal{C}^{-}\)
+    sowie \((\overline{n},c_C)\) verlaufen von \(R\) nach \(L\);
+    \((c_C,\varphi^{+})\) mit \(C\in\mathcal{C}^{+}\) verläuft von \(R\) nach
+    \(L\); \((c_C,\varphi^{-})\) mit \(C\in\mathcal{C}^{-}\) von \(L\) nach
+    \(R\); \((\varphi^{+},t^{+})\) von \(L\) nach \(R\) und
+    \((\varphi^{-},t^{-})\) von \(R\) nach \(L\), jeweils mit den
+    Gegenangriffen. Also gilt
+    \(R_\Psi\subseteq(L\times R)\cup(R\times L)\).
+\end{proof}
+
+Hier zeigt sich der eigentliche Grund für die Monotonieforderung: Nur weil
+positive Klauseln ausschließlich von unquerstrichenen und negative Klauseln
+ausschließlich von querstrichenen Literalargumenten angegriffen werden, lassen
+sich die Klauselargumente überhaupt widerspruchsfrei auf die beiden Seiten
+verteilen. Bei gemischten Klauseln entstünde ein Klauselargument mit Angreifern
+aus \(L\) \emph{und} \(R\), und die Bipartition bräche zusammen.
+
+\section{Kritikpunkte}
+\label{sec:bip-analyse-kritik}
+
+Die Reduktion ist nach den Abschnitten~\ref{sec:bip-analyse-korrektheit}
+und~\ref{sec:bip-analyse-bipartit} korrekt. Der Beweis in
+Kapitel~\ref{ch:graphclasses} weist jedoch die folgenden Mängel auf. Wir
+ordnen sie nach abnehmender Schwere.
+
+\begin{enumerate}
+    \item \textbf{Unbelegtes Ausgangsproblem.} Der Beweis reduziert von
+    \textsc{Balanced Monotone \(\forall\exists\)-3-SAT-\((1,1,2,2)\)} und
+    behauptet ohne Quellenangabe und ohne Definition, dieses Problem sei
+    \(\Pi_2^\text{P}\)-vollständig. Weder wird gesagt, worauf sich
+    \enquote{balanced} bezieht, noch was das Tupel \((1,1,2,2)\) zählt. Das ist
+    der einzige Mangel, der die \emph{Gültigkeit} der Aussage betrifft: Eine
+    Reduktion von einem Problem unbekannter Komplexität beweist nichts.
+    Vorkommensbeschränkungen sind zudem heikel. Nach dem Satz von Tovey ist
+    jede \(k\)-CNF-Formel, in der jede Klausel \(k\) verschiedene Literale
+    besitzt und jede Variable in höchstens \(k\) Klauseln vorkommt, erfüllbar;
+    zu enge Vorkommensschranken können ein Problem also trivialisieren.
+    \item \textbf{Die Zusatzrestriktionen werden nicht benötigt.} Die
+    Konstruktion verwendet ausschließlich die Monotonie der Klauseln (siehe
+    Abschnitt~\ref{sec:bip-analyse-bipartit}); weder die Ausgeglichenheit von
+    \(|\mathcal{C}^{+}|\) und \(|\mathcal{C}^{-}|\) noch irgendeine
+    Vorkommensschranke noch die Klauselbreite \(3\) geht in Korrektheit oder
+    Bipartitheit ein. Der Beweis macht sich also ohne Not von einer stärkeren
+    und schwerer zu belegenden Voraussetzung abhängig.
+    Abschnitt~\ref{sec:bip-analyse-reparatur} zeigt, dass die Monotonie
+    elementar und selbsttragend erreicht werden kann.
+    \item \textbf{Vertauschte Rollen von \(\lambda_1\) und \(\lambda_2\).} In
+    der Richtung \enquote{\(\Psi\) gültig} übernimmt \(\lambda_1\) die Labels
+    von \(\varphi^{+},\varphi^{-}\) und \(\lambda_2\) die Belegung von
+    \(X\cup\{p,n\}\), passend zur Reihenfolge der Mengen in
+    \(\{\varphi^{+},\varphi^{-}\}\bot_{\mathrm{st}}X\cup\{p,n\}\mid\emptyset\)
+    und zu Definition~\ref{def:BU:AFs}. In der Gegenrichtung sind die Rollen
+    stillschweigend vertauscht: Dort trägt \(\lambda_1\) die Belegung und
+    \(\lambda_2\) die \(\varphi\)-Labels. Inhaltlich ist das folgenlos, weil
+    die bedingte Unabhängigkeit symmetrisch ist, formal ist es jedoch ein
+    Bruch mit der eigenen Definition. Entweder man benennt konsistent um (wie
+    in Proposition~\ref{prop:bip-korrekt}) oder man beruft sich explizit auf
+    das Symmetrieaxiom.
+    \item \textbf{Undefinierte Mengen \(A\) und \(B\).} Der Satz
+    \enquote{[\ldots] das die Einschränkung von \(\lambda_1\) auf \(A\) und die
+    Einschränkung von \(\lambda_2\) auf \(B\) kombiniert} verwendet zwei nie
+    eingeführte Symbole. Erschwerend kommt hinzu, dass \(A\) in der gesamten
+    Arbeit die Argumentmenge eines AFs bezeichnet; gemeint sind offenbar
+    \(\{\varphi^{+},\varphi^{-}\}\) und \(X\cup\{p,n\}\).
+    \item \textbf{Namenskollision \(L,R\).} Die Bipartitionsklassen heißen
+    \(L\) und \(R\), während \(R\) beziehungsweise \(R_\Psi\) die
+    Angriffsrelation bezeichnet. Die Schlussformel
+    \(R_\Psi\subseteq(L\times R)\cup(R\times L)\) mischt beide Bedeutungen in
+    einer Zeile. Vorzuziehen wären etwa \(A_1,A_2\) oder \(L_1,L_2\).
+    \item \textbf{Fehlendes Strukturlemma.} Der Beweis benutzt mehrfach
+    Eigenschaften von \(\Lambda_{\mathrm{st}}(F_\Psi)\), die er nicht beweist:
+    dass in jedem \textit{stable}-Labelling genau eines von \(v,\overline{v}\)
+    das Label \(\mathit{in}\) trägt; dass \(c_C\) genau dann \(\mathit{out}\)
+    ist, wenn ein Literalargument \(\mathit{in}\) ist; und dass \(t^{+},t^{-}\)
+    die freie und \emph{voneinander unabhängige} Wahl der \(\varphi\)-Labels
+    erlauben. Lemma~\ref{lem:bip-struktur} schließt diese Lücke.
+    \item \textbf{Unvollständige Fallunterscheidung über \(p\) und \(n\).} Der
+    Abschnitt \enquote{Konstruktion} diskutiert nur die Kombinationen
+    \((p,n)=(\mathit{out},\mathit{in})\) und
+    \((p,n)=(\mathit{in},\mathit{out})\). Die ebenfalls in
+    \textit{stable}-Labellings auftretenden Kombinationen
+    \((\mathit{in},\mathit{in})\) und \((\mathit{out},\mathit{out})\) bleiben
+    unerwähnt. Der Korrektheitsbeweis benötigt diese Fallunterscheidung
+    tatsächlich nicht --- er läuft über die Formeläquivalenz aus
+    Lemma~\ref{lem:bip-qbf-aequiv} ---, der Text suggeriert jedoch eine
+    erschöpfende Analyse, die er nicht liefert.
+    \item \textbf{Zugehörigkeit fehlt.} Die Proposition behauptet
+    \(\Pi_2^\text{P}\)-\emph{Vollständigkeit}, der Beweis zeigt nur die Härte.
+    Ein Verweis auf Theorem~\ref{th:ind-st-is-pi2p-c} (die obere Schranke gilt
+    für alle AFs, also insbesondere für bipartite) fehlt, anders als beim
+    ungeradezykelfreien Fall.
+    \item \textbf{Formulierungs- und Notationsmängel.} Die Instanz wird als
+    Behauptung formuliert (\enquote{wählen wir
+    \(\{\varphi^{+},\varphi^{-}\}\perp_{st}\ldots\)}) statt als Anfrage; die
+    Polynomialität der Konstruktion wird nicht erwähnt; \(\perp\) wird sowohl
+    für die Unabhängigkeitsrelation als auch (in \enquote{\(p=\perp\)}) für den
+    Wahrheitswert \emph{falsch} verwendet, während an anderer Stelle
+    \(\bot_{\mathrm{st}}\) für die Unabhängigkeit steht; die Argumentmenge
+    heißt hier \(\mathcal{A}_\Psi\), im ungeradezykelfreien Fall dagegen
+    \(A_\Psi\); und der Satz \enquote{dann werden die Klauselargumente
+    ausschließlich durch die ursprünglichen Literale kontrolliert werden}
+    enthält ein doppeltes Verb.
+\end{enumerate}
+
+\begin{Corollary}
+    \label{cor:bip-subsumiert-ocf}
+    Proposition~\ref{prop:bip-st-ind-hard} impliziert
+    Proposition~\ref{prop:ocf-af-ci-st-pi^2}.
+\end{Corollary}
+
+\begin{proof}
+    Ist \(F\) bipartit, so wechselt jeder gerichtete Zyklus in jedem Schritt die
+    Bipartitionsklasse und hat daher gerade Länge. Bipartite AFs sind also
+    ungeradezykelfrei, und die Härte auf der Teilklasse überträgt sich auf die
+    Oberklasse.
+\end{proof}
+
+Das ist ein struktureller Hinweis, kein Fehler: Der eigenständige Beweis für
+ungeradezykelfreie AFs für \(\sigma=\mathrm{st}\) und \(\sigma=\mathrm{pr}\) ist
+entbehrlich, sobald das bipartite Resultat gesichert ist. Umgekehrt bleibt der
+gesonderte Beweis für \(\sigma=\mathrm{co}\)
+(Proposition~\ref{prop:ocf-af-ci-co-pi^2-c}) nötig, denn das dort verwendete AF
+ist wegen der Argumente \(d_i\), die sowohl von \(x_i\) als auch von
+\(\overline{x_i}\) angegriffen werden, nicht bipartit.
+
+Schließlich sei angemerkt, dass die Herleitung von
+Proposition~\ref{prop:bip-prf-ind-hard} aus dem \textit{stable}-Fall die
+Kohärenz ungeradezykelfreier AFs voraussetzt, also
+\(\Lambda_{\mathrm{st}}(F)=\Lambda_{\mathrm{pr}}(F)\). Diese Tatsache stammt von
+\textcite{dung:1995:af} und sollte dort zitiert werden.
+
+\section{Reparatur: Monotonie ohne fremde Voraussetzung}
+\label{sec:bip-analyse-reparatur}
+
+Der schwerwiegendste Kritikpunkt lässt sich vollständig beheben. Statt sich auf
+eine exotische Restriktion zu berufen, genügt eine elementare Normalform, die
+sich in wenigen Zeilen beweisen lässt.
+
+\begin{Lemma}[Monotone Normalform]
+    \label{lem:monotone-normalform}
+    Zu jeder Formel \(\Psi=\forall X\exists Y\,\varphi\) mit \(\varphi\) in KNF
+    lässt sich in Polynomialzeit eine Formel
+    \(\Psi'=\forall X\exists Y'\,\varphi'\) berechnen, sodass jede Klausel von
+    \(\varphi'\) entweder nur positive oder nur negative Literale enthält und
+    \(\Psi\) genau dann gültig ist, wenn \(\Psi'\) gültig ist.
+\end{Lemma}
+
+\begin{proof}
+    Für jede Variable \(v\in X\cup Y\) sei \(v'\) eine frische Variable und
+    \(Y':=Y\cup\{v'\mid v\in X\cup Y\}\). Die Formel \(\varphi'\) entstehe aus
+    \(\varphi\), indem jedes negative Literal \(\neg v\) durch \(v'\) ersetzt
+    wird; zusätzlich nehmen wir für jedes \(v\in X\cup Y\) die beiden Klauseln
+    \(
+        (v\lor v')
+    \) und \(
+        (\neg v\lor\neg v')
+    \)
+    auf. Alle aus \(\varphi\) entstandenen Klauseln sind rein positiv, die
+    ersten Zusatzklauseln ebenfalls, die zweiten rein negativ. Also ist
+    \(\varphi'\) monoton. Die beiden Zusatzklauseln sind zusammen äquivalent zu
+    \(v'\leftrightarrow\neg v\).
+
+    Sei \(\Psi\) gültig und \(\alpha\) eine Belegung von \(X\). Wähle \(\beta\)
+    mit \(\varphi(\alpha,\beta)=\top\) und setze \(v'\) auf den zu \(v\)
+    komplementären Wert. Die Zusatzklauseln sind dann erfüllt. Ist eine
+    ursprüngliche Klausel \(C\) durch ein positives Literal \(v\) erfüllt, so
+    auch ihr Bild; ist sie durch \(\neg v\) erfüllt, so ist \(v\) falsch, also
+    \(v'\) wahr, und das Bild ist ebenfalls erfüllt. Somit ist \(\Psi'\) gültig.
+
+    Sei umgekehrt \(\Psi'\) gültig und \(\alpha\) eine Belegung von \(X\). Es
+    existiert eine Belegung von \(Y'\), die \(\varphi'\) erfüllt; wegen der
+    Zusatzklauseln gilt dort \(v'=\neg v\) für alle \(v\in X\cup Y\). Sei
+    \(\beta\) die Einschränkung auf \(Y\). Jede ursprüngliche Klausel \(C\) hat
+    ein erfülltes Bildliteral; ist dieses ein \(v\), so erfüllt \(v\) auch
+    \(C\); ist es ein \(v'\), so ist \(v\) falsch und \(\neg v\in C\) erfüllt.
+    Also gilt \(\varphi(\alpha,\beta)=\top\) und \(\Psi\) ist gültig.
+
+    Die Konstruktion verdoppelt die Variablenzahl und fügt \(2|X\cup Y|\)
+    Klauseln hinzu, ist also polynomiell.
+\end{proof}
+
+Damit ist \textsc{Monotone \(\forall\exists\)-SAT} \(\Pi_2^\text{P}\)-hart,
+sobald \(\forall\exists\)-SAT es ist, und
+Proposition~\ref{prop:bip-st-ind-hard} steht auf einer belegten Grundlage. Wird
+zusätzlich Klauselbreite \(3\) gewünscht, füllt man die zweielementigen
+Zusatzklauseln durch Wiederholung eines Literals auf; die Monotonie bleibt
+erhalten. Alle übrigen Kritikpunkte sind redaktioneller Natur und durch die
+Fassung in den Abschnitten~\ref{sec:bip-analyse-struktur}
+bis~\ref{sec:bip-analyse-bipartit} bereits ausgeräumt.
+
+\section{Fazit}
+\label{sec:bip-analyse-fazit}
+
+Die Aussage von Proposition~\ref{prop:bip-st-ind-hard} ist richtig, und der
+Kern der Konstruktion --- die Aufspaltung des Formelarguments in \(\varphi^{+}\)
+und \(\varphi^{-}\) sowie die Steuerung durch die frischen Variablen \(p\) und
+\(n\) --- ist elegant und trägt die Bipartitheit. Der Beweis sollte jedoch um
+Lemma~\ref{lem:bip-qbf-aequiv}, Lemma~\ref{lem:bip-struktur} und
+Lemma~\ref{lem:monotone-normalform} ergänzt, in den Rollen von
+\(\lambda_1,\lambda_2\) vereinheitlicht und um den Zugehörigkeitsverweis
+ergänzt werden. Danach ist er lückenlos.
+
+\chapter{Symmetrische irreflexive AFs}
+\label{ch:sym-analyse}
+
+\section{Fragestellung}
+\label{sec:sym-frage}
+
+Abschnitt~\ref{sec:sym-afs} hat symmetrische AFs bereits als Extremfall hoher
+Angriffsdichte betrachtet und für vollständig gerichtete AFs gezeigt, dass
+\textit{stable}-Unabhängigkeit dort stets verletzt ist
+(Proposition~\ref{prop:cdg-afs-not-st-ci}). Offen blieb die
+komplexitätstheoretische Einordnung der gesamten Klasse. Dieses Kapitel
+schließt diese Lücke.
+
+Der Ausgangsverdacht ist, dass die Klasse einfach sein müsste. Symmetrische
+irreflexive AFs sind kohärent \cite{Coste:2005:symmetric-af-irflx-coherent},
+besitzen stets \textit{stable}-Labellings und ihre klassischen
+Entscheidungsprobleme --- Existenz, Verifikation, kredulöse und skeptische
+Akzeptanz --- sind sämtlich in Polynomialzeit lösbar
+(Proposition~\ref{prop:sym-klassisch-p}). Für alle bisher betrachteten
+Graphklassen (Abschnitt~\ref{sec:acyc-afs} bis
+Abschnitt~\ref{sec:odd-cycle-free-afs}) war eine solche strukturelle
+Vereinfachung stets mit einer Vereinfachung der Unabhängigkeit einhergegangen
+oder zumindest verträglich.
+
+Das Hauptresultat dieses Kapitels widerlegt diesen Verdacht für die
+\textit{stable}-Semantik: \(\textit{Ind}_{\mathrm{st}}\) bleibt auf
+symmetrischen irreflexiven AFs \(\Pi_2^\text{P}\)-vollständig
+(Theorem~\ref{th:sym-st-pi2p}). Für die \textit{preferred}-Semantik dagegen
+tritt eine echte Vereinfachung ein: Das Problem fällt von
+\(\Pi_3^\text{P}\)-Vollständigkeit auf \(\Pi_2^\text{P}\)-Vollständigkeit
+(Korollar~\ref{cor:sym-pr-pi2p}). Ergänzend wird ein Fragment identifiziert, in
+dem die Unabhängigkeit tatsächlich in Polynomialzeit entscheidbar wird
+(Proposition~\ref{prop:sym-singleton-p}).
+
+Wir betrachten für \(\sigma\in\{co,st,pr\}\) das Entscheidungsproblem
+\[
+\begin{array}{ll}
+\textit{Ind}^{\mathrm{sym}}_{\sigma}\\
+\text{Input:}  & \text{symmetrisches, irreflexives AF } F=(A,R),\
+                 \text{disjunkte } X,Y,Z\subseteq A \\
+\text{Output:} & \text{TRUE} \Longleftrightarrow X \bot_{\sigma} Y \mid Z.
+\end{array}
+\]
+
+\section{Struktur der Labellingmengen}
+\label{sec:sym-struktur}
+
+\begin{Definition}
+    \label{def:sym-af}
+    Ein AF \(F=(A,R)\) heißt \emph{symmetrisch}, falls
+    \((a,b)\in R\Rightarrow(b,a)\in R\) für alle \(a,b\in A\) gilt, und
+    \emph{irreflexiv}, falls \((a,a)\notin R\) für alle \(a\in A\) gilt. Für
+    \(a\in A\) schreiben wir \(N(a):=\{b\in A\mid (a,b)\in R\}\) für die
+    \emph{Nachbarschaft} von \(a\) und \(N[a]:=N(a)\cup\{a\}\). Für
+    \(S\subseteq A\) sei \(N(S):=\bigcup_{a\in S}N(a)\).
+\end{Definition}
+
+In einem symmetrischen irreflexiven AF ist \(R\) die Kantenrelation eines
+schlichten ungerichteten Graphen. Eine Menge \(S\subseteq A\) ist genau dann
+konfliktfrei, wenn sie in diesem Graphen unabhängig ist, und wir nennen \(S\)
+\emph{naiv}, falls \(S\) \(\subseteq\)-maximal konfliktfrei ist. Für
+\(S\subseteq A\) bezeichne \(\lambda_S\) das Labelling mit
+\(\mathit{in}(\lambda_S)=S\) und \(\mathit{out}(\lambda_S)=A\setminus S\).
+
+\begin{Lemma}
+    \label{lem:sym-cf-adm}
+    Sei \(F=(A,R)\) symmetrisch und irreflexiv. Dann ist jede konfliktfreie
+    Menge \(S\subseteq A\) admissibel.
+\end{Lemma}
+
+\begin{proof}
+    Sei \(a\in S\) und sei \(b\) ein Angreifer von \(a\), also \((b,a)\in R\).
+    Wegen der Konfliktfreiheit von \(S\) gilt \(b\notin S\). Aus der Symmetrie
+    folgt \((a,b)\in R\), also greift \(a\in S\) den Angreifer \(b\) an. Damit
+    verteidigt \(S\) jedes seiner Elemente.
+\end{proof}
+
+\begin{Proposition}
+    \label{prop:sym-naiv-st-pr}
+    Sei \(F=(A,R)\) symmetrisch und irreflexiv. Dann gilt
+    \[
+        \Lambda_{\mathrm{st}}(F)
+        =\Lambda_{\mathrm{pr}}(F)
+        =\{\lambda_S\mid S\subseteq A\text{ naiv}\}.
+    \]
+    Insbesondere ist \(\Lambda_{\mathrm{st}}(F)\neq\emptyset\).
+\end{Proposition}
+
+\begin{proof}
+    Sei \(S\) naiv und \(a\in A\setminus S\). Dann ist \(S\cup\{a\}\) nicht
+    konfliktfrei. Da \(S\) konfliktfrei und \(F\) irreflexiv ist, muss der
+    Konflikt zwischen \(a\) und einem \(b\in S\) bestehen; wegen der Symmetrie
+    gilt \((b,a)\in R\). Also greift \(S\) jedes Argument außerhalb von \(S\)
+    an, das heißt \(\lambda_S\) ist ein \textit{stable}-Labelling.
+
+    Umgekehrt ist jede \textit{stable}-Extension konfliktfrei und maximal
+    konfliktfrei, denn ein hinzunehmbares Argument wäre unangegriffen. Also
+    stimmen die \textit{stable}-Extensionen genau mit den naiven Mengen
+    überein.
+
+    Für die \textit{preferred}-Semantik gilt allgemein
+    \(\Lambda_{\mathrm{st}}(F)\subseteq\Lambda_{\mathrm{pr}}(F)\). Sei
+    umgekehrt \(E\) eine \textit{preferred}-Extension, also
+    \(\subseteq\)-maximal admissibel. Wäre \(E\) nicht maximal konfliktfrei, so
+    gäbe es eine konfliktfreie Menge \(E\subsetneq T\); nach
+    Lemma~\ref{lem:sym-cf-adm} wäre \(T\) admissibel, im Widerspruch zur
+    Maximalität von \(E\). Also ist \(E\) naiv und damit \textit{stable}. Da
+    eine \textit{stable}-Extension \(E\) die Labellingdarstellung
+    \(\mathit{in}=E\), \(\mathit{out}=A\setminus E\), \(\mathit{und}=\emptyset\)
+    besitzt und dies zugleich das zu \(E\) gehörige
+    \textit{preferred}-Labelling ist, stimmen auch die Labellingmengen überein.
+
+    Da \(A\) endlich ist, besitzt jede konfliktfreie Menge eine maximale
+    Obermenge; insbesondere existiert mindestens eine naive Menge.
+\end{proof}
+
+\begin{Corollary}
+    \label{cor:sym-extend}
+    Sei \(F=(A,R)\) symmetrisch und irreflexiv und sei \(T\subseteq A\)
+    konfliktfrei. Dann existiert ein \(\lambda\in\Lambda_{\mathrm{st}}(F)\) mit
+    \(T\subseteq\mathit{in}(\lambda)\). Ist zusätzlich \(a\in A\setminus T\) und
+    besitzt \(a\) einen Nachbarn in \(T\), so gilt
+    \(\lambda(a)=\mathit{out}\) für jedes solche \(\lambda\).
+\end{Corollary}
+
+\begin{proof}
+    Man erweitere \(T\) zu einer naiven Menge \(S\) und wende
+    Proposition~\ref{prop:sym-naiv-st-pr} an. Besitzt \(a\) einen Nachbarn in
+    \(T\subseteq S\), so verhindert die Konfliktfreiheit \(a\in S\).
+\end{proof}
+
+Korollar~\ref{cor:sym-extend} ist das Arbeitspferd aller folgenden Beweise: Es
+erlaubt, ein Labelling durch Angabe eines konfliktfreien \enquote{Kerns} zu
+spezifizieren, sofern jedes Argument, das ausgeschlossen werden soll, einen
+Nachbarn im Kern besitzt.
+
+\begin{Proposition}
+    \label{prop:sym-klassisch-p}
+    Sei \(F=(A,R)\) symmetrisch und irreflexiv und sei \(\sigma\in\{st,pr\}\).
+    Dann gilt:
+    \begin{enumerate}
+        \item \(\Lambda_\sigma(F)\neq\emptyset\).
+        \item Die Verifikation, ob ein gegebenes Labelling in
+        \(\Lambda_\sigma(F)\) liegt, ist in Polynomialzeit möglich.
+        \item Jedes \(a\in A\) ist kredulös akzeptiert.
+        \item Ein Argument \(a\in A\) ist genau dann skeptisch akzeptiert, wenn
+        \(N(a)=\emptyset\).
+    \end{enumerate}
+\end{Proposition}
+
+\begin{proof}
+    (1) und (2) folgen aus Proposition~\ref{prop:sym-naiv-st-pr}: Zu prüfen ist
+    lediglich, ob \(\mathit{in}(\lambda)\) konfliktfrei ist und ob jedes
+    Argument außerhalb einen Nachbarn darin besitzt; beides ist in
+    \(\mathcal{O}(|A|+|R|)\) möglich.
+
+    (3) Wegen der Irreflexivität ist \(\{a\}\) konfliktfrei; nach
+    Korollar~\ref{cor:sym-extend} existiert ein \(\lambda\in\Lambda_\sigma(F)\)
+    mit \(\lambda(a)=\mathit{in}\).
+
+    (4) Ist \(N(a)=\emptyset\), so ist \(a\) in jeder maximal konfliktfreien
+    Menge enthalten, denn \(a\) steht mit keinem Argument in Konflikt. Ist
+    dagegen \(b\in N(a)\), so liefert Korollar~\ref{cor:sym-extend} ein
+    \(\lambda\) mit \(\lambda(b)=\mathit{in}\) und folglich
+    \(\lambda(a)=\mathit{out}\).
+\end{proof}
+
+Proposition~\ref{prop:sym-klassisch-p} formalisiert den Befund von
+\textcite{Coste:2005:symmetric-af-irflx-coherent}, dass in symmetrischen
+irreflexiven AFs nur zwei sehr einfache und effizient prüfbare Formen der
+Akzeptanz auftreten. Nach diesem Bild müsste auch die bedingte Unabhängigkeit
+leicht sein: Sie ist nach Definition~\ref{def:BU:AFs} eine Aussage über
+\(\Lambda_\sigma(F)\), und alle punktweisen Fragen über \(\Lambda_\sigma(F)\)
+sind trivial.
+
+\section{Die eigentliche Schwierigkeit: exakte Realisierbarkeit}
+\label{sec:sym-realisierbarkeit}
+
+Die bedingte Unabhängigkeit fragt nicht nach dem Label eines einzelnen
+Arguments, sondern danach, ob ein \emph{vollständig vorgeschriebenes
+Teillabelling} realisiert werden kann. Genau hier bricht die Einfachheit
+zusammen.
+
+\begin{Definition}
+    \label{def:sym-real}
+    Das Realisierbarkeitsproblem \(\textit{Real}^{\mathrm{sym}}_{\mathrm{st}}\)
+    ist wie folgt definiert:
+    \[
+    \begin{array}{ll}
+    \text{Input:}  & \text{symmetrisches, irreflexives AF } F=(A,R),\
+                     W\subseteq A,\ \eta:W\to\{\mathit{in},\mathit{out}\}\\
+    \text{Output:} & \text{TRUE} \Longleftrightarrow
+                     \exists\lambda\in\Lambda_{\mathrm{st}}(F):\lambda|_W=\eta.
+    \end{array}
+    \]
+\end{Definition}
+
+Der Unterschied zur kredulösen Akzeptanz ist der Zwang, Argumente auch
+\emph{ausschließen} zu müssen: Ein Argument \(a\) mit \(\eta(a)=\mathit{out}\)
+verlangt einen Nachbarn im \(\mathit{in}\)-Teil, und mehrere solche Forderungen
+müssen gleichzeitig durch eine einzige konfliktfreie Menge erfüllt werden.
+
+\begin{Proposition}
+    \label{prop:sym-real-npc}
+    \(\textit{Real}^{\mathrm{sym}}_{\mathrm{st}}\) ist NP-vollständig.
+\end{Proposition}
+
+\begin{proof}
+    Zugehörigkeit: Man rät \(\lambda\) und verifiziert in Polynomialzeit
+    (Proposition~\ref{prop:sym-klassisch-p}(2)), dass
+    \(\lambda\in\Lambda_{\mathrm{st}}(F)\) und \(\lambda|_W=\eta\).
+
+    Härte: Wir reduzieren von 3-SAT. Sei \(\varphi=\bigwedge_{k=1}^{m}C_k\) eine
+    KNF-Formel über den Variablen \(y_1,\dots,y_l\). Wir definieren ein
+    symmetrisches irreflexives AF \(F_\varphi=(A,R)\) durch
+    \[
+        A:=\{w_j,\overline{w_j}\mid 1\leq j\leq l\}\cup\{c_k\mid 1\leq k\leq m\}
+    \]
+    und die (symmetrisch abgeschlossene) Angriffsrelation, die genau die
+    folgenden Konflikte enthält:
+    \begin{itemize}
+        \item \(\{w_j,\overline{w_j}\}\) für jedes \(j\),
+        \item \(\{w_j,c_k\}\), falls \(y_j\) positiv in \(C_k\) vorkommt,
+        \item \(\{\overline{w_j},c_k\}\), falls \(y_j\) negativ in \(C_k\)
+        vorkommt.
+    \end{itemize}
+    Wir setzen \(W:=\{c_1,\dots,c_m\}\) und \(\eta\equiv\mathit{out}\).
+
+    Sei \(\lambda\in\Lambda_{\mathrm{st}}(F_\varphi)\) mit \(\lambda|_W=\eta\)
+    und \(S:=\mathit{in}(\lambda)\). Da \(S\) konfliktfrei ist, gilt nicht
+    gleichzeitig \(w_j\in S\) und \(\overline{w_j}\in S\); wir definieren
+    \(\beta(y_j):=\top\) genau dann, wenn \(w_j\in S\). Nach
+    Proposition~\ref{prop:sym-naiv-st-pr} ist \(S\) naiv, also besitzt jedes
+    \(c_k\notin S\) einen Nachbarn in \(S\). Die Nachbarn von \(c_k\) sind
+    ausschließlich Literalargumente, also enthält \(S\) ein Literalargument von
+    \(C_k\). Ist dies \(w_j\), so gilt \(\beta(y_j)=\top\) und \(y_j\in C_k\);
+    ist es \(\overline{w_j}\), so ist \(w_j\notin S\), also
+    \(\beta(y_j)=\bot\) und \(\neg y_j\in C_k\). In beiden Fällen ist \(C_k\)
+    unter \(\beta\) erfüllt. Somit ist \(\varphi\) erfüllbar.
+
+    Sei umgekehrt \(\beta\) eine erfüllende Belegung und
+    \(T:=\{w_j\mid\beta(y_j)=\top\}\cup\{\overline{w_j}\mid\beta(y_j)=\bot\}\).
+    \(T\) ist konfliktfrei, denn \(T\) enthält aus jedem Paar genau ein
+    Argument und die Paare stehen untereinander nicht in Konflikt. Jedes
+    \(c_k\) besitzt ein unter \(\beta\) wahres Literal, dessen Literalargument
+    in \(T\) liegt. Nach Korollar~\ref{cor:sym-extend} existiert ein
+    \(\lambda\in\Lambda_{\mathrm{st}}(F_\varphi)\) mit
+    \(T\subseteq\mathit{in}(\lambda)\), und alle \(c_k\) tragen dort
+    \(\mathit{out}\). Also gilt \(\lambda|_W=\eta\).
+
+    Die Konstruktion ist offensichtlich polynomiell.
+\end{proof}
+
+Proposition~\ref{prop:sym-real-npc} erklärt, warum die Tractability der
+klassischen Aufgaben nicht auf die Unabhängigkeit durchschlägt: Der innere
+Existenzquantor aus Definition~\ref{def:BU:AFs} ist bereits auf dieser Klasse
+NP-vollständig. Was noch fehlt, ist ein Mechanismus, der den äußeren
+Allquantor über \(\lambda_1,\lambda_2\) in einen echten \(\forall\)-Quantor
+über Belegungen verwandelt. Dieser Mechanismus ist der Gegenstand des nächsten
+Abschnitts.
+
+\section{Hauptresultat}
+\label{sec:sym-hauptresultat}
+
+Die zentrale konstruktive Schwierigkeit in symmetrischen AFs ist, dass jeder
+Angriff in beide Richtungen wirkt. Zwei Konsequenzen sind dabei entscheidend.
+
+Erstens lässt sich die für Reduktionen übliche Invariante \enquote{aus jedem
+Paar \(v,\overline{v}\) ist genau eines \(\mathit{in}\)} nicht mehr durch einen
+bloßen Zweierzyklus erzwingen: Sobald \(v\) oder \(\overline{v}\) weitere
+Nachbarn besitzen, können in einer naiven Menge beide fehlen, weil sie von
+anderer Seite dominiert werden. Wir lösen das, indem wir Wert- und Signalknoten
+trennen und zu einem Viererkreis verbinden.
+
+Zweitens lässt sich die in gerichteten Konstruktionen übliche Aggregation
+\enquote{\(\varphi\) ist \(\mathit{in}\), also sind alle Klauselargumente
+\(\mathit{out}\), also ist jede Klausel erfüllt} nicht nachbauen: Ein
+Aggregationsargument \(\varphi\), das alle Klauselargumente angreift,
+dominiert diese selbst und macht damit jede Forderung an die Literale
+gegenstandslos. Wir verzichten deshalb auf ein Aggregationsargument und
+schreiben die Klauselargumente stattdessen \emph{direkt} als
+\(\mathit{out}\)-Teil der Unabhängigkeitsanfrage vor. Damit die Menge der so
+vorschreibbaren Muster klein und beherrschbar bleibt, verbinden wir die
+Klauselargumente zu einer Clique.
+
+\begin{Definition}
+    \label{def:sym-konstruktion}
+    Sei \(\Psi=\forall X\exists Y\,\varphi\) mit
+    \(X=\{x_1,\dots,x_n\}\), \(Y=\{y_1,\dots,y_l\}\) und
+    \(\varphi=\bigwedge_{k=1}^{m}C_k\) in KNF, \(m\geq 1\). Wir setzen
+    \(X^{+}:=X\cup\{x_0\}\) mit einer frischen universellen Variablen \(x_0\)
+    und
+    \[
+        \widehat{\varphi}:=\bigwedge_{k=1}^{m}\bigl(x_0\lor C_k\bigr).
+    \]
+    Das AF \(G_\Psi=(A_\Psi,R_\Psi)\) besitzt die Argumentmenge
+    \[
+    \begin{aligned}
+        A_\Psi:={}&
+        \{u_i,\overline{u_i},s_i,\overline{s_i}\mid x_i\in X^{+}\}
+        \;\cup\;
+        \{w_j,\overline{w_j}\mid y_j\in Y\}
+        \;\cup\;
+        \{c_1,\dots,c_m\},
+    \end{aligned}
+    \]
+    und \(R_\Psi\) ist die symmetrische Hülle genau der folgenden Konflikte:
+    \begin{enumerate}
+        \item[(K1)] \(\{u_i,\overline{u_i}\}\),
+        \(\{u_i,\overline{s_i}\}\),
+        \(\{\overline{u_i},s_i\}\),
+        \(\{s_i,\overline{s_i}\}\)
+        \quad für alle \(x_i\in X^{+}\),
+        \item[(K2)] \(\{w_j,\overline{w_j}\}\) \quad für alle \(y_j\in Y\),
+        \item[(K3)] \(\{s_i,c_k\}\), falls \(x_i\) positiv in \(C_k\) vorkommt,
+        und \(\{\overline{s_i},c_k\}\), falls \(x_i\) negativ in \(C_k\)
+        vorkommt \quad(\(1\leq i\leq n\)); zusätzlich \(\{s_0,c_k\}\) für alle
+        \(k\),
+        \item[(K4)] \(\{w_j,c_k\}\), falls \(y_j\) positiv in \(C_k\) vorkommt,
+        und \(\{\overline{w_j},c_k\}\), falls \(y_j\) negativ in \(C_k\)
+        vorkommt,
+        \item[(K5)] \(\{c_k,c_{k'}\}\) für alle \(k\neq k'\).
+    \end{enumerate}
+    Als Unabhängigkeitsanfrage setzen wir
+    \[
+        \mathcal{X}:=\{c_1,\dots,c_m\},\qquad
+        \mathcal{Y}:=\{u_i,\overline{u_i}\mid x_i\in X^{+}\},\qquad
+        Z:=\emptyset.
+    \]
+\end{Definition}
+
+Das AF \(G_\Psi\) ist nach Konstruktion symmetrisch und irreflexiv, besitzt
+\(4(n+1)+2l+m\) Argumente und ist in Polynomialzeit berechenbar. Die Blöcke
+(K1) bilden für jede universelle Variable einen Viererkreis
+\(u_i-\overline{u_i}-s_i-\overline{s_i}-u_i\); die Wertknoten
+\(u_i,\overline{u_i}\) besitzen \emph{keine} weiteren Nachbarn, während die
+Signalknoten \(s_i,\overline{s_i}\) die Verbindung zu den Klauselargumenten
+herstellen.
+
+\begin{Lemma}[Wertknoten]
+    \label{lem:sym-wertknoten}
+    Sei \(\lambda\in\Lambda_{\mathrm{st}}(G_\Psi)\) und
+    \(S:=\mathit{in}(\lambda)\). Dann gilt für jedes \(x_i\in X^{+}\):
+    \(|S\cap\{u_i,\overline{u_i}\}|=1\).
+\end{Lemma}
+
+\begin{proof}
+    Wegen \(\{u_i,\overline{u_i}\}\in R_\Psi\) und der Konfliktfreiheit von
+    \(S\) liegen nicht beide in \(S\). Seien nun beide nicht in \(S\). Nach
+    Proposition~\ref{prop:sym-naiv-st-pr} ist \(S\) naiv, also besitzt
+    \(u_i\) einen Nachbarn in \(S\). Die Nachbarn von \(u_i\) sind nach (K1)
+    genau \(\overline{u_i}\) und \(\overline{s_i}\); folglich gilt
+    \(\overline{s_i}\in S\). Analog besitzt \(\overline{u_i}\) die Nachbarn
+    \(u_i\) und \(s_i\), also \(s_i\in S\). Wegen
+    \(\{s_i,\overline{s_i}\}\in R_\Psi\) widerspricht das der
+    Konfliktfreiheit von \(S\).
+\end{proof}
+
+Für \(\lambda\in\Lambda_{\mathrm{st}}(G_\Psi)\) mit
+\(S=\mathit{in}(\lambda)\) definieren wir daher die \emph{induzierte Belegung}
+\[
+    \alpha_\lambda:X^{+}\to\{\top,\bot\},\quad
+    \alpha_\lambda(x_i)=\top:\iff u_i\in S,
+\]
+sowie
+\[
+    \beta_\lambda:Y\to\{\top,\bot\},\quad
+    \beta_\lambda(y_j)=\top:\iff w_j\in S.
+\]
+
+\begin{Lemma}[Signaltreue]
+    \label{lem:sym-signaltreue}
+    Sei \(\lambda\in\Lambda_{\mathrm{st}}(G_\Psi)\), \(S=\mathit{in}(\lambda)\).
+    Dann gilt:
+    \begin{enumerate}
+        \item \(s_i\in S\Rightarrow\alpha_\lambda(x_i)=\top\) und
+        \(\overline{s_i}\in S\Rightarrow\alpha_\lambda(x_i)=\bot\).
+        \item \(w_j\in S\Rightarrow\beta_\lambda(y_j)=\top\) und
+        \(\overline{w_j}\in S\Rightarrow\beta_\lambda(y_j)=\bot\).
+    \end{enumerate}
+\end{Lemma}
+
+\begin{proof}
+    (1) Aus \(s_i\in S\) und \(\{\overline{u_i},s_i\}\in R_\Psi\) folgt
+    \(\overline{u_i}\notin S\), mit Lemma~\ref{lem:sym-wertknoten} also
+    \(u_i\in S\) und damit \(\alpha_\lambda(x_i)=\top\). Der zweite Fall
+    verläuft symmetrisch über \(\{u_i,\overline{s_i}\}\in R_\Psi\).
+
+    (2) \(w_j\in S\) liefert \(\beta_\lambda(y_j)=\top\) definitionsgemäß; aus
+    \(\overline{w_j}\in S\) folgt \(w_j\notin S\) wegen
+    \(\{w_j,\overline{w_j}\}\in R_\Psi\), also \(\beta_\lambda(y_j)=\bot\).
+\end{proof}
+
+\begin{Lemma}[Realisierbare Teillabellings]
+    \label{lem:sym-teile}
+    Sei \(\lambda\in\Lambda_{\mathrm{st}}(G_\Psi)\) und
+    \(S=\mathit{in}(\lambda)\). Dann gilt:
+    \begin{enumerate}
+        \item \(|S\cap\mathcal{X}|\leq 1\).
+        \item Zu jedem \(k\in\{1,\dots,m\}\) und jeder Belegung
+        \(\alpha:X^{+}\to\{\top,\bot\}\) existiert
+        \(\lambda'\in\Lambda_{\mathrm{st}}(G_\Psi)\) mit
+        \(\mathit{in}(\lambda')\cap\mathcal{X}=\{c_k\}\) und
+        \(\alpha_{\lambda'}=\alpha\).
+        \item Zu jeder Belegung \(\alpha:X^{+}\to\{\top,\bot\}\) existiert
+        genau dann ein \(\lambda'\in\Lambda_{\mathrm{st}}(G_\Psi)\) mit
+        \(\mathit{in}(\lambda')\cap\mathcal{X}=\emptyset\) und
+        \(\alpha_{\lambda'}=\alpha\), wenn eine Belegung \(\beta\) von \(Y\)
+        mit \(\widehat{\varphi}(\alpha,\beta)=\top\) existiert.
+        \item Zu jeder Belegung \(\alpha:X^{+}\to\{\top,\bot\}\) existiert
+        \(\lambda'\in\Lambda_{\mathrm{st}}(G_\Psi)\) mit
+        \(\alpha_{\lambda'}=\alpha\).
+    \end{enumerate}
+\end{Lemma}
+
+\begin{proof}
+    Wir schreiben \(U_\alpha:=\{u_i\mid\alpha(x_i)=\top\}
+    \cup\{\overline{u_i}\mid\alpha(x_i)=\bot\}\) und
+    \(S_\alpha:=\{s_i\mid\alpha(x_i)=\top\}
+    \cup\{\overline{s_i}\mid\alpha(x_i)=\bot\}\).
+    Nach (K1) ist \(U_\alpha\cup S_\alpha\) konfliktfrei: Innerhalb eines
+    Viererkreises werden nur gegenüberliegende Knoten gewählt
+    (\(u_i\) mit \(s_i\) beziehungsweise \(\overline{u_i}\) mit
+    \(\overline{s_i}\)), und zwischen verschiedenen Blöcken bestehen keine
+    Konflikte. Ferner besitzt jedes Argument aus
+    \(\{u_i,\overline{u_i}\}\setminus U_\alpha\) seinen Partner in
+    \(U_\alpha\) als Nachbarn. Nach Korollar~\ref{cor:sym-extend} gilt
+    daher für jede Erweiterung eines \(U_\alpha\) enthaltenden konfliktfreien
+    Kerns zu einem \textit{stable}-Labelling \(\lambda'\) bereits
+    \(\alpha_{\lambda'}=\alpha\).
+
+    (1) Die Klauselargumente bilden nach (K5) eine Clique; eine konfliktfreie
+    Menge enthält daher höchstens eines von ihnen.
+
+    (2) Der Kern \(T:=U_\alpha\cup\{c_k\}\) ist konfliktfrei, da Wertknoten
+    nach (K1) nur Wert- und Signalknoten desselben Blocks als Nachbarn haben
+    und insbesondere zu keinem Klauselargument benachbart sind. Sei
+    \(\lambda'\) eine Erweiterung gemäß Korollar~\ref{cor:sym-extend}. Dann gilt
+    \(\alpha_{\lambda'}=\alpha\) nach der Vorbemerkung, und jedes \(c_{k'}\)
+    mit \(k'\neq k\) besitzt den Nachbarn \(c_k\in T\), ist also
+    \(\mathit{out}\). Somit ist
+    \(\mathit{in}(\lambda')\cap\mathcal{X}=\{c_k\}\).
+
+    (3) \enquote{\(\Leftarrow\)}: Sei \(\beta\) mit
+    \(\widehat{\varphi}(\alpha,\beta)=\top\) und sei
+    \[
+        T:=U_\alpha\cup S_\alpha\cup
+        \{w_j\mid\beta(y_j)=\top\}\cup\{\overline{w_j}\mid\beta(y_j)=\bot\}.
+    \]
+    \(T\) ist konfliktfrei: Konflikte bestehen nach (K3), (K4) nur zwischen
+    Signal- beziehungsweise Literalargumenten und Klauselargumenten, und
+    \(T\) enthält keine Klauselargumente; innerhalb der Blöcke wurde die
+    Konfliktfreiheit bereits festgestellt. Da \(\widehat{\varphi}\) unter
+    \((\alpha,\beta)\) erfüllt ist, besitzt jede Klausel \(x_0\lor C_k\) ein
+    wahres Literal, dessen zugehöriges Signal- oder Literalargument nach (K3),
+    (K4) in \(T\) liegt und zu \(c_k\) benachbart ist. Nach
+    Korollar~\ref{cor:sym-extend} existiert ein \textit{stable}-Labelling
+    \(\lambda'\) mit \(T\subseteq\mathit{in}(\lambda')\); dort sind alle
+    \(c_k\) \(\mathit{out}\) und es gilt \(\alpha_{\lambda'}=\alpha\).
+
+    \enquote{\(\Rightarrow\)}: Sei \(\lambda'\) mit
+    \(\mathit{in}(\lambda')\cap\mathcal{X}=\emptyset\) und
+    \(\alpha_{\lambda'}=\alpha\), und sei \(S'=\mathit{in}(\lambda')\). Da
+    \(S'\) naiv ist, besitzt jedes \(c_k\) einen Nachbarn in \(S'\). Die
+    Nachbarn von \(c_k\) sind nach (K3)--(K5) Signalargumente,
+    Literalargumente und andere Klauselargumente; letztere liegen nicht in
+    \(S'\). Also enthält \(S'\) ein Signal- oder Literalargument zu einem
+    Literal von \(x_0\lor C_k\). Nach Lemma~\ref{lem:sym-signaltreue} ist
+    dieses Literal unter \((\alpha,\beta_{\lambda'})\) wahr. Da \(k\) beliebig
+    war, gilt \(\widehat{\varphi}(\alpha,\beta_{\lambda'})=\top\).
+
+    (4) Man erweitere \(U_\alpha\) nach Korollar~\ref{cor:sym-extend}.
+\end{proof}
+
+\begin{Theorem}
+    \label{th:sym-st-pi2p}
+    \(\textit{Ind}^{\mathrm{sym}}_{\mathrm{st}}\) ist
+    \(\Pi_2^\text{P}\)-vollständig. Die Härte gilt bereits für
+    \(Z=\emptyset\).
+\end{Theorem}
+
+\begin{proof}
+    \emph{Zugehörigkeit.} Symmetrische irreflexive AFs bilden eine Teilklasse
+    aller AFs; die obere Schranke folgt daher aus
+    Theorem~\ref{th:ind-st-is-pi2p-c}.
+
+    \emph{Härte.} Sei \(\Psi=\forall X\exists Y\,\varphi\) eine Instanz des
+    \(\Pi_2^\text{P}\)-vollständigen Problems \(\mathrm{QBF}^2_\forall\) und sei
+    \(G_\Psi\) mit \(\mathcal{X},\mathcal{Y},Z=\emptyset\) wie in
+    Definition~\ref{def:sym-konstruktion}. Die Mengen \(\mathcal{X}\),
+    \(\mathcal{Y}\) und \(Z\) sind paarweise disjunkt, und \(G_\Psi\) ist
+    symmetrisch und irreflexiv. Wegen \(Z=\emptyset\) ist die Voraussetzung
+    \(\lambda_1|_Z=\lambda_2|_Z\) aus Definition~\ref{def:BU:AFs} für jedes
+    Paar erfüllt. Wir zeigen
+    \[
+        \Psi\text{ ist gültig}
+        \quad\Longleftrightarrow\quad
+        \mathcal{X}\bot_{\mathrm{st}}\mathcal{Y}\mid\emptyset
+        \text{ in }G_\Psi.
+    \]
+
+    Vorab halten wir fest, dass wegen
+    \(\widehat{\varphi}=\bigwedge_k(x_0\lor C_k)\) gilt:
+    \(\Psi\) ist genau dann gültig, wenn
+    \(\forall X^{+}\exists Y\,\widehat{\varphi}\) gültig ist. Für
+    \(\alpha(x_0)=\top\) ist \(\widehat{\varphi}\) unter jeder Belegung von
+    \(Y\) erfüllt, für \(\alpha(x_0)=\bot\) gilt
+    \(\widehat{\varphi}\equiv\varphi\).
+
+    \enquote{\(\Rightarrow\)}: Sei \(\Psi\) gültig und seien
+    \(\lambda_1,\lambda_2\in\Lambda_{\mathrm{st}}(G_\Psi)\). Sei
+    \(\alpha:=\alpha_{\lambda_2}\); nach Lemma~\ref{lem:sym-wertknoten} ist
+    \(\lambda_2|_{\mathcal{Y}}\) durch \(\alpha\) eindeutig bestimmt und
+    umgekehrt. Nach Lemma~\ref{lem:sym-teile}(1) ist
+    \(\mathit{in}(\lambda_1)\cap\mathcal{X}\) entweder leer oder von der Form
+    \(\{c_k\}\).
+
+    Im Fall \(\mathit{in}(\lambda_1)\cap\mathcal{X}=\{c_k\}\) liefert
+    Lemma~\ref{lem:sym-teile}(2) ein \(\lambda_3\) mit
+    \(\mathit{in}(\lambda_3)\cap\mathcal{X}=\{c_k\}\) und
+    \(\alpha_{\lambda_3}=\alpha\), also
+    \(\lambda_3|_{\mathcal{X}}=\lambda_1|_{\mathcal{X}}\) und
+    \(\lambda_3|_{\mathcal{Y}}=\lambda_2|_{\mathcal{Y}}\).
+
+    Im Fall \(\mathit{in}(\lambda_1)\cap\mathcal{X}=\emptyset\) existiert wegen
+    der Gültigkeit von \(\forall X^{+}\exists Y\,\widehat{\varphi}\) eine
+    Belegung \(\beta\) mit \(\widehat{\varphi}(\alpha,\beta)=\top\);
+    Lemma~\ref{lem:sym-teile}(3) liefert das gesuchte \(\lambda_3\).
+
+    Damit gilt \(\mathcal{X}\bot_{\mathrm{st}}\mathcal{Y}\mid\emptyset\).
+
+    \enquote{\(\Leftarrow\)}: Sei \(\Psi\) nicht gültig. Dann existiert eine
+    Belegung \(\alpha\) von \(X\), sodass \(\varphi(\alpha,\beta)=\bot\) für
+    alle \(\beta\) gilt. Wir setzen
+    \(\alpha^{+}:=\alpha\cup\{x_0\mapsto\bot\}\); dann gilt
+    \(\widehat{\varphi}(\alpha^{+},\beta)=\bot\) für alle \(\beta\).
+
+    Wähle \(\lambda_2\) nach Lemma~\ref{lem:sym-teile}(4) mit
+    \(\alpha_{\lambda_2}=\alpha^{+}\). Wähle \(\lambda_1\) nach
+    Lemma~\ref{lem:sym-teile}(3), angewandt auf eine beliebige Belegung
+    \(\alpha'\) mit \(\alpha'(x_0)=\top\); wegen
+    \(\widehat{\varphi}(\alpha',\beta)=\top\) für jedes \(\beta\) existiert ein
+    solches \(\lambda_1\) mit
+    \(\mathit{in}(\lambda_1)\cap\mathcal{X}=\emptyset\).
+
+    Angenommen, es existierte \(\lambda_3\in\Lambda_{\mathrm{st}}(G_\Psi)\) mit
+    \(\lambda_3|_{\mathcal{X}}=\lambda_1|_{\mathcal{X}}\) und
+    \(\lambda_3|_{\mathcal{Y}}=\lambda_2|_{\mathcal{Y}}\). Dann gilt
+    \(\mathit{in}(\lambda_3)\cap\mathcal{X}=\emptyset\) und
+    \(\alpha_{\lambda_3}=\alpha^{+}\). Nach Lemma~\ref{lem:sym-teile}(3)
+    existierte dann ein \(\beta\) mit
+    \(\widehat{\varphi}(\alpha^{+},\beta)=\top\), im Widerspruch zur Wahl von
+    \(\alpha\). Also gilt
+    \(\mathcal{X}\not\bot_{\mathrm{st}}\mathcal{Y}\mid\emptyset\).
+
+    Die Konstruktion ist in Polynomialzeit berechenbar, womit die Härte gezeigt
+    ist.
+\end{proof}
+
+\begin{Corollary}
+    \label{cor:sym-nicht-ocf}
+    Theorem~\ref{th:sym-st-pi2p} folgt nicht aus
+    Proposition~\ref{prop:ocf-af-ci-st-pi^2}.
+\end{Corollary}
+
+\begin{proof}
+    Für \(m\geq 3\) enthält \(G_\Psi\) wegen (K5) den Dreierkreis
+    \(c_1\to c_2\to c_3\to c_1\) und ist damit nicht ungeradezykelfrei. Ebenso
+    ist \(G_\Psi\) wegen dieses Dreiecks nicht bipartit. Die Klasse der
+    symmetrischen irreflexiven AFs ist somit weder in der Klasse der
+    ungeradezykelfreien noch in der der bipartiten AFs enthalten.
+\end{proof}
+
+Bemerkenswert ist, dass symmetrische irreflexive AFs dennoch kohärent sind: Die
+Kohärenz wird hier nicht über die Abwesenheit ungerader Zyklen erreicht, sondern
+über die Symmetrie selbst (Lemma~\ref{lem:sym-cf-adm}). Die Zyklenfreiheit ist
+also hinreichend, aber nicht notwendig für Kohärenz, und für die Komplexität
+der Unabhängigkeit ist offenkundig nicht die Kohärenz entscheidend.
+
+\section{Konsequenz für die \textit{preferred}-Semantik}
+\label{sec:sym-preferred}
+
+\begin{Lemma}[Transferlemma]
+    \label{lem:sym-transfer}
+    Sei \(F=(A,R)\) ein AF und seien \(\sigma,\tau\) Semantiken mit
+    \(\Lambda_\sigma(F)=\Lambda_\tau(F)\). Dann gilt für alle paarweise
+    disjunkten \(X,Y,Z\subseteq A\):
+    \(X\bot_\sigma Y\mid Z\) genau dann, wenn \(X\bot_\tau Y\mid Z\).
+\end{Lemma}
+
+\begin{proof}
+    Die definierende Bedingung aus Definition~\ref{def:BU:AFs} quantifiziert
+    ausschließlich über Elemente von \(\Lambda_\sigma(F)\). Ersetzt man diese
+    Menge durch die nach Voraussetzung identische Menge \(\Lambda_\tau(F)\), so
+    geht die Bedingung Wort für Wort in die entsprechende Bedingung für
+    \(\tau\) über.
+\end{proof}
+
+\begin{Corollary}
+    \label{cor:sym-pr-pi2p}
+    \(\textit{Ind}^{\mathrm{sym}}_{\mathrm{pr}}\) ist
+    \(\Pi_2^\text{P}\)-vollständig.
+\end{Corollary}
+
+\begin{proof}
+    Nach Proposition~\ref{prop:sym-naiv-st-pr} gilt
+    \(\Lambda_{\mathrm{pr}}(F)=\Lambda_{\mathrm{st}}(F)\) für jedes
+    symmetrische irreflexive AF \(F\). Mit Lemma~\ref{lem:sym-transfer} sind
+    \(\textit{Ind}^{\mathrm{sym}}_{\mathrm{pr}}\) und
+    \(\textit{Ind}^{\mathrm{sym}}_{\mathrm{st}}\) dieselbe Sprache; die
+    Behauptung folgt aus Theorem~\ref{th:sym-st-pi2p}.
+\end{proof}
+
+Für \(\sigma=\mathrm{pr}\) ist die Klasse also \emph{echt} einfacher: Das
+allgemeine Problem ist nach Theorem~\ref{th:ind-pr-is-pi3p-c}
+\(\Pi_3^\text{P}\)-vollständig, auf symmetrischen irreflexiven AFs sinkt es um
+eine Stufe der polynomiellen Hierarchie. Der Grund ist strukturell: Die
+Maximalitätsbedingung der \textit{preferred}-Semantik, die im allgemeinen Fall
+den zusätzlichen Quantorenwechsel erzwingt, kollabiert hier zu einer in
+Polynomialzeit prüfbaren Bedingung (Proposition~\ref{prop:sym-klassisch-p}(2)).
+Unter der üblichen Annahme \(\Pi_2^\text{P}\neq\Pi_3^\text{P}\) ist dieser
+Gewinn nicht nur formal.
+
+Für \(\sigma=\mathrm{st}\) tritt dagegen kein Gewinn ein. Die Erklärung liefert
+Proposition~\ref{prop:sym-real-npc}: Die Symmetrie vereinfacht alle
+\emph{punktweisen} Fragen über \(\Lambda_{\mathrm{st}}(F)\), lässt aber die
+\emph{simultane} Realisierbarkeit vorgeschriebener Teillabellings NP-hart. Da
+die bedingte Unabhängigkeit genau von dieser simultanen Realisierbarkeit
+handelt, überträgt sich die Vereinfachung nicht.
+
+\section{Ein in Polynomialzeit entscheidbares Fragment}
+\label{sec:sym-fragment}
+
+Die Härte in Theorem~\ref{th:sym-st-pi2p} benötigt eine unbeschränkt große
+Menge \(\mathcal{Y}\). Beschränkt man beide Mengen auf einzelne Argumente und
+setzt \(Z=\emptyset\), so wird das Problem tatsächlich einfach. Damit ist die
+Klasse in einem präzisen Sinn doch einfacher als der allgemeine Fall, in dem
+schon die zugrundeliegenden Realisierbarkeitsfragen NP-vollständig sind.
+
+\begin{Proposition}
+    \label{prop:sym-singleton-p}
+    Sei \(F=(A,R)\) symmetrisch und irreflexiv und seien \(x,y\in A\) mit
+    \(x\neq y\). Dann ist \(\{x\}\bot_{\mathrm{st}}\{y\}\mid\emptyset\) in Zeit
+    \(\mathcal{O}(|A|^2+|A|\cdot|R|)\) entscheidbar.
+\end{Proposition}
+
+\begin{proof}
+    Wegen \(Z=\emptyset\) ist die Bedingung \(\lambda_1|_Z=\lambda_2|_Z\)
+    stets erfüllt. Setze
+    \[
+        \mathcal{R}:=\bigl\{(\lambda(x),\lambda(y))\;\big|\;
+        \lambda\in\Lambda_{\mathrm{st}}(F)\bigr\}
+        \subseteq\{\mathit{in},\mathit{out}\}^2 .
+    \]
+    Nach Definition~\ref{def:BU:AFs} gilt
+    \(\{x\}\bot_{\mathrm{st}}\{y\}\mid\emptyset\) genau dann, wenn aus
+    \((\alpha_1,\beta_1),(\alpha_2,\beta_2)\in\mathcal{R}\) stets
+    \((\alpha_1,\beta_2)\in\mathcal{R}\) folgt. Da \(\mathcal{R}\) höchstens
+    vier Elemente besitzt, genügt es, die vier Zugehörigkeiten zu bestimmen.
+    Wir benutzen durchgehend Proposition~\ref{prop:sym-naiv-st-pr} und
+    Korollar~\ref{cor:sym-extend}.
+
+    \emph{\((\mathit{in},\mathit{in})\).} Genau dann realisierbar, wenn
+    \((x,y)\notin R\): Ist \(\{x,y\}\) konfliktfrei, erweitere man es; andernfalls
+    verbietet die Konfliktfreiheit beide gemeinsam.
+
+    \emph{\((\mathit{in},\mathit{out})\).} Ist \((x,y)\in R\), so erweitere man
+    \(\{x\}\); dann ist \(y\) \(\mathit{out}\). Ist \((x,y)\notin R\), so ist
+    das Paar genau dann realisierbar, wenn \(N(y)\setminus N[x]\neq\emptyset\).
+    Existiert nämlich ein solches \(w\), so ist \(\{x,w\}\) konfliktfrei und
+    jede Erweiterung enthält \(x\), aber wegen \(w\in N(y)\) nicht \(y\).
+    Existiert umgekehrt \(\lambda\) mit \(\lambda(x)=\mathit{in}\) und
+    \(\lambda(y)=\mathit{out}\), so besitzt \(y\) einen Nachbarn
+    \(w\in\mathit{in}(\lambda)\); wegen \(x\notin N(y)\) ist \(w\neq x\), und
+    wegen der Konfliktfreiheit gilt \(w\notin N(x)\).
+
+    \emph{\((\mathit{out},\mathit{in})\).} Symmetrisch mit vertauschten Rollen.
+
+    \emph{\((\mathit{out},\mathit{out})\).} Genau dann realisierbar, wenn
+    \(w_1\in N(x)\setminus\{y\}\) und \(w_2\in N(y)\setminus\{x\}\) mit
+    \(w_1=w_2\) oder \((w_1,w_2)\notin R\) existieren. Sind solche \(w_1,w_2\)
+    gegeben, so ist \(\{w_1,w_2\}\) konfliktfrei, und jede Erweiterung schließt
+    \(x\) und \(y\) aus. Existiert umgekehrt \(\lambda\) mit
+    \(\lambda(x)=\lambda(y)=\mathit{out}\), so besitzen \(x\) und \(y\) je einen
+    Nachbarn \(w_1,w_2\in\mathit{in}(\lambda)\); diese liegen wegen
+    \(\lambda(x)=\lambda(y)=\mathit{out}\) nicht in \(\{x,y\}\) und stehen
+    untereinander nicht in Konflikt.
+
+    Alle vier Tests sind durch Absuchen von \(N(x)\), \(N(y)\) beziehungsweise
+    aller Paare \((w_1,w_2)\in N(x)\times N(y)\) in der angegebenen Zeit
+    durchführbar. Anschließend prüft man die Rechteckbedingung auf der höchstens
+    vierelementigen Menge \(\mathcal{R}\) in konstanter Zeit.
+\end{proof}
+
+Im allgemeinen Fall sind bereits die vier Realisierbarkeitstests
+NP-vollständig, da \((\mathit{in},\cdot)\) die kredulöse Akzeptanz unter
+\textit{stable}-Semantik enthält. Proposition~\ref{prop:sym-singleton-p} ist
+also eine echte Vereinfachung; sie zeigt zugleich, dass die Härte aus
+Theorem~\ref{th:sym-st-pi2p} nicht aus einzelnen Argumentpaaren stammt, sondern
+aus der \emph{gemeinsamen} Vorschrift vieler Labels.
+
+Als Konsistenzprüfung sei angemerkt, dass
+Proposition~\ref{prop:cdg-afs-not-st-ci} ein Spezialfall dieser Analyse ist: Ein
+vollständig gerichtetes AF ist symmetrisch und irreflexiv, seine naiven Mengen
+sind genau die einelementigen Teilmengen von \(A\), und für \(x\neq y\) ist
+\((\mathit{in},\mathit{in})\) wegen \((x,y)\in R\) nicht realisierbar, während
+\((\mathit{in},\mathit{out})\) und \((\mathit{out},\mathit{in})\) realisierbar
+sind. Die Rechteckbedingung ist damit verletzt.
+
+\section{Die \textit{complete}-Semantik bleibt offen}
+\label{sec:sym-complete}
+
+Für \(\sigma=\mathrm{co}\) lässt sich die Konstruktion aus
+Definition~\ref{def:sym-konstruktion} nicht übernehmen. Wir halten zunächst die
+Struktur der \textit{complete}-Labellings fest.
+
+\begin{Proposition}
+    \label{prop:sym-co-struktur}
+    Sei \(F=(A,R)\) symmetrisch und irreflexiv und sei \(\lambda\) ein
+    Labelling mit \(S:=\mathit{in}(\lambda)\). Dann ist \(\lambda\) genau dann
+    \textit{complete}, wenn \(S\) konfliktfrei ist,
+    \(\mathit{out}(\lambda)=N(S)\) gilt und kein \(a\in A\setminus S\) mit
+    \(N(a)\subseteq N(S)\) existiert.
+\end{Proposition}
+
+\begin{proof}
+    Nach Definition~\ref{def:complete-labelling} ist \(a\) genau dann
+    \(\mathit{out}\), wenn \(a\) einen \(\mathit{in}\)-Angreifer besitzt, also
+    genau dann, wenn \(a\in N(S)\); das ist gleichbedeutend mit
+    \(\mathit{out}(\lambda)=N(S)\), und \(S\cap N(S)=\emptyset\) ist genau die
+    Konfliktfreiheit von \(S\). Ferner ist \(a\) genau dann \(\mathit{in}\),
+    wenn alle Angreifer \(\mathit{out}\) sind, also genau dann, wenn
+    \(N(a)\subseteq N(S)\). Für \(a\in S\) ist diese Bedingung wegen der
+    Symmetrie automatisch erfüllt; die verbleibende Forderung ist, dass kein
+    \(a\) außerhalb von \(S\) sie erfüllt.
+\end{proof}
+
+Insbesondere ist das \textit{grounded}-Labelling durch
+\(\mathit{in}(\lambda_{\mathrm{gr}})=\{a\in A\mid N(a)=\emptyset\}\) gegeben:
+Isolierte Argumente sind unangegriffen, und ein nicht isoliertes Argument \(a\)
+besitzt einen Nachbarn, der von einem isolierten Argument nicht angegriffen
+werden kann.
+
+Damit scheitert die Reduktion aus Abschnitt~\ref{sec:sym-hauptresultat} an
+Lemma~\ref{lem:sym-wertknoten}: Wählt man \(S=\emptyset\), so ist
+\(N(S)=\emptyset\), und nach Proposition~\ref{prop:sym-co-struktur} ist das
+Labelling, das alle nicht isolierten Argumente mit \(\mathit{und}\) versieht,
+\textit{complete}. In diesem Labelling tragen sämtliche Wertknoten
+\(u_i,\overline{u_i}\) das Label \(\mathit{und}\); die Zuordnung
+\enquote{\(\lambda_2\) kodiert eine totale Belegung} bricht zusammen, und der
+äußere Allquantor läuft über wesentlich mehr Labellings als über die
+Belegungen von \(X^{+}\). Da zusätzliche \(\lambda_2\) zusätzliche
+Kombinationsforderungen erzeugen, kann die Richtung
+\enquote{\(\Psi\) gültig \(\Rightarrow\) unabhängig} verletzt werden.
+
+In gerichteten Konstruktionen wird dieses Problem durch Detektorargumente
+gelöst, die partielle Labellings erkennen und die eigentliche Formelauswertung
+neutralisieren --- so etwa die Argumente \(d_i\), \(s\) und \(g\) im Beweis von
+Proposition~\ref{prop:ocf-af-ci-co-pi^2-c}. Ein solcher Detektor benötigt einen
+gerichteten Informationsfluss \(\{x_i,\overline{x_i}\}\to d_i\to s\to g\), der
+sich in symmetrischen AFs nicht nachbilden lässt: Jeder Detektor griffe seine
+Quelle zurück an. Wir halten daher fest:
+
+\begin{Proposition}
+    \label{prop:sym-co-obere-schranke}
+    \(\textit{Ind}^{\mathrm{sym}}_{\mathrm{co}}\in\Pi_2^\text{P}\).
+\end{Proposition}
+
+\begin{proof}
+    Folgt aus Theorem~\ref{th:ind-co-is-pi2p-c}, da symmetrische irreflexive
+    AFs eine Teilklasse aller AFs bilden.
+\end{proof}
+
+Ob \(\textit{Ind}^{\mathrm{sym}}_{\mathrm{co}}\) auch \(\Pi_2^\text{P}\)-hart
+ist, bleibt offen. Es ist die einzige der drei betrachteten Semantiken, für die
+in dieser Klasse keine vollständige Einordnung erreicht wurde.
+
+\section{Zusammenfassung}
+\label{sec:sym-zusammenfassung}
+
+\begin{table}[htbp]
+    \myfloatalign
+    \centering
+    \renewcommand{\arraystretch}{1.15}
+    \setlength{\tabcolsep}{1.0em}
+    \begin{tabular}{lccc}
+        \toprule
+        & \(co\) & \(st\) & \(pr\) \\
+        \midrule
+        allgemeine AFs
+            & \(\Pi_2^\text{P}\)-c
+            & \(\Pi_2^\text{P}\)-c
+            & \(\Pi_3^\text{P}\)-c \\
+        symmetrisch, irreflexiv
+            & in \(\Pi_2^\text{P}\)
+            & \(\Pi_2^\text{P}\)-c
+            & \(\Pi_2^\text{P}\)-c \\
+        \quad davon \(|X|=|Y|=1\), \(Z=\emptyset\)
+            & ---
+            & in P
+            & in P \\
+        \bottomrule
+    \end{tabular}
+    \caption[Komplexität der Unabhängigkeit auf symmetrischen irreflexiven
+    AFs]{Einordnung von \(\sigma\)-Unabhängigkeit auf symmetrischen
+    irreflexiven AFs im Vergleich zum allgemeinen Fall. Die Einträge der
+    zweiten Zeile stammen aus Proposition~\ref{prop:sym-co-obere-schranke},
+    Theorem~\ref{th:sym-st-pi2p} und Korollar~\ref{cor:sym-pr-pi2p}, der
+    Eintrag der dritten Zeile aus Proposition~\ref{prop:sym-singleton-p} in
+    Verbindung mit Korollar~\ref{cor:sym-pr-pi2p}.}
+    \label{tab:sym-komplexitaet}
+\end{table}
+
+Die Antwort auf die Ausgangsfrage ist differenziert. Symmetrische irreflexive
+AFs sind für die \textit{preferred}-Semantik echt einfacher, weil dort die
+Maximalitätsbedingung kollabiert und ein Quantorenwechsel entfällt. Für die
+\textit{stable}-Semantik sind sie \emph{nicht} einfacher: Trotz kohärenter
+Struktur, garantierter Existenz von Labellings und durchgängig polynomieller
+klassischer Entscheidungsprobleme bleibt die bedingte Unabhängigkeit
+\(\Pi_2^\text{P}\)-vollständig. Eine Vereinfachung tritt erst ein, wenn man
+zusätzlich die Größe der Anfragemengen beschränkt.
+
+Methodisch ist das der interessanteste Befund dieses Kapitels: Die
+Tractability der klassischen Aufgaben ist kein verlässlicher Indikator für die
+Komplexität der bedingten Unabhängigkeit. Maßgeblich ist stattdessen, ob
+vorgeschriebene Teillabellings \emph{simultan} realisierbar sind
+(Proposition~\ref{prop:sym-real-npc}) und ob der äußere Allquantor über
+hinreichend viele, strukturell unterscheidbare Labellings läuft
+(Lemma~\ref{lem:sym-wertknoten}). Beide Bedingungen sind in symmetrischen
+irreflexiven AFs erfüllt, obwohl jede einzelne Akzeptanzfrage trivial ist.

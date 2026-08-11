@@ -1,0 +1,783 @@
+\section{Argumentationssysteme}
+\label{sec:af}
+
+\emph{Argumentationssysteme} (engl. \emph{argumentation frameworks}, AFs)
+modellieren Argumente als abstrakte Einheiten und erfassen ausschließlich die
+zwischen ihnen bestehenden Angriffe. Die grundlegenden Begriffe gehen auf
+\textcite{dung:1995:af} zurück. Die labellingbasierte Darstellung und die
+Notation folgen \textcite{bluemel:2025:independence-aba}.
+
+\begin{Definition}
+    \label{def:af}
+    Ein \emph{Argumentationssystem} ist ein Paar \(F=(A,R)\), wobei \(A\)
+    eine Menge von Argumenten und \(R\subseteq A\times A\) eine
+    binäre Angriffsrelation ist. Für \((a,b)\in R\) heißt \(a\) ein
+    \emph{Angreifer} von \(b\). Falls die Zuordnung zu einem bestimmten
+    Argumentationssystem explizit angegeben werden muss, schreiben wir
+    \(A_F\) und \(R_F\).
+\end{Definition}
+
+Im Folgenden werden ausschließlich endliche Argumentationssysteme betrachtet.
+\begin{Definition}
+    \label{def:attack/defense}
+Für \(a\in A\) und \(S\subseteq A\) bezeichnen
+\[
+    a^+ = \{b\in A \mid (a,b)\in R\},
+\]
+\[
+    a^- = \{b\in A \mid (b,a)\in R\},
+\]
+\[
+    S^+ = \{b\in A \mid \exists a\in S\colon (a,b)\in R\},
+\]
+\[
+    S^- = \{b\in A \mid \exists a\in S\colon (b,a)\in R\}
+\]
+die von \(a\) beziehungsweise \(S\) angegriffenen Argumente sowie deren
+Angreifer.
+\end{Definition}
+
+\begin{Definition}
+    \label{def:defense}
+    Sei \(F=(A,R)\) ein Argumentationssystem, \(S\subseteq A\) und
+    \(a\in A\). Die Menge \(S\) \emph{verteidigt} \(a\), wenn sie jeden
+    Angreifer von \(a\) angreift, das heißt, genau dann wenn \(a^-\subseteq S^+\).
+\end{Definition}
+
+Insbesondere wird jedes unangreifbare Argument durch die leere Menge
+verteidigt. Eine Menge \(S\) verteidigt eine Menge \(T\subseteq A\), wenn
+\(S\) jedes Argument aus \(T\) verteidigt.
+
+Eine Argumentationssemantik legt fest, welche Bewertungen der Argumente eines
+Argumentationssystems zulässig sind. In der labellingbasierten Darstellung
+erhält jedes Argument genau einen von drei Akzeptanzstatus.
+
+\begin{Definition}
+    \label{def:labelling}
+    Sei \(F=(A,R)\) ein Argumentationssystem und
+    \(\mathcal{L}=\{\mathsf{in},\mathsf{out},\mathsf{und}\}\). Ein
+    \emph{Labelling} von \(F\) ist eine Funktion
+    \(\lambda\colon A\to\mathcal{L}\). Dabei steht \(\mathsf{in}\) für
+    akzeptiert, \(\mathsf{out}\) für abgelehnt und \(\mathsf{und}\) für
+    unentschieden. Für \(\ell\in\mathcal{L}\) schreiben wir
+    \[
+        \ell(\lambda)=\{a\in A \mid \lambda(a)=\ell\}.
+    \]
+    Somit bilden \(\mathsf{in}(\lambda)\),
+    \(\mathsf{out}(\lambda)\) und \(\mathsf{und}(\lambda)\) eine Partition
+    von \(A\).
+\end{Definition}
+
+\begin{Definition}
+    \label{def:complete-labelling}
+    Ein Labelling \(\lambda\colon A\to\mathcal{L}\) heißt
+    \emph{vollständig}, wenn für jedes \(a\in A\) gilt:
+    \[
+        \lambda(a)=\mathsf{in}
+        \quad\Longleftrightarrow\quad
+        \lambda(b)=\mathsf{out}\text{ für alle }b\in a^-,
+    \]
+    \[
+        \lambda(a)=\mathsf{out}
+        \quad\Longleftrightarrow\quad
+        \lambda(b)=\mathsf{in}\text{ für mindestens ein }b\in a^-.
+    \]
+    Ein Argument erhält folglich genau dann das Label \(\mathsf{und}\), wenn
+    keiner seiner Angreifer mit \(\mathsf{in}\) gelabelt ist, aber nicht alle
+    seine Angreifer mit \(\mathsf{out}\) gelabelt sind.
+\end{Definition}
+
+\begin{Definition}
+    \label{def:labelling-semantics}
+    Sei \(F=(A,R)\) ein Argumentationssystem. Eine \emph{Semantik}
+    \(\sigma\) ordnet \(F\) eine Menge \(\Lambda_\sigma(F)\) von
+    Labellings zu. Die Elemente von \(\Lambda_\sigma(F)\) heißen
+    \(\sigma\)-Labellings von \(F\).
+
+    Sei \(\lambda\colon A\to\mathcal{L}\) ein Labelling. Dann gilt:
+    \begin{itemize}
+        \item \(\lambda\) ist ein \emph{Complete-Labelling}, das heißt
+        \(\lambda\in\Lambda_{\mathsf{co}}(F)\), genau dann, wenn
+        \(\lambda\) vollständig ist.
+
+        \item \(\lambda\) ist ein \emph{Grounded-Labelling}, das heißt
+        \(\lambda\in\Lambda_{\mathsf{gr}}(F)\), genau dann, wenn
+        \(\lambda\) vollständig ist und \(\mathsf{und}(\lambda)\)
+        bezüglich \(\subseteq\) maximal unter den
+        \(\mathsf{und}\)-Mengen aller vollständigen Labellings von \(F\)
+        ist.
+
+        \item \(\lambda\) ist ein \emph{Preferred-Labelling}, das heißt
+        \(\lambda\in\Lambda_{\mathsf{pr}}(F)\), genau dann, wenn
+        \(\lambda\) vollständig ist und \(\mathsf{in}(\lambda)\)
+        bezüglich \(\subseteq\) maximal unter den
+        \(\mathsf{in}\)-Mengen aller vollständigen Labellings von \(F\)
+        ist.
+
+        \item \(\lambda\) ist ein \emph{Stable-Labelling}, das heißt
+        \(\lambda\in\Lambda_{\mathsf{st}}(F)\), genau dann, wenn
+        \(\lambda\) vollständig ist und
+        \(\mathsf{und}(\lambda)=\emptyset\) gilt.
+    \end{itemize}
+\end{Definition}
+
+Jedes Argumentationssystem besitzt genau ein Grounded-Labelling und
+mindestens ein Complete- sowie ein Preferred-Labelling. Die Menge
+\(\Lambda_{\mathsf{st}}(F)\) kann hingegen leer sein.
+
+Für die spätere Betrachtung bedingter Unabhängigkeit werden Labellings auf
+Teilmengen der Argumentmenge eingeschränkt.
+
+\begin{Definition}
+    \label{def:labelling-restriction}
+    Sei \(\lambda\colon A\to\mathcal{L}\) ein Labelling und \(X\subseteq A\).
+    Die \emph{Restriktion} von \(\lambda\) auf \(X\) ist das partielle
+    Labelling
+    \[
+        \lambda|_X\colon X\to\mathcal{L},
+        \qquad
+        (\lambda|_X)(x)=\lambda(x)
+        \quad\text{für alle }x\in X.
+    \]
+    Insbesondere gilt \(\lambda_1|_X=\lambda_2|_X\) genau dann, wenn
+    \(\lambda_1(x)=\lambda_2(x)\) für alle \(x\in X\) gilt.
+\end{Definition}
+
+\section{Bedingte Unabhängigkeit}
+\label{sec:conditional-independence}
+
+Die folgende abstrakte Darstellung der bedingten Unabhängigkeit orientiert
+sich an \textcite{pearl:paz:1986:graphoids}. Die Notation folgt
+\textcite{bluemel:2025:independence-aba}.
+
+\begin{Definition}
+    \label{def:dependency-model}
+    Sei \(V\) eine Menge. Ein \emph{Abhängigkeitsmodell} \(I\) über \(V\)
+    ist eine ternäre Relation über paarweise disjunkten Teilmengen von \(V\),
+    das heißt,
+    \[
+        I \subseteq
+        \bigl\{(X,Y,Z) \bigm| X,Y,Z\subseteq V,\,
+        X\cap Y=X\cap Z=Y\cap Z=\emptyset\bigr\}.
+    \]
+    Für paarweise disjunkte Mengen \(X,Y,Z\subseteq V\) schreiben wir
+    \[
+        X\perp_I Y\mid Z \text{ genau dann, wenn }
+        (X,Y,Z)\in I
+    \]
+    und sagen, dass \(X\) und \(Y\) bezüglich \(I\) \emph{bedingt
+    unabhängig gegeben \(Z\)} sind. Die Menge \(Z\) heißt
+    \emph{Bedingungsmenge}, und \(X\perp_I Y\mid Z\) heißt eine
+    \emph{Unabhängigkeitsaussage}. Gilt \((X,Y,Z)\notin I\), so heißen
+    \(X\) und \(Y\) \emph{bedingt abhängig gegeben \(Z\)}. Wir
+    schreiben \(X\not\perp_I Y\mid Z\).
+
+    Ist das Abhängigkeitsmodell aus dem Kontext eindeutig,
+    wird der Index \(I\) weggelassen. Für Elemente \(x,y\in V\) stehen
+    \(x\perp y\mid Z\) und \(x\not\perp y\mid Z\) kurz für
+    \(\{x\}\perp\{y\}\mid Z\) beziehungsweise
+    \(\{x\}\not\perp\{y\}\mid Z\).
+\end{Definition}
+
+Die Bedingungsmenge hält den betrachteten Kontext fest. Eine
+Unabhängigkeitsaussage bringt zum Ausdruck, dass sich die Beziehung zwischen
+den beiden übrigen Mengen unter diesem festgehaltenen Kontext trennen lässt.
+
+\begin{Definition}
+    \label{def:semi-graphoid}
+    Ein Abhängigkeitsmodell \(I\) über \(V\) heißt \emph{Semi-Graphoid},
+    wenn für alle paarweise disjunkten Mengen
+    \(X,Y,W,Z\subseteq V\) die folgenden
+    \emph{Semi-Graphoid-Axiome} erfüllt sind:
+    \begin{align*}
+        \text{Symmetrie:}\qquad
+        &X\perp Y\mid Z
+        &&\Longrightarrow Y\perp X\mid Z,\\
+        \text{Dekomposition:}\qquad
+        &X\perp (Y\cup W)\mid Z
+        &&\Longrightarrow X\perp Y\mid Z,\\
+        \text{Schwache Vereinigung:}\qquad
+        &X\perp (Y\cup W)\mid Z
+        &&\Longrightarrow X\perp Y\mid (Z\cup W),\\
+        \text{Kontraktion:}\qquad
+        &\left.
+          \begin{aligned}
+              X&\perp Y\mid Z,\\[-0.2em]
+              X&\perp W\mid (Z\cup Y)
+          \end{aligned}
+          \right\}
+        &&\Longrightarrow X\perp (Y\cup W)\mid Z.
+    \end{align*}
+\end{Definition}
+
+Die Symmetrie macht die Reihenfolge der beiden betrachteten Mengen
+unerheblich. Die Dekomposition überträgt eine Aussage über eine Vereinigung
+auf deren Teilmengen. Die schwache Vereinigung erlaubt es, einen Teil der
+zweiten Menge in die Bedingungsmenge zu verschieben. Die Kontraktion führt
+zwei passende Aussagen zu einer Aussage über die Vereinigung zusammen.
+
+\section{Quantifizierte Boolesche Formeln}
+\label{sec:qbf}
+
+Dieser Abschnitt führt die für den weiteren Verlauf benötigten Grundlagen
+quantifizierter boolescher Formeln ein. Die Darstellung orientiert sich an
+\textcite{egly:2006:reasoning-qbf}.
+
+\begin{Definition}
+    \label{def:propositional-formula}
+    Sei \(\mathcal{V}\) eine abzählbare Menge \emph{aussagenlogischer
+    Variablen}. Die Menge der \emph{aussagenlogischen Formeln} über
+    \(\mathcal{V}\) ist induktiv wie folgt definiert:
+    \begin{itemize}
+        \item Jede Variable \(p\in\mathcal{V}\) sowie die
+        \emph{Wahrheitskonstanten} \(\top\) und \(\bot\) sind
+        aussagenlogische Formeln.
+
+        \item Sind \(\varphi\) und \(\psi\) aussagenlogische Formeln, so sind
+        auch \(\neg\varphi\), \((\varphi\land\psi)\) und
+        \((\varphi\lor\psi)\) aussagenlogische Formeln.
+    \end{itemize}
+    Die weiteren Verknüpfungen werden durch
+    \[
+        \varphi\to\psi := \neg\varphi\lor\psi
+        \qquad\text{und}\qquad
+        \varphi\leftrightarrow\psi
+        := (\varphi\to\psi)\land(\psi\to\varphi)
+    \]
+    abgekürzt. Mit \(\operatorname{Var}(\varphi)\) bezeichnen wir die Menge
+    der in \(\varphi\) vorkommenden Variablen.
+
+    Ein \emph{Literal} ist eine Variable \(p\) oder deren Negation
+    \(\neg p\). Eine \emph{Klausel} ist eine endliche Disjunktion von
+    Literalen. Eine Formel liegt in \emph{konjunktiver Normalform} (KNF)
+    vor, wenn sie eine endliche Konjunktion von Klauseln ist. Dabei gelten
+    die Konventionen \(\bigwedge\emptyset=\top\) und
+    \(\bigvee\emptyset=\bot\).
+\end{Definition}
+
+\begin{Definition}
+    \label{def:boolean-assignment}
+    Sei \(V\subseteq\mathcal{V}\) endlich. Eine \emph{Belegung} von \(V\)
+    ist eine Funktion \(\nu\colon V\to\{0,1\}\), wobei \(1\) für
+    \emph{wahr} und \(0\) für \emph{falsch} steht. Für
+    \(p\in\mathcal{V}\) und \(b\in\{0,1\}\) bezeichnet
+    \(\nu[p\mapsto b]\colon V\cup\{p\}\to\{0,1\}\) die Belegung mit
+    \[
+        \nu[p\mapsto b](q)=
+        \begin{cases}
+            b,      & \text{falls }q=p,\\
+            \nu(q), & \text{falls }q\in V\setminus\{p\}.
+        \end{cases}
+    \]
+    Für \(W\subseteq V\) bezeichnet \(\nu|_W\) die Einschränkung von
+    \(\nu\) auf \(W\).
+
+    Für eine aussagenlogische Formel \(\varphi\) mit
+    \(\operatorname{Var}(\varphi)\subseteq V\) ist die
+    \emph{Erfüllungsrelation} \(\models\) durch die folgenden Bedingungen
+    definiert:
+    \begin{align*}
+        &\nu\models\top,
+        &&\nu\not\models\bot,\\
+        &\nu\models p
+        &&\Longleftrightarrow \nu(p)=1,\\
+        &\nu\models\neg\varphi
+        &&\Longleftrightarrow \nu\not\models\varphi,\\
+        &\nu\models\varphi\land\psi
+        &&\Longleftrightarrow
+          \nu\models\varphi\text{ und }\nu\models\psi,\\
+        &\nu\models\varphi\lor\psi
+        &&\Longleftrightarrow
+          \nu\models\varphi\text{ oder }\nu\models\psi.
+    \end{align*}
+\end{Definition}
+
+\begin{Definition}
+    \label{def:qbf-syntax}
+    Eine \emph{quantifizierte boolesche Formel} (QBF) über
+    \(\mathcal{V}\) wird aus aussagenlogischen Formeln zusätzlich durch die
+    folgende Bildungsregel erzeugt: Ist \(\Phi\) eine QBF und
+    \(p\in\mathcal{V}\), so sind auch \(\forall p\,\Phi\) und
+    \(\exists p\,\Phi\) QBFs. Dabei heißen \(\forall\) und \(\exists\)
+    \emph{Allquantor} beziehungsweise \emph{Existenzquantor}; \(\Phi\)
+    heißt ihr jeweiliger \emph{Geltungsbereich}.
+
+    Ein Vorkommen einer Variablen \(p\) ist \emph{gebunden}, wenn es im
+    Geltungsbereich eines Quantors \(\forall p\) oder \(\exists p\) liegt.
+    Andernfalls ist dieses Vorkommen \emph{frei}. Mit
+    \(\operatorname{FV}(\Phi)\) und \(\operatorname{BV}(\Phi)\) bezeichnen
+    wir die Mengen der in \(\Phi\) frei beziehungsweise gebunden
+    vorkommenden Variablen.
+
+    Eine QBF \(\Phi\) heißt \emph{geschlossen}, wenn
+    \(\operatorname{FV}(\Phi)=\emptyset\) gilt, und andernfalls
+    \emph{offen}. Sie heißt \emph{quantorenfrei}, wenn sie keinen Quantor
+    enthält.
+\end{Definition}
+
+\begin{Definition}
+    \label{def:qbf-semantics}
+    Sei \(\Phi\) eine QBF und sei
+    \(\nu\colon\operatorname{FV}(\Phi)\to\{0,1\}\) eine Belegung ihrer
+    freien Variablen. Die Erfüllungsrelation für QBFs erweitert
+    Definition~\ref{def:boolean-assignment} um
+    \begin{align*}
+        \nu\models\forall p\,\Psi
+        &\quad\Longleftrightarrow\quad
+        \nu[p\mapsto 0]\models\Psi
+        \text{ und }
+        \nu[p\mapsto 1]\models\Psi,\\
+        \nu\models\exists p\,\Psi
+        &\quad\Longleftrightarrow\quad
+        \nu[p\mapsto 0]\models\Psi
+        \text{ oder }
+        \nu[p\mapsto 1]\models\Psi.
+    \end{align*}
+
+    Gilt \(\nu\models\Phi\), so heißt \(\nu\) ein \emph{Modell} von
+    \(\Phi\). Die QBF \(\Phi\) heißt \emph{erfüllbar}, wenn sie mindestens
+    ein Modell besitzt, und \emph{unerfüllbar}, wenn sie kein Modell
+    besitzt. Sie heißt \emph{gültig}, wenn
+    \(\nu\models\Phi\) für jede Belegung ihrer freien Variablen gilt. Zwei
+    QBFs \(\Phi\) und \(\Psi\) heißen \emph{logisch äquivalent}, wenn
+    für jede Belegung
+    \(\nu\colon\operatorname{FV}(\Phi)\cup
+    \operatorname{FV}(\Psi)\to\{0,1\}\) gilt:
+    \[
+        \nu|_{\operatorname{FV}(\Phi)}\models\Phi
+        \quad\Longleftrightarrow\quad
+        \nu|_{\operatorname{FV}(\Psi)}\models\Psi.
+    \]
+
+    Eine geschlossene QBF \(\Phi\) heißt \emph{wahr}, wenn
+    \(\emptyset\models\Phi\) gilt, und andernfalls \emph{falsch}. Somit ist
+    eine geschlossene QBF genau dann erfüllbar und gültig, wenn sie wahr ist.
+\end{Definition}
+
+\begin{Definition}
+    \label{def:set-quantification}
+    Sei \(\Phi\) eine QBF, sei
+    \(X=\{x_1,\dots,x_n\}\subseteq\operatorname{FV}(\Phi)\) endlich und
+    sei \(Q\in\{\forall,\exists\}\).
+    Die \emph{Quantifizierung über die Variablenmenge \(X\)} ist die
+    Kurzschreibweise
+    \[
+        QX\,\Phi := Qx_1\cdots Qx_n\,\Phi.
+    \]
+    Für \(X=\emptyset\) gilt \(QX\,\Phi:=\Phi\). Da Quantoren desselben Typs
+    miteinander vertauschbar sind, ist die gewählte Reihenfolge der Variablen
+    aus \(X\) für den Wahrheitswert unerheblich.
+
+    Seien \(X_1,\dots,X_m\) endliche, paarweise disjunkte Teilmengen von
+    \(\operatorname{FV}(\Phi)\). Ferner verwenden wir die Kurzschreibweisen
+    \[
+        \forall X_1,\dots,X_m\,\Phi
+        :=\forall X_1\cdots\forall X_m\,\Phi
+    \]
+    und
+    \[
+        \exists X_1,\dots,X_m\,\Phi
+        :=\exists X_1\cdots\exists X_m\,\Phi.
+    \]
+
+    Sei nun \(\nu\) eine Belegung von
+    \(\operatorname{FV}(\Phi)\setminus X\), und sei
+    \(\beta\colon X\to\{0,1\}\) eine Belegung von \(X\). Mit
+    \(\nu\cup\beta\) bezeichnen wir die gemeinsame Belegung auf
+    \(\operatorname{FV}(\Phi)\). Dann gilt
+    \begin{align*}
+        \nu\models\forall X\,\Phi
+        &\quad\Longleftrightarrow\quad
+        \forall\beta\colon X\to\{0,1\}\colon
+        \nu\cup\beta\models\Phi,\\
+        \nu\models\exists X\,\Phi
+        &\quad\Longleftrightarrow\quad
+        \exists\beta\colon X\to\{0,1\}\colon
+        \nu\cup\beta\models\Phi.
+    \end{align*}
+\end{Definition}
+
+Die Formel \(\forall X\,\exists Y\,\varphi\) verlangt somit, dass zu jeder
+Belegung von \(X\) mindestens eine Belegung von \(Y\) existiert, unter der
+\(\varphi\) wahr ist. Die Belegung von \(Y\) darf dabei von der zuvor
+gewählten Belegung von \(X\) abhängen. Daher ist die Reihenfolge
+unterschiedlicher Quantoren im Allgemeinen wesentlich.
+
+\begin{Definition}
+    \label{def:qbf-prenex-form}
+    Eine QBF befindet sich in \emph{Pränexnormalform} (PNF), wenn sie die
+    Gestalt
+    \[
+        Q_1X_1\,Q_2X_2\cdots Q_mX_m\,\varphi
+    \]
+    besitzt, wobei \(m\geq 1\), die Mengen
+    \(X_1,\dots,X_m\) nichtleer und paarweise disjunkt sind,
+    \(Q_i\in\{\forall,\exists\}\), \(Q_i\neq Q_{i+1}\) für
+    \(1\leq i<m\) gilt und \(\varphi\) quantorenfrei ist. Der Ausdruck
+    \(Q_1X_1\cdots Q_mX_m\) heißt \emph{Quantorenpräfix}, und
+    \(\varphi\) heißt \emph{Matrix}. Jeder Ausdruck \(Q_iX_i\) heißt
+    \emph{Quantorenblock}. Der Wechsel von \(Q_i\) zu \(Q_{i+1}\) heißt
+    \emph{Quantorenalternation}; eine solche QBF besitzt folglich
+    \(m-1\) Quantorenalternationen.
+
+    Liegt die Matrix \(\varphi\) zusätzlich in konjunktiver Normalform vor,
+    so befindet sich die QBF in \emph{pränexer konjunktiver Normalform}
+    (PCNF).
+\end{Definition}
+
+\begin{Definition}
+    \label{def:bounded-qbf-problems}
+    Sei \(k\geq 1\). Mit \(\mathrm{QBF}^{\forall}_k\) bezeichnen wir das
+    \emph{Wahrheitsproblem} für geschlossene QBFs in Pränexnormalform mit
+    genau \(k\) alternierenden Quantorenblöcken, deren erster Block
+    universell quantifiziert ist. Analog bezeichnet
+    \(\mathrm{QBF}^{\exists}_k\) das Wahrheitsproblem für solche QBFs,
+    deren erster Block existenziell quantifiziert ist. Gefragt ist jeweils,
+    ob die gegebene QBF wahr ist.
+\end{Definition}
+
+\section{Komplexitätstheoretische Grundlagen}
+\label{sec:complexity}
+
+Die folgenden Grundlagen orientieren sich an
+\textcite[Abschnitt~2.2]{dvorak:2012:computational-aspects}. Die Darstellung
+beschr\"ankt sich auf die im weiteren Verlauf ben\"otigten Begriffe.
+
+\begin{Definition}
+    \label{def:problem-and-decision-problem}
+    Ein \emph{Problem} \(\mathcal{P}\) wird durch eine Menge
+    \(\mathcal{I}_{\mathcal{P}}\) von \emph{Instanzen} und eine f\"ur jede
+    Instanz festgelegte Fragestellung beziehungsweise geforderte Ausgabe
+    beschrieben. Besitzt die Fragestellung ausschlie\ss lich die m\"oglichen
+    Antworten \emph{ja} und \emph{nein}, so hei\ss t \(\mathcal{P}\) ein
+    \emph{Entscheidungsproblem}.
+
+    Mit \(\{0,1\}^*\) bezeichnen wir die Menge aller endlichen W\"orter
+    \"uber dem bin\"aren Alphabet \(\{0,1\}\). Eine
+    \emph{bin\"are Kodierung} der Instanzen ist eine injektive Abbildung
+    \[
+        \operatorname{enc}_{\mathcal{P}}\colon
+        \mathcal{I}_{\mathcal{P}}\to\{0,1\}^*.
+    \]
+    Sei \(\mathcal{Y}_{\mathcal{P}}\subseteq
+    \mathcal{I}_{\mathcal{P}}\) die Menge der Instanzen, f\"ur welche die
+    Antwort \emph{ja} lautet. Das zugeh\"orige
+    \emph{Entscheidungsproblem als Sprache} ist
+    \[
+        L_{\mathcal{P}}
+        =\{\operatorname{enc}_{\mathcal{P}}(x)
+          \mid x\in\mathcal{Y}_{\mathcal{P}}\}
+        \subseteq\{0,1\}^*.
+    \]
+    Im Folgenden werden ein Entscheidungsproblem und die es repr\"asentierende
+    Sprache miteinander identifiziert. F\"ur eine kodierte Instanz
+    \(x\in\{0,1\}^*\) hei\ss t \(x\in L_{\mathcal{P}}\) eine
+    \emph{Ja-Instanz} und \(x\notin L_{\mathcal{P}}\) eine
+    \emph{Nein-Instanz}. Die \emph{Eingabegr\"o\ss e} ist die Wortl\"ange
+    \(|x|\). Das \emph{Komplementproblem} \(\overline{\mathcal{P}}\) wird
+    durch die Sprache
+    \[
+        \overline{L_{\mathcal{P}}}
+        =\{0,1\}^*\setminus L_{\mathcal{P}}
+    \]
+    repr\"asentiert.
+\end{Definition}
+
+\begin{Definition}
+    \label{def:turing-machine}
+    Sei \(k\geq 1\). Eine \emph{deterministische
+    \(k\)-Band-Turingmaschine} ist ein Tupel
+    \[
+        M=(Q,\Gamma,\delta,q_0,q_{\mathsf{acc}},q_{\mathsf{rej}}),
+    \]
+    wobei
+    \begin{itemize}
+        \item \(Q\) eine endliche Menge von Zust\"anden ist,
+        \item \(\Gamma\) ein endliches \emph{Bandalphabet} mit
+        \(\{0,1,\square\}\subseteq\Gamma\) und dem
+        \emph{Blanksymbol} \(\square\) ist,
+        \item \(q_0\in Q\) der \emph{Startzustand} ist,
+        \item \(q_{\mathsf{acc}},q_{\mathsf{rej}}\in Q\) verschiedene
+        \emph{Haltezust\"ande} sind und
+        \item
+        \[
+            \delta\colon
+            \bigl(Q\setminus
+            \{q_{\mathsf{acc}},q_{\mathsf{rej}}\}\bigr)\times\Gamma^k
+            \to
+            Q\times\Gamma^k\times
+            \{\mathsf{L},\mathsf{R},\mathsf{N}\}^k
+        \]
+        die \emph{\"Ubergangsfunktion} ist. Dabei stehen
+        \(\mathsf{L}\), \(\mathsf{R}\) und \(\mathsf{N}\) f\"ur eine
+        Bewegung des jeweiligen Schreib-Lese-Kopfes nach links, nach rechts
+        beziehungsweise f\"ur keine Bewegung.
+    \end{itemize}
+
+    Eine \emph{Konfiguration} von \(M\) besteht aus dem aktuellen Zustand,
+    den Inhalten der \(k\) B\"ander und den Positionen ihrer
+    Schreib-Lese-K\"opfe. Bei Eingabe \(x\in\{0,1\}^*\) enth\"alt das erste
+    Band anfangs \(x\), alle \"ubrigen Bandzellen enthalten \(\square\), und
+    die Maschine befindet sich in \(q_0\). Eine \emph{Berechnung} ist die
+    durch wiederholte Anwendung von \(\delta\) erzeugte Folge von
+    Konfigurationen. Sie ist \emph{akzeptierend} beziehungsweise
+    \emph{verwerfend}, wenn sie in \(q_{\mathsf{acc}}\) beziehungsweise
+    \(q_{\mathsf{rej}}\) endet.
+
+    Die Maschine \(M\) \emph{entscheidet} ein Entscheidungsproblem
+    \(\mathcal{P}\), wenn sie auf jeder Eingabe h\"alt und eine Eingabe
+    \(x\) genau dann akzeptiert, wenn \(x\in L_{\mathcal{P}}\) gilt.
+
+    Eine \emph{nichtdeterministische \(k\)-Band-Turingmaschine} entsteht,
+    indem die \"Ubergangsfunktion durch eine \emph{\"Ubergangsrelation}
+    \[
+        \Delta\subseteq
+        \left(
+            \bigl(Q\setminus
+            \{q_{\mathsf{acc}},q_{\mathsf{rej}}\}\bigr)\times\Gamma^k
+        \right)
+        \times
+        \left(
+            Q\times\Gamma^k\times
+            \{\mathsf{L},\mathsf{R},\mathsf{N}\}^k
+        \right)
+    \]
+    ersetzt wird. Ein \emph{Rechenzweig} ist eine durch jeweils eine der
+    m\"oglichen Transitionen bestimmte Berechnung. Die Maschine akzeptiert
+    eine Eingabe, wenn mindestens ein Rechenzweig akzeptierend ist, und sie
+    verwirft die Eingabe, wenn alle Rechenzweige verwerfend sind. Sie
+    entscheidet \(\mathcal{P}\), wenn alle Rechenzweige halten und sie eine
+    Eingabe \(x\) genau dann akzeptiert, wenn
+    \(x\in L_{\mathcal{P}}\) gilt.
+\end{Definition}
+
+\begin{Definition}
+    \label{def:polynomial-running-time}
+    Die \emph{Laufzeit} \(t_M(x)\) einer haltenden Turingmaschine \(M\) auf
+    einer Eingabe \(x\) ist im deterministischen Fall die Anzahl ihrer
+    Berechnungsschritte und im nichtdeterministischen Fall die maximale
+    Anzahl von Schritten eines Rechenzweiges. Die Maschine arbeitet in
+    \emph{Polynomialzeit}, wenn ein Polynom \(p\) existiert, sodass
+    \[
+        t_M(x)\leq p(|x|)
+    \]
+    f\"ur jede Eingabe \(x\in\{0,1\}^*\) gilt.
+\end{Definition}
+
+\begin{Definition}
+    \label{def:oracle-machine}
+    Sei \(O\subseteq\{0,1\}^*\) eine Sprache. Eine
+    \emph{Turingmaschine mit Orakel \(O\)} beziehungsweise
+    \emph{\(O\)-Orakelmaschine} ist eine deterministische oder
+    nichtdeterministische Turingmaschine mit einem ausgezeichneten
+    \emph{Anfrageband} und drei ausgezeichneten Zust\"anden
+    \(q_{?}\), \(q_{\mathsf{yes}}\) und \(q_{\mathsf{no}}\). Befindet sich
+    die Maschine in \(q_{?}\), so wird das auf dem Anfrageband stehende Wort
+    \(y\) in einem Schritt durch das \emph{Orakel} gepr\"uft. Der n\"achste
+    Zustand ist \(q_{\mathsf{yes}}\), falls \(y\in O\) gilt, und andernfalls
+    \(q_{\mathsf{no}}\). Eine solche Anfrage hei\ss t
+    \emph{Orakelaufruf} und wird unabh\"angig von der Komplexit\"at von
+    \(O\) als ein Berechnungsschritt gez\"ahlt.
+\end{Definition}
+
+\begin{Definition}
+    \label{def:p-np-conp}
+    Eine \emph{Komplexit\"ats\-klasse} ist eine Menge von
+    Entscheidungs\-problemen. Die folgenden Klassen sind durch
+    Polynomialzeit beschr\"ankt:
+    \begin{itemize}
+        \item \(\mathrm{P}\) ist die Klasse aller Entscheidungsprobleme,
+        die von einer deterministischen Turingmaschine in Polynomialzeit
+        entschieden werden.
+
+        \item \(\mathrm{NP}\) ist die Klasse aller Entscheidungsprobleme,
+        die von einer nichtdeterministischen Turingmaschine in
+        Polynomialzeit entschieden werden.
+    \end{itemize}
+
+    F\"ur eine Komplexit\"atsklasse \(\mathcal{C}\) ist ihre
+    \emph{Komplementklasse}
+    \[
+        \operatorname{co}\mathcal{C}
+        =\{\overline{\mathcal{P}}\mid \mathcal{P}\in\mathcal{C}\}.
+    \]
+    Insbesondere ist
+    \[
+        \mathrm{coNP}:=\operatorname{co}(\mathrm{NP}).
+    \]
+    Ein Entscheidungsproblem geh\"ort somit genau dann zu
+    \(\mathrm{coNP}\), wenn sein Komplement zu \(\mathrm{NP}\) geh\"ort.
+\end{Definition}
+
+\begin{Definition}
+    \label{def:polynomial-hierarchy}
+    Sei \(O\subseteq\{0,1\}^*\) eine Sprache. Mit \(\mathrm{P}^O\)
+    beziehungsweise \(\mathrm{NP}^O\) bezeichnen wir die Klassen der von
+    einer deterministischen beziehungsweise nichtdeterministischen
+    \(O\)-Orakelmaschine in Polynomialzeit entscheidbaren Probleme. F\"ur
+    eine Komplexit\"atsklasse \(\mathcal{C}\) setzen wir
+    \[
+        \mathrm{P}^{\mathcal{C}}
+        =\bigcup_{O\in\mathcal{C}}\mathrm{P}^O,
+        \qquad
+        \mathrm{NP}^{\mathcal{C}}
+        =\bigcup_{O\in\mathcal{C}}\mathrm{NP}^O,
+    \]
+    und
+    \[
+        \mathrm{coNP}^{\mathcal{C}}
+        :=\operatorname{co}\!\left(\mathrm{NP}^{\mathcal{C}}\right).
+    \]
+
+    Die Klassen der \emph{polynomiellen Hierarchie} werden f\"ur
+    \(i\geq 0\) rekursiv durch
+    \[
+        \Sigma^{\mathrm{P}}_0
+        =\Pi^{\mathrm{P}}_0
+        =\mathrm{P},
+        \qquad
+        \Sigma^{\mathrm{P}}_{i+1}
+        =\mathrm{NP}^{\Sigma^{\mathrm{P}}_i},
+        \qquad
+        \Pi^{\mathrm{P}}_{i+1}
+        =\operatorname{co}\!\left(\Sigma^{\mathrm{P}}_{i+1}\right)
+        =\mathrm{coNP}^{\Sigma^{\mathrm{P}}_i}
+    \]
+    definiert. Ihre Gesamtheit ist die Klasse
+    \[
+        \mathrm{PH}
+        :=\bigcup_{i\geq 0}\Sigma^{\mathrm{P}}_i.
+    \]
+    F\"ur die ersten drei Ebenen gelten insbesondere
+    \[
+        \Sigma^{\mathrm{P}}_1=\mathrm{NP},
+        \qquad
+        \Pi^{\mathrm{P}}_1=\mathrm{coNP},
+    \]
+    \[
+        \Sigma^{\mathrm{P}}_2
+        =\mathrm{NP}^{\mathrm{NP}}
+        =\operatorname{co}\!\left(\Pi^{\mathrm{P}}_2\right),
+        \qquad
+        \Pi^{\mathrm{P}}_2
+        =\mathrm{coNP}^{\mathrm{NP}},
+    \]
+    sowie
+    \[
+        \Sigma^{\mathrm{P}}_3
+        =\mathrm{NP}^{\Sigma^{\mathrm{P}}_2},
+        \qquad
+        \Pi^{\mathrm{P}}_3
+        =\mathrm{coNP}^{\Sigma^{\mathrm{P}}_2}.
+    \]
+    Die Schreibweise
+    \(\operatorname{co}\!\left(\Pi^{\mathrm{P}}_2\right)\) bezeichnet
+    folglich dieselbe Klasse wie \(\Sigma^{\mathrm{P}}_2\) und keine
+    zus\"atzliche Ebene der Hierarchie.
+\end{Definition}
+
+\begin{Definition}
+    \label{def:polynomial-many-one-reduction}
+    Seien \(\mathcal{A}\) und \(\mathcal{B}\) Entscheidungsprobleme. Eine
+    \emph{polynomielle Many-one-Reduktion} beziehungsweise
+    \emph{P-Reduktion} von \(\mathcal{A}\) auf \(\mathcal{B}\) ist eine
+    totale Funktion
+    \[
+        f\colon\{0,1\}^*\to\{0,1\}^*,
+    \]
+    die von einer deterministischen Turingmaschine in Polynomialzeit
+    berechnet wird und f\"ur jede Eingabe \(x\in\{0,1\}^*\) die Bedingung
+    \[
+        x\in L_{\mathcal{A}}
+        \quad\Longleftrightarrow\quad
+        f(x)\in L_{\mathcal{B}}
+    \]
+    erf\"ullt. In diesem Fall schreiben wir
+    \(\mathcal{A}\leq^{\mathrm{P}}_{\mathrm{m}}\mathcal{B}\).
+    Sofern nichts anderes angegeben ist, bezeichnet der Begriff
+    \emph{Reduktion} im Folgenden stets eine polynomielle
+    Many-one-Reduktion.
+\end{Definition}
+
+Eine solche Reduktion transformiert Ja-Instanzen in Ja-Instanzen und
+Nein-Instanzen in Nein-Instanzen. Ein Verfahren f\"ur \(\mathcal{B}\) kann
+daher nach der Transformation auch zur Entscheidung von \(\mathcal{A}\)
+verwendet werden. Polynomielle Many-one-Reduktionen sind transitiv.
+
+\begin{Definition}
+    \label{def:hardness-and-completeness}
+    Sei \(\mathcal{C}\) eine Komplexit\"ats\-klasse und sei
+    \(\mathcal{B}\) ein Entscheidungs\-problem. Das Problem
+    \(\mathcal{B}\) hei\ss t \emph{\(\mathcal{C}\)-hart}, wenn f\"ur jedes
+    Problem \(\mathcal{A}\in\mathcal{C}\) eine Reduktion
+    \[
+        \mathcal{A}\leq^{\mathrm{P}}_{\mathrm{m}}\mathcal{B}
+    \]
+    existiert. Gilt zus\"atzlich \(\mathcal{B}\in\mathcal{C}\), so hei\ss t
+    \(\mathcal{B}\) \emph{\(\mathcal{C}\)-vollst\"andig}. Der Nachweis
+    \(\mathcal{B}\in\mathcal{C}\) hei\ss t
+    \emph{Zugeh\"origkeitsnachweis}; der Nachweis der
+    \(\mathcal{C}\)-H\"arte hei\ss t \emph{H\"artenachweis}.
+\end{Definition}
+
+Aufgrund der Transitivit\"at der Reduktion gen\"ugt es f\"ur einen
+H\"artenachweis, ein bereits als \(\mathcal{C}\)-hart bekanntes Problem auf
+das betrachtete Problem zu reduzieren.
+
+\begin{Definition}
+    \label{def:qbf-hardness-problems}
+    Aufbauend auf Definition~\ref{def:bounded-qbf-problems} werden die
+    folgenden einge\-schr\"ankten QBF-Entscheidungs\-probleme verwendet:
+    \begin{description}
+        \item[\(\mathrm{QBF}^{\forall}_{2,\mathrm{KNF}}\).]
+        Eine Instanz ist eine geschlossene QBF
+        \[
+            \Phi=\forall X\,\exists Y\,\varphi
+        \]
+        in Pr\"anexnormalform, wobei \(X\) und \(Y\) disjunkte, nichtleere
+        Variablenmengen sind und die Matrix \(\varphi\) eine Formel in
+        konjunktiver Normalform \"uber \(X\cup Y\) ist. Gefragt ist, ob
+        \(\Phi\) wahr ist.
+
+        \item[\(\overline{\mathrm{QBF}^{\exists}_{3,\mathrm{KNF}}}\).]
+        Eine Instanz ist eine geschlossene QBF
+        \[
+            \Psi=\exists X\,\forall Y\,\exists Z\,\varphi
+        \]
+        in Pr\"anexnormalform, wobei \(X\), \(Y\) und \(Z\) paarweise
+        disjunkte, nichtleere Variablenmengen sind und die Matrix
+        \(\varphi\) eine Formel in konjunktiver Normalform \"uber
+        \(X\cup Y\cup Z\) ist. Gefragt ist, ob \(\Psi\) falsch ist. Der
+        Querstrich bezeichnet somit das Komplement des entsprechenden
+        QBF-Wahrheitsproblems.
+    \end{description}
+\end{Definition}
+
+\begin{Theorem}[
+    Meyer und Stockmeyer~\cite{meyer:stockmeyer:1972:equivalence-regex};
+    Stockmeyer und Meyer~{\cite[Theorem~4.2]
+    {stockmeyer:meyer:1973:word-problems}}
+]
+\label{thm:qbf-ph-completeness}
+Für jedes \(k \geq 1\) ist \(\mathrm{QBF}^{\exists}_k\)
+\(\Sigma^{\mathrm{P}}_k\)-vollständig und
+\(\mathrm{QBF}^{\forall}_k\)
+\(\Pi^{\mathrm{P}}_k\)-vollständig.
+Die Vollständigkeit gilt bezüglich polynomialer
+Many-one-Reduktionen. Insbesondere sind:
+\begin{enumerate}
+    \item \(\mathrm{QBF}^{\forall}_{2,\mathrm{KNF}}\)
+    \(\Pi^{\mathrm{P}}_2\)-vollständig und
+
+    \item \(\overline{\mathrm{QBF}^{\exists}_{3,\mathrm{KNF}}}\)
+    \(\Pi^{\mathrm{P}}_3\)-vollständig.
+\end{enumerate}
+\end{Theorem}
+
+Der erste H\"artenachweis f\"ur die alternations\-beschr\"ankten
+QBF-Wahrheits\-probleme geht auf \textcite{meyer:stockmeyer:1972:equivalence-regex}
+zur\"uck. Folglich kann \(\Pi^{\mathrm{P}}_2\)-H\"arte durch eine Reduktion
+von \(\mathrm{QBF}^{\forall}_{2,\mathrm{KNF}}\) gezeigt werden. F\"ur
+\(\Pi^{\mathrm{P}}_3\)-H\"arte kann entsprechend
+\(\overline{\mathrm{QBF}^{\exists}_{3,\mathrm{KNF}}}\) verwendet werden;
+bei dessen Ja-Instanzen ist die eingegebene QBF falsch.

@@ -1,0 +1,632 @@
+\chapter{Unabhängigkeit unter verschiedenen Semantiken}
+\label{ch:semantic-independence}
+
+Dieses Kapitel untersucht bedingte Unabhängigkeit unter der Complete-,
+Stable- und Preferred-Semantik in einer gemeinsamen Darstellung. Zunächst
+wird der abstrakte Unabhängigkeitsbegriff auf die Labellings eines
+Argumentationssystems übertragen. Anschließend werden einheitliche
+aussagenlogische Bausteine entwickelt, aus denen sich die drei
+Semantikkodierungen und eine gemeinsame QBF-Kodierung der Unabhängigkeit
+zusammensetzen. Die Quantorenstruktur dieser Formeln erklärt zugleich die
+unterschiedliche Komplexität der drei Entscheidungsprobleme. Abschließend
+wird das Vorkommen von Unabhängigkeit in einer Auswahl von AFs empirisch untersucht.
+
+Die semantische Definition geht auf
+\textcite{rienstra:2020:independence-af} zurück. Notation und
+Komplexitätsergebnisse orientieren sich an
+\textcite{bluemel:2025:independence-aba}; QBFs als Zielformalismus für
+Argumentationsprobleme wurden insbesondere von
+\textcite{egly:woltran:2006:reasoning-qbf} untersucht.
+
+\section{Semantikspezifische Unabhängigkeit}
+\label{sec:sigma-independence-af}
+
+Die abstrakte Unabhängigkeitsrelation wird im Folgenden durch die unter einer
+Semantik zulässigen Labellings bestimmt.
+
+\begin{Definition}
+    \label{def:sigma-independence-af}
+    Sei \(F=(A,R)\) ein Argumentationssystem, sei \(\sigma\) eine Semantik
+    und seien \(X,Y,Z\subseteq A\) paarweise disjunkt. Die Menge \(X\) ist
+    \emph{\(\sigma\)-unabhängig von \(Y\) gegeben \(Z\) in \(F\)},
+    geschrieben
+    \[
+        X\perp_\sigma Y\mid Z,
+    \]
+    genau dann, wenn für alle
+    \(\lambda_1,\lambda_2\in\Lambda_\sigma(F)\) aus
+    \(\lambda_1|_Z=\lambda_2|_Z\) die Existenz eines
+    \(\lambda_3\in\Lambda_\sigma(F)\) folgt, für das
+    \[
+        \lambda_3|_X=\lambda_1|_X,
+        \qquad
+        \lambda_3|_Y=\lambda_2|_Y,
+        \qquad
+        \lambda_3|_Z=\lambda_1|_Z=\lambda_2|_Z
+    \]
+    gilt. Andernfalls sind \(X\) und \(Y\) \emph{\(\sigma\)-abhängig
+    gegeben \(Z\) in \(F\)}; hierfür schreiben wir
+    \(X\not\perp_\sigma Y\mid Z\).
+
+    Für \(\sigma\in\{\mathsf{co},\mathsf{st},\mathsf{pr}\}\) bezeichnet
+    \(\mathrm{IND}_\sigma\) das folgende \emph{Entscheidungsproblem}:
+    \[
+        \begin{array}{ll}
+        \text{Eingabe:}
+            &F=(A,R)\text{ sowie paarweise disjunkte Mengen }
+             X,Y,Z\subseteq A,\\
+        \text{Frage:}
+            &\text{Gilt }X\perp_\sigma Y\mid Z\text{ in }F\,?
+        \end{array}
+    \]
+    Für \(x,y\in A\) stehen
+    \(x\perp_\sigma y\mid Z\) und
+    \(x\not\perp_\sigma y\mid Z\) kurz für die entsprechenden Aussagen
+    über die Singletonmengen \(\{x\}\) und \(\{y\}\).
+\end{Definition}
+
+Die Definition verlangt nicht nur, dass die gewählten Bewertungen von \(X\)
+und \(Y\) jeweils vorkommen. Sie verlangt ihre gemeinsame Realisierbarkeit
+unter derselben Bewertung der Bedingungsmenge \(Z\).
+
+\begin{Lemma}
+    \label{lem:independence-trivial-labelling-set}
+    Gilt \(|\Lambda_\sigma(F)|\leq 1\), so gilt
+    \(X\perp_\sigma Y\mid Z\) für alle paarweise disjunkten Mengen
+    \(X,Y,Z\subseteq A\).
+\end{Lemma}
+
+\begin{proof}
+    Für \(\Lambda_\sigma(F)=\emptyset\) ist die Allquantifizierung über
+    \(\lambda_1\) und \(\lambda_2\) leer. Besteht
+    \(\Lambda_\sigma(F)\) aus genau einem Labelling \(\lambda\), so kann
+    für das einzige Paar \((\lambda,\lambda)\) dieses Labelling selbst als
+    \(\lambda_3\) gewählt werden.
+\end{proof}
+
+Das Lemma ist für die spätere empirische Auswertung wesentlich: Eine hohe
+Unabhängigkeitsrate kann sowohl durch echte Kombinierbarkeit als auch durch
+das Fehlen mehrerer vergleichbarer Labellings entstehen.
+
+\section{Einheitliche Kodierung der Semantiken}
+\label{sec:uniform-semantics-encoding}
+
+Für alle drei Semantiken wird dieselbe dreiwertige Darstellung verwendet.
+Dies vermeidet semantikspezifische Gleichheitsformeln und erlaubt eine
+gemeinsame Unabhängigkeitskodierung.
+
+\subsection{Labellingvariablen und Wohlgeformtheit}
+
+\begin{Definition}
+    \label{def:labelling-variable-block}
+    Sei \(F=(A,R)\) ein Argumentationssystem. Ein
+    \emph{Labellingvariablenblock} für \(F\) ist ein Tripel
+    \(\mathbf V=(I,O,U)\) paarweise disjunkter Variablenmengen
+    \[
+        I=\{i_a\mid a\in A\},
+        \qquad
+        O=\{o_a\mid a\in A\},
+        \qquad
+        U=\{u_a\mid a\in A\}.
+    \]
+    Die Variablen \(i_a\), \(o_a\) und \(u_a\) kodieren die Labels
+    \(\mathsf{in}\), \(\mathsf{out}\) beziehungsweise \(\mathsf{und}\)
+    von \(a\). Die Formel
+    \[
+        \operatorname{One}_F(\mathbf V)
+        :=
+        \bigwedge_{a\in A}
+        \Bigl(
+            (i_a\lor o_a\lor u_a)
+            \land\neg(i_a\land o_a)
+            \land\neg(i_a\land u_a)
+            \land\neg(o_a\land u_a)
+        \Bigr)
+    \]
+    heißt \emph{Wohlgeformtheitsformel} des Blocks.
+
+    Jede Belegung \(\nu\models\operatorname{One}_F(\mathbf V)\)
+    induziert das \emph{kodierte Labelling} \(\lambda_\nu\) durch
+    \[
+        \lambda_\nu(a)=
+        \begin{cases}
+            \mathsf{in},  &\text{falls }\nu(i_a)=1,\\
+            \mathsf{out}, &\text{falls }\nu(o_a)=1,\\
+            \mathsf{und}, &\text{falls }\nu(u_a)=1.
+        \end{cases}
+    \]
+    Mit \(\mathbf V^k=(I^k,O^k,U^k)\) bezeichnen wir eine frische
+    \emph{\(k\)-te Kopie} dieses Blocks, deren Variablen mit dem
+    Superskript \(k\) versehen werden. Ein Quantor über einem Block ist
+    die Abkürzung für die Folge gleichartiger Quantoren über allen
+    Variablen \(i_a,o_a,u_a\) mit \(a\in A\); insbesondere bindet
+    \(\forall\mathbf V\) sämtliche Variablen des Blocks universell.
+\end{Definition}
+
+\subsection{Complete- und Stable-Semantik}
+
+\begin{Definition}
+    \label{def:co-st-encodings}
+    Sei \(F=(A,R)\) ein Argumentationssystem und
+    \(\mathbf V=(I,O,U)\) ein Labellingvariablenblock. Die
+    \emph{Complete-Kodierung} und die \emph{Stable-Kodierung} sind
+    \[
+        \operatorname{Co}_F(\mathbf V)
+        :=
+        \operatorname{One}_F(\mathbf V)
+        \land
+        \bigwedge_{a\in A}
+        \left(
+            i_a\leftrightarrow
+            \bigwedge_{b\in a^-}o_b
+        \right)
+        \land
+        \bigwedge_{a\in A}
+        \left(
+            o_a\leftrightarrow
+            \bigvee_{b\in a^-}i_b
+        \right)
+    \]
+    beziehungsweise
+    \[
+        \operatorname{St}_F(\mathbf V)
+        :=
+        \operatorname{Co}_F(\mathbf V)
+        \land
+        \bigwedge_{a\in A}\neg u_a.
+    \]
+\end{Definition}
+
+Die beiden Äquivalenzen der Complete-Kodierung entsprechen unmittelbar den
+beiden Bedingungen eines vollständigen Labellings. Die Stable-Kodierung
+schließt zusätzlich das Label \(\mathsf{und}\) aus.
+
+\subsection{Preferred-Semantik}
+
+Die Preferred-Semantik ergänzt die Complete-Semantik um eine
+Maximalitätsbedingung. Hierfür wird eine zweite Kopie des Variablenblocks
+benötigt.
+
+\begin{Definition}
+    \label{def:strict-inclusion-and-dominator}
+    Seien \(\mathbf V=(I,O,U)\) und
+    \(\mathbf V'=(I',O',U')\) zwei Labellingvariablenblöcke für
+    \(F=(A,R)\). Die Formel
+    \[
+        I\prec I'
+        :=
+        \left(
+            \bigwedge_{a\in A}(i_a\rightarrow i'_a)
+        \right)
+        \land
+        \left(
+            \bigvee_{a\in A}(\neg i_a\land i'_a)
+        \right)
+    \]
+    heißt \emph{strikte Inklusionsformel}. Sie ist genau dann wahr, wenn
+    die durch \(I\) kodierte Argumentmenge eine echte Teilmenge der durch
+    \(I'\) kodierten Argumentmenge ist.
+
+    Die Formel
+    \[
+        \operatorname{Dom}_F(\mathbf V,\mathbf V')
+        :=
+        \operatorname{Co}_F(\mathbf V')\land(I\prec I')
+    \]
+    heißt \emph{Dominanzformel}. Eine sie erfüllende Belegung von
+    \(\mathbf V'\) heißt \emph{Dominanzzeuge} für \(\mathbf V\).
+\end{Definition}
+
+\begin{Definition}
+    \label{def:preferred-encoding}
+    Sei \(\mathbf V\) ein Labellingvariablenblock und sei
+    \(\widehat{\mathbf V}\) ein frischer Block. Die offene QBF
+    \[
+        \operatorname{Pr}_F(\mathbf V)
+        :=
+        \operatorname{Co}_F(\mathbf V)
+        \land
+        \forall\widehat{\mathbf V}\,
+        \neg\operatorname{Dom}_F
+        (\mathbf V,\widehat{\mathbf V})
+    \]
+    heißt \emph{Preferred-Kodierung}. Ihre freien Variablen sind die
+    Variablen aus \(\mathbf V\).
+\end{Definition}
+
+\begin{Definition}
+    \label{def:uniform-semantics-predicate}
+    Für
+    \(\sigma\in\{\mathsf{co},\mathsf{st},\mathsf{pr}\}\) bezeichnet
+    die \emph{Semantikkodierung}
+    \[
+        \operatorname{Sem}^{\sigma}_F(\mathbf V)
+        :=
+        \begin{cases}
+            \operatorname{Co}_F(\mathbf V),
+                &\text{falls }\sigma=\mathsf{co},\\
+            \operatorname{St}_F(\mathbf V),
+                &\text{falls }\sigma=\mathsf{st},\\
+            \operatorname{Pr}_F(\mathbf V),
+                &\text{falls }\sigma=\mathsf{pr}.
+        \end{cases}
+    \]
+\end{Definition}
+
+\begin{Lemma}
+    \label{lem:semantics-encoding-correct}
+    Sei \(\nu\models\operatorname{One}_F(\mathbf V)\), und sei
+    \(\lambda_\nu\) das durch \(\nu\) kodierte Labelling. Für jedes
+    \(\sigma\in\{\mathsf{co},\mathsf{st},\mathsf{pr}\}\) gilt
+    \[
+        \nu\models\operatorname{Sem}^{\sigma}_F(\mathbf V)
+        \quad\Longleftrightarrow\quad
+        \lambda_\nu\in\Lambda_\sigma(F).
+    \]
+\end{Lemma}
+
+\begin{proof}
+    Für \(\sigma=\mathsf{co}\) geben die beiden Äquivalenzen in
+    \(\operatorname{Co}_F\) genau die Definition eines vollständigen
+    Labellings wieder. Für \(\sigma=\mathsf{st}\) kommt die Bedingung
+    \(\mathsf{und}(\lambda_\nu)=\emptyset\) hinzu.
+
+    Für \(\sigma=\mathsf{pr}\) ist
+    \(\operatorname{Dom}_F(\mathbf V,\widehat{\mathbf V})\) genau dann
+    wahr, wenn \(\widehat{\mathbf V}\) ein vollständiges Labelling
+    kodiert, dessen In-Menge die In-Menge von \(\lambda_\nu\) echt
+    enthält. Die universelle Negation solcher Dominanzzeugen ist daher
+    äquivalent zur In-Maximalität von \(\lambda_\nu\) unter allen
+    vollständigen Labellings.
+\end{proof}
+
+Alle verwendeten Formeln besitzen eine Größe in
+\(O(|A|+|R|)\). Insbesondere wird jede Angriffsbeziehung nur in der
+Kodierung des jeweils angegriffenen Arguments verwendet.
+
+\section{Einheitliche QBF-Kodierung der Unabhängigkeit}
+\label{sec:uniform-independence-qbf}
+
+Die Definition der Unabhängigkeit benötigt drei Labellings. Ihre
+Übereinstimmung auf ausgewählten Argumentmengen wird unabhängig von der
+Semantik kodiert.
+
+\begin{Definition}
+    \label{def:equality-and-mix-formulas}
+    Seien \(\mathbf V^j\) und \(\mathbf V^k\) zwei Kopien des
+    Labellingvariablenblocks und sei \(S\subseteq A\). Die
+    \emph{Gleichheitsformel auf \(S\)} ist
+    \[
+        \operatorname{Eq}^{j,k}_S
+        :=
+        \bigwedge_{a\in S}
+        \Bigl(
+            (i_a^j\leftrightarrow i_a^k)
+            \land(o_a^j\leftrightarrow o_a^k)
+            \land(u_a^j\leftrightarrow u_a^k)
+        \Bigr).
+    \]
+    Für paarweise disjunkte Mengen \(X,Y,Z\subseteq A\) heißt
+    \[
+        \operatorname{Mix}^{1,2,3}_{X,Y\mid Z}
+        :=
+        \operatorname{Eq}^{1,3}_X
+        \land
+        \operatorname{Eq}^{2,3}_Y
+        \land
+        \operatorname{Eq}^{1,3}_Z
+    \]
+    die \emph{Kombinationsformel} der drei Blöcke.
+\end{Definition}
+
+\begin{Lemma}
+    \label{lem:equality-and-mix-correct}
+    Kodieren die Blöcke \(\mathbf V^1,\mathbf V^2,\mathbf V^3\) die
+    Labellings \(\lambda_1,\lambda_2,\lambda_3\), so gilt
+    \[
+        \operatorname{Eq}^{j,k}_S
+        \quad\Longleftrightarrow\quad
+        \lambda_j|_S=\lambda_k|_S
+    \]
+    und
+    \[
+        \operatorname{Mix}^{1,2,3}_{X,Y\mid Z}
+        \quad\Longleftrightarrow\quad
+        \left(
+        \lambda_3|_X=\lambda_1|_X
+        \land
+        \lambda_3|_Y=\lambda_2|_Y
+        \land
+        \lambda_3|_Z=\lambda_1|_Z
+        \right).
+    \]
+\end{Lemma}
+
+\begin{proof}
+    Aufgrund der Wohlgeformtheit ist für jedes Argument genau eine der drei
+    Labelvariablen wahr. Die drei Äquivalenzen für ein Argument sind daher
+    genau dann erfüllt, wenn beide Blöcke dasselbe Label kodieren. Die zweite
+    Aussage folgt durch Einsetzen der drei Gleichheitsformeln.
+\end{proof}
+
+\begin{Definition}
+    \label{def:generic-independence-qbf}
+    Sei \(F=(A,R)\), seien \(X,Y,Z\subseteq A\) paarweise disjunkt und sei
+    \(\sigma\in\{\mathsf{co},\mathsf{st},\mathsf{pr}\}\). Die
+    \emph{semantikparametrisierte Unabhängigkeits-QBF} ist
+    \[
+    \begin{split}
+        \Phi^\sigma_F(X,Y\mid Z)
+        :=\forall\mathbf V^1\,\forall\mathbf V^2\,
+        \Bigl(&
+            \operatorname{Sem}^{\sigma}_F(\mathbf V^1)
+            \land
+            \operatorname{Sem}^{\sigma}_F(\mathbf V^2)
+            \land
+            \operatorname{Eq}^{1,2}_Z
+        \\
+        &\rightarrow
+        \exists\mathbf V^3\,
+        \bigl(
+            \operatorname{Sem}^{\sigma}_F(\mathbf V^3)
+            \land
+            \operatorname{Mix}^{1,2,3}_{X,Y\mid Z}
+        \bigr)
+        \Bigr).
+    \end{split}
+    \]
+\end{Definition}
+
+\begin{Theorem}
+    \label{thm:generic-independence-qbf-correct}
+    Für jedes \(F=(A,R)\), alle paarweise disjunkten Mengen
+    \(X,Y,Z\subseteq A\) und jedes
+    \(\sigma\in\{\mathsf{co},\mathsf{st},\mathsf{pr}\}\) gilt
+    \[
+        \Phi^\sigma_F(X,Y\mid Z)\text{ ist wahr}
+        \quad\Longleftrightarrow\quad
+        X\perp_\sigma Y\mid Z.
+    \]
+\end{Theorem}
+
+\begin{proof}
+    Sei die QBF wahr, und seien
+    \(\lambda_1,\lambda_2\in\Lambda_\sigma(F)\) mit
+    \(\lambda_1|_Z=\lambda_2|_Z\) gegeben. Ihre kodierenden Belegungen
+    erfüllen nach Lemma~\ref{lem:semantics-encoding-correct} die beiden
+    Semantikkodierungen und nach
+    Lemma~\ref{lem:equality-and-mix-correct} die Formel
+    \(\operatorname{Eq}^{1,2}_Z\). Die QBF liefert daher eine Belegung von
+    \(\mathbf V^3\), die ein \(\sigma\)-Labelling \(\lambda_3\) kodiert
+    und die geforderten Restriktionen erfüllt. Somit gilt
+    \(X\perp_\sigma Y\mid Z\).
+
+    Gelte umgekehrt \(X\perp_\sigma Y\mid Z\), und seien die beiden
+    universellen Blöcke beliebig belegt. Ist das Antezedens falsch, ist die
+    Implikation wahr. Andernfalls kodieren die Blöcke zwei
+    \(\sigma\)-Labellings, die auf \(Z\) übereinstimmen. Nach Definition
+    der Unabhängigkeit existiert ein passendes \(\lambda_3\). Seine
+    kodierende Belegung erfüllt das Konsequens. Dies gilt für jede Belegung
+    der universellen Blöcke, also ist die QBF wahr.
+\end{proof}
+
+\subsection{Quantorenstruktur der Spezialfälle}
+\label{subsec:independence-prenex}
+
+Für Complete und Stable sind die Semantikkodierungen quantorenfrei. Daher
+kann der Existenzquantor für den dritten Block vor die Matrix gezogen
+werden.
+
+\begin{Proposition}
+    \label{prop:co-st-independence-prenex}
+    Für \(\sigma\in\{\mathsf{co},\mathsf{st}\}\) ist
+    \(\Phi^\sigma_F(X,Y\mid Z)\) logisch äquivalent zu
+    \[
+    \begin{split}
+        \forall\mathbf V^1\,\forall\mathbf V^2\,
+        \exists\mathbf V^3\,
+        \Bigl(&
+        \bigl(
+            \operatorname{Sem}^{\sigma}_F(\mathbf V^1)
+            \land
+            \operatorname{Sem}^{\sigma}_F(\mathbf V^2)
+            \land
+            \operatorname{Eq}^{1,2}_Z
+        \bigr)
+        \\
+        &\rightarrow
+        \bigl(
+            \operatorname{Sem}^{\sigma}_F(\mathbf V^3)
+            \land
+            \operatorname{Mix}^{1,2,3}_{X,Y\mid Z}
+        \bigr)
+        \Bigr).
+    \end{split}
+    \]
+    Die Formel besitzt damit zwei alternierende Quantorenblöcke.
+\end{Proposition}
+
+Bei Preferred dürfen die internen Quantoren der drei
+Maximalitätsprüfungen nicht lediglich nebeneinandergestellt werden. Die
+Maximalität der universell gewählten Labellings steht im Antezedens und
+kehrt deshalb beim Übergang in Negationsnormalform ihre Quantorenrichtung
+um. Die folgende Formel macht diese Abhängigkeit explizit.
+
+\begin{Definition}
+    \label{def:preferred-independence-prenex}
+    Für \(k\in\{1,2,3\}\) sei
+    \(\widehat{\mathbf V}^{k}\) ein frischer Labellingvariablenblock. Die
+    \emph{pränexe Preferred-Unabhängigkeitskodierung} ist
+    \[
+    \begin{split}
+        \Phi^{\mathsf{pr},\mathrm{PNF}}_F(X,Y\mid Z)
+        := {}&
+        \forall\mathbf V^1\,\forall\mathbf V^2\,
+        \exists\mathbf V^3\,
+        \exists\widehat{\mathbf V}^{1}\,
+        \exists\widehat{\mathbf V}^{2}\,
+        \forall\widehat{\mathbf V}^{3}
+        \;\Bigl[
+        \\
+        &\neg\operatorname{Co}_F(\mathbf V^1)
+        \lor
+        \neg\operatorname{Co}_F(\mathbf V^2)
+        \lor
+        \neg\operatorname{Eq}^{1,2}_Z
+        \\
+        &\lor
+        \operatorname{Dom}_F
+            (\mathbf V^1,\widehat{\mathbf V}^{1})
+        \lor
+        \operatorname{Dom}_F
+            (\mathbf V^2,\widehat{\mathbf V}^{2})
+        \\
+        &\lor
+        \Bigl(
+            \operatorname{Co}_F(\mathbf V^3)
+            \land
+            \operatorname{Mix}^{1,2,3}_{X,Y\mid Z}
+            \land
+            \neg\operatorname{Dom}_F
+                (\mathbf V^3,\widehat{\mathbf V}^{3})
+        \Bigr)
+        \Bigr].
+    \end{split}
+    \]
+\end{Definition}
+
+\begin{Proposition}
+    \label{prop:preferred-independence-prenex-correct}
+    Es gilt
+    \[
+        \Phi^{\mathsf{pr},\mathrm{PNF}}_F(X,Y\mid Z)
+        \quad\Longleftrightarrow\quad
+        \Phi^{\mathsf{pr}}_F(X,Y\mid Z).
+    \]
+    Insbesondere ist die pränexe Formel genau dann wahr, wenn
+    \(X\perp_{\mathsf{pr}}Y\mid Z\) gilt.
+\end{Proposition}
+
+\begin{proof}
+    Fixiere Belegungen von \(\mathbf V^1\) und \(\mathbf V^2\). Kodiert
+    einer der Blöcke kein vollständiges Labelling oder stimmen die Blöcke
+    auf \(Z\) nicht überein, ist eine der ersten drei Disjunktionen wahr.
+    Kodiert einer der Blöcke ein vollständiges, aber nicht bevorzugtes
+    Labelling, kann der Existenzspieler in
+    \(\widehat{\mathbf V}^{1}\) beziehungsweise
+    \(\widehat{\mathbf V}^{2}\) einen Dominanzzeugen wählen.
+
+    Sind dagegen beide Blöcke bevorzugt und stimmen auf \(Z\) überein,
+    bleiben alle genannten Disjunktionen falsch. Dann muss ein Block
+    \(\mathbf V^3\) gewählt werden, der vollständig ist und die
+    Kombinationsformel erfüllt. Die anschließende Allquantifizierung über
+    \(\widehat{\mathbf V}^{3}\) verlangt zusätzlich, dass kein
+    Dominanzzeuge für \(\mathbf V^3\) existiert. Dies ist genau die
+    Preferred-Bedingung im Konsequens der generischen Formel.
+\end{proof}
+
+\section{Komplexität}
+\label{sec:independence-complexity}
+
+Die Quantorenstruktur der Kodierungen entspricht der bekannten
+Komplexitätsklassifikation. Zum Vergleich wird zunächst die Komplexität der
+Prüfung eines einzelnen Labellings festgehalten.
+
+\begin{Definition}
+    \label{def:labelling-verification-problem}
+    Für eine Semantik \(\sigma\) bezeichnet
+    \(\mathrm{VER}_\sigma\) das \emph{Labelling-Verifikationsproblem}:
+    Eine Instanz besteht aus einem Argumentationssystem \(F=(A,R)\) und
+    einem Labelling \(\lambda\colon A\to
+    \{\mathsf{in},\mathsf{out},\mathsf{und}\}\). Gefragt ist, ob
+    \(\lambda\in\Lambda_\sigma(F)\) gilt.
+\end{Definition}
+
+Nach der von \textcite[Tabelle~3.1]{dvorak:2012:computational-aspects}
+zusammengefassten Klassifikation liegen
+\(\mathrm{VER}_{\mathsf{co}}\) und
+\(\mathrm{VER}_{\mathsf{st}}\) in \(\mathrm P\), während
+\(\mathrm{VER}_{\mathsf{pr}}\) \(\mathrm{coNP}\)-vollständig ist. In
+der QBF-Kodierung zeigt sich dieser Unterschied in der zusätzlichen
+Maximalitätsquantifizierung der Preferred-Semantik.
+
+\textcite[Proposition~C.4]{bluemel:2025:independence-aba} zeigen das
+folgende Resultat für abstrakte Argumentationssysteme.
+
+\begin{Theorem}
+    \label{thm:independence-complexity}
+    Bezüglich polynomialer Many-one-Reduktionen sind
+    \[
+        \mathrm{IND}_{\mathsf{co}}
+        \quad\text{und}\quad
+        \mathrm{IND}_{\mathsf{st}}
+    \]
+    \(\Pi^{\mathrm P}_2\)-vollständig. Das Problem
+    \(\mathrm{IND}_{\mathsf{pr}}\) ist
+    \(\Pi^{\mathrm P}_3\)-vollständig.
+\end{Theorem}
+
+\begin{proof}
+    Für Complete und Stable liefert
+    Proposition~\ref{prop:co-st-independence-prenex} in Polynomialzeit eine
+    äquivalente QBF mit Präfix \(\forall\exists\) und polynomiell großer
+    Matrix. Daher liegen beide Probleme in \(\Pi^{\mathrm P}_2\). Für
+    Preferred besitzt die äquivalente Formel aus
+    Definition~\ref{def:preferred-independence-prenex} das Präfix
+    \(\forall\exists\forall\) und eine polynomiell große Matrix; folglich
+    liegt das Problem in \(\Pi^{\mathrm P}_3\).
+
+    Für die Härte reduzieren
+    \textcite[Propositionen~C.1--C.4]
+    {bluemel:2025:independence-aba} polynomial von
+    \(\mathrm{QBF}^{\forall}_{2,\mathrm{KNF}}\) auf die Complete- und
+    Stable-Probleme. Für Preferred wird polynomial vom Falschheitsproblem
+    für Formeln der Gestalt
+    \(\exists X\,\forall Y\,\exists Z\,\varphi\) mit KNF-Matrix, also von
+    \(\overline{\mathrm{QBF}^{\exists}_{3,\mathrm{KNF}}}\), reduziert.
+    Die verwendeten Ausgangsprobleme sind die kanonischen
+    \(\Pi^{\mathrm P}_2\)- beziehungsweise
+    \(\Pi^{\mathrm P}_3\)-vollständigen QBF-Probleme. Damit folgen die
+    behaupteten Härten und zusammen mit den Zugehörigkeiten die
+    Vollständigkeiten.
+\end{proof}
+
+\begin{table}[tb]
+    \centering
+    \caption{Einheitlicher Vergleich von Verifikation, QBF-Präfix und
+    Unabhängigkeitskomplexität. Die Verifikationskomplexität folgt
+    \textcite[Tabelle~3.1]{dvorak:2012:computational-aspects}, die
+    Vollständigkeit der Unabhängigkeitsprobleme
+    \textcite[Proposition~C.4]{bluemel:2025:independence-aba}.}
+    \label{tab:independence-complexity-comparison}
+    \small
+    \begin{tabular}{llll}
+        \toprule
+        Semantik
+        & \(\mathrm{VER}_\sigma\)
+        & Präfix der Unabhängigkeits-QBF
+        & \(\mathrm{IND}_\sigma\) \\
+        \midrule
+        \(\mathsf{co}\)
+        & in \(\mathrm P\)
+        & \(\forall\mathbf V^1,\mathbf V^2\,
+             \exists\mathbf V^3\)
+        & \(\Pi^{\mathrm P}_2\)-vollständig \\
+        \(\mathsf{st}\)
+        & in \(\mathrm P\)
+        & \(\forall\mathbf V^1,\mathbf V^2\,
+             \exists\mathbf V^3\)
+        & \(\Pi^{\mathrm P}_2\)-vollständig \\
+        \(\mathsf{pr}\)
+        & \(\mathrm{coNP}\)-vollständig
+        & \(\forall\mathbf V^1,\mathbf V^2\,
+             \exists\mathbf V^3,\widehat{\mathbf V}^{1},
+             \widehat{\mathbf V}^{2}\,
+             \forall\widehat{\mathbf V}^{3}\)
+        & \(\Pi^{\mathrm P}_3\)-vollständig \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\section{Empirischer Vergleich der Semantiken}
+\label{sec:empirical-independence-occurrence}
