@@ -1,3 +1,5 @@
+\chapter{Grundlagen}
+\label{ch:grundlagen}
 \section{Argumentationssysteme}
 \label{sec:af}
 
@@ -96,28 +98,29 @@ erhält jedes Argument genau einen von drei Akzeptanzstatus.
 
     Sei \(\lambda\colon A\to\mathcal{L}\) ein Labelling. Dann gilt:
     \begin{itemize}
-        \item \(\lambda\) ist ein \emph{Complete-Labelling}, das heißt
-        \(\lambda\in\Lambda_{\mathsf{co}}(F)\), genau dann, wenn
-        \(\lambda\) vollständig ist.
+        \item \(\lambda\) ist ein \emph{Complete-Labelling}, gdw.
+        \(\lambda\) \emph{vollständig} ist. Wir schreiben
+       \(\lambda\in\Lambda_{\mathsf{co}}(F)\).
 
-        \item \(\lambda\) ist ein \emph{Grounded-Labelling}, das heißt
-        \(\lambda\in\Lambda_{\mathsf{gr}}(F)\), genau dann, wenn
+        \item \(\lambda\) ist ein \emph{Grounded-Labelling}, gdw.
         \(\lambda\) vollständig ist und \(\mathsf{und}(\lambda)\)
         bezüglich \(\subseteq\) maximal unter den
         \(\mathsf{und}\)-Mengen aller vollständigen Labellings von \(F\)
-        ist.
+        ist. Wir schreiben 
+        \(\lambda\in\Lambda_{\mathsf{gr}}(F)\).
 
-        \item \(\lambda\) ist ein \emph{Preferred-Labelling}, das heißt
-        \(\lambda\in\Lambda_{\mathsf{pr}}(F)\), genau dann, wenn
+        \item \(\lambda\) ist ein \emph{Preferred-Labelling}, gdw.
         \(\lambda\) vollständig ist und \(\mathsf{in}(\lambda)\)
         bezüglich \(\subseteq\) maximal unter den
         \(\mathsf{in}\)-Mengen aller vollständigen Labellings von \(F\)
-        ist.
+        ist. Wir schreiben
+        \(\lambda\in\Lambda_{\mathsf{pr}}(F)\).
 
-        \item \(\lambda\) ist ein \emph{Stable-Labelling}, das heißt
-        \(\lambda\in\Lambda_{\mathsf{st}}(F)\), genau dann, wenn
+        \item \(\lambda\) ist ein \emph{Stable-Labelling}, gdw.
         \(\lambda\) vollständig ist und
         \(\mathsf{und}(\lambda)=\emptyset\) gilt.
+        Wir schreiben
+        \(\lambda\in\Lambda_{\mathsf{st}}(F)\).
     \end{itemize}
 \end{Definition}
 
@@ -139,14 +142,14 @@ Teilmengen der Argumentmenge eingeschränkt.
         (\lambda|_X)(x)=\lambda(x)
         \quad\text{für alle }x\in X.
     \]
-    Insbesondere gilt \(\lambda_1|_X=\lambda_2|_X\) genau dann, wenn
+    Insbesondere gilt \(\lambda_1|_X=\lambda_2|_X\) gdw.
     \(\lambda_1(x)=\lambda_2(x)\) für alle \(x\in X\) gilt.
 \end{Definition}
 
 \section{Bedingte Unabhängigkeit}
 \label{sec:conditional-independence}
 
-Die folgende abstrakte Darstellung der bedingten Unabhängigkeit orientiert
+Die folgende Darstellung der bedingten Unabhängigkeit orientiert
 sich an \textcite{pearl:paz:1986:graphoids}. Die Notation folgt
 \textcite{bluemel:2025:independence-aba}.
 
@@ -162,7 +165,7 @@ sich an \textcite{pearl:paz:1986:graphoids}. Die Notation folgt
     \]
     Für paarweise disjunkte Mengen \(X,Y,Z\subseteq V\) schreiben wir
     \[
-        X\perp_I Y\mid Z \text{ genau dann, wenn }
+        X\perp_I Y\mid Z \text{ gdw. }
         (X,Y,Z)\in I
     \]
     und sagen, dass \(X\) und \(Y\) bezüglich \(I\) \emph{bedingt
@@ -178,10 +181,6 @@ sich an \textcite{pearl:paz:1986:graphoids}. Die Notation folgt
     \(\{x\}\perp\{y\}\mid Z\) beziehungsweise
     \(\{x\}\not\perp\{y\}\mid Z\).
 \end{Definition}
-
-Die Bedingungsmenge hält den betrachteten Kontext fest. Eine
-Unabhängigkeitsaussage bringt zum Ausdruck, dass sich die Beziehung zwischen
-den beiden übrigen Mengen unter diesem festgehaltenen Kontext trennen lässt.
 
 \begin{Definition}
     \label{def:semi-graphoid}
@@ -210,18 +209,35 @@ den beiden übrigen Mengen unter diesem festgehaltenen Kontext trennen lässt.
     \end{align*}
 \end{Definition}
 
-Die Symmetrie macht die Reihenfolge der beiden betrachteten Mengen
-unerheblich. Die Dekomposition überträgt eine Aussage über eine Vereinigung
-auf deren Teilmengen. Die schwache Vereinigung erlaubt es, einen Teil der
-zweiten Menge in die Bedingungsmenge zu verschieben. Die Kontraktion führt
-zwei passende Aussagen zu einer Aussage über die Vereinigung zusammen.
+\begin{Definition}
+    \label{def:sigma-independence-af}
+    Sei \(F =(A,R)\) ein Argumentationssystem, sei \(\sigma\) eine Semantik
+    und seien \(X,Y,Z\subseteq A\) paarweise disjunkt. Die Menge \(X\) ist
+    \emph{\(\sigma\)-unabhängig von \(Y\) gegeben \(Z\) in \(F\)},
+    geschrieben
+    \[
+        X\perp_\sigma Y\mid Z,
+    \]
+    genau dann, wenn für alle
+    \(\lambda_1,\lambda_2\in\Lambda_\sigma(F)\) aus
+    \(\lambda_1|_Z=\lambda_2|_Z\) die Existenz eines
+    \(\lambda_3\in\Lambda_\sigma(F)\) folgt, für das
+    \(
+        \lambda_3|_X=\lambda_1|_X,
+        \lambda_3|_Y=\lambda_2|_Y,
+        \lambda_3|_Z=\lambda_1|_Z=\lambda_2|_Z
+    \)
+    gilt. Andernfalls sind \(X\) und \(Y\) \emph{\(\sigma\)-abhängig
+    gegeben \(Z\) in \(F\)} und wir schreiben
+    \(X\not\perp_\sigma Y\mid Z\).
+\end{Definition}
 
 \section{Quantifizierte Boolesche Formeln}
 \label{sec:qbf}
 
 Dieser Abschnitt führt die für den weiteren Verlauf benötigten Grundlagen
 quantifizierter boolescher Formeln ein. Die Darstellung orientiert sich an
-\textcite{egly:2006:reasoning-qbf}.
+\textcite{egly:woltran:2006:reasoning-qbf}.
 
 \begin{Definition}
     \label{def:propositional-formula}
@@ -379,34 +395,12 @@ quantifizierter boolescher Formeln ein. Die Darstellung orientiert sich an
         \exists X_1,\dots,X_m\,\Phi
         :=\exists X_1\cdots\exists X_m\,\Phi.
     \]
-
-    Sei nun \(\nu\) eine Belegung von
-    \(\operatorname{FV}(\Phi)\setminus X\), und sei
-    \(\beta\colon X\to\{0,1\}\) eine Belegung von \(X\). Mit
-    \(\nu\cup\beta\) bezeichnen wir die gemeinsame Belegung auf
-    \(\operatorname{FV}(\Phi)\). Dann gilt
-    \begin{align*}
-        \nu\models\forall X\,\Phi
-        &\quad\Longleftrightarrow\quad
-        \forall\beta\colon X\to\{0,1\}\colon
-        \nu\cup\beta\models\Phi,\\
-        \nu\models\exists X\,\Phi
-        &\quad\Longleftrightarrow\quad
-        \exists\beta\colon X\to\{0,1\}\colon
-        \nu\cup\beta\models\Phi.
-    \end{align*}
 \end{Definition}
-
-Die Formel \(\forall X\,\exists Y\,\varphi\) verlangt somit, dass zu jeder
-Belegung von \(X\) mindestens eine Belegung von \(Y\) existiert, unter der
-\(\varphi\) wahr ist. Die Belegung von \(Y\) darf dabei von der zuvor
-gewählten Belegung von \(X\) abhängen. Daher ist die Reihenfolge
-unterschiedlicher Quantoren im Allgemeinen wesentlich.
 
 \begin{Definition}
     \label{def:qbf-prenex-form}
     Eine QBF befindet sich in \emph{Pränexnormalform} (PNF), wenn sie die
-    Gestalt
+    Form
     \[
         Q_1X_1\,Q_2X_2\cdots Q_mX_m\,\varphi
     \]
@@ -416,9 +410,8 @@ unterschiedlicher Quantoren im Allgemeinen wesentlich.
     \(1\leq i<m\) gilt und \(\varphi\) quantorenfrei ist. Der Ausdruck
     \(Q_1X_1\cdots Q_mX_m\) heißt \emph{Quantorenpräfix}, und
     \(\varphi\) heißt \emph{Matrix}. Jeder Ausdruck \(Q_iX_i\) heißt
-    \emph{Quantorenblock}. Der Wechsel von \(Q_i\) zu \(Q_{i+1}\) heißt
-    \emph{Quantorenalternation}; eine solche QBF besitzt folglich
-    \(m-1\) Quantorenalternationen.
+    \emph{Quantorenblock}. Eine solche QBF besitzt folglich
+    \(m-1\) Quantorenwechsel.
 
     Liegt die Matrix \(\varphi\) zusätzlich in konjunktiver Normalform vor,
     so befindet sich die QBF in \emph{pränexer konjunktiver Normalform}

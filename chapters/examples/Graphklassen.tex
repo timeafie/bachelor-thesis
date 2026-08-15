@@ -1,7 +1,9 @@
-\chapter{Berechnungstheoretische Vorteile bestimmter Graphklassen zur Bestimmung bedingter Unabhängigkeit}
+\chapter{Berechnungstheoretische Analyse bestimmter Graphklassen}
 \label{ch:graphclasses}
 
 Die folgenden Abschnitte orientieren sich an \textcite{handbook__of_formal_argumentation__vol__3:2024}.
+
+\iffalse
 Zu Beginn eine Feststellung, die die späteren komplexitätstheoretischen Einordnungen vereinfacht.
 \begin{Lemma}
 \label{lem:at-most-one-labelling-ci}
@@ -18,19 +20,21 @@ Zu Beginn eine Feststellung, die die späteren komplexitätstheoretischen Einord
     Wähle \(\lambda_3=\lambda\). Dann gilt unmittelbar \(\lambda_3|_X=\lambda_1|_X\), \(\lambda_3|_Y=\lambda_2|_Y\) und \(\lambda_3|_Z=\lambda_1|_Z=\lambda_2|_Z\). 
     Also gilt \(X \perp_\sigma Y \mid Z\).
 \end{proof}
+\fi
+
 \section{Azyklische AFs}
 \label{sec:acyc-afs}
 
 \begin{Proposition}
 \label{prop:acyc-af-ci-st-top}
-    \(\sigma\)-Unabhängigkeit für \(\sigma \in {co,st,pr}\) ist trivial in azyklischen AFs.
+    \(\sigma\)-Unabhängigkeit für \(\sigma \in \{co,st,pr\}\) ist allgemeingültig in azyklischen AFs.
 \end{Proposition}
 
 \begin{proof}
 \label{pr:acyc-af-ci-st-top-true}
     Sei \(F=(A,R)\) ein endlicher azyklischer AF. Für azyklische AFs fallen die \emph{complete}-, \emph{preferred}- und \emph{stable}-Semantik mit der \emph{grounded}-Semantik zusammen. 
     Da das grounded Labelling eindeutig ist, existiert genau ein Labelling \(\lambda\), sodass \(\Lambda_{co}(F)=\Lambda_{pr}(F)=\Lambda_{st}(F)=\{\lambda\}\).
-    Sei nun \(\sigma \in \{co,st,pr\}\). Dann gilt insbesondere \(|\Lambda_\sigma(F)|=1\). Nach Lemma~\ref{lem:at-most-one-labelling-ci} folgt für alle paarweise disjunkten \(X,Y,Z \subseteq A\), 
+    Sei nun \(\sigma \in \{co,st,pr\}\). Dann gilt insbesondere \(|\Lambda_\sigma(F)|=1\). Nach Lemma~\ref{lem:independence-trivial-labelling-set} folgt für alle paarweise disjunkten \(X,Y,Z \subseteq A\), 
     dass \(X \perp_\sigma Y \mid Z\) gilt.
 \end{proof}
 
@@ -42,7 +46,7 @@ Damit existiert ebenfalls maximal ein \emph{stable}-Labelling.
 
 \begin{Proposition}
 \label{prop:even-cycle-free-af-ci-st-top}
-    \(\sigma\)-Unabhängigkeit für \(\sigma \in {co,st,pr}\) ist trivial in geradezykelfreien AFs.
+    \(\sigma\)-Unabhängigkeit für \(\sigma \in \{co,st,pr\}\) ist allgemeingültig in geradezykelfreien AFs.
 \end{Proposition}
 
 \begin{proof}
@@ -53,7 +57,7 @@ Damit existiert ebenfalls maximal ein \emph{stable}-Labelling.
     Daher gilt entweder \(\Lambda_{st}(F)=\emptyset\), falls das \emph{grounded }Labelling nicht \emph{stable} ist, oder \(\Lambda_{st}(F)=\{\lambda\}\), 
     falls das \emph{grounded} Labelling \emph{stable} ist. In beiden Fällen gilt \(|\Lambda_{st}(F)| \leq 1\).
     Somit gilt für jedes \(\sigma \in \{co,st,pr\}\), dass \(|\Lambda_\sigma(F)| \leq 1\). 
-    Nach Lemma~\ref{lem:at-most-one-labelling-ci} folgt für alle paarweise disjunkten \(X,Y,Z \subseteq A\), dass \(X \perp_\sigma Y \mid Z\) gilt.
+    Nach Lemma~\ref{lem:independence-trivial-labelling-set} folgt für alle paarweise disjunkten \(X,Y,Z \subseteq A\), dass \(X \perp_\sigma Y \mid Z\) gilt.
 \end{proof}
 
 
@@ -67,8 +71,8 @@ Damit existiert ebenfalls maximal ein \emph{stable}-Labelling.
 
 \begin{proof}
     \label{pr:ocf-af-ci-st-pi^2-is-correct}
-    Der Zugehörigkeitsbeweis erfolgt analog zum allgemeinen Fall.
-    Für die Härte benutzen wir die Konstruktion von \textcite{bluemel:2025:independence-aba}, wobei zu zeigen bleibt, dass es sich um einen ungeradezykelfreien Graphen handelt.
+    Zugehörigkeits- und Härtebeweis wurden zuerst von \textcite{bluemel:2025:independence-aba} bewiesen. 
+    Es bleibt zu zeigen, dass es sich bei der Konstruktion um einen ungeradezykelfreien Graphen handelt.
     Wir betrachten zunächst die stark zusammenhängenden Komponenten von \(F_{\Psi}\). 
     Für jede universell quantifizierte Variable \(x_i\) bildet das zugehörige Argumentpaar 
     \(\{x_i,\overline{x_i}\}\) eine stark zusammenhängende Komponente. Entsprechend bildet 
@@ -102,6 +106,7 @@ Damit existiert ebenfalls maximal ein \emph{stable}-Labelling.
     \(F_{\Psi}\) keinen gerichteten Zyklus ungerader Länge und ist somit ungeradezykelfrei.
 \end{proof}
 
+NEUE GRAPHIK EINFÜGEN
 \begin{figure}[H]
     \myfloatalign
     \centering
@@ -128,7 +133,7 @@ Damit existiert ebenfalls maximal ein \emph{stable}-Labelling.
 \begin{proof}
     \label{pr:ocf-af-ci-co-pi^2-c-is-correct}
     Wir modifizieren die Konstruktion von \textcite{bluemel:2025:independence-aba}.
-    Wir reduzieren vom \(\Pi_2^P\)-vollständigen Problem
+    Reduziert wird vom \(\Pi_2^P\)-vollständigen Problem
     \(\mathrm{QBF}^{2}_{\forall}\). Eine Instanz dieses Problems ist
     eine quantifizierte boolesche Formel der Form
     \(\Psi=\forall X\exists Y\,\varphi(X,Y), \)
@@ -139,7 +144,7 @@ Damit existiert ebenfalls maximal ein \emph{stable}-Labelling.
 
 
     \paragraph{Konstruktion.}
-    Wir führen wir eine neue universelle
+    Wir führen eine neue universelle
     Variable \(x_0\) ein und setzen
     \( X^{+}=X\cup\{x_0\}~
         \text{und}~
