@@ -125,6 +125,20 @@
   \def\aclabelfont#1{\acsfont{#1}}
 % ****************************************************************************************************
 %\usepackage{pgfplots} % External TikZ/PGF support (thanks to Andreas Nautsch)
+\PassOptionsToPackage{dvipsnames}{xcolor}
+\usepackage{tikz}
+\tikzset{
+    arg/.style={
+        circle,
+        draw,
+        minimum size=7mm,
+        inner sep=1pt
+    },
+    attack/.style={
+        ->,
+        thick
+    }
+}
 %\usetikzlibrary{external}
 %\tikzexternalize[mode=list and make, prefix=ext-tikz/]
 % ****************************************************************************************************

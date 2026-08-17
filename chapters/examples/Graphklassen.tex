@@ -21,7 +21,6 @@ Zu Beginn eine Feststellung, die die späteren komplexitätstheoretischen Einord
     Also gilt \(X \perp_\sigma Y \mid Z\).
 \end{proof}
 \fi
-
 \section{Azyklische AFs}
 \label{sec:acyc-afs}
 
@@ -106,14 +105,18 @@ Damit existiert ebenfalls maximal ein \emph{stable}-Labelling.
     \(F_{\Psi}\) keinen gerichteten Zyklus ungerader Länge und ist somit ungeradezykelfrei.
 \end{proof}
 
-NEUE GRAPHIK EINFÜGEN
-\begin{figure}[H]
-    \myfloatalign
+\begin{figure}
     \centering
-    \includegraphics[keepaspectratio, scale=0.9]{../../Bilder/Bluemel_AF-Reduktion.pdf}
-    \caption[Reduktion]{Konstruktionsbeispiel Reduktion}
-    \label{fig:bluemel-st-reduction}
+    \resizebox{\textwidth}{!}{
+        \input{gfx/Blümel_Reduktion.tex}
+    }
+    \caption{\cite{bluemel:2025:independence-aba}[Figure 1]AF Repräsentation der Reduktion in Proposition C.1 für eine Formel 
+    \(\forall X \exists Y \varphi\) wo \(\phi\) durch die folgenden Klauseln gegeben ist: \(\{\{x_0, x_2, y_1\}, \{x_0, \overline{x_2}, \overline{y_1}, \overline{x_1}\},
+    \{x_0, \overline{x_2}, x_1\}\}\)}
+    \label{fig:reduktion-stable}
 \end{figure}
+
+
 
 \begin{Proposition}
     \label{prop:ocf-af-ci-pr-pi^2-c}
@@ -232,12 +235,21 @@ NEUE GRAPHIK EINFÜGEN
     eine Variable aus \(X^{+}\) unentschieden, so gilt
     \(\lambda(s)=\lambda(g)=und\).
 
-    \begin{figure}[H]
-        \myfloatalign
+    \begin{figure}
         \centering
-        \includegraphics[keepaspectratio, scale=0.8]{../../Bilder/ocf_co_reduction_diagram(1).pdf}
-        \caption[Reduktion]{Konstruktionsbeispiel Reduktion}
-        \label{fig:ocf-co-reduction}
+        \resizebox{\textwidth}{!}{
+            \input{gfx/ocf_co_härte.tex}
+        }
+        \caption{AF-Repräsentation der Reduktion in \ref{prop:ocf-af-ci-co-pi^2-c} für die Formel
+            \(\Psi = \forall x_1 \exists y_1 \varphi\) mit
+            \(\varphi =
+            (x_1 \lor y_1) \land
+            (\overline{x_1} \lor \overline{y_1})\).
+            Die reduzierte Formel \(\widehat{\varphi}\) ist durch die Klauseln
+            \(\{\{x_0,x_1,y_1\},
+            \{x_0,\overline{x_1},\overline{y_1}\}\}\)
+            gegeben.}
+    \label{fig:reduktion-complete}
     \end{figure}
 
     \paragraph{Korrektheit.}

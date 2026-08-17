@@ -2,18 +2,7 @@
 \label{ch:semantic-independence}
 
 
-%Hier ein großer Ausblick, was alles im Kapitel passiert. Bereits zitieren, wer was gemacht hat und worauf wir aufbauen.%
-
-Dieses Kapitel untersucht bedingte Unabhängigkeit unter der Complete-,
-Stable- und Preferred-Semantik in einer gemeinsamen Darstellung. 
-Zunächst wird der Begriff der bedingten Unabhängigkeit auf die
-labellingbasierte Bewertung eines Argumentationssystems übertragen und die
-Komplexität der daraus entstehenden Entscheidungsprobleme
-eingeordnet. Anschließend werden einheitliche aussagenlogische
-Bausteine entwickelt, aus denen sich die drei Semantikkodierungen
-und eine gemeinsame QBF-Kodierung der Unabhängigkeit zusammensetzen. 
-Abschließend wird empirisch untersucht, wie die Größe der Konditionierungsmenge \(Z\) 
-mit Ergebnisverteilung und Solverlaufzeit zusammenhängt.
+Hier ein großer Ausblick, was alles im Kapitel passiert. Bereits zitieren, wer was gemacht hat und worauf wir aufbauen.
 
 Die semantische Definition geht auf
 \textcite{rienstra:2020:independence-af} zurück. Notation und
@@ -576,7 +565,7 @@ um. Die folgende Formel macht diese Abhängigkeit explizit.
 \end{proof}
 \fi
 
-\section{Empirische Analyse des Einflusses der Konditionierungsmenge}
+\section{Versuchsaufbau}
 \label{sec:empirical-independence-occurrence}
 
 \iffalse
@@ -597,8 +586,8 @@ Status und die benötigte Solverlaufzeit. Der Versuchsaufbau umfasst die
 Auswahl der Argumentationssysteme, die Konstruktion der Anfragen sowie
 deren Übersetzung und Lösung als QBF.
 
-\section{Auswahl der Argumentationssysteme}
-\label{sec:instance-selection}
+\subsection{Auswahl der Argumentationssysteme}
+\label{subsec:instance-selection}
 
 Die Datengrundlage umfasst 107 Argumentationssysteme aus den sieben
 Instanzfamilien ABA2AF, Barabási--Albert, Erdős--Rényi, Planning2AF,
@@ -617,8 +606,8 @@ ausgewählt, die zwischen 100 und 1.000 Argumente besitzen.
 \emph{[Ergänzen: Ausschlusskriterien und gegebenenfalls Anzahl der
 ausgeschlossenen Instanzen.]}
 
-\section{Auswahl der Argumentpaare}
-\label{sec:argument-pair-selection}
+\subsection{Auswahl der Argumentpaare}
+\label{subsec:argument-pair-selection}
 
 Für jedes Argumentationssystem \(F=(A,R)\) wurden fünf feste
 Singletonpaare \((x,y)\) mit \(x,y\in A\) und \(x\neq y\) ausgewählt.
@@ -635,8 +624,8 @@ Argumentpaare verwendet. Die zufällige Auswahl erfolgte mit dem Seed
 42 und dem Zufallszahlengenerator
 \emph{[Ergänzen: Programmiersprache, Bibliothek und Version]}.
 
-\section{Konstruktion der Konditionierungsmengen}
-\label{sec:conditioning-set-construction}
+\subsection{Konstruktion der Konditionierungsmengen}
+\label{subsec:conditioning-set-construction}
 
 Für ein Argumentationssystem \(F=(A,R)\) mit \(n=|A|\) wurden sechs
 Größenstufen \(Z_0,\ldots,Z_5\) betrachtet. Ihre Größen wurden durch
@@ -668,8 +657,8 @@ Größenstufen ergeben sich insgesamt
 \]
 vorgesehene Anfragen.
 
-\section{QBF-Erzeugung und technische Durchführung}
-\label{sec:qbf-experimental-execution}
+\subsection{QBF-Erzeugung und technische Durchführung}
+\label{subsec:qbf-experimental-execution}
 
 Jede Anfrage \(x\perp_{\mathsf{st}}y\mid Z_k\) wurde mit der in
 Theorem~\ref{thm:generic-independence-qbf-correct} beschriebenen
@@ -777,6 +766,8 @@ Argumentationssysteme mit unverändertem TIMEOUT-Anteil nicht in die
 Berechnung des \(p\)-Werts ein, werden jedoch separat berichtet.
 \fi
 
+\section{Empirische Auswertung}
+\label{sec:empirical-analysis}
 \subsection{Ergebnisverteilung und Einfluss der Konditionierungsmenge}
 \label{subsec:empirical-stable-z-status}
 

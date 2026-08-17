@@ -1,0 +1,59 @@
+\tikzset{
+    arg/.style={
+        draw,
+        circle,
+        fill=gray!15,
+        inner sep=1pt,
+        minimum size=.5cm
+    }
+}
+
+\begin{tikzpicture}[>=stealth,xscale=1, yscale=0.7]
+  \small
+
+  % Zielargumente
+  \node[arg] (phi) at (0,0.5) {$\varphi$};
+  \node[arg] (t)   at (1.8,0.5) {$t$};
+
+  % Klauselargumente
+  \node[arg] (cl1) at (-3.0,-1.3) {$cl_1$};
+  \node[arg] (cl2) at ( 0.0,-1.3) {$cl_2$};
+  \node[arg] (cl3) at ( 3.0,-1.3) {$cl_3$};
+
+  % Literalargumente
+  \node[arg] (x0)  at (-6.3,-4.0) {$x_0$};
+  \node[arg] (nx0) at (-4.9,-4.0) {$\bar{x}_0$};
+  \node[arg] (x1)  at (-3.2,-4.0) {$x_1$};
+  \node[arg] (nx1) at (-1.8,-4.0) {$\bar{x}_1$};
+  \node[arg] (x2)  at ( 0.0,-4.0) {$x_2$};
+  \node[arg] (nx2) at ( 1.4,-4.0) {$\bar{x}_2$};
+  \node[arg] (y1)  at ( 3.2,-4.0) {$y_1$};
+  \node[arg] (ny1) at ( 4.6,-4.0) {$\bar{y}_1$};
+
+  % Gegenseitige Angriffe komplementärer Literale
+  \path[attack, <->, thick]
+    (x0) edge (nx0)
+    (x1) edge (nx1)
+    (x2) edge (nx2)
+    (y1) edge (ny1)
+    (phi) edge (t);
+
+  % Erfüllte Literale greifen die zugehörigen Klauseln an
+  \path[attack, thick]
+    (x0)  edge (cl1)
+          edge (cl2)
+          edge (cl3)
+    (x2)  edge (cl1)
+    (y1)  edge (cl1)
+    (nx2) edge (cl2)
+          edge (cl3)
+    (ny1) edge (cl2)
+    (nx1) edge (cl2)
+    (x1)  edge (cl3);
+
+  % Klauseln greifen das Formelargument an
+  \path[attack, thick]
+    (cl1) edge (phi)
+    (cl2) edge (phi)
+    (cl3) edge (phi);
+\end{tikzpicture}
