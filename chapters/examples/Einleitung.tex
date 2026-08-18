@@ -4,44 +4,46 @@
 \section{Einführung}
 \label{sec:einleitung-einfuehrung}
 
-Argumente bilden eine wichtige Grundlage menschlicher und maschineller Entscheidungsprozesse. Liegen widersprüchliche Informationen vor, muss bestimmt werden, 
-welche Argumente trotz der bestehenden Konflikte gemeinsam vertreten werden können. Abstrakte Argumentationssysteme (engl.\ \emph{abstract argumentation frameworks}, kurz AFs) 
-stellen hierfür ein einfaches und zugleich allgemeines Modell bereit. Sie wurden von \textcite{dung:1995:af} eingeführt und bilden Argumente als Knoten sowie Angriffe 
-zwischen ihnen als gerichtete Kanten ab. Dabei wird bewusst vom Inhalt der Argumente und von der konkreten Ursache eines Konflikts abstrahiert. 
+Welche Argumente können gemeinsam vertreten werden, wenn die zugrunde liegenden Informationen einander widersprechen? 
+Diese Frage ist für menschliche ebenso wie für maschinelle Entscheidungsprozesse von zentraler Bedeutung. 
+Abstrakte Argumentationssysteme (engl.\ \emph{abstract argumentation frameworks}, kurz AFs) stellen hierfür ein einfaches und zugleich allgemeines Modell bereit. 
+Sie wurden von \textcite{dung:1995:af} eingeführt und bilden Argumente als Knoten sowie Angriffe zwischen ihnen als gerichtete Kanten ab. 
+Ihre Stärke liegt gerade in der bewussten Abstraktion: Weder der Inhalt eines Arguments noch die konkrete Ursache eines Konflikts müssen bekannt sein, 
+um die Beziehungen zwischen den Argumenten untersuchen zu können.
 
-Für ein Argumentationssystem können unterschiedliche zulässige Bewertungen der enthaltenen Argumente bestehen. 
-Ein Argument kann beispielsweise in einer vertretbaren Position akzeptiert und in einer anderen verworfen werden. 
-Diese Mehrdeutigkeit bildet ab, dass eine Konfliktsituation mehrere gleichermaßen begründbare Standpunkte zulassen kann. 
+Ein Konflikt lässt jedoch nicht notwendigerweise nur eine einzige vertretbare Bewertung zu. 
+Für dasselbe Argumentationssystem können unterschiedliche zulässige Bewertungen der enthaltenen Argumente bestehen. 
 
+Genau an dieser Stelle wird die bedingte Unabhängigkeit relevant. Sie stammt ursprünglich aus der Wahrscheinlichkeitstheorie und beschreibt, 
+ob zwei Gruppen von Variablen noch Informationen übereinander liefern, nachdem eine dritte Gruppe beobachtet wurde. 
+Grundlegende Eigenschaften solcher Unabhängigkeitsrelationen wurden unter anderem von \textcite{pearl:paz:1986:graphoids} untersucht. 
+Eine bekannte Anwendung bilden Bayes-Netze, in denen Unabhängigkeiten zwischen Variablen mithilfe einer graphischen Darstellung 
+sichtbar gemacht werden können und für die strukturierte Verarbeitung probabilistischer Informationen genutzt werden \cite{pearl:2010}.
 
-Einen Ausgangspunkt für die Untersuchung solcher Zusammenhänge bietet die bedingte Unabhängigkeit. 
-Sie stammt ursprünglich aus der Wahrscheinlichkeitstheorie und beschreibt, ob zwei Gruppen von Variablen noch Informationen übereinander liefern, 
-nachdem eine dritte Gruppe beobachtet wurde. Grundlegende Eigenschaften solcher Unabhängigkeitsrelationen wurden unter anderem von
-\textcite{pearl:paz:1986:graphoids} untersucht. Eine bekannte Anwendung bilden Bayes-Netze, in denen Unabhängigkeiten zwischen Variablen mithilfe
-einer graphischen Darstellung sichtbar gemacht und für eine strukturierte Verarbeitung probabilistischer Informationen genutzt werden können \cite{pearl:2010}.
+Die hinter diesem Begriff stehende Idee ist jedoch nicht auf Wahrscheinlichkeiten beschränkt. Auch logische Wissensrepräsentationen 
+können mehrere mögliche Zustände oder Interpretationen zulassen. Die von \textcite{darwiche:1997:logical-ci} entwickelte logische 
+bedingte Unabhängigkeit überträgt die zentrale Frage daher auf das logische Schließen: Können Informationen aus unterschiedlichen 
+Bereichen miteinander kombiniert werden, sobald eine gemeinsame Hintergrundinformation festgelegt ist?
 
-Die Grundidee bedingter Unabhängigkeit ist jedoch nicht auf Wahrscheinlichkeiten beschränkt.
-Auch logische Wissensrepräsentationen können mehrere mögliche Zustände oder Interpretationen zulassen. 
-Die von \textcite{darwiche:1997:logical-ci} entwickelte logische bedingte Unabhängigkeit beschreibt, 
-ob Informationen aus verschiedenen Bereichen miteinander kombiniert werden können, sobald eine gemeinsame Hintergrundinformation festgelegt ist.
+In abstrakten Argumentationssystemen treten an die Stelle möglicher Interpretationen die zulässigen Bewertungen der Argumente.
+Zwei Argumentmengen können als bedingt unabhängig angesehen werden, wenn ihre möglichen Bewertungen nach Festlegung einer 
+dritten Argumentmenge miteinander vereinbar bleiben. Bedingte Unabhängigkeit erfasst damit, ob zwei argumentative 
+Teilbereiche getrennt voneinander betrachtet werden können.
 
-Diese Idee lässt sich auf abstrakte Argumentationssysteme übertragen. An die Stelle möglicher Interpretationen treten die 
-zulässigen Bewertungen der Argumente. Zwei Argumentmengen können als bedingt unabhängig angesehen werden, 
-wenn ihre möglichen Bewertungen nach Festlegung einer dritten Argumentmenge miteinander vereinbar bleiben. 
-Bedingte Unabhängigkeit erfasst damit, ob zwei argumentative Teilbereiche getrennt voneinander betrachtet werden können.
- 
 Eine entsprechende Definition bedingter Unabhängigkeit für abstrakte Argumentationssysteme wurde von \textcite{rienstra:2020:independence-af} eingeführt. 
-Das Erkennen solcher Unabhängigkeiten kann helfen, argumentative Zusammenhänge verständlicher zu machen und umfangreiche Probleme in kleinere Teilprobleme zu zerlegen.
+Das damit verbundene Potenzial liegt auf der Hand: Werden unabhängige Teilbereiche erkannt, können argumentative Zusammenhänge verständlicher dargestellt 
+und umfangreiche Probleme in kleinere Teilprobleme zerlegt werden. Diesem Potenzial steht jedoch eine wesentliche Schwierigkeit gegenüber. 
+Die exakte Entscheidung bedingter Unabhängigkeit ist für zentrale Auswertungsweisen abstrakter Argumentationssysteme anspruchsvoll \cite{bluemel:2025:independence-aba}.
 
-Die exakte Entscheidung bedingter Unabhängigkeit ist für zentrale Auswertungsweisen abstrakter Argumentationssysteme 
-jedoch komplexitätstheoretisch schwierig \cite{bluemel:2025:independence-aba}. 
+Für die automatisierte Auswertung formaler Argumentationsprobleme wird daher häufig der Reduktionsansatz verwendet. 
+Statt eine Aufgabe unmittelbar zu lösen, wird sie in einen anderen Formalismus übersetzt, für den bereits leistungsfähige 
+allgemeine Solver verfügbar sind. Aussagenlogische Kodierungen können beispielsweise von SAT-Solvern verarbeitet werden. 
+Quantifizierte boolesche Formeln erweitern diesen Ansatz um die Eigenschaft Beziehungen zwischen mehreren möglichen Bewertungen 
+innerhalb einer einzigen Formel auszudrücken, und eignen sich daher besonders für die Formulierung bedingter Unabhängigkeiten.
 
-Für die automatisierte Auswertung formaler Argumentationsprobleme wird häufig der Reduktionsansatz verwendet. 
-Dabei wird die zu lösende Aufgabe in einen anderen Formalismus übersetzt, für den bereits leistungsfähige allgemeine 
-Solver verfügbar sind. Aussagenlogische Kodierungen können beispielsweise von SAT-Solvern verarbeitet werden.
-Quantifizierte boolesche Formeln erweitern diesen Ansatz und erlauben es, auch Beziehungen zwischen mehreren möglichen Bewertungen innerhalb einer Formel auszudrücken. 
-Sie eignen sich daher besonders für die Formulierung bedingter Unabhängigkeit. Dass QBFs als einheitliches Zielformat für anspruchsvolle Aufgaben 
-der formalen Argumentation eingesetzt werden können, zeigen bereits \textcite{egly:woltran:2006:reasoning-qbf}.
+Dass QBFs als einheitliches Zielformat für anspruchsvolle Aufgaben der formalen Argumentation eingesetzt werden können, 
+zeigen bereits \textcite{egly:woltran:2006:reasoning-qbf}.
+Mit diesem Formalismus gewappnet wollen wir uns nun der Untersuchung der bedingten Unabhängikeit in Argumentationssystemen stellen.
 
 \section{Roadmap}
 \label{sec:einleitung-roadmap}
@@ -72,4 +74,4 @@ Die Untersuchung auf ICCMA-Instanzen soll zeigen, ob sich hierbei systematische 
 Ergänzend wird analysiert, welchen Einfluss die Graphstruktur eines Argumentationssystems auf die Schwierigkeit der Unabhängigkeitsentscheidung besitzt. 
 Strukturelle Einschränkungen können die Auswertung eines Argumentationssystems vereinfachen. Dies muss jedoch nicht unmittelbar für bedingte Unabhängigkeit gelten, 
 da diese die Beziehungen zwischen mehreren zulässigen Bewertungen betrachtet. Die komplexitätstheoretische Analyse soll daher feststellen,
- in welchen Graphklassen tatsächlich eine Vereinfachung erreicht wird und in welchen die Schwierigkeit des allgemeinen Falls bestehen bleibt.
+in welchen Graphklassen tatsächlich eine Vereinfachung erreicht wird und in welchen die Schwierigkeit des allgemeinen Falls bestehen bleibt.

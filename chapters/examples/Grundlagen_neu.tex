@@ -21,16 +21,16 @@ Notation folgen \textcite{bluemel:2025:independence-aba}.
 Im Folgenden werden ausschließlich endliche Argumentationssysteme betrachtet.
 \begin{Definition}
     \label{def:attack/defense}
-    Sei \(F = (A,R)\) ein AF.     
-    Für \(a\in A\)  bezeichnen
+    Sei \(F = (A,R)\) ein AF, \(a \in A\) und \(S \in A\).     
+    Mit
     \(
         a^+ = \{b\in A \mid (a,b)\in R\},
     \)
     \(
         a^- = \{b\in A \mid (b,a)\in R\},
     \)
-    die von \(a\) angegriffenen beziehungsweise \(a\) angreifenden Argumente. 
-    Sei \(S\subseteq A\). Für Mengen schreiben wir
+    bezeichnen wir die von \(a\) angegriffenen beziehungsweise \(a\) angreifenden Argumente. 
+    Für Mengen schreiben wir
     \(
         S^+ = \{b\in A \mid \exists a\in S\colon (a,b)\in R\},
     \)
@@ -72,16 +72,17 @@ von \(A\).
     Sei \(F=(A,R)\) ein AF.
     Ein Labelling \(\lambda\colon A\to\mathcal{L}\) heißt
     \emph{complete}, wenn für jedes \(a\in A\) gilt:
-    \[
+    \(
         \lambda(a)=\mathsf{in}
-        \quad\Longleftrightarrow\quad
-        \lambda(b)=\mathsf{out}\text{ für alle }b\in a^-,
-    \]
-    \[
+        \text{ genau dann, wenn }
+        \lambda(b)=\mathsf{out}\text{ für alle }b\in a^-
+    \)
+    und 
+    \(
         \lambda(a)=\mathsf{out}
-        \quad\Longleftrightarrow\quad
+        \text{ genau dann, wenn }
         \lambda(b)=\mathsf{in}\text{ für mindestens ein }b\in a^-.
-    \]
+    \)
     \(\Lambda_{\mathrm{co}}(F)\) ist die Menge aller \emph{complete}-Labellings von F.
 \end{Definition}
 Ein Argument erhält folglich genau dann das Label \(\mathsf{und}\), wenn
@@ -90,9 +91,9 @@ seine Angreifer mit \(\mathsf{out}\) gelabelt sind.
 \begin{Definition}
     \label{def:af-semantics}
     Sei \(F=(A,R)\) ein Argumentationssystem und sei \(\Lambda_{\mathrm{co}}(F)\) die Menge seiner vollständigen Labellings.  
-    Die Grounded-Semantik ist durch \(\Lambda_{\mathrm{gr}}(F)=\{\lambda\in\Lambda_{\mathrm{co}}(F)\mid\nexists\lambda'\in\Lambda_{\mathrm{co}}(F):\mathsf{und}(\lambda)\subsetneq\mathsf{und}(\lambda')\}\) definiert. 
-    Die Preferred-Semantik ist durch \(\Lambda_{\mathrm{pr}}(F)=\{\lambda\in\Lambda_{\mathrm{co}}(F)\mid\nexists\lambda'\in\Lambda_{\mathrm{co}}(F):\mathsf{in}(\lambda)\subsetneq\mathsf{in}(\lambda')\}\) definiert. 
-    Die Stable-Semantik ist durch \(\Lambda_{\mathrm{st}}(F)=\{\lambda\in\Lambda_{\mathrm{co}}(F)\mid\mathsf{und}(\lambda)=\emptyset\}\) definiert.
+    Die Menge der \emph{grounded}-Semantiken von F ist durch \(\Lambda_{\mathrm{gr}}(F)=\{\lambda\in\Lambda_{\mathrm{co}}(F)\mid\nexists\lambda'\in\Lambda_{\mathrm{co}}(F):\mathsf{und}(\lambda)\subsetneq\mathsf{und}(\lambda')\}\) definiert. 
+    Die Menge der \emph{preferred}-Semantiken von F ist durch \(\Lambda_{\mathrm{pr}}(F)=\{\lambda\in\Lambda_{\mathrm{co}}(F)\mid\nexists\lambda'\in\Lambda_{\mathrm{co}}(F):\mathsf{in}(\lambda)\subsetneq\mathsf{in}(\lambda')\}\) definiert. 
+    Die Menge der \emph{stable}-Semantiken von F ist durch \(\Lambda_{\mathrm{st}}(F)=\{\lambda\in\Lambda_{\mathrm{co}}(F)\mid\mathsf{und}(\lambda)=\emptyset\}\) definiert.
 \end{Definition}
 Jedes Argumentationssystem besitzt genau ein \emph{grounded}-Labelling und
 mindestens ein \emph{complete}- sowie ein \emph{preferred}-Labelling. Die Menge
@@ -101,7 +102,7 @@ mindestens ein \emph{complete}- sowie ein \emph{preferred}-Labelling. Die Menge
 \begin{Definition}
     \label{def:labelling-restriction}
     Sei \(\lambda\colon A\to\mathcal{L}\) ein Labelling und \(X\subseteq A\).
-    Die \emph{Restriktion} von \(\lambda\) auf \(X\) ist 
+    Die \emph{Restriktion} von \(\lambda\) auf \(X\) lautet
     \(
         \lambda|_X
     \).
@@ -116,32 +117,27 @@ sich an \textcite{pearl:paz:1986:graphoids}. Die Notation folgt
 
 \begin{Definition}
     \label{def:dependency-model}
-    Sei \(V\) eine Menge. Ein \emph{Abhängigkeitsmodell} \(I\) über \(V\)
+    Seien \(V, X, Y, Z\) Mengen und \(X,Y,Z \subseteq V\). Ein \emph{Abhängigkeitsmodell} \(I\) über \(V\)
     ist eine ternäre Relation über paarweise disjunkten Teilmengen von \(V\),
-    das heißt,
-    \[
+    das heißt
+    \(
         I \subseteq
         \bigl\{(X,Y,Z) \bigm| X,Y,Z\subseteq V,\,
         X\cap Y=X\cap Z=Y\cap Z=\emptyset\bigr\}.
-    \]
-    Für paarweise disjunkte Mengen \(X,Y,Z\subseteq V\) schreiben wir
-    \[
-        X\perp_I Y\mid Z \text{ gdw. }
-        (X,Y,Z)\in I
-    \]
-    und sagen, dass \(X\) und \(Y\) bezüglich \(I\) \emph{bedingt
-    unabhängig gegeben \(Z\)} sind. Die Menge \(Z\) heißt
-    \emph{Bedingungsmenge}, und \(X\perp_I Y\mid Z\) heißt eine
-    \emph{Unabhängigkeitsaussage}. Gilt \((X,Y,Z)\notin I\), so heißen
-    \(X\) und \(Y\) \emph{bedingt abhängig gegeben \(Z\)}. Wir
-    schreiben \(X\not\perp_I Y\mid Z\).
-
-    Ist das Abhängigkeitsmodell aus dem Kontext eindeutig,
-    wird der Index \(I\) weggelassen. Für Elemente \(x,y\in V\) stehen
-    \(x\perp y\mid Z\) und \(x\not\perp y\mid Z\) kurz für
-    \(\{x\}\perp\{y\}\mid Z\) beziehungsweise
-    \(\{x\}\not\perp\{y\}\mid Z\).
+    \)
+    Wir schreiben
+    \(
+        X\perp_I Y\mid Z \text{ genau dann, wenn }
+        (X,Y,Z)\in I.
+    \)
+    Gilt \((X,Y,Z)\notin I\), so
+    schreiben wir \(X\not\perp_I Y\mid Z\).
 \end{Definition}
+Ist das Abhängigkeitsmodell aus dem Kontext eindeutig,
+wird der Index \(I\) weggelassen. Für Elemente \(x,y\in V\) stehen
+\(x\perp y\mid Z\) und \(x\not\perp y\mid Z\) kurz für
+\(\{x\}\perp\{y\}\mid Z\) beziehungsweise
+\(\{x\}\not\perp\{y\}\mid Z\).
 
 \begin{Definition}
     \label{def:semi-graphoid}
@@ -150,23 +146,18 @@ sich an \textcite{pearl:paz:1986:graphoids}. Die Notation folgt
     \(X,Y,W,Z\subseteq V\) die folgenden
     \emph{Semi-Graphoid-Axiome} erfüllt sind:
     \begin{align*}
-        \text{Symmetrie:}\qquad
-        &X\perp Y\mid Z
-        &&\Longrightarrow Y\perp X\mid Z,\\
-        \text{Dekomposition:}\qquad
-        &X\perp (Y\cup W)\mid Z
-        &&\Longrightarrow X\perp Y\mid Z,\\
-        \text{Schwache Vereinigung:}\qquad
-        &X\perp (Y\cup W)\mid Z
-        &&\Longrightarrow X\perp Y\mid (Z\cup W),\\
-        \text{Kontraktion:}\qquad
-        &\left.
-          \begin{aligned}
-              X&\perp Y\mid Z,\\[-0.2em]
-              X&\perp W\mid (Z\cup Y)
-          \end{aligned}
-          \right\}
-        &&\Longrightarrow X\perp (Y\cup W)\mid Z.
+        &\text{Symmetrie:}\qquad
+        X\perp Y\mid Z
+        \Longrightarrow Y\perp X\mid Z,\\
+        &\text{Dekomposition:}\qquad
+        X\perp (Y\cup Y')\mid Z
+        \Longrightarrow X\perp Y\mid Z,\\
+        &\text{Schwache Vereinigung:}\qquad
+        X\perp (Y\cup Y')\mid Z
+        \Longrightarrow X\perp Y\mid (Z\cup Y'),\\
+        &\text{Kontraktion:}\qquad
+        X\perp Y\mid Z\land X\perp Y'\mid (Z\cup Y)
+        \Longrightarrow X\perp (Y\cup Y')\mid Z.
     \end{align*}
 \end{Definition}
 
@@ -377,6 +368,7 @@ HIER Turingmaschinen EINFÜHREN (OHNE DEFINITION?)
     heißt eine \emph{polynomielle Many-one-Reduktion} von \(Q'\) auf
     \(Q\).
 \end{Definition}
+Im Folgenden sprechen wir vereinfachend von polynomiellen Reduktionen. 
 
 \begin{Definition}[Härte und Vollständigkeit]
     \label{def:hardness-completeness}
@@ -414,6 +406,6 @@ HIER Turingmaschinen EINFÜHREN (OHNE DEFINITION?)
     \(\mathrm{QBF}^{\exists}_k\)
     \(\Sigma_k^{\mathrm{P}}\)-vollständig und
     \(\mathrm{QBF}^{\forall}_k\)
-    \(\Pi_k^{\mathrm{P}}\)-vollständig bezüglich polynomialer
+    \(\Pi_k^{\mathrm{P}}\)-vollständig bezüglich polynomieller
     Reduktionen.
 \end{Theorem}

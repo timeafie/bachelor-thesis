@@ -1,0 +1,342 @@
+\chapter{bipartite}
+\label{ch:bipartite}
+
+\begin{Proposition}
+\label{prop:bip-st-ind-hard}
+    \(stable\)-Unabhängigkeit ist auch für bipartite AFs
+    \(\Pi_2^{\mathrm P}\)-vollständig.
+\end{Proposition}
+
+\begin{proof}
+Die Zugehörigkeit zu \(\Pi_2^{\mathrm P}\) gilt bereits für beliebige AFs.
+Tatsächlich kann Nicht-Unabhängigkeit durch zwei stabile Labellings
+\(\lambda_1,\lambda_2\) bezeugt werden, für die kein stabiles Labelling
+\(\lambda\) die geforderten Einschränkungen kombiniert. Dies lässt sich
+durch eine Formel der Form
+\(\exists\lambda_1\exists\lambda_2\forall\lambda\) mit polynomiell
+prüfbarem Prädikat ausdrücken. Nicht-Unabhängigkeit liegt daher in
+\(\Sigma_2^{\mathrm P}\) und \(stable\)-Unabhängigkeit folglich in
+\(\Pi_2^{\mathrm P}\).
+
+Für die Härte reduzieren wir vom \(\Pi_2^{\mathrm P}\)-vollständigen Problem
+\textsc{True \(\forall\exists\)-3-CNF}. Sei
+\[
+    \Psi=\forall X\exists Y\,\varphi
+\]
+eine Instanz dieses Problems.
+
+Zunächst bringen wir \(\varphi\) in eine Form, in der jede Klausel entweder
+ausschließlich positive oder ausschließlich negative Literale enthält.
+Sei \(C\) eine gemischte Klausel. Wir schreiben
+\[
+    C=P_C\lor N_C,
+\]
+wobei \(P_C\) die Disjunktion der positiven und \(N_C\) die Disjunktion
+der negativen Literale von \(C\) bezeichnet. Für \(C\) führen wir eine
+frische existentielle Variable \(z_C\) ein und ersetzen \(C\) durch
+\[
+    (P_C\lor z_C)\land(N_C\lor\neg z_C).
+\]
+Für jede Belegung der ursprünglichen Variablen gilt
+\[
+    C
+    \quad\Longleftrightarrow\quad
+    \exists z_C\,
+    \bigl((P_C\lor z_C)\land(N_C\lor\neg z_C)\bigr).
+\]
+Ist \(P_C\) wahr, kann \(z_C=0\) gewählt werden. Ist \(N_C\) wahr, kann
+\(z_C=1\) gewählt werden. Sind beide Teile falsch, erzwingt die erste
+Klausel \(z_C=1\), während die zweite \(z_C=0\) erzwingt.
+
+Jede gemischte Klausel erhält eine eigene neue Variable, und alle neuen
+Variablen werden dem existentiellen Block hinzugefügt. Die erhaltene QBF
+ist daher genau dann gültig wie \(\Psi\). Da die ursprünglichen Klauseln
+höchstens drei Literale enthalten, haben auch die neuen Klauseln höchstens
+drei Literale. Die Transformation ist polynomial. Im Folgenden bezeichnen
+wir die transformierte QBF wieder mit
+\[
+    \Psi=\forall X\exists Y\,\varphi.
+\]
+Die Klauselmenge von \(\varphi\) zerfällt nun in die Menge
+\(\mathcal C^+\) der positiven und die Menge \(\mathcal C^-\) der
+negativen Klauseln.
+
+Wir führen zwei neue Variablen \(p,n\) ein und setzen
+\[
+    V=X\cup Y\cup\{p,n\}.
+\]
+Das AF
+\[
+    F_\Psi=(\mathcal A_\Psi,R_\Psi)
+\]
+ist durch
+\[
+\begin{aligned}
+    \mathcal A_\Psi
+    ={}&
+    \{v,\overline v\mid v\in V\}\\
+    &\cup
+    \{c_C\mid C\in\mathcal C^+\cup\mathcal C^-\}\\
+    &\cup
+    \{\varphi^+,\varphi^-,t^+,t^-\}
+\end{aligned}
+\]
+und
+\[
+\begin{aligned}
+    R_\Psi
+    ={}&
+    \{(v,\overline v),(\overline v,v)\mid v\in V\}\\
+    &\cup
+    \{(v,c_C)\mid C\in\mathcal C^+,\,v\in C\}\\
+    &\cup
+    \{(\overline v,c_C)
+        \mid C\in\mathcal C^-,\,\neg v\in C\}\\
+    &\cup
+    \{(p,c_C)\mid C\in\mathcal C^+\}\\
+    &\cup
+    \{(\overline n,c_C)\mid C\in\mathcal C^-\}\\
+    &\cup
+    \{(c_C,\varphi^+)\mid C\in\mathcal C^+\}\\
+    &\cup
+    \{(c_C,\varphi^-)\mid C\in\mathcal C^-\}\\
+    &\cup
+    \{(\varphi^+,t^+),(t^+,\varphi^+)\}\\
+    &\cup
+    \{(\varphi^-,t^-),(t^-,\varphi^-)\}
+\end{aligned}
+\]
+gegeben.
+
+Wir betrachten die Unabhängigkeitsanfrage
+\[
+    A\perp_{\mathrm{st}}B\mid\emptyset,
+    \qquad
+    A=\{\varphi^+,\varphi^-\},
+    \qquad
+    B=X\cup\{p,n\}.
+\]
+Die Konstruktion ist polynomial, da für jede Variable, jede Klausel und
+jedes Literalvorkommen nur konstant viele Argumente beziehungsweise
+Angriffe erzeugt werden.
+
+\paragraph{Bipartitheit.}
+Setze
+\[
+\begin{aligned}
+    U_0={}&
+    \{v\mid v\in V\}
+    \cup
+    \{c_C\mid C\in\mathcal C^-\}
+    \cup
+    \{\varphi^+,t^-\},\\
+    U_1={}&
+    \{\overline v\mid v\in V\}
+    \cup
+    \{c_C\mid C\in\mathcal C^+\}
+    \cup
+    \{\varphi^-,t^+\}.
+\end{aligned}
+\]
+Die Mengen \(U_0\) und \(U_1\) bilden eine Partition von
+\(\mathcal A_\Psi\). Die Angriffe zwischen \(v\) und \(\overline v\)
+verlaufen zwischen \(U_0\) und \(U_1\). Positive Literalargumente sowie
+\(p\) liegen in \(U_0\) und greifen positive Klauselargumente in \(U_1\)
+an. Negative Literalargumente sowie \(\overline n\) liegen in \(U_1\) und
+greifen negative Klauselargumente in \(U_0\) an. Ferner liegen
+\[
+    c_C\in U_1,\quad \varphi^+\in U_0
+    \qquad\text{für }C\in\mathcal C^+
+\]
+und
+\[
+    c_C\in U_0,\quad \varphi^-\in U_1
+    \qquad\text{für }C\in\mathcal C^-.
+\]
+Auch die Angriffe
+\(\varphi^+\leftrightarrow t^+\) und
+\(\varphi^-\leftrightarrow t^-\) verlaufen zwischen den beiden Mengen.
+Somit gilt
+\[
+    R_\Psi
+    \subseteq
+    (U_0\times U_1)\cup(U_1\times U_0),
+\]
+also ist \(F_\Psi\) bipartit.
+
+\paragraph{Struktur der stabilen Labellings.}
+In jedem stabilen Labelling ist für jedes \(v\in V\) genau eines der
+Argumente \(v,\overline v\) mit \(\mathit{in}\) gelabelt. Wegen ihres
+gegenseitigen Angriffs können nicht beide \(\mathit{in}\) sein. Wären
+beide \(\mathit{out}\), hätte keines von ihnen einen
+\(\mathit{in}\)-gelabelten Angreifer. Die Literalpaare kodieren daher
+eine totale Wahrheitsbelegung, wobei \(v\) genau dann wahr ist, wenn das
+Argument \(v\) mit \(\mathit{in}\) gelabelt ist.
+
+Für eine positive Klausel \(C\in\mathcal C^+\) gilt
+\[
+    \lambda(c_C)=\mathit{out}
+    \quad\Longleftrightarrow\quad
+    \lambda(p)=\mathit{in}
+    \ \text{oder}\
+    \lambda(v)=\mathit{in}
+    \text{ für ein }v\in C.
+\]
+Für eine negative Klausel \(C\in\mathcal C^-\) gilt entsprechend
+\[
+    \lambda(c_C)=\mathit{out}
+    \quad\Longleftrightarrow\quad
+    \lambda(\overline n)=\mathit{in}
+    \ \text{oder}\
+    \lambda(\overline v)=\mathit{in}
+    \text{ für ein }\neg v\in C.
+\]
+Dies folgt jeweils daraus, dass ein Argument in einem stabilen Labelling
+genau dann \(\mathit{out}\) ist, wenn es einen
+\(\mathit{in}\)-gelabelten Angreifer besitzt.
+
+Sind alle positiven Klauselargumente \(\mathit{out}\), so kann das Paar
+\((\varphi^+,t^+)\) wahlweise als
+\[
+    (\mathit{in},\mathit{out})
+    \qquad\text{oder}\qquad
+    (\mathit{out},\mathit{in})
+\]
+gelabelt werden. Entsprechendes gilt für
+\((\varphi^-,t^-)\), wenn alle negativen Klauselargumente
+\(\mathit{out}\) sind.
+
+Insbesondere lässt sich jede Belegung der Variablen aus \(V\) zu einem
+stabilen Labelling erweitern. Dazu werden zunächst die Literalpaare
+entsprechend der Belegung gelabelt. Anschließend wird jedes
+Klauselargument genau dann mit \(\mathit{out}\) gelabelt, wenn es einen
+\(\mathit{in}\)-gelabelten Angreifer besitzt. Schließlich werden
+\(\varphi^+,\varphi^-\) mit \(\mathit{out}\) und
+\(t^+,t^-\) mit \(\mathit{in}\) gelabelt.
+
+\paragraph{Korrektheit.}
+Angenommen, \(\Psi\) ist gültig. Seien
+\(\lambda_A\) und \(\lambda_B\) beliebige stabile Labellings von
+\(F_\Psi\). Wir zeigen, dass ihre Einschränkungen auf \(A\) beziehungsweise
+\(B\) kombiniert werden können.
+
+Die Labels von \(\lambda_B\) auf \(X\) bestimmen eine Belegung von \(X\).
+Da \(\Psi\) gültig ist, existiert eine Belegung von \(Y\), welche unter
+dieser \(X\)-Belegung alle Klauseln von \(\varphi\) erfüllt. Wir labeln
+die Literalpaare aus \(X\cup Y\) entsprechend dieser Belegung und
+übernehmen die Labels von \(p\) und \(n\) aus \(\lambda_B\).
+
+Da jede positive Klausel ein wahres positives Literal und jede negative
+Klausel ein wahres negatives Literal enthält, wird jedes Klauselargument
+bereits von einem \(\mathit{in}\)-gelabelten ursprünglichen
+Literalargument angegriffen. Dies gilt unabhängig von den übernommenen
+Labels von \(p\) und \(n\). Daher sind sämtliche Klauselargumente
+\(\mathit{out}\).
+
+Nun übernehmen wir die Labels von \(\varphi^+\) und \(\varphi^-\) aus
+\(\lambda_A\) und labeln \(t^+\) beziehungsweise \(t^-\) jeweils
+entgegengesetzt. Nach den obigen Beobachtungen ist das erhaltene Labelling
+stabil. Es stimmt auf \(A\) mit \(\lambda_A\) und auf \(B\) mit
+\(\lambda_B\) überein. Folglich gilt
+\[
+    A\perp_{\mathrm{st}}B\mid\emptyset.
+\]
+
+Sei umgekehrt
+\[
+    A\perp_{\mathrm{st}}B\mid\emptyset
+\]
+erfüllt. Wir zeigen, dass \(\Psi\) gültig ist. Sei dazu
+\(\alpha\) eine beliebige Belegung von \(X\).
+
+Zunächst konstruieren wir ein stabiles Labelling \(\lambda_A\) mit
+\[
+    \lambda_A(\varphi^+)
+    =
+    \lambda_A(\varphi^-)
+    =
+    \mathit{in}.
+\]
+Hierzu wählen wir
+\[
+    \lambda_A(p)=\mathit{in},
+    \qquad
+    \lambda_A(n)=\mathit{out}.
+\]
+Dann ist auch \(\overline n\) mit \(\mathit{in}\) gelabelt. Somit greift
+\(p\) alle positiven und \(\overline n\) alle negativen
+Klauselargumente an. Sämtliche Klauselargumente können daher mit
+\(\mathit{out}\), die Argumente \(\varphi^+,\varphi^-\) mit
+\(\mathit{in}\) und die Argumente \(t^+,t^-\) mit
+\(\mathit{out}\) gelabelt werden. Die übrigen Variablenpaare können
+beliebig konsistent gelabelt werden. Das resultierende Labelling ist
+stabil.
+
+Weiter wählen wir ein stabiles Labelling \(\lambda_B\), das auf \(X\)
+die Belegung \(\alpha\) kodiert und
+\[
+    \lambda_B(p)=\mathit{out},
+    \qquad
+    \lambda_B(n)=\mathit{in}
+\]
+erfüllt. Ein solches Labelling existiert nach der obigen
+Vervollständigungsbeobachtung: Die Variablen aus \(Y\) können beliebig
+belegt und die übrigen Argumente anschließend entsprechend gelabelt
+werden.
+
+Aus
+\(A\perp_{\mathrm{st}}B\mid\emptyset\) folgt nun die Existenz eines
+stabilen Labellings \(\lambda\) mit
+\[
+    \lambda|_A=\lambda_A|_A
+    \qquad\text{und}\qquad
+    \lambda|_B=\lambda_B|_B.
+\]
+Insbesondere gilt
+\[
+    \lambda(\varphi^+)
+    =
+    \lambda(\varphi^-)
+    =
+    \mathit{in},
+    \qquad
+    \lambda(p)=\mathit{out},
+    \qquad
+    \lambda(n)=\mathit{in}.
+\]
+Da \(\varphi^+\) und \(\varphi^-\) mit \(\mathit{in}\) gelabelt sind,
+müssen alle positiven und negativen Klauselargumente
+\(\mathit{out}\) sein.
+
+Sei \(C\in\mathcal C^+\). Da \(c_C\) mit \(\mathit{out}\) gelabelt ist,
+muss es einen \(\mathit{in}\)-gelabelten Angreifer besitzen. Wegen
+\(\lambda(p)=\mathit{out}\) muss dies ein Argument \(v\) mit \(v\in C\)
+sein. Somit ist \(C\) unter der durch \(\lambda\) kodierten Belegung
+erfüllt.
+
+Sei nun \(C\in\mathcal C^-\). Aus
+\(\lambda(n)=\mathit{in}\) folgt
+\(\lambda(\overline n)=\mathit{out}\). Da \(c_C\) mit
+\(\mathit{out}\) gelabelt ist, muss daher ein Argument
+\(\overline v\) mit \(\neg v\in C\) mit \(\mathit{in}\) gelabelt sein.
+Damit ist auch \(C\) erfüllt.
+
+Die von \(\lambda\) kodierte Belegung von \(Y\) erfüllt folglich alle
+Klauseln von \(\varphi\). Ihre Einschränkung auf \(X\) ist
+\(\alpha\). Da \(\alpha\) beliebig gewählt war, gilt
+\[
+    \forall X\exists Y\,\varphi.
+\]
+Somit ist \(\Psi\) gültig.
+
+Wir haben damit gezeigt, dass
+\[
+    \Psi\text{ gültig}
+    \quad\Longleftrightarrow\quad
+    A\perp_{\mathrm{st}}B\mid\emptyset
+    \text{ in }F_\Psi.
+\]
+Da die Konstruktion polynomial und \(F_\Psi\) bipartit ist, folgt die
+\(\Pi_2^{\mathrm P}\)-Härte für bipartite AFs. Zusammen mit der
+Zugehörigkeit zu \(\Pi_2^{\mathrm P}\) ergibt sich die Behauptung.
+\end{proof}

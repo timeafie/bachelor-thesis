@@ -566,149 +566,198 @@ um. Die folgende Formel macht diese Abhängigkeit explizit.
 \fi
 
 \section{Versuchsaufbau}
-\label{sec:empirical-independence-occurrence}
+\label{sec:experimental-setup}
 
-\iffalse
-Die vorangegangenen Abschnitte liefern Kodierungen für die Complete, Stable und
-Preferred Semantik. Die folgende empirische Untersuchung betrachtet, wie sich unter
-diesen Semantiken mit wachsender Größe der Konditionierungsmenge Solverstatus und 
-Lösungszeit verändern. Dazu werden Singleton-Anfragen
-\(x\perp_{\mathsf{st}}y\mid Z\) untersucht.
-\fi
+Die vorangegangenen Abschnitte liefern für jede betrachtete Semantik eine
+QBF-Kodierung der bedingten Unabhängigkeit. Im Folgenden wird beschrieben, wie diese
+Kodierungen auf eine gemeinsame Auswahl an Benchmarkinstanzen angewendet und unter
+kontrollierter Variation der Konditionierungsmenge empirisch untersucht
+wurden. Eine Prüfkonfiguration besteht aus einem Argumentationssystem
+\(F=(A,R)\), einer Semantik
+\(\sigma\in\{\mathsf{st},\mathsf{co},\mathsf{pr}\}\), zwei
+Singletonmengen \(X=\{x\}\) und \(Y=\{y\}\) sowie einer
+Konditionierungsmenge \(Z\). Erfasst wurden der logische Solverstatus, die
+für Übersetzung und Lösung benötigten Laufzeiten und Größenmerkmale der
+erzeugten QBF.
 
-In der empirischen Untersuchung wird betrachtet, wie die Größe der
-Konditionierungsmenge mit der praktischen Lösung von Anfragen der Form
+\paragraph{Testinstanzen}
+Die Ausgangsinstanzen stammen aus der AF-Kuration der sechsten
+International Competition on Computational Models of Argumentation
+(ICCMA'25) \cite{apostolakis:2025:iccma-instances}. Aus diesem Bestand
+wurde vor Beginn des Experiments eine Auswahl aus sieben Familien
+zusammengestellt. Sie umfasst drei klassische Zufallsgraphmodelle,
+dedizierte AF-Generatoren sowie aus ABA- beziehungsweise Planungsinstanzen
+erzeugte Argumentationssysteme. Tabelle~\ref{tab:experimental-instance-corpus}
+zeigt die Zusammensetzung nach Anwendung des Größenfilters.
+
+\begin{table}[htbp]
+    \centering
+    \begin{tabularx}{\textwidth}{@{}lXr@{}}
+        \toprule
+        Instanzfamilie & Struktur beziehungsweise Herkunft & Anzahl \\
+        \midrule
+        ABA2AF & aus ABA-Instanzen erzeugte AFs & 14 \\
+        Barabási--Albert & skalenfreies Zufallsgraphmodell & 20 \\
+        Erdős--Rényi & Zufallsgraphmodell mit unabhängigen Kanten & 20 \\
+        Planning2AF & aus Planungsinstanzen erzeugte AFs & 5 \\
+        SCC-Generator & AFs mit gezielt erzeugter SCC-Struktur & 6 \\
+        Stable-Generator & mit einem dedizierten AF-Generator erzeugte Instanzen & 20 \\
+        Watts--Strogatz & Small-World-Zufallsgraphmodell & 20 \\
+        \midrule
+        Insgesamt & & 105 \\
+        \bottomrule
+    \end{tabularx}
+    \caption{Überblick über die Testinstanzen}
+    \label{tab:experimental-instance-corpus}
+\end{table}
+
+Die Argumentanzahl \(n=|A|\) wurde jeweils aus der Kopfzeile
+\texttt{p af N} der ICCMA-Datei gelesen. Berücksichtigt wurden sämtliche
+vorab kuratierten Instanzen mit
+\(
+  100\leq n\leq 1\,000.
+\)
+Damit enthält das Untersuchungskorpus 105 AFs mit tatsächlich 100 bis
+981 Argumenten. Die
+Auswahl erfolgte weder anhand der späteren Solverstatus noch anhand der
+gemessenen Laufzeiten. Verarbeitet wurden ausschließlich die bereitgestellten
+\texttt{.af}-Dateien.
+
+\paragraph{Konstruktion der Unabhängigkeitsanfrage}
+\label{subsec:query-construction}
+
+Für jedes Argumentationssystem \(F=(A,R)\) wurden zunächst fünf
+verschiedene ungeordnete Paare \(\{x,y\}\subseteq A\) gleichverteilt und
+ohne Wiederholung ausgewählt. Hieraus entstehen die Singletonmengen
+\(X=\{x\}\) und \(Y=\{y\}\).
+
+Die verwandte Pseudozufallsauswahl ist reproduzierbar. Der globale Ausgangswert ist
+\texttt{SEED=42}. Für jede Instanz wird aus der Zeichenkette, die diesen
+Wert und den Instanznamen enthält, ein instanzspezifischer
+Seed abgeleitet. Daher untersuchen \emph{stable}, \emph{complete} und \emph{preferred}
+dieselben fünf Argumentpaare.
+
+Zu jedem Paar wurden sechs Größenstufen betrachtet. Für
+\(\sigma\in\{\mathsf{st},\mathsf{co},\mathsf{pr}\}\) sei
 \[
-    x\perp_{\mathsf{st}}y\mid Z
-\]
-zusammenhängt. Untersucht werden der von der QBF-Software zurückgegebene
-Status und die benötigte Solverlaufzeit. Der Versuchsaufbau umfasst die
-Auswahl der Argumentationssysteme, die Konstruktion der Anfragen sowie
-deren Übersetzung und Lösung als QBF.
-
-\subsection{Auswahl der Argumentationssysteme}
-\label{subsec:instance-selection}
-
-Die Datengrundlage umfasst 107 Argumentationssysteme aus den sieben
-Instanzfamilien ABA2AF, Barabási--Albert, Erdős--Rényi, Planning2AF,
-SCC-Generator, Stable-Generator und Watts--Strogatz. Die Instanzen
-stammen aus
-\emph{[Ergänzen: genaue Bezeichnung und Ausgabe der
-ICCMA-Benchmark-Sammlung]}
-\cite{bistarelli:2025:iccma}.
-
-Berücksichtigt wurden Argumentationssysteme mit mindestens 100 und
-höchstens 1.000 Argumenten. Die Auswahl enthält 15 ABA2AF-Instanzen,
-jeweils 20 Barabási--Albert-, Erdős--Rényi-, Stable-Generator- und
-Watts--Strogatz-Instanzen sowie jeweils sechs Planning2AF- und
-SCC-Generator-Instanzen. Innerhalb der Familien wurden die Instanzen
-ausgewählt, die zwischen 100 und 1.000 Argumente besitzen. 
-\emph{[Ergänzen: Ausschlusskriterien und gegebenenfalls Anzahl der
-ausgeschlossenen Instanzen.]}
-
-\subsection{Auswahl der Argumentpaare}
-\label{subsec:argument-pair-selection}
-
-Für jedes Argumentationssystem \(F=(A,R)\) wurden fünf feste
-Singletonpaare \((x,y)\) mit \(x,y\in A\) und \(x\neq y\) ausgewählt.
-Die Paare wurden
-zufällig
-bestimmt. Dabei wurden sie als
-geordnete
-Paare behandelt und
-mit Zurücklegen
-gezogen. 
-
-Für alle Größenstufen der Konditionierungsmenge wurden dieselben fünf
-Argumentpaare verwendet. Die zufällige Auswahl erfolgte mit dem Seed
-42 und dem Zufallszahlengenerator
-\emph{[Ergänzen: Programmiersprache, Bibliothek und Version]}.
-
-\subsection{Konstruktion der Konditionierungsmengen}
-\label{subsec:conditioning-set-construction}
-
-Für ein Argumentationssystem \(F=(A,R)\) mit \(n=|A|\) wurden sechs
-Größenstufen \(Z_0,\ldots,Z_5\) betrachtet. Ihre Größen wurden durch
-\[
-    |Z_k|
-    =
+    d_\sigma=
+    \begin{cases}
+        5,  & \sigma\in\{\mathsf{st},\mathsf{co}\},\\
+        10, & \sigma=\mathsf{pr},
+    \end{cases}
+    \qquad
+    s_k^\sigma(n)=
     \left\lfloor
-        \frac{k\lfloor n/5\rfloor}{5}+\frac{1}{2}
+        \frac{k\lfloor n/d_\sigma\rfloor}{5}+\frac{1}{2}
     \right\rfloor,
-    \qquad k\in\{0,\ldots,5\},
+    \quad k\in\{0,\ldots,5\}.
 \]
-bestimmt. Sie entsprechen näherungsweise \(0\,\%\), \(4\,\%\),
-\(8\,\%\), \(12\,\%\), \(16\,\%\) und \(20\,\%\) der Argumente.
+Für jedes Paar, jede Semantik und jede Stufe wurde eine Menge
+\(
+    Z_{k,x,y}^{\sigma}\subseteq A\setminus\{x,y\},
+    |Z_{k,x,y}^{\sigma}|=s_k^\sigma(n),
+\)
+gleichverteilt ohne Zurücklegen gezogen und anschließend numerisch
+sortiert. Insbesondere ist \(Z_{0,x,y}^{\sigma}=\varnothing\). \emph{stable} und \emph{complete}
+verwenden aufgrund derselben Größen und derselben Zufallsfolge identische
+Konditionierungsmengen. \emph{preferred} verwendet dieselben Argumentpaare, aber
+Stufen bis höchstens \(\lfloor n/10\rfloor\) und damit im Allgemeinen
+andere Konditionierungsmengen. Die Maximalstufe beträgt bei \emph{stable} und
+\emph{complete} \(\lfloor n/5\rfloor\).
 
-Für jedes Argumentpaar \((x,y)\) und jede Größenstufe wurde genau eine
-Menge
-\[
-    Z_k\subseteq A\setminus\{x,y\}
-\]
-gezogen. Die Argumente wurden dabei
-gleichverteilt ohne Zurücklegen
-ausgewählt. Die Mengen der verschiedenen Größenstufen wurden unabhängig
-voneinander erzeugt und sind daher nicht notwendigerweise geschachtelt.
+Aus 105 Argumentationssystemen, fünf Paaren und sechs Größenstufen ergeben
+sich je Semantik
+\(
+    105\cdot5\cdot6=3\,150
+\)
+Anfragen. Über alle drei Semantiken wurden somit \(9\,450\) QBF-Instanzen
+erzeugt.
 
-Aus 107 Argumentationssystemen, fünf Argumentpaaren und sechs
-Größenstufen ergeben sich insgesamt
-\[
-    107\cdot 5\cdot 6=3.210
-\]
-vorgesehene Anfragen.
+\paragraph{Erzeugung der QBF-Instanzen}
+\label{subsec:qbf-generation}
 
-\subsection{QBF-Erzeugung und technische Durchführung}
-\label{subsec:qbf-experimental-execution}
+Jede Instanz wurde mit der in
+Theorem~\ref{thm:generic-independence-qbf-correct} beschriebenen Kodierung
+in die geschlossene QBF
+\(
+    \Phi_F^\sigma(\{x\},\{y\}\mid Z_{k,x,y}^{\sigma})
+\)
+übersetzt. Die drei in Python implementierten Instanzgeneratoren und die
+Anzahl ihrer quantifizierten Variablen sind in
+Tabelle~\ref{tab:experimental-qbf-generators} zusammengefasst.
 
-Jede Anfrage \(x\perp_{\mathsf{st}}y\mid Z_k\) wurde mit der in
-Theorem~\ref{thm:generic-independence-qbf-correct} beschriebenen
-Kodierung in eine geschlossene QBF
-\[
-    \Phi_F^{\mathsf{st}}(\{x\},\{y\}\mid Z_k)
-\]
-übersetzt. Die Implementierung erfolgte mit
-\emph{[Ergänzen: Programmiersprache, Programmname, Verweis zum Anhang]}. Die erzeugte Formel wurde im Format
-QCIR
-gespeichert. Anschließend wurde sie direkt
-an den QBF-Solver
-\emph{[Ergänzen: Solvername und Version]}
-übergeben.
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{@{}lll@{}}
+        \toprule
+        Semantik & Instanzgenerator & quantifizierte Variablen \\
+        \midrule
+        \emph{stable} & \texttt{af\_to\_stind\_qcir.py} & \(3n\) \\
+        \emph{complete} & \texttt{af\_to\_coind\_qcir.py} & \(9n\) \\
+        \emph{preferred} & \texttt{af\_to\_prind\_qcir.py} & \(18n\) \\
+        \bottomrule
+    \end{tabular}
+    \caption{Semantikspezifische Generatoren der QBF-Instanzen.}
+    \label{tab:experimental-qbf-generators}
+\end{table}
+Die Generatoren lesen das ICCMA-Format ein und bauen aus den
+Angriffszeilen \texttt{i j} für jedes Argument die Menge seiner Angreifer
+auf. Das Batchskript übergibt \(x\), \(y\) und die kommaseparierte Liste
+der Elemente von \(Z\). Vor der Formelerzeugung wird geprüft,
+ob alle Indizes im zulässigen Bereich liegen, innerhalb der drei Mengen
+keine Duplikate auftreten und \(X\), \(Y\) und \(Z\) paarweise disjunkt
+sind.
 
-Die Experimente wurden auf einem System mit
-\emph{[Ergänzen: Prozessor]}, \emph{[Ergänzen: Arbeitsspeicher]} und
-\emph{[Ergänzen: Betriebssystem]} durchgeführt. Jeder Solverlauf
-verwendete
-\emph{[Ergänzen: Anzahl der Kerne]}
-und unterlag keinem Speicherlimit.
-Jede Anfrage wurde
-einmal
-ausgeführt.
+Die Generatoren schreiben alle quantifizierten Variablenblöcke und
+Teilformeln unmittelbar im Format QCIR-G14. Eine Umwandlung in CNF oder
+QDIMACS findet nicht statt. Die \emph{stable}-Kodierung verwendet boolesche
+In-Mengen. \emph{complete} benötigt dreiwertige Labellings; \emph{preferred} ergänzt
+Hilfslabellings für die Maximalitätsprüfung.
 
-Für einen Solverlauf galt ein Zeitlimit von \(600\,\mathrm{s}\).
-Gemessen wurde
-CPU-Zeit(nochmal nachgucken). Das Zeitlimit umfasste
-nur die Solverausführung.
+\paragraph{Solverausführung}
+\label{subsec:solver-execution-protocol}
 
-Eine vom Solver als SAT bewertete QBF bestätigt nach
-Theorem~\ref{thm:generic-independence-qbf-correct}
-\[
-    x\perp_{\mathsf{st}}y\mid Z_k.
-\]
-Ein UNSAT-Ergebnis bestätigt entsprechend
-\[
-    x\not\perp_{\mathsf{st}}y\mid Z_k.
-\]
-Wurde das Zeitlimit überschritten, erhielt die Anfrage den Status
-TIMEOUT. Fehler vor dem Start des Solvers wurden als
-Übersetzungsfehler erfasst. Als Übersetzungsfehler galten
-NOCH ERGÄNZEN.
+Das Batchskript \texttt{run\_batch\_singleton\_z.sh} führt die drei
+Semantikphasen strikt in der Reihenfolge \emph{stable}, \emph{complete} und \emph{preferred}
+aus. Eine Phase beginnt erst nach Abschluss der vorherigen. Innerhalb einer
+Phase werden mehrere Argumentationssysteme parallel verarbeitet.
 
-Für jede Anfrage wurden
-\emph{[Ergänzen: Solverstatus, Solverlaufzeit, QBF-Erzeugungszeit,
-Dateigröße, Anzahl der Variablen und Gates]}
-gespeichert. Die verwendeten Instanzlisten, Seeds, Programme und
-Ausführungsskripte sind im ANHANG
-dokumentiert.
+Die erzeugte QCIR-Datei wird ohne weitere Konvertierung an QuAbS
+übergeben. Für jeden Solveraufruf gilt ein individuelles Zeitlimit von
+\(600\,\mathrm{s}\), das ausschließlich die Solverausführung umfasst. Das
+Batchskript setzt kein separates Speicherlimit. Jede vorgesehene Anfrage
+wird genau einmal ausgeführt. Die Übersetzungs- und Solverlaufzeit werden
+getrennt als Echtzeit gemessen. Nach erfolgreicher Übersetzung
+werden außerdem die Anzahl der quantifizierten Variablen, die Zahl der
+QCIR-Gatter und die Dateigröße in Byte bestimmt.
+
+QuAbS signalisiert SAT regulär mit Rückgabecode 10 und UNSAT mit
+Rückgabecode 20. Nach
+Theorem~\ref{thm:generic-independence-qbf-correct} gilt damit
+\(
+    \text{SAT}
+    \Longleftrightarrow
+    \{x\}\perp_\sigma\{y\}\mid Z_{k,x,y}^{\sigma},
+\)
+während UNSAT die entsprechende Abhängigkeit bestätigt. Rückgabecode 124
+des vorgeschalteten Zeitlimitprogramms wird als \texttt{TIMEOUT}
+protokolliert. Bei anderen Rückgabecodes wird die Solverausgabe
+noch auf eine eindeutige SAT- oder UNSAT-Zeile geprüft; ist auch dadurch
+keine Entscheidung möglich, wird \texttt{SOLVER\_ERR} zusammen mit dem
+Rückgabecode und der normalisierten Solvermeldung gespeichert. Nur SAT und
+UNSAT werden als logische Ergebnisse interpretiert. Für alle übrigen
+Status bleibt die Unabhängigkeitsaussage unbekannt.
+
+Die semantikspezifischen CSV-Dateien enthalten 19 Spalten. Neben
+Instanzname, \(n\), \(|R|\), Paarindex, \(x\), \(y\) und ihrer direkten
+Angriffsbeziehung werden die Größenstufe, \(|Z|\) und die Elemente von
+\(Z\) erfasst. Hinzu kommen Variablenzahl, Gatterzahl und Dateigröße der
+QBF, beide Echtzeiten, Status, Rückgabecode, Solvermeldung und die
+abgeleitete Kennzeichnung der Unabhängigkeit.
+
+\emph{[Nach Abschluss des Reruns ergänzen: Prozessor,
+Arbeitsspeicher, Betriebssystem, Python-, Bash- und QuAbS-Version sowie die
+Zahl der parallelen AF-Worker.]}
 
 \iffalse
 \subsection{Versuchsdesign und Auswertungsmethode}
