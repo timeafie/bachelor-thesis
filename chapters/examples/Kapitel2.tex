@@ -7,16 +7,14 @@
 modellieren Argumente als abstrakte Einheiten und erfassen ausschließlich die
 zwischen ihnen bestehenden Angriffe. Die grundlegenden Begriffe gehen auf
 \textcite{dung:1995:af} zurück. Die labellingbasierte Darstellung und die
-Notation folgen \textcite{bluemel:2025:independence-aba}.
+Notation folgen \citeauthor*{bluemel:2025:independence-aba} \cite{bluemel:2025:independence-aba}.
 
 \begin{Definition}
     \label{def:af}
     Ein \emph{Argumentationssystem} ist ein Paar \(F=(A,R)\), wobei \(A\)
     eine Menge von Argumenten und \(R\subseteq A\times A\) eine
     binäre Angriffsrelation ist. Für \((a,b)\in R\) heißt \(a\) ein
-    \emph{Angreifer} von \(b\). Falls die Zuordnung zu einem bestimmten
-    Argumentationssystem explizit angegeben werden muss, schreiben wir
-    \(A_F\) und \(R_F\).
+    \emph{Angreifer} von \(b\). Wir schreiben \(A_F\) und \(R_F\).
 \end{Definition}
 Im Folgenden werden ausschließlich endliche Argumentationssysteme betrachtet.
 \begin{Definition}
@@ -31,12 +29,10 @@ Im Folgenden werden ausschließlich endliche Argumentationssysteme betrachtet.
     \)
     bezeichnen wir die von \(a\) angegriffenen beziehungsweise \(a\) angreifenden Argumente. 
     Für Mengen schreiben wir
-    \(
+    \[
         S^+ = \{b\in A \mid \exists a\in S\colon (a,b)\in R\},
-    \)
-    \(
-        S^- = \{b\in A \mid \exists a\in S\colon (b,a)\in R\}
-    \).
+        S^- = \{b\in A \mid \exists a\in S\colon (b,a)\in R\}.
+    \]
 \end{Definition}
 
 \begin{Definition}
@@ -120,11 +116,11 @@ sich an \textcite{pearl:paz:1986:graphoids}. Die Notation folgt
     Seien \(V, X, Y, Z\) Mengen und \(X,Y,Z \subseteq V\). Ein \emph{Abhängigkeitsmodell} \(I\) über \(V\)
     ist eine ternäre Relation über paarweise disjunkten Teilmengen von \(V\),
     das heißt
-    \(
+    \[
         I \subseteq
         \bigl\{(X,Y,Z) \bigm| X,Y,Z\subseteq V,\,
         X\cap Y=X\cap Z=Y\cap Z=\emptyset\bigr\}.
-    \)
+    \]
     Wir schreiben
     \(
         X\perp_I Y\mid Z \text{ genau dann, wenn }
@@ -161,36 +157,13 @@ wird der Index \(I\) weggelassen. Für Elemente \(x,y\in V\) stehen
     \end{align*}
 \end{Definition}
 
-\begin{Definition}[\cite{rienstra:2020:independence-af}]
-    \label{def:sigma-independence-af}
-    Sei \(F =(A,R)\) ein Argumentationssystem, sei \(\sigma\) eine Semantik
-    und seien \(X,Y,Z\subseteq A\) paarweise disjunkt. Die Menge \(X\) ist
-    \emph{\(\sigma\)-unabhängig von \(Y\) gegeben \(Z\) in \(F\)},
-    geschrieben
-    \(
-        X\perp_\sigma Y\mid Z,
-    \)
-    genau dann, wenn für alle
-    \(\lambda_1,\lambda_2\in\Lambda_\sigma(F)\) aus
-    \(\lambda_1|_Z=\lambda_2|_Z\) die Existenz eines
-    \(\lambda_3\in\Lambda_\sigma(F)\) folgt, für das
-    \(
-        \lambda_3|_X=\lambda_1|_X,
-        \lambda_3|_Y=\lambda_2|_Y,
-        \lambda_3|_Z=\lambda_1|_Z=\lambda_2|_Z
-    \)
-    gilt. Andernfalls sind \(X\) und \(Y\) \emph{\(\sigma\)-abhängig
-    gegeben \(Z\) in \(F\)} und wir schreiben
-    \(X\not\perp_\sigma Y\mid Z\).
-\end{Definition}
-
 \section{Quantifizierte Boolesche Formeln}
 \label{sec:qbf}
 
 Quantifizierte boolesche Formeln erweitern aussagenlogische Formeln um
 existenzielle und universelle Quantoren. Dadurch können Aussagen über alle
 oder über mindestens eine Belegung boolescher Variablen ausgedrückt werden.
-Die folgenden Definitionen folgen \cite{handbook-satisfiability-2nd}.
+Die folgenden Definitionen orientieren sich an \citeauthor*{handbook-satisfiability-2nd} \cite{handbook-satisfiability-2nd}.
 
 \begin{Definition}[QBF]
     \label{def:qbf}
@@ -286,7 +259,7 @@ Die folgenden Definitionen folgen \cite{handbook-satisfiability-2nd}.
 
 Die folgenden Grundlagen orientieren sich an
 \textcite[Abschnitt~2.2]{dvorak:2012:computational-aspects}. Die Darstellung
-beschränkt sich auf die im weiteren Verlauf ben\"otigten Begriffe.
+beschränkt sich auf die im weiteren Verlauf benötigten Begriffe.
 
 \begin{Definition}[Entscheidungsproblem]
     \label{def:decision-problem}
@@ -399,8 +372,8 @@ Im Folgenden sprechen wir vereinfachend von polynomiellen Reduktionen.
     Form mit \(Q_1=\forall\).
 \end{Definition}
 
-\begin{Theorem}[\parencites{meyer:stockmeyer:1972:equivalence-regex}
-    {stockmeyer:meyer:1973:word-problems}QBF-Vollständigkeit]
+\begin{Theorem}[QBF-Vollständigkeit\parencites{meyer:stockmeyer:1972:equivalence-regex}
+    {stockmeyer:meyer:1973:word-problems}]
     \label{thm:qbf-ph-completeness}
     Für jedes \(k\geq 1\) ist
     \(\mathrm{QBF}^{\exists}_k\)
@@ -409,3 +382,6 @@ Im Folgenden sprechen wir vereinfachend von polynomiellen Reduktionen.
     \(\Pi_k^{\mathrm{P}}\)-vollständig bezüglich polynomieller
     Reduktionen.
 \end{Theorem}
+
+AF KOMPLEXITÄTSERGEBNISSE VORSTELLEN
+VERIFIKATION? ENUMERATION? USW. noch nicht sigma-Unabhängikeit

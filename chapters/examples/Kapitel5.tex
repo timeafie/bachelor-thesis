@@ -1,49 +1,72 @@
-\chapter{Berechnungstheoretische Analyse bestimmter Graphklassen}
+\chapter{Berechnungstheoretische Analyse bedingter Unabhängigkeit in ausgewählten Graphklassen}
 \label{ch:graphclasses}
 
-\iffalse
-Zu Beginn eine Feststellung, die die späteren komplexitätstheoretischen Einordnungen vereinfacht.
-\begin{Lemma}
-\label{lem:at-most-one-labelling-ci}
-    Sei \(F=(A,R)\) ein AF und sei \(\sigma\) eine beliebige Semantik. 
-    Falls \(|\Lambda_\sigma(F)| \leq 1\), dann ist die \(\sigma\)-Unabhängigkeit trivial.
-\end{Lemma}
+Die bedingte Unabhängigkeit \(X\perp_\sigma Y\mid Z\) wird über die Kombinierbarkeit 
+von \(\sigma\)-Labellings definiert. Strukturelle Eigenschaften eines AFs 
+beeinflussen daher unmittelbar, welche Labellings existieren und ob zwischen 
+ihnen die für eine nichttriviale Abhängigkeit erforderliche Variation auftreten kann. 
+Eine besondere Rolle spielen dabei gerichtete Zyklen: Ihr Auftreten und ihre Parität 
+wirken sich unterschiedlich auf die betrachteten Semantiken aus. 
+Dieses Kapitel untersucht deshalb, wie sich der Ausschluss bestimmter Zyklen 
+auf die bedingte Unabhängigkeit und auf die Komplexität ihrer Entscheidung auswirkt.
 
-\begin{proof}
-    Seien \(X,Y,Z \subseteq A\) paarweise disjunkt. Nach Definition gilt \(X \perp_\sigma Y \mid Z\), falls für alle \(\lambda_1,\lambda_2 \in \Lambda_\sigma(F)\) 
-    mit \(\lambda_1|_Z = \lambda_2|_Z\) ein 
-    \(\lambda_3 \in \Lambda_\sigma(F)\) existiert, sodass \(\lambda_3|_X = \lambda_1|_X\), \(\lambda_3|_Y = \lambda_2|_Y\) und \(\lambda_3|_Z = \lambda_1|_Z = \lambda_2|_Z\).
-    Falls \(\Lambda_\sigma(F)=\emptyset\), ist die universelle Quantifikation über \(\lambda_1\) und \(\lambda_2\) leer. Die Aussage gilt daher vakuos.
-    Sei nun \(\Lambda_\sigma(F)=\{\lambda\}\). Dann gilt für alle \(\lambda_1,\lambda_2 \in \Lambda_\sigma(F)\) bereits \(\lambda_1=\lambda_2=\lambda\). 
-    Wähle \(\lambda_3=\lambda\). Dann gilt unmittelbar \(\lambda_3|_X=\lambda_1|_X\), \(\lambda_3|_Y=\lambda_2|_Y\) und \(\lambda_3|_Z=\lambda_1|_Z=\lambda_2|_Z\). 
-    Also gilt \(X \perp_\sigma Y \mid Z\).
-\end{proof}
-\fi
+Zunächst werden in Abschnitt~\ref{sec:acyc-afs} azyklische AFs betrachtet. 
+Da ihre Struktur die semantische Bewertung für \(\sigma\in\{co,st,pr\}\) 
+eindeutig festlegt, gilt \(X\perp_\sigma Y\mid Z\) unabhängig von der Wahl 
+der paarweise disjunkten Mengen \(X,Y,Z\). Abschnitt~\ref{sec:even-cycle-free-afs} 
+schwächt diese Voraussetzung ab und erlaubt gerichtete Zyklen ungerader Länge.
+ Auch in dieser Graphklasse fehlt jedoch die semantische Variation, 
+ die für eine nichttriviale Abhängigkeit erforderlich wäre.
+
+In Abschnitt~\ref{sec:odd-cycle-free-afs} ändert sich die Ausgangslage grundlegend, 
+da gerade Zyklen und damit mehrere Labellings zulässig bleiben. 
+Der eigenständige Beitrag dieses Kapitels besteht insbesondere in der Bestimmung der 
+Komplexität der \emph{stable}-, \emph{preferred}- und \emph{complete}-Unabhängigkeit 
+auf dieser Graphklasse. Für die \emph{stable}-Semantik wird gezeigt, dass die bekannte 
+Härtereduktion von \textcite{bluemel:2025:independence-aba} ausschließlich 
+ungeradezykelfreie AFs erzeugt; das Ergebnis für die \emph{preferred}-Semantik folgt 
+aus der Übereinstimmung beider Semantiken auf dieser Graphklasse. Für die \emph{complete}-
+Semantik wird eine neue Konstruktion entwickelt, welche die zusätzlich möglichen 
+partiellen Labellings kontrolliert. 
+Damit wird für alle drei Semantiken \(\Pi_2^\text{P}\)-Vollständigkeit nachgewiesen.
+
 \section{Azyklische AFs}
 \label{sec:acyc-afs}
-
+Ein AF \(F=(A,R)\) heißt azyklisch, wenn der gerichtete Graph \((A,R)\) keinen gerichteten Zyklus enthält. 
+Azyklische AFs bilden eine besonders restriktive Graphklasse, da sämtliche zyklischen Angriffsbeziehungen
+ ausgeschlossen sind. Im Folgenden wird gezeigt, dass diese strukturelle Einschränkung die möglichen Labellings 
+vollständig festlegt und damit eine unmittelbare Aussage über \(X\perp_\sigma Y\mid Z\) erlaubt.
 \begin{Proposition}
 \label{prop:acyc-af-ci-st-top}
-    \(\sigma\)-Unabhängigkeit für \(\sigma \in \{co,st,pr\}\) ist allgemeingültig in azyklischen AFs.
+    Sei \(F=(A,R)\) ein azyklisches AF und \(\sigma\) eine Semantik mit
+    \(\sigma \in \{co,st,pr\}\). Dann gilt für alle paarweise disjunkten
+    \(X,Y,Z \subseteq A\), dass \(X\perp_\sigma Y\mid Z\).
 \end{Proposition}
 
 \begin{proof}
 \label{pr:acyc-af-ci-st-top-true}
-    Sei \(F=(A,R)\) ein endlicher azyklischer AF. Für azyklische AFs fallen die \emph{complete}-, \emph{preferred}- und \emph{stable}-Semantik mit der \emph{grounded}-Semantik zusammen. 
-    Da das grounded Labelling eindeutig ist, existiert genau ein Labelling \(\lambda\), sodass \(\Lambda_{co}(F)=\Lambda_{pr}(F)=\Lambda_{st}(F)=\{\lambda\}\).
-    Sei nun \(\sigma \in \{co,st,pr\}\). Dann gilt insbesondere \(|\Lambda_\sigma(F)|=1\). Nach Lemma~\ref{lem:independence-trivial-labelling-set} folgt für alle paarweise disjunkten \(X,Y,Z \subseteq A\), 
-    dass \(X \perp_\sigma Y \mid Z\) gilt.
+    Sei \(F=(A,R)\) ein azyklisches AF. Für azyklische AFs fallen die \emph{complete}-, 
+    \emph{preferred}- und \emph{stable}-Semantik mit der \emph{grounded}-Semantik zusammen. 
+    Da das \emph{grounded}-Labelling eindeutig ist, existiert genau ein Labelling \(\lambda\),
+     sodass \(\Lambda_{co}(F)=\Lambda_{pr}(F)=\Lambda_{st}(F)=\{\lambda\}\).
+    Sei nun \(\sigma \in \{co,st,pr\}\). Dann gilt insbesondere \(|\Lambda_\sigma(F)|=1\).
+     Nach Lemma~\ref{lem:independence-trivial-labelling-set} folgt für alle 
+     paarweise disjunkten \(X,Y,Z \subseteq A\), dass \(X \perp_\sigma Y \mid Z\) gilt.
 \end{proof}
 
+Damit beruht die bedingte Unabhängigkeit nicht auf einer Separation von \(X\) und \(Y\), 
+sondern auf der fehlenden Variation innerhalb von \(\Lambda_\sigma(F)\).
 \section{Geradezykelfreie AFs}
 \label{sec:even-cycle-free-afs}
-
-Für AFs ohne gerade Zykel ist allein das \emph{grounded}-Labelling ein Kandidat, ein \emph{stable}-Labelling zu sein. 
-Damit existiert ebenfalls maximal ein \emph{stable}-Labelling. 
-
+Geradezykelfreie AFs schließen gerichtete Zyklen gerader Länge aus, erlauben jedoch ungerade Zyklen. 
+Sie bilden daher eine echt umfassendere Graphklasse als die azyklischen AFs. 
+Dennoch begrenzt das Fehlen gerader Zyklen die Menge der möglichen Labellings so stark, 
+dass sich erneut allgemeine Aussagen über \(X\perp_\sigma Y\mid Z\) ableiten lassen.
 \begin{Proposition}
 \label{prop:even-cycle-free-af-ci-st-top}
-    \(\sigma\)-Unabhängigkeit für \(\sigma \in \{co,st,pr\}\) ist allgemeingültig in geradezykelfreien AFs.
+    Sei \(F=(A,R)\) ein AF ohne gerade Zyklen und \(\sigma\) eine Semantik mit
+    \(\sigma \in \{co,st,pr\}\). Dann gilt für alle paarweise disjunkten
+    \(X,Y,Z \subseteq A\), dass \(X\perp_\sigma Y\mid Z\).
 \end{Proposition}
 
 \begin{proof}
@@ -57,10 +80,22 @@ Damit existiert ebenfalls maximal ein \emph{stable}-Labelling.
     Nach Lemma~\ref{lem:independence-trivial-labelling-set} folgt für alle paarweise disjunkten \(X,Y,Z \subseteq A\), dass \(X \perp_\sigma Y \mid Z\) gilt.
 \end{proof}
 
-
+Auch in AFs ohne Zykel gerader Länge beruht die Allgmeingültigkeit der 
+bedingten Unabhängigkeit damit lediglich auf der fehlenden Variation
+der Labellings.  
 \section{Ungeradezykelfreie AFs}
 \label{sec:odd-cycle-free-afs}
+In den bisher betrachteten Graphklassen entstand bedingte Unabhängigkeit aus dem Fehlen 
+semantischer Alternativen. Mit den ungeradezykelfreien AFs ändert sich diese Ausgangslage: 
+Zyklen bleiben nun zulässig, sofern sie eine gerade Länge besitzen. Damit bleiben gerade 
+jene Rückkopplungen erhalten, die unterschiedliche Labellings ermöglichen können. 
 
+Dennoch ist die Struktur ungeradezykelfreier AFs nicht beliebig. Insbesondere fallen auf dieser 
+Graphklasse die \emph{stable}- und die \emph{preferred}-Semantik zusammen. 
+Die folgenden Ergebnisse zeigen, dass die strukturelle Einschränkung keine entsprechende Verringerung 
+der Komplexität bewirkt. Während sich dies für die \emph{stable}- und die \emph{preferred}-Semantik 
+aus bekannten Reduktion von \textcite{bluemel:2025:independence-aba} und ihrer Graphstruktur ableiten lässt, 
+erfordert die \emph{complete}-Semantik eine neue Konstruktion.
 \begin{Proposition}
     \label{prop:ocf-af-ci-st-pi^2}
     \(stable\)-Unabhängigkeit ist auch in ungeradezykelfreien AFs \(\Pi_2^\text{P}\)-vollständig.
@@ -108,14 +143,16 @@ Damit existiert ebenfalls maximal ein \emph{stable}-Labelling.
     \resizebox{\textwidth}{!}{
         \input{gfx/Blümel_Reduktion.tex}
     }
-    \caption{\cite{bluemel:2025:independence-aba}[Figure 1]AF Repräsentation der Reduktion in Proposition C.1 für eine Formel 
+    \caption{AF Repräsentation der Reduktion in Proposition C.1 für eine Formel 
     \(\forall X \exists Y \varphi\) wo \(\phi\) durch die folgenden Klauseln gegeben ist: \(\{\{x_0, x_2, y_1\}, \{x_0, \overline{x_2}, \overline{y_1}, \overline{x_1}\},
-    \{x_0, \overline{x_2}, x_1\}\}\)}
+    \{x_0, \overline{x_2}, x_1\}\}\), adaptiert von \cite{bluemel:2025:independence-aba}.}
     \label{fig:reduktion-stable}
 \end{figure}
+Abbildung~\ref{fig:reduktion-stable} zeigt eine konkrete Instanz der Reduktion.
 
-
-
+Das vorangegangene Ergebnis lässt sich auf ungeradezykelfreien AFs unmittelbar auf die \emph{preferred}-Unabhängigkeit übertragen. 
+Maßgeblich ist die Gleichheit \(\Lambda_{st}(F)=\Lambda_{pr}(F)\), 
+aufgrund derer beide Unabhängigkeitsbegriffe auf derselben Menge von Labellings ausgewertet werden.
 \begin{Proposition}
     \label{prop:ocf-af-ci-pr-pi^2-c}
     \(preferred\)-Unabhängigkeit ist auch in ungeradezykelfreien AFs \(\Pi_2^\text{P}\)-vollständig .
@@ -126,6 +163,10 @@ Damit existiert ebenfalls maximal ein \emph{stable}-Labelling.
     Folgt direkt aus Proposition \ref{prop:ocf-af-ci-st-pi^2} und der Tatsache, dass in ungeradezykelfreien AFs \(\Lambda_{st} = \Lambda_{pr}\).
 \end{proof}
 
+Für die \emph{complete}-Unabhängigkeit ist ein entsprechender Übertrag nicht möglich, 
+da \(\Lambda_{co}(F)\) zusätzliche, nichtmaximale Labellings enthalten kann. 
+Insbesondere können Variablenpaare mit \(und\) gelabelt sein, weshalb eine 
+modifizierte Konstruktion benötigt wird, die totale und partielle Belegungen unterscheidet.
 \begin{Proposition}
     \label{prop:ocf-af-ci-co-pi^2-c}
     \(complete\)-Unabhängigkeit ist auch in ungeradezykelfreien AFs \(\Pi_2^\text{P}\)-vollständig.
@@ -233,23 +274,6 @@ Damit existiert ebenfalls maximal ein \emph{stable}-Labelling.
     eine Variable aus \(X^{+}\) unentschieden, so gilt
     \(\lambda(s)=\lambda(g)=und\).
 
-    \begin{figure}
-        \centering
-        \resizebox{\textwidth}{!}{
-            \input{gfx/ocf_co_härte.tex}
-        }
-        \caption{AF-Repräsentation der Reduktion in \ref{prop:ocf-af-ci-co-pi^2-c} für die Formel
-            \(\Psi = \forall x_1 \exists y_1 \varphi\) mit
-            \(\varphi =
-            (x_1 \lor y_1) \land
-            (\overline{x_1} \lor \overline{y_1})\).
-            Die reduzierte Formel \(\widehat{\varphi}\) ist durch die Klauseln
-            \(\{\{x_0,x_1,y_1\},
-            \{x_0,\overline{x_1},\overline{y_1}\}\}\)
-            gegeben.}
-    \label{fig:reduktion-complete}
-    \end{figure}
-
     \paragraph{Korrektheit.}
     Sei zunächst \(\Psi\) gültig und seien
     \(\lambda_1,\lambda_2\in\Lambda_{co}(F_{\Psi})\) mit
@@ -322,7 +346,28 @@ Damit existiert ebenfalls maximal ein \emph{stable}-Labelling.
     \(F_{\Psi}\) ist ungeradezykelfrei.
 \end{proof}
 
-\newpage
+\begin{figure}
+    \centering
+    \resizebox{\textwidth}{!}{
+        \input{gfx/ocf_co_härte.tex}
+    }
+    \caption{AF-Repräsentation der Reduktion in \ref{prop:ocf-af-ci-co-pi^2-c} für die Formel
+        \(\Psi = \forall x_1 \exists y_1 \varphi\) mit
+        \(\varphi =
+        (x_1 \lor y_1) \land
+        (\overline{x_1} \lor \overline{y_1})\).
+        Die reduzierte Formel \(\widehat{\varphi}\) ist durch die Klauseln
+        \(\{\{x_0,x_1,y_1\},
+        \{x_0,\overline{x_1},\overline{y_1}\}\}\)
+        gegeben.}
+\label{fig:reduktion-complete}
+\end{figure}
+
+Abbildung~\ref{fig:reduktion-complete} verdeutlicht, wie die Kontrollstruktur aus \(d_i\), 
+\(s\) und \(g\) totale von partiellen Belegungen trennt. Die Konstruktion berücksichtigt damit 
+die zusätzlichen \emph{complete}-Labellings, während alle gerichteten Zyklen weiterhin auf 
+die Zweierzyklen innerhalb der Variablenpaare und der Komponente \(\{\varphi,t\}\) beschränkt bleiben.
+
 
 \section{Bipartite AFs}
 \begin{Proposition}
@@ -514,6 +559,8 @@ und \(F_{\Psi}\) ist bipartit.
     bipartite Graphen eine Unterklasse der ungeradezykelfreien Graphen sind. Womit direkt
     \(\Lambda_{st} = \Lambda_{pr}\) gilt. 
 \end{proof}
+
+\iffalse
 
 \section{Symmetrische AFs}
 \label{sec:sym-afs}
@@ -720,3 +767,5 @@ Kaum \emph{stable}-Labellings vorhanden.
     bislang nicht gezeigten Fall.}
     \label{tab:complexity-results-graph-classes}
 \end{table}
+
+\fi

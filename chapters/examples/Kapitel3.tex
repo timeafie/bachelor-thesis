@@ -1,0 +1,556 @@
+\chapter{QBF-Kodierung bedingter Unabhängigkeit}
+\label{ch:semantic-independence}
+
+Bedingte Unabhängigkeit untersucht, ob sich die Bewertungen der Mengen \(X\) und 
+\(Y\) aus verschiedenen gültigen Labellings bei festgehaltener Bewertung von \(Z\) 
+in einem dritten gültigen Labelling kombinieren lassen. Die zugrunde liegende
+ semantische Definition geht auf \citeauthor*{rienstra:2020:independence-af}\cite{rienstra:2020:independence-af} zurück. 
+ Notation und Komplexitätsergebnisse orientieren sich an 
+\citeauthor*{bluemel:2025:independence-aba} \cite{bluemel:2025:independence-aba}: Für die \emph{complete}- und die 
+ \emph{stable}-Semantik ist das Entscheidungsproblem \(\Pi_2^{\mathrm P}\)-vollständig, 
+ für die \emph{preferred}-Semantik hingegen \(\Pi_3^{\mathrm P}\)-vollständig.
+  Diese Ergebnisse motivieren quantifizierte boolesche Formeln als Zielformalismus, 
+deren Einsatz für Argumentationsprobleme insbesondere von 
+\citeauthor*{egly:woltran:2006:reasoning-qbf}\cite{egly:woltran:2006:reasoning-qbf} untersucht wurde.
+
+Ziel dieses Kapitels ist die Entwicklung einer einheitlichen, labellingbasierten 
+QBF-Kodierung der bedingten Unabhängigkeit für die drei betrachteten Semantiken. 
+Hierzu werden die semantische Gültigkeit einzelner Labellings und ihre für die 
+Unabhängigkeit erforderliche Rekombination zunächst als getrennte Bausteine kodiert. 
+Diese Trennung ermöglicht es, dieselben Formeln für Übereinstimmung und Rekombination 
+unabhängig von der gewählten Semantik zu verwenden. Zugleich werden Sonderfälle berücksichtigt, 
+in denen ein Argumentationssystem bezüglich der betrachteten Semantik höchstens ein Labelling 
+besitzt und die Unabhängigkeitsbedingung daher trivial erfüllt ist.
+
+Das Kapitel ist in drei Schritte gegliedert. Zunächst werden der semantische 
+Unabhängigkeitsbegriff, das zugehörige Entscheidungsproblem und dessen Komplexität 
+eingeführt. Anschließend werden boolesche Variablenblöcke zur Repräsentation von 
+Labellings sowie Kodierungen der \emph{complete}-, \emph{stable}- 
+und \emph{preferred}-Semantik entwickelt. Im letzten Schritt werden Formeln für die 
+Gleichheit eingeschränkter Labellings und ihre Rekombination definiert. 
+Gemeinsam mit den Semantikkodierungen werden sie gemäß der Quantorenstruktur 
+der Unabhängigkeitsdefinition zur QBF \(\Phi_F^\sigma(X,Y\mid Z)\) zusammengesetzt, 
+deren Korrektheit abschließend bewiesen wird.
+
+\section{Bedingte Unabhängigkeit in Argumentationssystemen}
+\label{sec:sigma-independence-af-complexity}
+
+Dieses Unterkapitel untersucht bedingte Unabhängigkeit in Argumentationssystemen und 
+bereitet ihre Kodierung durch quantifizierte boolesche Formeln vor.
+Dazu werden zunächst der semantische Unabhängigkeitsbegriff und das zugehörige 
+Entscheidungsproblem eingeführt. Anschließend werden die relevanten 
+Komplexitätsergebnisse und jene Sonderfälle betrachtet, die für die Konstruktion 
+und empirische Auswertung der QBF-Kodierungen von Bedeutung sind.
+
+Intuitiv beschreibt bedingte Unabhängigkeit die Möglichkeit, 
+Bewertungen verschiedener Argumentmengen miteinander zu kombinieren.
+Stimmen zwei \(\sigma\)-Labellings auf der bedingenden Menge \(Z\) überein, 
+so sollen die Bewertung von \(X\) aus dem ersten und die Bewertung von 
+\(Y\) aus dem zweiten Labelling gemeinsam in einem weiteren 
+\(\sigma\)-Labelling auftreten können, ohne die gemeinsame Bewertung von \(Z\) zu verändern.
+\begin{Definition}[\cite{rienstra:2020:independence-af}]
+    \label{def:sigma-independence-af}
+    Sei \(F =(A,R)\) ein AF, sei \(\sigma\) eine Semantik
+    und seien \(X,Y,Z\subseteq A\) paarweise disjunkt. Die Menge \(X\) ist
+    \emph{\(\sigma\)-unabhängig von \(Y\) gegeben \(Z\) in \(F\)},
+    geschrieben
+    \(
+        X\perp_\sigma Y\mid Z,
+    \)
+    genau dann, wenn für alle
+    \(\lambda_1,\lambda_2\in\Lambda_\sigma(F)\) aus
+    \(\lambda_1|_Z=\lambda_2|_Z\) die Existenz eines
+    \(\lambda_3\in\Lambda_\sigma(F)\) folgt, für das
+    \[
+        \lambda_3|_X=\lambda_1|_X,
+        \lambda_3|_Y=\lambda_2|_Y,
+        \lambda_3|_Z=\lambda_1|_Z=\lambda_2|_Z
+    \]
+    gilt. Andernfalls sind \(X\) und \(Y\) \emph{\(\sigma\)-abhängig
+    gegeben \(Z\) in \(F\)} und wir schreiben
+    \(X\not\perp_\sigma Y\mid Z\).
+\end{Definition}
+
+Bislang wurde bedingte Unabhängigkeit als semantische Eigenschaft beschrieben. 
+Eine Kodierung benötigt jedoch eine konkrete Ja-Nein-Frage, 
+die für eine gegebene Instanz beantwortet werden kann. 
+Daher wird die Rekombinationsbedingung im nächsten Schritt als Entscheidungsproblem gefasst.
+\begin{Definition}[\cite{bluemel:2025:independence-aba}]
+    \label{def:sigma-independence-af-dec-problem}
+    Für \(\sigma\in\{\mathsf{co},\mathsf{st},\mathsf{pr}\}\) bezeichnet
+    \(\mathrm{IND}_\sigma\) das folgende \emph{Entscheidungsproblem}:
+    \[
+        \begin{array}{ll}
+        \text{Eingabe:}
+            &AF~F =(A,R)\text{ sowie paarweise disjunkte Mengen }
+             X,Y,Z\subseteq A\\
+        \text{Frage:}
+            &\text{Gilt }X\perp_\sigma Y\mid Z\text{ in }F\,?
+        \end{array}
+    \]
+\end{Definition}
+Die Problemformulierung macht zugleich die für die spätere QBF-Kodierung maßgebliche Quantorenstruktur sichtbar: 
+Abhängigkeit liegt genau dann vor, wenn ein auf \(Z\) übereinstimmendes Paar von \(\sigma\)-Labellings existiert, 
+für das kein geeignetes rekombinierendes \(\sigma\)-Labelling gefunden werden kann.
+
+Die Entscheidungsprobleme zur semantikspezifischen Unabhängigkeit weisen
+bereits für die betrachteten Standardsemantiken eine hohe Komplexität auf.
+\begin{Theorem}[\cite{bluemel:2025:independence-aba}]
+\label{thm:independence-complexity}
+Die Entscheidungsprobleme
+\(\mathrm{IND}_{\mathsf{co}}\) und
+\(\mathrm{IND}_{\mathsf{st}}\) sind
+\(\Pi^{\mathrm P}_2\)-vollständig.
+Das Entscheidungsproblem
+\(\mathrm{IND}_{\mathsf{pr}}\) ist
+\(\Pi^{\mathrm P}_3\)-vollständig.
+\end{Theorem}
+Die Komplexität entsteht durch die Betrachtung aller auf \(Z\) übereinstimmenden Labelling-Paare, 
+für die jeweils ein geeignetes drittes Labelling existieren muss. 
+Bei \emph{preferred}-Labellings erzeugt die zusätzliche Maximalitätsprüfung eine weitere Prüfebene.
+
+Dabei ist der Randfall von AFs mit höchstens einem \(\sigma\)-Labelling zu berücksichtigen. 
+Da kein Paar unterschiedlicher Bewertungen ein Gegenbeispiel liefern kann, 
+gilt die Unabhängigkeit hier trivial, wie das folgende Lemma festhält.
+\begin{Lemma}[\cite{rienstra:2020:independence-af}]
+    \label{lem:independence-trivial-labelling-set}
+    Gilt \(|\Lambda_\sigma(F)|\leq 1\), so gilt
+    \(X\perp_\sigma Y\mid Z\) für alle paarweise disjunkten Mengen
+    \(X,Y,Z\subseteq A\).
+\end{Lemma}
+
+\begin{proof}
+    Für \(\Lambda_\sigma(F)=\emptyset\) ist die Allquantifizierung über
+    \(\lambda_1\) und \(\lambda_2\) leer. Besteht
+    \(\Lambda_\sigma(F)\) aus genau einem Labelling \(\lambda\), so kann
+    für das einzige Paar \((\lambda,\lambda)\) dieses Labelling selbst als
+    \(\lambda_3\) gewählt werden.
+\end{proof}
+
+Das Lemma ist für die spätere empirische Auswertung wesentlich: Eine hohe
+Unabhängigkeitsrate kann sowohl durch viele Kombinationsmöglichkeiten als auch durch
+das Fehlen vergleichbarer Labellings entstehen.
+
+\section{Labellingbasierte Semantikkodierung}
+\label{sec:semantics-encoding}
+Dieser Abschnitt entwickelt die logischen Bausteine für die spätere QBF-Kodierung bedingter Unabhängigkeit.
+Dazu werden zunächst boolesche Variablen für die einzelnen Labels eingeführt und anschließend um die spezifischen Bedingungen
+der \emph{stable-}, \emph{complete-} und \emph{preferred-}Semantik ergänzt.
+Die daraus entstehenden Formeln bilden schließlich die Grundlage der Unabhängigkeitskodierung.
+
+Bevor zwischen \emph{stable-}, \emph{complete-} und \emph{preferred-} Labellings unterschieden werden kann, 
+muss zunächst ein beliebiges Labelling in eine boolesche Belegung übersetzt werden.
+Hierzu erhält jedes Argument drei Variablen, die seine möglichen Labels repräsentieren.
+
+\begin{Definition}
+    \label{def:labelling-variable-block}
+    Sei \(F=(A,R)\) ein AF. Ein
+    \emph{Labellingvariablenblock} für \(F\) ist ein Tripel
+    \(\mathbf{V}=(I,O,U)\) paarweise disjunkter Variablenmengen
+\(
+        I=\{i_a\mid a\in A\},~
+        O=\{o_a\mid a\in A\},~
+        U=\{u_a\mid a\in A\}.
+\)
+\end{Definition}
+Die Variablen \(i_a\), \(o_a\) und \(u_a\) kodieren die Labels
+\(\mathsf{in}\), \(\mathsf{out}\) beziehungsweise \(\mathsf{und}\)
+von \(a\). 
+
+Zusätzlich müssen wir für die Kodierung eines Labellings noch sicherstellen, dass jedes Argument 
+genau ein Label erhält. 
+\begin{Definition}
+\label{def:One}
+    Sei \(F=(A,R)\) ein AF und
+    \(\mathbf V=(I,O,U)\) ein Labellingvariablenblock für \(F\).
+    \[
+        \operatorname{One}F(\mathbf V)
+        :=
+        \bigwedge{a\in A}
+        \Bigl(
+            (i_a\lor o_a\lor u_a)
+            \land\neg(i_a\land o_a)
+            \land\neg(i_a\land u_a)
+            \land\neg(o_a\land u_a)
+        \Bigr).
+    \]
+\end{Definition}
+Die Disjunktion \(i_a\lor o_a\lor u_a\) fordert für jedes Argument
+mindestens eine wahre Labelvariable. Die drei negierten Konjunktionen
+schließen aus, dass mehrere Labelvariablen desselben Arguments
+gleichzeitig wahr sind.
+
+Intuitiv wählt eine Belegung, die \(\operatorname{One}_F(\mathbf V)\) erfüllt, für jedes Argument genau eine der drei Labelvariablen \(i_a\), \(o_a\) und \(u_a\) aus. 
+Die jeweils wahre Variable legt das Label des Arguments fest. 
+Somit lässt sich eine solche Belegung unmittelbar als Labelling lesen - und umgekehrt.
+\begin{Definition}
+    \label{def:One-model}
+    Sei \(\mathbf V=(I,O,U)\) ein Labellingvariablenblock für das AF
+    \(F=(A,R)\), und sei
+    \(\nu\colon I\cup O\cup U\to\{0,1\}\) eine Belegung mit
+    \(\nu\models\operatorname{One}_F(\mathbf V)\).
+    Das durch \(\nu\) kodierte Labelling
+    \(\lambda_\nu\colon A\to
+    \{\mathsf{in},\mathsf{out},\mathsf{und}\}\) ist definiert durch \\
+    \[
+        \lambda_\nu(a)=
+        \begin{cases}
+            \mathsf{in},
+                &\text{falls }\nu(i_a)=1,\\
+            \mathsf{out},
+                &\text{falls }\nu(o_a)=1,\\
+            \mathsf{und},
+                &\text{falls }\nu(u_a)=1.
+        \end{cases}
+    \]
+\end{Definition}
+
+\begin{Lemma}
+    \label{lem:One-model}
+    Sei \(F=(A,R)\) ein AF und
+    \(\mathbf V=(I,O,U)\) ein Labellingvariablenblock für \(F\).
+    Dann gelten die folgenden Aussagen:
+    \begin{enumerate}
+        \item Für jede Belegung
+        \(\nu\colon I\cup O\cup U\to\{0,1\}\)
+        mit
+        \(\nu\models\operatorname{One}_F(\mathbf V)\)
+        ist \(\lambda_\nu\) ein eindeutig bestimmtes Labelling
+        von \(F\).
+
+        \item Für jedes Labelling
+        \(\lambda\colon A\to
+        \{\mathsf{in},\mathsf{out},\mathsf{und}\}\)
+        existiert genau eine Belegung
+        \(\nu\colon I\cup O\cup U\to\{0,1\}\)
+        mit
+        \(\nu\models\operatorname{One}_F(\mathbf V)\)
+        und
+        \(\lambda_\nu=\lambda\).
+    \end{enumerate}
+\end{Lemma}
+
+\begin{proof}
+    Zu 1: Aus
+    \(\nu\models\operatorname{One}_F(\mathbf V)\)
+    folgt, dass für jedes \(a\in A\) genau eine der Variablen
+    \(i_a\), \(o_a\) und \(u_a\) wahr ist. Daher trifft in
+    Definition~\ref{def:One-model} genau ein Fall zu und
+    \(\lambda_\nu\) ist eindeutig bestimmt.
+
+    Zu 2: Für ein gegebenes Labelling \(\lambda\) wird eine Belegung
+    \(\nu_\lambda\) definiert, indem für jedes \(a\in A\) genau die
+    zu \(\lambda(a)\) gehörende Labelvariable wahr gesetzt wird.
+    Dann gelten
+    \(\nu_\lambda\models\operatorname{One}_F(\mathbf V)\)
+    und
+    \(\lambda_{\nu_\lambda}=\lambda\).
+
+    Jede weitere Belegung mit diesen Eigenschaften muss für jedes
+    Argument dieselbe Labelvariable wahr setzen und stimmt daher mit
+    \(\nu_\lambda\) auf \(I\cup O\cup U\) überein. Somit ist
+    \(\nu_\lambda\) eindeutig.
+\end{proof}
+
+Nach dieser Vorarbeit können wir uns der konkreten Kodierung der Semantiken stellen.
+Die \emph{complete}-Semantik stellt die schwächsten Bedingungen und ist Grundlage aller weiteren hier
+behandelten Semantiken. 
+\begin{Definition}
+    \label{def:co-st-encodings}
+    Sei \(F=(A,R)\) ein AF und
+    \(\mathbf V=(I,O,U)\) ein Labellingvariablenblock.
+    \[
+        \operatorname{Co}_F(\mathbf V)
+        :=
+        \operatorname{One}_F(\mathbf V)
+        \land
+        \bigwedge_{a\in A}
+        \left(
+            i_a\leftrightarrow
+            \bigwedge_{b\in a^-}o_b
+        \right)
+        \land
+        \bigwedge_{a\in A}
+        \left(
+            o_a\leftrightarrow
+            \bigvee_{b\in a^-}i_b
+        \right).
+    \]
+\end{Definition}
+Die Teilformel \(\operatorname{One}_F(\mathbf V)\) stellt zunächst sicher, dass jedes Argument genau ein Label erhält. 
+Die erste Äquivalenz weist \(a\) genau dann das Label \(\mathsf{in}\) zu, wenn alle Angreifer von \(a\) mit \(\mathsf{out}\) bezeichnet sind. 
+Nach der zweiten Äquivalenz erhält \(a\) genau dann das Label \(\mathsf{out}\), wenn mindestens ein Angreifer mit \(\mathsf{in}\) bezeichnet ist. 
+Damit charakterisiert \(\operatorname{Co}_F(\mathbf V)\) genau die \emph{complete} Labellings von \(F\).
+
+Die \emph{stable}-Semantik verschärft die Forderung der \emph{complete}-Semantik weiter.
+\begin{Definition}
+    Sei \(F=(A,R)\) ein AF und
+    \(\mathbf V=(I,O,U)\) ein Labellingvariablenblock.
+    \[
+        \operatorname{St}_F(\mathbf V)
+        :=
+        \operatorname{Co}_F(\mathbf V)
+        \land
+        \bigwedge_{a\in A}\neg u_a.
+    \]
+\end{Definition}
+Die Formel \(\operatorname{St}_F(\mathbf V)\) ergänzt die Bedingungen eines \emph{complete}-Labellings um den Ausschluss des Labels 
+\(\mathsf{und}\). Sie ist daher genau für jene Belegungen erfüllt, die \emph{stable}-Labellings von \(F\) kodieren.
+
+Im Unterschied zur \emph{complete}- und \emph{stable}-Semantik lässt sich die \emph{preferred}-Semantik nicht 
+allein durch lokale Bedingungen innerhalb eines Labellings charakterisieren.
+Um die geforderte Inhaltsmaximalität der In-Menge der \emph{preferred}-Semantik auszudrücken, benötigen 
+wir eine zweite Kopie des Variablenblocks.
+Allgemein bezeichnen wir mit \(\mathbf V^k=(I^k,O^k,U^k)\) die
+\emph{\(k\)-te Kopie} eines Variablenblocks. 
+\begin{Definition}[\cite{egly:woltran:2006:reasoning-qbf}]
+    \label{def:strict-inclusion}
+    Seien \(\mathbf V=(I,O,U)\) und
+    \(\widehat{\mathbf V}=(\widehat{I},\widehat{O},\widehat{U})\) zwei Labellingvariablenblöcke für das 
+    \(AF ~F=(A,R)\).
+    \[
+        I < \widehat{I}
+        :=
+        \left(
+            \bigwedge_{a\in A}(i_a\rightarrow \widehat{i}_a)
+        \right)
+        \land
+        \left(
+            \bigvee_{a\in A}(\neg i_a\land \widehat{i}_a)
+        \right).
+    \]
+\end{Definition}
+Unter einer Belegung der beiden Variablenblöcke ist \(I<\widehat I\) genau dann erfüllt, 
+wenn die durch \(I\) repräsentierte In-Menge eine echte Teilmenge der durch \(\widehat I\) repräsentierten In-Menge ist. 
+Die erste Konjunktion gewährleistet die Inklusion, während die zweite sicherstellt, 
+dass mindestens ein weiteres Argument in \(\widehat I\) enthalten ist.
+\begin{Definition}
+    \label{def:preferred-encoding}
+    Sei \(F=(A,R)\) ein AF und \(\mathbf V \text{ und } \widehat{\mathbf V}\) Labellingvariablenblöcke.
+    \[
+        \operatorname{Pr}_F(\mathbf V)
+        :=
+        \operatorname{Co}_F(\mathbf V)
+        \land
+        \forall\widehat{\mathbf V}\,
+        \neg ({Co}_F(\widehat{\mathbf V})
+        \land I < \widehat{I}).
+    \]
+\end{Definition}
+Die Formel \(\operatorname{Co}_F(\mathbf V)\) stellt zunächst sicher, dass \(\mathbf V\) ein \emph{complete}-Labelling kodiert. 
+Der universell quantifizierte Vergleichsblock schließt anschließend jedes \emph{complete}-Labelling aus, 
+dessen In-Menge die durch \(I\) bestimmte In-Menge echt enthält. Damit ist \(\operatorname{Pr}_F(\mathbf V)\) 
+genau dann erfüllt, wenn das kodierte \emph{complete}-Labelling In-maximal und somit \emph{preferred} ist.
+\begin{Definition}
+    \label{def:uniform-semantics-predicate}
+    Für
+    \(\sigma\in\{\mathsf{co},\mathsf{st},\mathsf{pr}\}\) ist
+    \[
+        \operatorname{Sem}^{\sigma}_F(\mathbf V)
+        :=
+        \begin{cases}
+            \operatorname{Co}_F(\mathbf V),
+                &\text{falls }\sigma=\mathsf{co},\\
+            \operatorname{St}_F(\mathbf V),
+                &\text{falls }\sigma=\mathsf{st},\\
+            \operatorname{Pr}_F(\mathbf V),
+                &\text{falls }\sigma=\mathsf{pr}.
+        \end{cases}
+    \]
+\end{Definition}
+Das Prädikat \(\operatorname{Sem}^{\sigma}_F\) fasst die drei Semantikkodierungen in einer einheitlichen Notation zusammen. 
+Abhängig von \(\sigma\) bezeichnet es die Formel für \emph{complete}, \emph{stable} oder \emph{preferred} Labellings. 
+Dadurch können die nachfolgenden Konstruktionen unabhängig von der jeweils betrachteten Semantik formuliert werden.
+\begin{Lemma}
+    \label{lem:semantics-encoding-correct}
+    Sei \(\nu\models\operatorname{One}_F(\mathbf V)\), und sei
+    \(\lambda_\nu\) das durch \(\nu\) kodierte Labelling. Für jedes
+    \(\sigma\in\{\mathsf{co},\mathsf{st},\mathsf{pr}\}\) gilt
+    \[
+        \nu\models\operatorname{Sem}^{\sigma}_F(\mathbf V)
+        \quad\Longleftrightarrow\quad
+        \lambda_\nu\in\Lambda_\sigma(F).
+    \]
+\end{Lemma}
+\begin{proof}
+    Für \(\sigma=\mathsf{co}\) geben die beiden Äquivalenzen in
+    \(\operatorname{Co}_F\) genau die Definition eines \emph{complete}
+    Labellings wieder. Für \(\sigma=\mathsf{st}\) kommt die Bedingung
+    \(\mathsf{und}(\lambda_\nu)=\emptyset\) hinzu.
+
+    Für \(\sigma=\mathsf{pr}\) ist
+    \(\forall\widehat{\mathbf V}\,
+        \neg ({Co}_F(\widehat{\mathbf V})
+        \land I < \widehat{I})\) genau dann wahr, wenn kein \emph{complete}-Labelling existiert,
+    dessen In-Menge die In-Menge von \(\lambda_\nu\) echt enthält.
+    Dies ist äquivalent zur In-Maximalität von \(\lambda_\nu\).
+\end{proof}
+
+\section{QBF-Kodierung der bedingten Unabhängigkeit}
+\label{sec:uniform-independence-qbf}
+
+Dieser Abschnitt entwickelt die QBF-Kodierung der bedingten Unabhängigkeit. Die zuvor eingeführten Prädikate erfassen bereits, 
+ob ein einzelner Variablenblock ein gültiges Labelling der \emph{complete}-, \emph{stable}- oder \emph{preferred}-Semantik kodiert. 
+Für bedingte Unabhängigkeit müssen nun drei solcher Labellings miteinander in Beziehung gesetzt werden. 
+Dazu wird zunächst die Übereinstimmung zweier Labellings auf einer Teilmenge des Argumentationssystems kodiert. 
+Anschließend beschreibt eine Mischungsformel die geforderte Rekombination der Bewertungen auf \(X\), \(Y\) und \(Z\). 
+Beide Bausteine werden schließlich entsprechend der Quantorenstruktur der Unabhängigkeitsdefinition zu einer QBF zusammengesetzt, 
+deren Korrektheit abschließend gezeigt wird.
+
+
+Wir beginnen mit der Kodierung der Gleichheit zweier Labellings auf einer Teilmenge der Argumente des dazugehörigen AFs.
+\begin{Definition}
+    \label{def:equality-formula}
+    Sei \(F =(A,R)\) ein AF, \(S\subseteq A\) und \(\mathbf V^j\) und \(\mathbf V^k\) zwei Kopien eines
+    Labellingvariablenblocks.
+    \[
+        \operatorname{Eq}^{j,k}_S
+        :=
+        \bigwedge_{a\in S}
+        \Bigl(
+            (i_a^j\leftrightarrow i_a^k)
+            \land(o_a^j\leftrightarrow o_a^k)
+            \land(u_a^j\leftrightarrow u_a^k)
+        \Bigr).
+    \]
+\end{Definition}
+Jedes Argument wird in einem Variablenblock durch ein Tripel von Labelvariablen repräsentiert. Die Formel verlangt, 
+dass dieses Tripel für jedes Argument aus \(S\) in beiden Blöcken identisch ist.
+Kodieren die Blöcke Labellings, weisen sie den Argumenten aus \(S\) damit dieselben Labels zu.
+\begin{Lemma}
+    \label{lem:equality-correct}
+    Sei \(\nu\) eine gemeinsame Belegung der Variablen in
+    \(\mathbf V^j\) und \(\mathbf V^k\), deren Einschränkungen die
+    Labellings \(\lambda_j\) und \(\lambda_k\) kodieren. Dann gilt
+    \[
+        \nu\models\operatorname{Eq}^{j,k}_S
+        \quad\Longleftrightarrow\quad
+        \lambda_j|_S=\lambda_k|_S.
+    \]
+\end{Lemma}
+\begin{proof}
+    Für jedes \(a\in S\) sind die drei Äquivalenzen genau dann erfüllt,
+    wenn beide Blöcke dasselbe Label für \(a\) kodieren. Die Konjunktion
+    über \(S\) liefert die Behauptung.
+\end{proof}
+
+Der zentrale Existenzschritt der bedingten Unabhängigkeit verlangt ein drittes Labelling, das auf \(X\) mit dem ersten, 
+auf \(Y\) mit dem zweiten und auf \(Z\) mit dem gemeinsamen Kontext übereinstimmt. 
+Wir fassen diese Anforderungen zu einem eigenständigen Baustein zusammen.
+\begin{Definition}
+\label{def:eq-mix-formula}
+    Sei \(F =(A,R)\) ein AF, \(X,Y,Z\subseteq A\) paarweise disjunkte Mengen, 
+    \(\mathbf V^1\), \(\mathbf V^2\) und \(\mathbf V^3\) paarweise disjunkte Variablenblöcke 
+    und \(\operatorname{Eq}^{j,k}_S\) wie in \ref{def:equality-formula} definiert.
+    \[
+        \operatorname{Mix}^{1,2,3}_{X,Y\mid Z}
+        :=
+        \operatorname{Eq}^{1,3}_X
+        \land
+        \operatorname{Eq}^{2,3}_Y
+        \land
+        \operatorname{Eq}^{1,3}_Z.
+    \]
+\end{Definition}
+Die Formel \( \operatorname{Mix}^{1,2,3}_{X,Y\mid Z}\) beschreibt, wie das dritte Labelling aus 
+den beiden Ausgangslabellings zusammengesetzt werden soll. Es übernimmt die Bewertung von \(X\) 
+aus dem ersten und die Bewertung von \(Y\) aus dem zweiten Labelling, 
+während der gemeinsame Kontext \(Z\) erhalten bleibt.
+\begin{Lemma}
+    \label{lem:mix-correct}
+    Sei \(\nu\) eine gemeinsame Belegung der Variablen in
+    \(\mathbf V^1\), \(\mathbf V^2\) und \(\mathbf V^3\), deren
+    Einschränkungen die Labellings
+    \(\lambda_1\), \(\lambda_2\) und \(\lambda_3\) kodieren. Dann gilt
+    \[
+        \nu\models\operatorname{Mix}^{1,2,3}_{X,Y\mid Z}
+        \quad\Longleftrightarrow\quad
+        \left(
+            \lambda_3|_X=\lambda_1|_X
+            \land
+            \lambda_3|_Y=\lambda_2|_Y
+            \land
+            \lambda_3|_Z=\lambda_1|_Z
+        \right).
+    \]
+\end{Lemma}
+\begin{proof}
+    Die Behauptung folgt unmittelbar aus
+    Lemma~\ref{lem:equality-correct} und der Definition von
+    \(\operatorname{Mix}^{1,2,3}_{X,Y\mid Z}\).
+\end{proof}
+
+Damit stehen sowohl die semantische Gültigkeit der drei Labellings als
+auch ihre erforderlichen Übereinstimmungen als getrennte Bausteine zur
+Verfügung. Wir setzen diese nun entsprechend der Quantorenstruktur der
+Unabhängigkeitsdefinition zusammen.
+\begin{Definition}
+    \label{def:generic-independence-qbf}
+    Sei \(F=(A,R)\) ein \(AF\), \(X,Y,Z\subseteq A\) paarweise disjunkt, \(\mathbf V^1, 
+    \mathbf V^2, \mathbf V^3\) Labellingvariablenblöcke und
+    \(\sigma\in\{\mathsf{co},\mathsf{st},\mathsf{pr}\}\).
+    \[
+    \begin{split}
+        \Phi^\sigma_F(X,Y\mid Z)
+        :=\forall\mathbf V^1\,\forall\mathbf V^2\,
+        \Bigl(&
+            \operatorname{Sem}^{\sigma}_F(\mathbf V^1)
+            \land
+            \operatorname{Sem}^{\sigma}_F(\mathbf V^2)
+            \land
+            \operatorname{Eq}^{1,2}_Z
+        \\
+        &\rightarrow
+        \exists\mathbf V^3\,
+        \bigl(
+            \operatorname{Sem}^{\sigma}_F(\mathbf V^3)
+            \land
+            \operatorname{Mix}^{1,2,3}_{X,Y\mid Z}
+        \bigr)
+        \Bigr).
+    \end{split}
+    \]
+\end{Definition}
+Bei der \emph{preferred}-Kodierung werden zusätzlich jeweils
+paarweise verschiedene Labellingvariablenblöcke
+\(\widehat{\mathbf V}^{1},
+\widehat{\mathbf V}^{2},
+\widehat{\mathbf V}^{3}\)
+verwendet.
+
+Die beiden universellen Variablenblöcke repräsentieren die beliebig
+gewählten Labellings \(\lambda_1\) und \(\lambda_2\). Der existentielle
+Block repräsentiert das kombinierende Labelling \(\lambda_3\). Die
+Prämisse der Implikation beschränkt die universellen Belegungen auf
+\(\sigma\)-Labellings, die auf \(Z\) übereinstimmen.
+\begin{Theorem}
+    \label{thm:generic-independence-qbf-correct}
+    Für jedes \(AF~F=(A,R)\), alle paarweise disjunkten Mengen
+    \(X,Y,Z\subseteq A\) und jedes
+    \(\sigma\in\{\mathsf{co},\mathsf{st},\mathsf{pr}\}\) gilt
+    \[
+        \Phi^\sigma_F(X,Y\mid Z)\text{ ist wahr}
+        \quad\Longleftrightarrow\quad
+        X\perp_\sigma Y\mid Z \text{ in } F.
+    \]
+\end{Theorem}
+\begin{proof}
+    Sei die QBF wahr, und seien
+    \(\lambda_1,\lambda_2\in\Lambda_\sigma(F)\) mit
+    \(\lambda_1|_Z=\lambda_2|_Z\) gegeben. Ihre kodierenden Belegungen
+    erfüllen nach Lemma~\ref{lem:semantics-encoding-correct} die beiden
+    Semantikkodierungen und nach
+    Lemma~\ref{lem:equality-correct} die Formel
+    \(\operatorname{Eq}^{1,2}_Z\). Die QBF liefert daher eine Belegung von
+    \(\mathbf V^3\), die ein \(\sigma\)-Labelling \(\lambda_3\) kodiert
+    und nach Lemma~\ref{lem:mix-correct} die geforderten Restriktionen erfüllt. 
+    Somit gilt \(X\perp_\sigma Y\mid Z\).
+
+    Gelte umgekehrt \(X\perp_\sigma Y\mid Z\), und seien die beiden
+    universellen Blöcke beliebig belegt. Ist die Prämisse falsch, ist die
+    Implikation wahr. Andernfalls kodieren die Blöcke zwei
+    \(\sigma\)-Labellings, die auf \(Z\) übereinstimmen. Nach Definition
+    der Unabhängigkeit existiert ein passendes \(\lambda_3\). Seine
+    kodierende Belegung erfüllt die Konklusion. Dies gilt für jede Belegung
+    der universellen Blöcke, also ist die QBF wahr.
+\end{proof}
