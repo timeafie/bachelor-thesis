@@ -11,14 +11,11 @@ in einem dritten gültigen Labelling kombinieren lassen. Die zugrunde liegende
  für die \emph{preferred}-Semantik hingegen \(\Pi_3^{\mathrm P}\)-vollständig.
   Diese Ergebnisse motivieren quantifizierte boolesche Formeln als Zielformalismus, 
 deren Einsatz für Argumentationsprobleme insbesondere von 
-\citeauthor*{egly:woltran:2006:reasoning-qbf}\cite{egly:woltran:2006:reasoning-qbf} untersucht wurde.
+\citeauthor*{egly:woltran:2006:reasoning-qbf} \cite{egly:woltran:2006:reasoning-qbf} untersucht wurde.
 
 Ziel dieses Kapitels ist die Entwicklung einer einheitlichen, labellingbasierten 
 QBF-Kodierung der bedingten Unabhängigkeit für die drei betrachteten Semantiken. 
-Hierzu werden die semantische Gültigkeit einzelner Labellings und ihre für die 
-Unabhängigkeit erforderliche Rekombination zunächst als getrennte Bausteine kodiert. 
-Diese Trennung ermöglicht es, dieselben Formeln für Übereinstimmung und Rekombination 
-unabhängig von der gewählten Semantik zu verwenden. Zugleich werden Sonderfälle berücksichtigt, 
+Zugleich werden Sonderfälle berücksichtigt, 
 in denen ein Argumentationssystem bezüglich der betrachteten Semantik höchstens ein Labelling 
 besitzt und die Unabhängigkeitsbedingung daher trivial erfüllt ist.
 
@@ -89,9 +86,7 @@ Daher wird die Rekombinationsbedingung im nächsten Schritt als Entscheidungspro
         \end{array}
     \]
 \end{Definition}
-Die Problemformulierung macht zugleich die für die spätere QBF-Kodierung maßgebliche Quantorenstruktur sichtbar: 
-Abhängigkeit liegt genau dann vor, wenn ein auf \(Z\) übereinstimmendes Paar von \(\sigma\)-Labellings existiert, 
-für das kein geeignetes rekombinierendes \(\sigma\)-Labelling gefunden werden kann.
+KURZE BESCHREIBUNG?
 
 Die Entscheidungsprobleme zur semantikspezifischen Unabhängigkeit weisen
 bereits für die betrachteten Standardsemantiken eine hohe Komplexität auf.
@@ -166,7 +161,7 @@ genau ein Label erhält.
     \[
         \operatorname{One}F(\mathbf V)
         :=
-        \bigwedge{a\in A}
+        \bigwedge_{a\in A}
         \Bigl(
             (i_a\lor o_a\lor u_a)
             \land\neg(i_a\land o_a)
@@ -180,7 +175,8 @@ mindestens eine wahre Labelvariable. Die drei negierten Konjunktionen
 schließen aus, dass mehrere Labelvariablen desselben Arguments
 gleichzeitig wahr sind.
 
-Intuitiv wählt eine Belegung, die \(\operatorname{One}_F(\mathbf V)\) erfüllt, für jedes Argument genau eine der drei Labelvariablen \(i_a\), \(o_a\) und \(u_a\) aus. 
+Intuitiv wählt eine Belegung, die \(\operatorname{One}_F(\mathbf V)\) erfüllt, 
+für jedes Argument genau eine der drei Labelvariablen \(i_a\), \(o_a\) und \(u_a\) aus. 
 Die jeweils wahre Variable legt das Label des Arguments fest. 
 Somit lässt sich eine solche Belegung unmittelbar als Labelling lesen - und umgekehrt.
 \begin{Definition}
@@ -324,6 +320,8 @@ Unter einer Belegung der beiden Variablenblöcke ist \(I<\widehat I\) genau dann
 wenn die durch \(I\) repräsentierte In-Menge eine echte Teilmenge der durch \(\widehat I\) repräsentierten In-Menge ist. 
 Die erste Konjunktion gewährleistet die Inklusion, während die zweite sicherstellt, 
 dass mindestens ein weiteres Argument in \(\widehat I\) enthalten ist.
+
+Damit haben wir alle nötigen Bausteine, um die \emph{preferred}-Semantik zu kodieren.
 \begin{Definition}
     \label{def:preferred-encoding}
     Sei \(F=(A,R)\) ein AF und \(\mathbf V \text{ und } \widehat{\mathbf V}\) Labellingvariablenblöcke.
@@ -341,6 +339,9 @@ Die Formel \(\operatorname{Co}_F(\mathbf V)\) stellt zunächst sicher, dass \(\m
 Der universell quantifizierte Vergleichsblock schließt anschließend jedes \emph{complete}-Labelling aus, 
 dessen In-Menge die durch \(I\) bestimmte In-Menge echt enthält. Damit ist \(\operatorname{Pr}_F(\mathbf V)\) 
 genau dann erfüllt, wenn das kodierte \emph{complete}-Labelling In-maximal und somit \emph{preferred} ist.
+
+Zur Einfachheit der späteren QBF fassen wir die definierten Semantiken in 
+folgender Formel zusammen.
 \begin{Definition}
     \label{def:uniform-semantics-predicate}
     Für
@@ -554,3 +555,8 @@ Prämisse der Implikation beschränkt die universellen Belegungen auf
     kodierende Belegung erfüllt die Konklusion. Dies gilt für jede Belegung
     der universellen Blöcke, also ist die QBF wahr.
 \end{proof}
+
+Das Ergebnis zeigt, dass die bedingte Unabhängigkeit vollständig 
+durch die Wahrheit von \(\Phi_F^\sigma(X,Y\mid Z)\) charakterisiert wird.
+Damit ist die Grundlage für die algorithmische Umsetzung und 
+die anschließende empirische Untersuchung geschaffen.

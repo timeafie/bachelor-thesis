@@ -6,9 +6,9 @@ von \(\sigma\)-Labellings definiert. Strukturelle Eigenschaften eines AFs
 beeinflussen daher unmittelbar, welche Labellings existieren und ob zwischen 
 ihnen die für eine nichttriviale Abhängigkeit erforderliche Variation auftreten kann. 
 Eine besondere Rolle spielen dabei gerichtete Zyklen: Ihr Auftreten und ihre Parität 
-wirken sich unterschiedlich auf die betrachteten Semantiken aus. 
-Dieses Kapitel untersucht deshalb, wie sich der Ausschluss bestimmter Zyklen 
-auf die bedingte Unabhängigkeit und auf die Komplexität ihrer Entscheidung auswirkt.
+wirken sich unterschiedlich aber oftmals grundlegend auf die betrachteten Semantiken aus. 
+Dieses Kapitel untersucht deshalb, wie sich die bedingte Unabhängigkeit in bestimmten, 
+teils sehr restriktiven Graphklassen verhält.
 
 Zunächst werden in Abschnitt~\ref{sec:acyc-afs} azyklische AFs betrachtet. 
 Da ihre Struktur die semantische Bewertung für \(\sigma\in\{co,st,pr\}\) 
@@ -53,9 +53,6 @@ vollständig festlegt und damit eine unmittelbare Aussage über \(X\perp_\sigma 
      Nach Lemma~\ref{lem:independence-trivial-labelling-set} folgt für alle 
      paarweise disjunkten \(X,Y,Z \subseteq A\), dass \(X \perp_\sigma Y \mid Z\) gilt.
 \end{proof}
-
-Damit beruht die bedingte Unabhängigkeit nicht auf einer Separation von \(X\) und \(Y\), 
-sondern auf der fehlenden Variation innerhalb von \(\Lambda_\sigma(F)\).
 \section{Geradezykelfreie AFs}
 \label{sec:even-cycle-free-afs}
 Geradezykelfreie AFs schließen gerichtete Zyklen gerader Länge aus, erlauben jedoch ungerade Zyklen. 
@@ -88,7 +85,7 @@ der Labellings.
 In den bisher betrachteten Graphklassen entstand bedingte Unabhängigkeit aus dem Fehlen 
 semantischer Alternativen. Mit den ungeradezykelfreien AFs ändert sich diese Ausgangslage: 
 Zyklen bleiben nun zulässig, sofern sie eine gerade Länge besitzen. Damit bleiben gerade 
-jene Rückkopplungen erhalten, die unterschiedliche Labellings ermöglichen können. 
+jene Rückkopplungen erhalten, die größere Labellingvariationen ermögichen. 
 
 Dennoch ist die Struktur ungeradezykelfreier AFs nicht beliebig. Insbesondere fallen auf dieser 
 Graphklasse die \emph{stable}- und die \emph{preferred}-Semantik zusammen. 
@@ -148,8 +145,8 @@ erfordert die \emph{complete}-Semantik eine neue Konstruktion.
     \{x_0, \overline{x_2}, x_1\}\}\), adaptiert von \cite{bluemel:2025:independence-aba}.}
     \label{fig:reduktion-stable}
 \end{figure}
-Abbildung~\ref{fig:reduktion-stable} zeigt eine konkrete Instanz der Reduktion.
 
+Abbildung~\ref{fig:reduktion-stable} zeigt eine konkrete Instanz der Reduktion.
 Das vorangegangene Ergebnis lässt sich auf ungeradezykelfreien AFs unmittelbar auf die \emph{preferred}-Unabhängigkeit übertragen. 
 Maßgeblich ist die Gleichheit \(\Lambda_{st}(F)=\Lambda_{pr}(F)\), 
 aufgrund derer beide Unabhängigkeitsbegriffe auf derselben Menge von Labellings ausgewertet werden.
@@ -368,7 +365,7 @@ Abbildung~\ref{fig:reduktion-complete} verdeutlicht, wie die Kontrollstruktur au
 die zusätzlichen \emph{complete}-Labellings, während alle gerichteten Zyklen weiterhin auf 
 die Zweierzyklen innerhalb der Variablenpaare und der Komponente \(\{\varphi,t\}\) beschränkt bleiben.
 
-
+\iffalse
 \section{Bipartite AFs}
 \begin{Proposition}
 \label{prop:bip-st-ind-hard}
@@ -768,4 +765,5 @@ Kaum \emph{stable}-Labellings vorhanden.
     \label{tab:complexity-results-graph-classes}
 \end{table}
 
+\fi
 \fi
