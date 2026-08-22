@@ -1,17 +1,24 @@
 \chapter{QBF-Kodierung bedingter Unabhängigkeit}
 \label{ch:semantic-independence}
 
-Bedingte Unabhängigkeit untersucht, ob sich die Bewertungen der Mengen \(X\) und 
-\(Y\) aus verschiedenen gültigen Labellings bei festgehaltener Bewertung von \(Z\) 
-in einem dritten gültigen Labelling kombinieren lassen. Die zugrunde liegende
- semantische Definition geht auf \citeauthor*{rienstra:2020:independence-af}\cite{rienstra:2020:independence-af} zurück. 
- Notation und Komplexitätsergebnisse orientieren sich an 
-\citeauthor*{bluemel:2025:independence-aba} \cite{bluemel:2025:independence-aba}: Für die \emph{complete}- und die 
- \emph{stable}-Semantik ist das Entscheidungsproblem \(\Pi_2^{\mathrm P}\)-vollständig, 
- für die \emph{preferred}-Semantik hingegen \(\Pi_3^{\mathrm P}\)-vollständig.
-  Diese Ergebnisse motivieren quantifizierte boolesche Formeln als Zielformalismus, 
-deren Einsatz für Argumentationsprobleme insbesondere von 
-\citeauthor*{egly:woltran:2006:reasoning-qbf} \cite{egly:woltran:2006:reasoning-qbf} untersucht wurde.
+Ein Argumentationssystem kann bezüglich einer Semantik mehrere gültige Labellings besitzen, 
+zwischen deren Bewertungen Abhängigkeiten bestehen. Die Kenntnis solcher Abhängigkeiten erlaubt es, 
+semantisch voneinander trennbare Bereiche zu erkennen und gegebenenfalls unabhängig zu untersuchen. 
+Seien dazu \(F=(A,R)\) ein Argumentationssystem, \(\sigma\) eine Semantik und \(X,Y,Z\subseteq A\) 
+paarweise disjunkte Mengen von Argumenten. Intuitiv gilt \(X\perp_\sigma Y\mid Z\) in \(F\), 
+wenn sich die Bewertung von \(X\) aus einem gültigen Labelling und die Bewertung von \(Y\) aus 
+einem zweiten gültigen Labelling kombinieren lassen, sofern beide auf \(Z\) übereinstimmen. 
+Der zugrunde liegende semantische Unabhängigkeitsbegriff geht auf \citeauthor*{rienstra:2020:independence-af}~\cite{rienstra:2020:independence-af} zurück.
+
+Die Entscheidung, ob \(X\perp_\sigma Y\mid Z\) gilt, erfordert die Betrachtung aller auf \(Z\) 
+übereinstimmenden Labelling-Paare und die Suche nach einem geeigneten dritten Labelling. 
+Entsprechend ist ihre Berechnung bereits für die hier betrachteten Standardsemantiken schwierig: 
+für die \emph{complete}- und die \emph{stable}-Semantik sind die zugehörigen Entscheidungsprobleme 
+\(\Pi_2^{\mathrm P}\)-vollständig, während das Problem für die \emph{preferred}-Semantik
+\(\Pi_3^{\mathrm P}\)-vollständig ist \cite{bluemel:2025:independence-aba}. 
+Die Quantorenstruktur dieser Komplexitätsklassen motiviert 
+QBFs als Zielformalismus. Ihr Einsatz zur Kodierung von Argumentationsproblemen wurde 
+insbesondere von \citeauthor*{egly:woltran:2006:reasoning-qbf}~\cite{egly:woltran:2006:reasoning-qbf} untersucht.
 
 Ziel dieses Kapitels ist die Entwicklung einer einheitlichen, labellingbasierten 
 QBF-Kodierung der bedingten Unabhängigkeit für die drei betrachteten Semantiken. 
@@ -32,12 +39,14 @@ deren Korrektheit abschließend bewiesen wird.
 \section{Bedingte Unabhängigkeit in Argumentationssystemen}
 \label{sec:sigma-independence-af-complexity}
 
-Dieses Unterkapitel untersucht bedingte Unabhängigkeit in Argumentationssystemen und 
-bereitet ihre Kodierung durch quantifizierte boolesche Formeln vor.
-Dazu werden zunächst der semantische Unabhängigkeitsbegriff und das zugehörige 
-Entscheidungsproblem eingeführt. Anschließend werden die relevanten 
-Komplexitätsergebnisse und jene Sonderfälle betrachtet, die für die Konstruktion 
-und empirische Auswertung der QBF-Kodierungen von Bedeutung sind.
+Dieses Unterkapitel führt bedingte Unabhängigkeit in Argumentationssystemen 
+ein und bereitet ihre Kodierung durch quantifizierte boolesche Formeln vor. 
+Die konkrete Formulierung des Unabhängigkeitsbegriffs, die verwendete Notation 
+und die dargestellten Komplexitätsergebnisse orientieren sich an 
+\citeauthor*{bluemel:2025:independence-aba}~\cite{bluemel:2025:independence-aba}. 
+Dazu werden zunächst der semantische Unabhängigkeitsbegriff und das zugehörige Entscheidungsproblem eingeführt. 
+Anschließend werden die relevanten Komplexitätsergebnisse und jene Sonderfälle betrachtet, 
+die für die Konstruktion und empirische Auswertung der QBF-Kodierungen von Bedeutung sind.
 
 Intuitiv beschreibt bedingte Unabhängigkeit die Möglichkeit, 
 Bewertungen verschiedener Argumentmengen miteinander zu kombinieren.
