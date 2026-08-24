@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="150mm"
+     height="205mm"
+     viewBox="0 0 1200 1640"
+     role="img"
+     aria-labelledby="svg-title svg-desc">
+  <title id="svg-title">Ablauf von AF-Dateien über QCIR und QuAbS zur Ergebnisdatei</title>
+  <desc id="svg-desc">Vertikaler Prozess mit acht Stufen: AF-Dateien, Filterung, Stichprobenauswahl, Übersetzung, QCIR-G14, QuAbS, Ergebnisstatus und CSV-Datei.</desc>
+
+  <defs>
+    <marker id="arrowhead"
+            markerWidth="10"
+            markerHeight="10"
+            refX="9"
+            refY="5"
+            orient="auto"
+            markerUnits="strokeWidth">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#707070"/>
+    </marker>
+  </defs>
+
+  <style>
+    text {
+      font-family: Arial, Helvetica, sans-serif;
+      fill: #222222;
+      text-anchor: middle;
+    }
+    .primary {
+      font-size: 36px;
+      font-weight: 500;
+    }
+    .primary-long {
+      font-size: 34px;
+      font-weight: 500;
+    }
+    .secondary {
+      font-size: 30px;
+      font-weight: 400;
+    }
+    .status {
+      font-size: 30px;
+      font-weight: 500;
+    }
+    .single-line {
+      dominant-baseline: middle;
+    }
+    .node {
+      stroke-width: 2.25;
+    }
+    .input-node {
+      fill: #EAF3F8;
+      stroke: #0072B2;
+    }
+    .translation-node {
+      fill: #E8F5F1;
+      stroke: #008B66;
+    }
+    .solver-node {
+      fill: #FBEFE7;
+      stroke: #D55E00;
+    }
+    .result-node {
+      fill: #F2EEF7;
+      stroke: #76569B;
+    }
+    .connector {
+      fill: none;
+      stroke: #707070;
+      stroke-width: 2.5;
+      marker-end: url(#arrowhead);
+    }
+    .status-divider {
+      stroke: #D8CAE5;
+      stroke-width: 1.5;
+    }
+  </style>
+
+  <rect x="0" y="0" width="1200" height="1640" fill="#FFFFFF"/>
+
+  <rect class="node input-node" x="150" y="48" width="900" height="104" rx="14"/>
+  <text class="primary single-line" x="600" y="100">*.af-Dateien</text>
+
+  <line class="connector" x1="600" y1="152" x2="600" y2="208"/>
+
+  <rect class="node input-node" x="150" y="220" width="900" height="144" rx="14"/>
+  <text class="primary" x="600" y="280">Sortierung und Größenfilter</text>
+  <text class="secondary" x="600" y="326">100 ≤ n ≤ 1 000</text>
+
+  <line class="connector" x1="600" y1="364" x2="600" y2="420"/>
+
+  <rect class="node input-node" x="150" y="432" width="900" height="206" rx="14"/>
+  <text class="primary" x="600" y="494">Pro AF und Semantik</text>
+  <text class="secondary" x="600" y="544">5 ungeordnete Paare {x,y}</text>
+  <text class="secondary" x="600" y="592">6 separat gezogene Z-Mengen</text>
+
+  <line class="connector" x1="600" y1="638" x2="600" y2="694"/>
+
+  <rect class="node translation-node" x="150" y="706" width="900" height="130" rx="14"/>
+  <text class="primary-long single-line" x="600" y="771">Semantikspezifischer Python-Übersetzer</text>
+
+  <line class="connector" x1="600" y1="836" x2="600" y2="892"/>
+
+  <rect class="node translation-node" x="150" y="904" width="900" height="104" rx="14"/>
+  <text class="primary single-line" x="600" y="956">QCIR-G14-Datei</text>
+
+  <line class="connector" x1="600" y1="1008" x2="600" y2="1064"/>
+
+  <rect class="node solver-node" x="150" y="1076" width="900" height="144" rx="14"/>
+  <text class="primary" x="600" y="1135">QuAbS</text>
+  <text class="secondary" x="600" y="1181">Zeitlimit: 600 s</text>
+
+  <line class="connector" x1="600" y1="1220" x2="600" y2="1276"/>
+
+  <rect class="node result-node" x="150" y="1288" width="900" height="112" rx="14"/>
+  <line class="status-divider" x1="375" y1="1306" x2="375" y2="1382"/>
+  <line class="status-divider" x1="600" y1="1306" x2="600" y2="1382"/>
+  <line class="status-divider" x1="825" y1="1306" x2="825" y2="1382"/>
+  <text class="status single-line" x="262.5" y="1344">SAT</text>
+  <text class="status single-line" x="487.5" y="1344">UNSAT</text>
+  <text class="status single-line" x="712.5" y="1344">TIMEOUT</text>
+  <text class="status single-line" x="937.5" y="1344">SOLVER_ERR</text>
+
+  <line class="connector" x1="600" y1="1400" x2="600" y2="1456"/>
+
+  <rect class="node result-node" x="150" y="1468" width="900" height="104" rx="14"/>
+  <text class="primary single-line" x="600" y="1520">Semantikspezifische CSV-Datei</text>
+</svg>

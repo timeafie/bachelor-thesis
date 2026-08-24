@@ -1,54 +1,116 @@
-
-\chapter{Empirische Analyse bedinger Unabhängigkeit}
+\chapter{Empirische Analyse bedingter Unabhängigkeit}
 \label{ch:empirical-analysis}
 
-EINLEITUNG IN DAS KAPITEL
+Die zuvor eingeführte Kodierung durch QBFs ermöglicht es, bedingte Unabhängigkeit in 
+AFs automatisiert zu entscheiden. Über die formale Entscheidbarkeit hinaus stellt 
+sich jedoch die Frage, wie häufig Abhängigkeit und Unabhängigkeit in heterogenen 
+Benchmarkinstanzen auftreten, welchen Einfluss die Konditionierungsmenge besitzt 
+und wie aufwendig die entsprechenden Solverentscheidungen sind. Das vorliegende 
+Kapitel untersucht diese Aspekte empirisch für die Semantiken \(\mathsf{st}\), 
+\(\mathsf{co}\) und \(\mathsf{pr}\).
+
+Der Untersuchung liegen die folgenden Forschungsfragen zugrunde:
+
+\begin{enumerate}
+    \item[\textbf{Frage 1}] In welchem generellen Verhältnis stehen beobachtete Abhängigkeit 
+    (\texttt{AB}) und Unabhängigkeit (\texttt{UNAB})?
+    \item[\textbf{Frage 2}] Wie verändert sich der beobachtete Unabhängigkeitsstatus von 
+    \(X\perp_\sigma Y\mid Z\) mit der Konditionierungsstufe von \(Z\)?
+    \item[\textbf{Frage 3}] Wie wirken sich höhere Konditionierungsstufen auf die 
+    Solverlaufzeit und die praktische Lösungsquote aus?
+\end{enumerate}
+
+Die Auswertung von \(9\,450\) Anfragen zeigt eine deutliche Dominanz beobachteter 
+Unabhängigkeit. Unter den \(7\,164\) entschiedenen Anfragen entfallen \(97{,}52\,\%\) 
+auf \texttt{UNAB} und \(2{,}48\,\%\) auf \texttt{AB}. Dieses Verhältnis zeigt sich 
+grundsätzlich unter allen drei Semantiken, wobei der \texttt{AB}-Anteil unter 
+\emph{complete} am höchsten und unter \emph{stable} am niedrigsten ausfällt. 
+Mit höheren Konditionierungsstufen nimmt der beobachtete \texttt{AB}-Anteil ab. 
+Im Vergleich zwischen \(Z_0\) und \(Z_5\) wird zudem in keiner Semantik ein 
+Übergang von \texttt{UNAB} zu \texttt{AB} beobachtet. Gleichzeitig gehen höhere 
+Konditionierungsstufen tendenziell mit längeren Solverlaufzeiten und geringeren 
+Lösungsquoten einher. Dieser Zusammenhang ist unter \emph{complete} und \emph{stable} 
+deutlicher ausgeprägt als unter \emph{preferred}. Aufgrund des Anteils nicht 
+entschiedener Anfragen, der nicht geschachtelten Konditionierungsmengen und 
+der nicht durchgehend monotonen Verläufe werden die Befunde ausschließlich 
+deskriptiv interpretiert.
+
+Das Kapitel beginnt in Abschnitt~\ref{sec:trial-design} mit dem methodischen 
+und technischen Versuchsaufbau. Abschnitt~\ref{sec:ci-status} untersucht 
+anschließend das Gesamtverhältnis von Abhängigkeit und Unabhängigkeit. 
+Darauf aufbauend betrachtet Abschnitt~\ref{subsec:z-ci-status} den Zusammenhang 
+zwischen der Konditionierungsstufe und dem beobachteten Unabhängigkeitsstatus. 
+Abschließend analysiert Abschnitt~\ref{subsec:z-runtime} den Einfluss der 
+Konditionierungsstufe auf die Solverlaufzeit und die praktische Lösungsquote.
+
 \section{Versuchsaufbau}
 \label{sec:trial-design}
 
-\paragraph{Versuchsaufbau.}
-Die empirische Untersuchung betrachtet die bedingte Unabhängigkeit \(X\perp_\sigma Y\mid Z\) 
-für \(\sigma\in{\mathsf{st},\mathsf{co},\mathsf{pr}}\). Für jedes AF \(F=(A,R)\) wurden fünf 
-verschiedene ungeordnete Argumentpaare \({x,y}\) gleichverteilt und ohne Wiederholung ausgewählt 
-und als Singletonmengen \(X={x}\) und \(Y={y}\) verwendet. Die Auswahl ist durch den globalen Ausgangswert 
-\(\texttt{SEED}=42\) und einen daraus abgeleiteten instanzspezifischen Seed reproduzierbar. 
-Zu jedem Paar wurden sechs unabhängig gezogene Konditionierungsmengen untersucht. 
-Für \emph{stable} und \emph{complete} reicht ihre Größe von \(0\) bis \(\lfloor n/5\rfloor\), 
-für \emph{preferred} von \(0\) bis \(\lfloor n/10\rfloor\). Damit entstehen bei 105 AFs je Semantik 
-\(105\cdot5\cdot6=3,150\) Anfragen und insgesamt \(9,450\) QBF-Instanzen. Jeder Aufruf des 
-QBF-Solvers QuAbS unterliegt einem Zeitlimit von \(600,\mathrm{s}\).
-Ein separates Speicherlimit wurde nicht gesetzt. Der Hauptlauf verwendete 32 parallele AF-Worker. 
+Dieses Kapitel beschreibt den methodischen und technischen Versuchsaufbau der empirischen 
+Untersuchung. Es begründet die Auswahl der Instanzen und Werkzeuge, erläutert die 
+Verarbeitung der Solveranfragen und dokumentiert deren Ergebniserfassung, Fehlerbehandlung 
+sowie die verwendete Rechenumgebung. Damit wird die Grundlage für eine reproduzierbare 
+Durchführung und die anschließende Einordnung der Ergebnisse geschaffen.
 
-\paragraph{Instanzauswahl.}
-Die Ausgangsinstanzen stammen aus der AF-Kuration der ICCMA'25. Berücksichtigt wurden alle \texttt{.af}-Dateien mit \(100\leq n\leq1,000\). Die resultierende Auswahl umfasst 105 
-AFs mit tatsächlich 100 bis 981 Argumenten. Sie setzt sich aus 14 ABA2AF-, 20 Barabási--Albert-, 
-20 Erdős--Rényi-, fünf Planning2AF-, sechs SCC-Generator-, 20 Stable-Generator- und 20 Watts--Strogatz-Instanzen zusammen.
+\paragraph{Instanzauswahl und Untersuchungsdesign.}
+Die empirische Untersuchung betrachtet die bedingte Unabhängigkeit \(X\perp_\sigma Y\mid Z\) für 
+\(\sigma\in\{\mathsf{st},\mathsf{co},\mathsf{pr}\}\). Als Datengrundlage dienen 105 AFs 
+aus der Kuration der International Competition on Computational 
+Models of Argumentation 2025 (ICCMA'25), die nach dem vorab festgelegten Größenkriterium 
+\(100\leq n\leq1\,000\) ausgewählt wurden \parencite{apostolakis:2025:iccma-instances}. Der Bestand umfasst 
+sieben Instanzfamilien mit 100 bis 981 Argumenten. Für jedes AF werden mit \(\texttt{SEED}=42\) 
+fünf verschiedene ungeordnete Argumentpaare reproduzierbar ausgewählt und mit sechs unabhängig 
+gezogenen, nicht geschachtelten Konditionierungsmengen kombiniert. Für \(k\in\{0,\ldots,5\}\) 
+gilt \(\lvert Z_k^\sigma\rvert=\lfloor k\,s_{\max}^\sigma(n)/5+1/2\rfloor\), wobei 
+\(s_{\max}^\sigma(n)=\lfloor n/5\rfloor\) für \emph{stable} und \emph{complete} sowie 
+\(s_{\max}^\sigma(n)=\lfloor n/10\rfloor\) für \emph{preferred} ist. Dadurch entstehen 
+\(3\,150\) Anfragen je Semantik und insgesamt \(9\,450\) quantifizierte boolesche Formeln (QBFs).
 
-\paragraph{Implementierung und Workflow.}
-Die AFs werden aus dem ICCMA-Format eingelesen und durch drei semantikspezifische Python-Programme 
-unmittelbar in das Format \texttt{QCIR-G14} übersetzt. Die \emph{stable}-Kodierung verwendet \(3n\), 
-die \emph{complete}-Kodierung \(9n\) und die \emph{preferred}-Kodierung \(18n\) quantifizierte Variablen. 
-Vor der Formelerzeugung wird geprüft, ob die übergebenen Indizes im zulässigen Bereich liegen, 
-innerhalb von \(X,Y\) und \(Z\) keine Duplikate auftreten und die drei Mengen paarweise disjunkt sind. 
-Das Batchskript führt die Phasen in der Reihenfolge \emph{stable}, \emph{complete} und \emph{preferred} 
-aus und übergibt die erzeugten QCIR-Dateien ohne weitere Konvertierung an QuAbS. Die Rückgabecodes 10 und 
-20 werden als \texttt{SAT} beziehungsweise \texttt{UNSAT} interpretiert, wobei \texttt{SAT} eine 
-Unabhängigkeit (UNAB) und \texttt{UNSAT} eine Abhängigkeit (AB) der 
-betrachteten Anfrage signalisiert. Rückgabecode 124 bezeichnet einen \texttt{TIMEOUT}. 
-Übersetzungs- und Solverlaufzeit sowie Variablenzahl, Gatterzahl und Dateigröße werden getrennt 
-protokolliert. Anschließend werden die Extensionszahlen mit dem Programm TweetY (ZITIEREN) bestimmt. 
+\paragraph{Implementierung und Solverwahl.}
+Drei semantikspezifische Python-Programme übersetzen die AFs unmittelbar in das Format 
+\texttt{QCIR-G14}, wobei die Kodierungen \(3n\), \(9n\) beziehungsweise \(18n\) 
+quantifizierte Variablen verwenden. Die erzeugten Formeln werden ohne weitere Konvertierung an 
+den Quantified Abstraction Solver (QuAbS) übergeben. QuAbS wurde aufgrund des 
+Siegs der QBF Solver Evaluation 2022 (QBFEVAL'22) des \emph{Prenex non-CNF Track}s ausgewählt \parencite{qbflib:2022:qbfeval-results}.
+
+\paragraph{Ausführung und Ergebniserfassung.}
+Ein erfüllbares Ergebnis (\texttt{SAT}) wird als Unabhängigkeit, ein unerfüllbares Ergebnis 
+(\texttt{UNSAT}) als Abhängigkeit interpretiert. Jeder Solveraufruf ist auf \(600\,\mathrm{s}\) 
+begrenzt. Der Hauptlauf verwendet 32 parallele AF-Worker und protokolliert Anfrageparameter, 
+Formelgröße sowie Übersetzungs- und Solverlaufzeit in kommagetrennten Ergebnisdateien (CSV-Dateien). 
+Anschließend bestimmt TweetY die Extensionszahlen unter den drei Semantiken \parencite{thimm:2018}.
 
 \paragraph{Umgang mit Solverfehlern.}
-Insgesamt wurden 95 Anfragen ausschließlich unter der \emph{preferred}-Semantik als \texttt{SOLVER\_ERR} protokolliert. 
-Die Fehler verteilen sich auf acht AFs, wobei 84 Fälle auf Watts--Strogatz- und elf auf Stable-Generator-Instanzen entfallen. 
-60 der 95 Fälle stammen aus zwei Instanzen. (GENAUE FEHLERBESCHREIBUNG). 
-Die betreffenden Zeilen werden in den Rohdaten beibehalten und als logisch 
-unbekannt behandelt.
-In Performanceprofilen verbleiben \texttt{SOLVER\_ERR} als nicht gelöste Anfragen im festen Nenner. 
+Insgesamt wurden 95 Anfragen ausschließlich unter der \emph{preferred}-Semantik als \texttt{SOLVER\_ERR} 
+protokolliert. Betroffen sind acht AFs: 84 Fehler entfallen auf Watts--Strogatz- und elf 
+auf Stable-Generator-Instanzen. Dabei konzentrieren sich 60 der 95 Fälle auf zwei Instanzen. 
+Die betroffenen Zeilen verbleiben in den Rohdaten und werden als logisch unbekannt behandelt. 
+Bei der Auswertung des Unabhängigkeitsstatus werden ausschließlich \texttt{SAT} und \texttt{UNSAT} 
+als entschiedene Anfragen berücksichtigt und gemeinsam mit der jeweiligen Entscheidungsquote berichtet. 
+In Performanceprofilen verbleiben die \texttt{SOLVER\_ERR} als nicht gelöste Anfragen im festen Nenner.
 
-\emph{[Nach Abschluss des Reruns ergänzen: Prozessor,
-Arbeitsspeicher, Betriebssystem, Python-, Bash- und QuAbS-Version sowie die
-Zahl der parallelen AF-Worker.]}
+Der vollständige Ablauf der Untersuchung ist in
+Abbildung~\ref{fig:trial-design-workflow} zusammengefasst.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.70\textwidth]
+        {gfx/versuchsaufbau/ablauf_af_qcir_quabs.pdf}
+    \caption[Experimenteller Ablauf der Untersuchung]{%
+        Ablauf der Untersuchung von der Instanzauswahl bis zur
+        semantikspezifischen Ergebnisdatei.}
+    \label{fig:trial-design-workflow}
+\end{figure}
+
+\paragraph{Rechenumgebung.}
+Für die Durchführung der Experimente stand eine virtuelle Maschine mit 
+\(32\,\mathrm{GiB}\) Arbeitsspeicher und Debian GNU/Linux 13.3 (\emph{trixie}) zur Verfügung. 
+Insgesamt waren 48 virtuelle Prozessoren für die 
+Benutzerprozesse freigegeben. Auf dieser Umgebung wurde das Batchverfahren 
+mit 32 parallelen AF-Workern gestartet. Da jeder Worker höchstens einen Solverprozess 
+gleichzeitig ausführte, konnten bis zu 32 Anfragen parallel durch QuAbS bearbeitet werden. 
+Die Skriptumgebung bestand aus Python 3.13.5 und Bash 5.2.37. Für die 
+Bestimmung der Extensionszahlen wurde der TweetY-Solver in Version 1.2 eingesetzt.
 
 \iffalse
 \subsection{Versuchsdesign und Auswertungsmethode}
@@ -522,8 +584,9 @@ Läufe mit \texttt{TIMEOUT} oder \texttt{SOLVER\_ERR} werden
 \begin{figure}[t]
     \centering
     \makebox[\linewidth][c]{
-        \includegraphics[width=1.4\linewidth]
-            {gfx/conditioning_set_z/fig06_ergebniszusammensetzung_triviale_unab.png}
+        % fig06
+    \includegraphics[width=1.30\linewidth]
+    {../../Themen/Conditional Indepence in AF/analysis_outputs/conditioning_set_z_large_text/fig06_ergebniszusammensetzung_triviale_unab.png}
     }
     \caption[Ergebniszusammensetzung mit trivialen UNAB]{%
         Ergebniszusammensetzung der jeweils 525 Solverläufe pro Semantik und
@@ -561,8 +624,9 @@ zeigt diesen Anteil über die sechs Konditionierungsstufen.
 \begin{figure}[t]
     \centering
     \makebox[\linewidth][c]{%
+        % fig02
         \includegraphics[width=1.30\linewidth]
-            {gfx/conditioning_set_z/fig02_ab_anteil_entschieden.png}%
+        {../../Themen/Conditional Indepence in AF/analysis_outputs/conditioning_set_z_large_text/fig02_ab_anteil_entschieden.png}
     }
     \caption[AB-Anteil unter den entschiedenen Läufen]{%
         Anteil der \texttt{AB}-Ergebnisse unter den als \texttt{UNAB} oder
@@ -657,12 +721,12 @@ Läufe vor. \texttt{TIMEOUT} wird als Rechtszensierung am Zeitlimit von
 Abbildung~\ref{fig:z-runtime-distribution} zeigt die Verteilungen der
 entschiedenen Läufe. Aufgrund ihrer starken Rechtsschiefe wird eine
 logarithmische Zeitachse verwendet.
-
 \begin{figure}[t]
     \centering
     \makebox[\linewidth][c]{%
+        % fig03
         \includegraphics[width=1.30\linewidth]
-            {gfx/conditioning_set_z/fig03_solverlaufzeit_verteilung.png}%
+        {../../Themen/Conditional Indepence in AF/analysis_outputs/conditioning_set_z_large_text/fig03_solverlaufzeit_verteilung.png}
     }
     \caption[Solverlaufzeit nach Konditionierungsstufe]{%
         Verteilung von \(t_{\mathrm{solve}}\) für die als \texttt{UNAB}
@@ -674,24 +738,25 @@ logarithmische Zeitachse verwendet.
 Unter \emph{complete} steigt der Median von
 \(0{,}289\,\mathrm{s}\) bei \(Z_0\) auf \(1{,}104\,\mathrm{s}\) bei
 \(Z_5\). Dies entspricht ungefähr dem Faktor \(3{,}82\). Das
-Interquartilsintervall erweitert sich von
-\([0{,}074;2{,}516]\,\mathrm{s}\) auf
-\([0{,}190;33{,}281]\,\mathrm{s}\). Das 90.\ Perzentil nimmt von
+Interquartilsintervall reicht bei \(Z_0\) von \(0{,}074\,\mathrm{s}\) bis
+\(2{,}516\,\mathrm{s}\) und bei \(Z_5\) von \(0{,}190\,\mathrm{s}\) bis
+\(33{,}281\,\mathrm{s}\). Das 90.\ Perzentil nimmt von
 \(58{,}421\,\mathrm{s}\) auf \(98{,}873\,\mathrm{s}\) zu. Die
 Verschiebung betrifft damit insbesondere den oberen Bereich der Verteilung.
-
 Unter \emph{preferred} erhöht sich der Median von
-\(1{,}376\,\mathrm{s}\) auf \(2{,}163\,\mathrm{s}\), entsprechend dem
-Faktor \(1{,}57\). Das Interquartilsintervall verändert sich von
-\([0{,}320;8{,}314]\,\mathrm{s}\) auf
-\([0{,}461;32{,}977]\,\mathrm{s}\), während das 90.\ Perzentil von
-\(111{,}198\,\mathrm{s}\) auf \(127{,}537\,\mathrm{s}\) steigt. Unter
-\emph{stable} nimmt der Median von \(0{,}083\,\mathrm{s}\) auf
-\(0{,}266\,\mathrm{s}\) zu, was ungefähr dem Faktor \(3{,}20\)
-entspricht. Das Interquartilsintervall wächst von
-\([0{,}034;1{,}626]\,\mathrm{s}\) auf
-\([0{,}058;8{,}507]\,\mathrm{s}\). Das 90.\ Perzentil verändert sich von
-\(30{,}622\,\mathrm{s}\) auf \(35{,}803\,\mathrm{s}\).
+\(1{,}376\,\mathrm{s}\) bei \(Z_0\) auf \(2{,}163\,\mathrm{s}\) bei
+\(Z_5\), entsprechend dem Faktor \(1{,}57\). Das Interquartilsintervall
+reicht bei \(Z_0\) von \(0{,}320\,\mathrm{s}\) bis \(8{,}314\,\mathrm{s}\)
+und bei \(Z_5\) von \(0{,}461\,\mathrm{s}\) bis \(32{,}977\,\mathrm{s}\).
+Das 90.\ Perzentil steigt von \(111{,}198\,\mathrm{s}\) auf
+\(127{,}537\,\mathrm{s}\).
+Unter \emph{stable} nimmt der Median von \(0{,}083\,\mathrm{s}\) bei
+\(Z_0\) auf \(0{,}266\,\mathrm{s}\) bei \(Z_5\) zu, was ungefähr dem
+Faktor \(3{,}20\) entspricht. Das Interquartilsintervall reicht bei
+\(Z_0\) von \(0{,}034\,\mathrm{s}\) bis \(1{,}626\,\mathrm{s}\) und bei
+\(Z_5\) von \(0{,}058\,\mathrm{s}\) bis \(8{,}507\,\mathrm{s}\). Das
+90.\ Perzentil verändert sich von \(30{,}622\,\mathrm{s}\) auf
+\(35{,}803\,\mathrm{s}\).
 
 Die Boxplots für \(Z_0\) und \(Z_5\) beruhen unter \emph{complete} auf 424
 beziehungsweise 376, unter \emph{preferred} auf 361 beziehungsweise 355
@@ -715,8 +780,9 @@ sichtbar.
 \begin{figure}[t]
     \centering
     \makebox[\linewidth][c]{%
+        % fig04
         \includegraphics[width=1.30\linewidth]
-            {gfx/conditioning_set_z/fig04_kumulative_solverleistung.png}%
+        {../../Themen/Conditional Indepence in AF/analysis_outputs/conditioning_set_z_large_text/fig04_kumulative_solverleistung.png}   
     }
     \caption[Kumulative Solverleistung nach Konditionierungsstufe]{%
         Anteil der jeweils 525 Solverläufe, die bis zum Zeitbudget \(t\)

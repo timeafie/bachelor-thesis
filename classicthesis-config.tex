@@ -282,6 +282,23 @@
 % Last, but not least...
 % ********************************************************************
 \usepackage{classicthesis}
+
+% Kompaktere, weiterhin einlaufende Absatzüberschriften
+\DeclareRobustCommand{\compactparagraphtitle}[1]{%
+    \textls[50]{\scshape\MakeTextLowercase{#1}}%
+}
+
+\titleformat{\paragraph}[runin]
+    {\normalfont\normalsize}
+    {\theparagraph}
+    {0pt}
+    {\compactparagraphtitle}
+
+% Letzter Wert: horizontaler Abstand zum Folgetext
+\titlespacing*{\paragraph}
+    {0pt}
+    {1\baselineskip}
+    {0.5em}
 % ****************************************************************************************************
 
 
