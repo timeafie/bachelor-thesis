@@ -7,16 +7,17 @@ beeinflussen daher unmittelbar, welche Labellings existieren und ob zwischen
 ihnen die für eine nichttriviale Abhängigkeit erforderliche Variation auftreten kann. 
 Eine besondere Rolle spielen dabei gerichtete Zyklen: Ihr Auftreten und ihre Parität 
 wirken sich unterschiedlich aber oftmals grundlegend auf die betrachteten Semantiken aus. 
-Dieses Kapitel untersucht deshalb, wie sich die bedingte Unabhängigkeit in bestimmten, 
-teils sehr restriktiven Graphklassen verhält.
+Dieses Kapitel untersucht deshalb, wie sich die bedingte Unabhängigkeit in bestimmten 
+Graphklassen, die aufgrund ihrer vorteilhaften Eigenschaften und geringerer Komplexität 
+in der Literatur betrachtet werden \cite{dung:1995:af,DUNNE2002187,handbook__of_formal_argumentation__vol__3:2024}, verhält.
 
-Zunächst werden in Abschnitt~\ref{sec:acyc-afs} azyklische AFs betrachtet. 
+Zunächst werden in Abschnitt~\ref{sec:acyc-afs} AFs ohne gerichteten Zyklus betrachtet. 
 Da ihre Struktur die semantische Bewertung für \(\sigma\in\{co,st,pr\}\) 
 eindeutig festlegt, gilt \(X\perp_\sigma Y\mid Z\) unabhängig von der Wahl 
 der paarweise disjunkten Mengen \(X,Y,Z\). Abschnitt~\ref{sec:even-cycle-free-afs} 
-schwächt diese Voraussetzung ab und erlaubt gerichtete Zyklen ungerader Länge.
- Auch in dieser Graphklasse fehlt jedoch die semantische Variation, 
- die für eine nichttriviale Abhängigkeit erforderlich wäre.
+schwächt diese Voraussetzung ab und erlaubt gerichtete Zyklen ungerader Länge. 
+Auch in dieser Graphklasse fehlt jedoch die semantische Variation, 
+die für eine nichttriviale Abhängigkeit erforderlich wäre.
 
 In Abschnitt~\ref{sec:odd-cycle-free-afs} ändert sich die Ausgangslage grundlegend, 
 da gerade Zyklen und damit mehrere Labellings zulässig bleiben. 
@@ -33,9 +34,10 @@ Damit wird für alle drei Semantiken \(\Pi_2^\text{P}\)-Vollständigkeit nachgew
 \section{Azyklische AFs}
 \label{sec:acyc-afs}
 Ein AF \(F=(A,R)\) heißt azyklisch, wenn der gerichtete Graph \((A,R)\) keinen gerichteten Zyklus enthält. 
-Azyklische AFs bilden eine besonders restriktive Graphklasse, da sämtliche zyklischen Angriffsbeziehungen
- ausgeschlossen sind. Im Folgenden wird gezeigt, dass diese strukturelle Einschränkung die möglichen Labellings 
-vollständig festlegt und damit eine unmittelbare Aussage über \(X\perp_\sigma Y\mid Z\) erlaubt.
+Azyklische AFs bilden eine besonders restriktive Graphklasse, für sie fallen alle betrachteten 
+Semantiken auf das eindeutige \emph{grounded}-Labelling zusammen \cite{dung:1995:af,caminada:2009:logical-account}.
+Im Folgenden wird gezeigt, dass diese strukturelle Einschränkung 
+eine unmittelbare Aussage über \(X\perp_\sigma Y\mid Z\) erlaubt.
 \begin{Proposition}
 \label{prop:acyc-af-ci-st-top}
     Sei \(F=(A,R)\) ein azyklisches AF und \(\sigma\) eine Semantik mit
@@ -57,7 +59,7 @@ vollständig festlegt und damit eine unmittelbare Aussage über \(X\perp_\sigma 
 \label{sec:even-cycle-free-afs}
 Geradezykelfreie AFs schließen gerichtete Zyklen gerader Länge aus, erlauben jedoch ungerade Zyklen. 
 Sie bilden daher eine echt umfassendere Graphklasse als die azyklischen AFs. 
-Dennoch begrenzt das Fehlen gerader Zyklen die Menge der möglichen Labellings so stark, 
+Dennoch begrenzt das Fehlen gerader Zyklen die Menge der möglichen Labellings so stark \cite{dvorak:2012:computational-aspects}, 
 dass sich erneut allgemeine Aussagen über \(X\perp_\sigma Y\mid Z\) ableiten lassen.
 \begin{Proposition}
 \label{prop:even-cycle-free-af-ci-st-top}
@@ -83,16 +85,18 @@ der Labellings.
 \section{Ungeradezykelfreie AFs}
 \label{sec:odd-cycle-free-afs}
 In den bisher betrachteten Graphklassen entstand bedingte Unabhängigkeit aus dem Fehlen 
-semantischer Alternativen. Mit den ungeradezykelfreien AFs ändert sich diese Ausgangslage: 
+alternativer Labellings. Mit den ungeradezykelfreien AFs ändert sich diese Ausgangslage: 
 Zyklen bleiben nun zulässig, sofern sie eine gerade Länge besitzen. Damit bleiben gerade 
 jene Rückkopplungen erhalten, die größere Labellingvariationen ermögichen. 
 
 Dennoch ist die Struktur ungeradezykelfreier AFs nicht beliebig. Insbesondere fallen auf dieser 
-Graphklasse die \emph{stable}- und die \emph{preferred}-Semantik zusammen. 
+Graphklasse die \emph{stable}- und die \emph{preferred}-Semantik zusammen \cite{DUNNE2002187}.
 Die folgenden Ergebnisse zeigen, dass die strukturelle Einschränkung keine entsprechende Verringerung 
 der Komplexität bewirkt. Während sich dies für die \emph{stable}- und die \emph{preferred}-Semantik 
 aus bekannten Reduktion von \textcite{bluemel:2025:independence-aba} und ihrer Graphstruktur ableiten lässt, 
 erfordert die \emph{complete}-Semantik eine neue Konstruktion.
+
+Wir zeigen zuerst, dass sich für die \emph{stable}-Semantik keine Vereinfachung ergibt.
 \begin{Proposition}
     \label{prop:ocf-af-ci-st-pi^2}
     \(stable\)-Unabhängigkeit ist auch in ungeradezykelfreien AFs \(\Pi_2^\text{P}\)-vollständig.

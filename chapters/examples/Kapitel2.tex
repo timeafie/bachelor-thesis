@@ -19,7 +19,7 @@ Notation folgen \citeauthor*{bluemel:2025:independence-aba} \cite{bluemel:2025:i
 Im Folgenden werden ausschließlich endliche Argumentationssysteme betrachtet.
 \begin{Definition}
     \label{def:attack/defense}
-    Sei \(F = (A,R)\) ein AF, \(a \in A\) und \(S \in A\).     
+    Sei \(F = (A,R)\) ein AF, \(a \in A\) und \(S \subseteq A\).     
     Mit
     \(
         a^+ = \{b\in A \mid (a,b)\in R\},
@@ -30,7 +30,7 @@ Im Folgenden werden ausschließlich endliche Argumentationssysteme betrachtet.
     bezeichnen wir die von \(a\) angegriffenen beziehungsweise \(a\) angreifenden Argumente. 
     Für Mengen schreiben wir
     \[
-        S^+ = \{b\in A \mid \exists a\in S\colon (a,b)\in R\},
+        S^+ = \{b\in A \mid \exists a\in S\colon (a,b)\in R\},~
         S^- = \{b\in A \mid \exists a\in S\colon (b,a)\in R\}.
     \]
 \end{Definition}
@@ -84,16 +84,146 @@ von \(A\).
 Ein Argument erhält folglich genau dann das Label \(\mathsf{und}\), wenn
 keiner seiner Angreifer mit \(\mathsf{in}\) gelabelt ist, aber nicht alle
 seine Angreifer mit \(\mathsf{out}\) gelabelt sind.
+\begin{Example}
+    \label{ex:abendplanung-complete}
+    Das in der Einleitung eingeführte Beispiel wird durch
+    den AF \(F_{\mathrm{Ausflug}}=(A,R)\) mit
+    \[
+        A=\{m,d,r_1,r_2,k_1,k_2\}
+    \]
+    und
+    \[
+    \begin{aligned}
+        R={}&\{(m,d),(d,m),(r_1,r_2),(r_2,r_1),
+               (k_1,k_2),(k_2,k_1)\}\\
+             &{}\cup
+               \bigl(\{d\}\times\{r_1,r_2,k_1,k_2\}\bigr)
+    \end{aligned}
+    \]
+    formalisiert. Dabei stehen \(m\) und \(d\) dafür, den Ausflug in Münster
+    beziehungsweise Dortmund zu verbringen. Die Argumente \(r_1,r_2\)
+    bezeichnen zwei Restaurant- und \(k_1,k_2\) zwei Kinooptionen in
+    Münster. Die beiden Stadtargumente sowie die jeweiligen Alternativen
+    greifen sich gegenseitig an. Das Argument \(d\) greift außerdem alle
+    Münsteraner Optionen an.
+
+    Betrachte das Labelling \(\lambda^\ast\) mit
+    \[
+        \mathsf{in}(\lambda^\ast)=\{m,r_1\},\qquad
+        \mathsf{out}(\lambda^\ast)=\{d,r_2\},\qquad
+        \mathsf{und}(\lambda^\ast)=\{k_1,k_2\}.
+    \]
+    Dieses Labelling ist \emph{complete}: Sämtliche Angreifer von \(m\)
+    und \(r_1\) sind mit \(\mathsf{out}\) gelabelt. Die Argumente \(d\)
+    und \(r_2\) besitzen dagegen jeweils einen mit \(\mathsf{in}\)
+    gelabelten Angreifer. Für \(k_1\) und \(k_2\) ist jeweils kein
+    Angreifer mit \(\mathsf{in}\), aber aufgrund des gegenseitigen
+    Angriffs auch nicht jeder Angreifer mit \(\mathsf{out}\) gelabelt.
+    Daher gilt
+    \[
+        \lambda^\ast\in\Lambda_{\mathrm{co}}(F_{\mathrm{Ausflug}}).
+    \]
+\end{Example}
+
 \begin{Definition}
     \label{def:af-semantics}
-    Sei \(F=(A,R)\) ein Argumentationssystem und sei \(\Lambda_{\mathrm{co}}(F)\) die Menge seiner vollständigen Labellings.  
-    Die Menge der \emph{grounded}-Semantiken von F ist durch \(\Lambda_{\mathrm{gr}}(F)=\{\lambda\in\Lambda_{\mathrm{co}}(F)\mid\nexists\lambda'\in\Lambda_{\mathrm{co}}(F):\mathsf{und}(\lambda)\subsetneq\mathsf{und}(\lambda')\}\) definiert. 
-    Die Menge der \emph{preferred}-Semantiken von F ist durch \(\Lambda_{\mathrm{pr}}(F)=\{\lambda\in\Lambda_{\mathrm{co}}(F)\mid\nexists\lambda'\in\Lambda_{\mathrm{co}}(F):\mathsf{in}(\lambda)\subsetneq\mathsf{in}(\lambda')\}\) definiert. 
-    Die Menge der \emph{stable}-Semantiken von F ist durch \(\Lambda_{\mathrm{st}}(F)=\{\lambda\in\Lambda_{\mathrm{co}}(F)\mid\mathsf{und}(\lambda)=\emptyset\}\) definiert.
+    Sei \(F=(A,R)\) ein AF und sei \(\Lambda_{\mathrm{co}}(F)\) die Menge seiner vollständigen Labellings.  
+    \begin{itemize}
+        \item Die Menge der \emph{grounded}-Semantiken von F ist definiert durch 
+        \(\Lambda_{\mathrm{gr}}(F)=\{\lambda\in\Lambda_{\mathrm{co}}(F)
+        \mid\nexists\lambda'\in\Lambda_{\mathrm{co}}(F):\mathsf{und}
+        (\lambda)\subsetneq\mathsf{und}(\lambda')\}\). 
+        \item Die Menge der \emph{preferred}-Semantiken von F ist definiert durch 
+        \(\Lambda_{\mathrm{pr}}(F)=\{\lambda\in\Lambda_{\mathrm{co}}(F)
+        \mid\nexists\lambda'\in\Lambda_{\mathrm{co}}(F):\mathsf{in}
+        (\lambda)\subsetneq\mathsf{in}(\lambda')\}\). 
+        \item Die Menge der \emph{stable}-Semantiken von F ist defninert durch 
+        \(\Lambda_{\mathrm{st}}(F)=\{\lambda\in\Lambda_{\mathrm{co}}
+        (F)\mid\mathsf{und}(\lambda)=\emptyset\}\).
+    \end{itemize}
 \end{Definition}
 Jedes Argumentationssystem besitzt genau ein \emph{grounded}-Labelling und
 mindestens ein \emph{complete}- sowie ein \emph{preferred}-Labelling. Die Menge
 \(\Lambda_{\mathsf{st}}(F)\) kann hingegen leer sein.
+
+\begin{Example}
+    \label{ex:abendplanung-semantiken}
+    Für den AF \(F_{\mathrm{Ausflug}}\) aus
+    Beispiel~\ref{ex:abendplanung-complete} lassen sich die Labellings
+    der drei Semantiken wie folgt bestimmen.
+
+    Das eindeutige \emph{grounded}-Labelling
+    \(\lambda_{\mathrm{gr}}\) ist durch
+    \[
+        \mathsf{in}(\lambda_{\mathrm{gr}})
+        =\mathsf{out}(\lambda_{\mathrm{gr}})=\emptyset,
+        \qquad
+        \mathsf{und}(\lambda_{\mathrm{gr}})=A
+    \]
+    gegeben. Da jedes Argument mindestens einen Angreifer besitzt, ist
+    dieses Labelling \emph{complete}. Seine Menge unentschiedener
+    Argumente ist zudem bezüglich Mengeninklusion maximal. Daher gilt
+    \[
+        \Lambda_{\mathrm{gr}}(F_{\mathrm{Ausflug}})
+        =\{\lambda_{\mathrm{gr}}\}.
+    \]
+
+    Für \(i,j\in\{1,2\}\) sei \(\lambda_{ij}\) das Labelling mit
+    \[
+        \mathsf{in}(\lambda_{ij})=\{m,r_i,k_j\},\qquad
+        \mathsf{out}(\lambda_{ij})
+        =A\setminus\{m,r_i,k_j\},\qquad
+        \mathsf{und}(\lambda_{ij})=\emptyset.
+    \]
+    Diese vier Labellings entsprechen einer Entscheidung für Münster
+    sowie für jeweils ein Restaurant und ein Kino. Daneben bezeichnet
+    \(\lambda_D\) das Labelling
+    \[
+        \mathsf{in}(\lambda_D)=\{d\},\qquad
+        \mathsf{out}(\lambda_D)=A\setminus\{d\},\qquad
+        \mathsf{und}(\lambda_D)=\emptyset.
+    \]
+    Wird \(d\) akzeptiert, werden sowohl \(m\) als auch sämtliche
+    Münsteraner Optionen verworfen.
+
+    Die Mengen akzeptierter Argumente dieser fünf Labellings sind
+    bezüglich Mengeninklusion maximal. Somit gilt
+    \[
+        \Lambda_{\mathrm{pr}}(F_{\mathrm{Ausflug}})
+        =
+        \{\lambda_D\}
+        \cup
+        \{\lambda_{ij}\mid i,j\in\{1,2\}\}.
+    \]
+    Da diese Labellings keine unentschiedenen Argumente enthalten und
+    alle übrigen \emph{complete}-Labellings mindestens ein mit
+    \(\mathsf{und}\) gelabeltes Argument besitzen, sind sie zugleich
+    genau die \emph{stable}-Labellings:
+    \[
+        \Lambda_{\mathrm{st}}(F_{\mathrm{Ausflug}})
+        =
+        \Lambda_{\mathrm{pr}}(F_{\mathrm{Ausflug}}).
+    \]
+
+    Das Labelling \(\lambda^\ast\) aus
+    Beispiel~\ref{ex:abendplanung-complete} ist dagegen zwar
+    \emph{complete}, aber keiner dieser drei Semantiken zugeordnet:
+    Es ist nicht \emph{grounded}, da
+    \[
+        \mathsf{und}(\lambda^\ast)=\{k_1,k_2\}
+        \subsetneq A
+        =\mathsf{und}(\lambda_{\mathrm{gr}}),
+    \]
+    nicht \emph{preferred}, da beispielsweise
+    \[
+        \mathsf{in}(\lambda^\ast)=\{m,r_1\}
+        \subsetneq
+        \{m,r_1,k_1\}
+        =\mathsf{in}(\lambda_{11}),
+    \]
+    und nicht \emph{stable}, da
+    \(\mathsf{und}(\lambda^\ast)\neq\emptyset\) gilt.
+\end{Example}
 
 \begin{Definition}
     \label{def:labelling-restriction}
@@ -139,7 +269,7 @@ wird der Index \(I\) weggelassen. Für Elemente \(x,y\in V\) stehen
     \label{def:semi-graphoid}
     Ein Abhängigkeitsmodell \(I\) über \(V\) heißt \emph{Semi-Graphoid},
     wenn für alle paarweise disjunkten Mengen
-    \(X,Y,W,Z\subseteq V\) die folgenden
+    \(X,Y,Y',Z\subseteq V\) die folgenden
     \emph{Semi-Graphoid-Axiome} erfüllt sind:
     \begin{align*}
         &\text{Symmetrie:}\qquad
@@ -170,10 +300,11 @@ Die folgenden Definitionen orientieren sich an \citeauthor*{handbook-satisfiabil
     Die Menge der \emph{quantifizierten booleschen Formeln} ist induktiv definiert als:
     \begin{enumerate}
         \item Aussagenlogische Formeln und die booleschen Konstanten 1 (wahr) und 0 (falsch) sind quantifizierte boolesche Formeln.
-        \item Ist \(\varPhi\) eine quantifizierte boolesche Formel, so sind \(\exists x \varPhi\) und \(\forall x \varPhi\) quantifizierte boolesche Formeln
-        \item Sind \(\varPhi_1\) und \(\varPhi_2\) quantifizierte boolesche Formel, so sind \(\neg \varPhi_1\), \(\varPhi_1 \lor \varPhi_2\) und \(\varPhi_1 \land \varPhi_2\).
+        \item Ist \(\varPhi\) eine quantifizierte boolesche Formel, so sind \(\exists x \varPhi\) und 
+        \(\forall x \varPhi\) quantifizierte boolesche Formeln
+        \item Sind \(\varPhi_1\) und \(\varPhi_2\) quantifizierte boolesche Formel, so sind \(\neg \varPhi_1\), 
+        \(\varPhi_1 \lor \varPhi_2\) und \(\varPhi_1 \land \varPhi_2\) quantifizierte boolesche Formeln.
         \item Keine weitere Formel neben (1)-(3) beschreibt quantifizierte boolesche Formeln.
-
     \end{enumerate}
 \end{Definition}
 
@@ -271,7 +402,11 @@ beschränkt sich auf die im weiteren Verlauf benötigten Begriffe.
     \emph{negative Instanzen}. Für \(x\in D_Q\) bezeichnet \(|x|\) die
     Länge der Eingabe \(x\).
 \end{Definition}
-HIER Turingmaschinen EINFÜHREN (OHNE DEFINITION?)
+Im Folgenden wird das Standardmodell deterministischer und
+nichtdeterministischer Turingmaschinen vorausgesetzt. 
+Für eine formale Einführung sei auf
+\textcite[Kap.~4]{hromkovic:2014:theoretische-informatik}
+verwiesen.
 \begin{Definition}[P]
     \label{def:p-np-conp}
     Ein Entscheidungsproblem \(Q\) gehört zur Komplexitätsklasse
@@ -383,5 +518,62 @@ Im Folgenden sprechen wir vereinfachend von polynomiellen Reduktionen.
     Reduktionen.
 \end{Theorem}
 
-AF KOMPLEXITÄTSERGEBNISSE VORSTELLEN
-VERIFIKATION? ENUMERATION? USW. noch nicht sigma-Unabhängikeit
+\begin{Definition}[Zentrale Entscheidungsprobleme für AFs]
+    \label{def:standard-af-problems}
+    Sei \(F=(A,R)\) ein AF und sei
+    \(\sigma\in
+    \{\mathsf{gr},\mathsf{co},\mathsf{st},\mathsf{pr}\}\).
+    Das \emph{Verifikationsproblem}
+    \(\mathrm{VER}_{\sigma}\) fragt für ein gegebenes Labelling
+    \(\lambda\colon A\to\mathcal{L}\), ob
+    \(\lambda\in\Lambda_{\sigma}(F)\) gilt.
+    Das Problem der \emph{kredulösen Akzeptanz}
+    \(\mathrm{CRED}_{\sigma}\) fragt für ein gegebenes Argument
+    \(a\in A\), ob
+    \(
+        \exists\lambda\in\Lambda_{\sigma}(F)\colon
+        \lambda(a)=\mathsf{in}
+    \)
+    gilt. 
+    Das Problem der \emph{skeptischen Akzeptanz}
+    \(\mathrm{SKEPT}_{\sigma}\) fragt entsprechend, ob
+    \(
+        \forall\lambda\in\Lambda_{\sigma}(F)\colon
+        \lambda(a)=\mathsf{in}
+    \)
+    gilt.
+\end{Definition}
+Die bekannten Ergebnisse sind in
+Tabelle~\ref{tab:complexity-af-semantics} zusammengefasst
+\parencite[Tab.~3.3]{dvorak:2012:computational-aspects}.
+\begin{table}[h]
+    \centering
+    \caption{Komplexität der Verifikation sowie der kredulösen und
+    skeptischen Akzeptanz für die betrachteten AF-Semantiken.}
+    \label{tab:complexity-af-semantics}
+    \small
+    \begin{tabular}{@{}lcccc@{}}
+        \toprule
+        & \(\mathsf{gr}\)
+        & \(\mathsf{co}\)
+        & \(\mathsf{st}\)
+        & \(\mathsf{pr}\) \\
+        \midrule
+        \(\mathrm{VER}_{\sigma}\)
+            & in \(\mathrm{P}\)
+            & in \(\mathrm{P}\)
+            & in \(\mathrm{P}\)
+            & \(\mathrm{coNP}\)-vollständig \\
+        \(\mathrm{CRED}_{\sigma}\)
+            & in \(\mathrm{P}\)
+            & \(\mathrm{NP}\)-vollständig
+            & \(\mathrm{NP}\)-vollständig
+            & \(\mathrm{NP}\)-vollständig \\
+        \(\mathrm{SKEPT}_{\sigma}\)
+            & in \(\mathrm{P}\)
+            & in \(\mathrm{P}\)
+            & \(\mathrm{coNP}\)-vollständig
+            & \(\Pi_2^{\mathrm{P}}\)-vollständig \\
+        \bottomrule
+    \end{tabular}
+\end{table}

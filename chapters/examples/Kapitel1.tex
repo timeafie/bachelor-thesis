@@ -1,85 +1,441 @@
 \chapter{Einleitung}
 \label{chap:einleitung}
 
-Welche Argumente können gemeinsam vertreten werden, wenn die zugrunde liegenden Informationen einander widersprechen? 
-Diese Frage ist für menschliche ebenso wie für maschinelle Entscheidungsprozesse von zentraler Bedeutung. 
-Abstrakte Argumentationssysteme (engl.\ \emph{abstract argumentation frameworks}, kurz AFs) stellen hierfür ein einfaches und zugleich allgemeines Modell bereit. 
-Sie wurden von \textcite{dung:1995:af} eingeführt und bilden Argumente als Knoten sowie Angriffe zwischen ihnen als gerichtete Kanten ab. 
+Welche Argumente können gemeinsam vertreten werden, wenn die zugrunde
+liegenden Informationen einander widersprechen? Diese Frage stellt sich
+sowohl in menschlichen als auch in maschinellen Entscheidungsprozessen.
+Abstrakte Argumentationssysteme
+(engl.\ \emph{abstract argumentation frameworks}, AFs) stellen hierfür
+ein einfaches und zugleich allgemeines Modell bereit. Sie wurden von
+\textcite{dung:1995:af} eingeführt und bilden Argumente als Knoten (Argumentmenge \(A\)) sowie
+Angriffe zwischen ihnen als gerichtete Kanten (\(R\)) ab.
 
-Ein Konflikt lässt jedoch nicht notwendigerweise nur eine einzige vertretbare Bewertung zu. 
-Für dasselbe Argumentationssystem können unterschiedliche zulässige Bewertungen der enthaltenen Argumente bestehen. 
+Die Bewertung eines AFs wird durch ein sogenanntes
+\emph{Labelling} beschrieben. Dieses ordnet jedem Argument eines der
+Labels \(\mathsf{in}\), \(\mathsf{out}\) oder \(\mathsf{und}\) zu und
+kennzeichnet es damit als akzeptiert, verworfen beziehungsweise
+unentschieden. Ein AF kann mehrere vertretbare Labellings desselben
+Konflikts besitzen. Welche davon zulässig sind, bestimmt die gewählte
+Semantik. In der vorliegenden Arbeit werden insbesondere die
+\emph{complete}-, \emph{stable}- und \emph{preferred}-Semantik
+betrachtet.
 
-AN DIESER STELLE BEREITS SEMANTIKEN MIT EINEM BEISPIEL EINFÜHREN
+Betrachten wir beispielhaft die Planung eines Ausflugs, der entweder nach Münster
+oder Dortmund gehen kann. Die durch \(m\) und \(d\) dargestellten
+Stadtoptionen greifen einander an, wodurch sie sich gegenseitig ausschließen. 
+Fällt die Wahl auf Münster,
+müssen zusätzlich ein Restaurant und ein Kino ausgewählt werden, wobei
+für beide Entscheidungen jeweils zwei Alternativen zur Verfügung
+stehen. Wird stattdessen Dortmund gewählt, entfallen sämtliche
+Münsteraner Restaurant- und Kinooptionen.
 
-Genau an dieser Stelle wird die bedingte Unabhängigkeit relevant. Sie stammt ursprünglich aus der Wahrscheinlichkeitstheorie und beschreibt, 
-ob zwei Gruppen von Variablen noch Informationen übereinander liefern, nachdem eine dritte Gruppe beobachtet wurde. 
-Grundlegende Eigenschaften solcher Unabhängigkeitsrelationen wurden unter anderem von \textcite{pearl:paz:1986:graphoids} untersucht. 
-Eine bekannte Anwendung bilden Bayes-Netze, in denen Unabhängigkeiten zwischen Variablen mithilfe einer graphischen Darstellung 
-sichtbar gemacht werden können und für die strukturierte Verarbeitung probabilistischer Informationen genutzt werden \cite{pearl:2010}.
+Auf den ersten Blick können Restaurant und Kino unabhängig voneinander
+gewählt werden, denn die Entscheidung für ein Restaurant sagt noch nichts
+darüber aus, welches Kino besucht werden soll. Dennoch lassen sich die
+beiden Entscheidungen nicht beliebig aus unterschiedlichen
+Ausflugsplanungen zusammensetzen. Beruht eine Planung auf Münster und eine
+andere auf Dortmund, passen ihre Restaurant- und Kinobewertungen
+möglicherweise nicht zusammen. Beide Entscheidungen sind somit über die
+noch offene Stadtwahl miteinander verbunden.
 
-Die hinter diesem Begriff stehende Idee ist jedoch nicht auf Wahrscheinlichkeiten beschränkt. Auch logische Wissensrepräsentationen 
-können mehrere mögliche Zustände oder Interpretationen zulassen. Die von \textcite{darwiche:1997:logical-ci} entwickelte logische 
-bedingte Unabhängigkeit überträgt die zentrale Frage daher auf das logische Schließen: KONKRETER, CI INFORMELL DEFINIEREN
-Können Informationen aus unterschiedlichen 
-Bereichen miteinander kombiniert werden, sobald eine gemeinsame Hintergrundinformation festgelegt ist?
+Das in der Ausflugsplanung auftretende Muster ist auch aus anderen
+Bereichen bekannt. Zwei Entscheidungen können zunächst voneinander
+abhängig wirken, weil beide durch dieselbe Hintergrundinformation beeinflusst
+werden. Wird diese Information festgehalten, kann die Abhängigkeit
+verschwinden. Dieses Prinzip wird als bedingte Unabhängigkeit
+(engl.\ \emph{conditional independence}) bezeichnet. Das von
+\citeauthor*{pearl:paz:1986:graphoids}
+\cite{pearl:paz:1986:graphoids} untersuchte Konzept stammt aus der
+Wahrscheinlichkeitstheorie und bildet eine wesentliche Grundlage von
+Bayes-Netzen. Dort können bedingte Unabhängigkeiten mithilfe der
+\(d\)-Separation aus einem gerichteten azyklischen Graphen abgelesen
+werden \cite{pearl:2010}. \textcite{darwiche:1997:logical-ci} überträgt
+die Idee auf logische Wissensrepräsentationen und versteht
+Unabhängigkeit als die Kombinierbarkeit möglicher Festlegungen von
+\(X\) und \(Y\) bei derselben Festlegung von \(Z\).
 
-In abstrakten Argumentationssystemen treten an die Stelle möglicher Interpretationen die zulässigen Bewertungen der Argumente.
-Zwei Argumentmengen können als bedingt unabhängig angesehen werden, wenn ihre möglichen Bewertungen nach Festlegung einer 
-dritten Argumentmenge miteinander vereinbar bleiben. Bedingte Unabhängigkeit erfasst damit, ob zwei argumentative 
-Teilbereiche getrennt voneinander betrachtet werden können.
+Für AFs ersetzen \citeauthor*{rienstra:2020:independence-af} 
+\cite{rienstra:2020:independence-af} diese
+Festlegungen durch semantisch zulässige \(\sigma\)-Labellings. 
+Sei \(F=(A,R)\) ein AF,
+\(\sigma\) eine Semantik und seien
+\(X,Y,Z\subseteq A\) paarweise disjunkt. Die Mengen \(X\) und \(Y\)
+sind gegeben \(Z\) unter \(\sigma\) bedingt unabhängig, wenn sich je
+zwei \(\sigma\)-Labellings, die auf \(Z\) übereinstimmen, zu einem
+weiteren \(\sigma\)-Labelling rekombinieren lassen. Dieses übernimmt
+die Bewertung von \(X\) aus dem ersten, die Bewertung von \(Y\) aus
+dem zweiten und die gemeinsame Bewertung von \(Z\) aus beiden
+Ausgangslabellings.
 
-Eine entsprechende Definition bedingter Unabhängigkeit für abstrakte Argumentationssysteme wurde von \citeauthor*{rienstra:2020:independence-af} \cite{rienstra:2020:independence-af} eingeführt. 
-Das damit verbundene Potenzial liegt auf der Hand: Werden unabhängige Teilbereiche erkannt, können argumentative Zusammenhänge verständlicher dargestellt 
-und umfangreiche Probleme in kleinere Teilprobleme zerlegt werden. Diesem Potenzial steht jedoch eine wesentliche Schwierigkeit gegenüber. 
-Die exakte Entscheidung bedingter Unabhängigkeit ist für zentrale Auswertungsweisen abstrakter Argumentationssysteme bereits mindestens auf der 
-zweiten Ebene der polynomiellen Hierarchie anzuordnen \cite{bluemel:2025:independence-aba}.
+Übertragen auf den geplanten Ausflug sehen wir: Solange unterschiedliche Bewertungen für Münster und 
+Dortmund zugelassen sind, passen Restaurant- und Kinobewertungen
+verschiedener Planungen nicht immer zusammen. Werden dagegen nur
+Planungen mit derselben Stadtentscheidung verglichen, kann die
+Restaurantwahl der einen mit der Kinowahl der anderen Planung verbunden
+werden. Die Stadtwahl erklärt somit ihre zunächst bestehende
+Abhängigkeit und macht beide Teilentscheidungen nach ihrer Festlegung
+voneinander unabhängig.
 
-HIER ERWÄHNEN, WAS AUSWERTUNG IST UND, DASS DESHALB CI SO SCHWER IST. 
-Für die automatisierte Auswertung formaler Argumentationsprobleme wird daher häufig der Reduktionsansatz verwendet. 
-Statt eine Aufgabe unmittelbar zu lösen, wird sie in einen anderen Formalismus übersetzt, für den bereits leistungsfähige 
-allgemeine Solver verfügbar sind. Aussagenlogische Kodierungen können beispielsweise von SAT-Solvern verarbeitet werden. 
-Quantifizierte boolesche Formeln (QBF) erweitern diesen Ansatz um die Eigenschaft Beziehungen zwischen mehreren möglichen Bewertungen 
-innerhalb einer einzigen Formel auszudrücken, und eignen sich daher besonders für die Formulierung bedingter Unabhängigkeiten.
+Für die automatische Erkennung bedingter Unabhängigkeit entwickeln
+\citeauthor*{rienstra:2020:independence-af}
+\cite{rienstra:2020:independence-af} ein polynomialzeitlich prüfbares
+Kriterium auf Grundlage von \(d\)-Separation. Für die
+\emph{complete}- und die \emph{preferred}-Semantik ist dieses korrekt,
+aber nicht vollständig. Für die
+\emph{stable}-Semantik besitzt das Kriterium keine allgemeine
+Korrektheitsgarantie. Eine exakte semantische Entscheidung kann es daher
+nicht ersetzen.
 
-Dass QBFs als einheitliches Zielformat für anspruchsvolle Aufgaben der formalen Argumentation eingesetzt werden können, 
-zeigen bereits \textcite{egly:woltran:2006:reasoning-qbf}.
-Mit diesem Formalismus gewappnet wollen wir uns nun der Untersuchung der bedingten Unabhängikeit in Argumentationssystemen stellen.
+Die Entscheidung ist zugleich berechnungskomplex. Für jedes Paar
+zulässiger, auf \(Z\) übereinstimmender Labellings muss ein weiteres
+zulässiges Labelling mit der geforderten Rekombination existieren. Unter
+der \emph{preferred}-Semantik ist zusätzlich die Maximalität der
+akzeptierten Argumente zu prüfen.
+\citeauthor*{bluemel:2025:independence-aba}
+\cite{bluemel:2025:independence-aba} weisen
+\(\Pi_2^{\mathsf P}\)-Vollständigkeit für \emph{complete} und
+\emph{stable} sowie \(\Pi_3^{\mathsf P}\)-Vollständigkeit für
+\emph{preferred} nach. Quantifizierte Boolesche Formeln (QBFs) eignen 
+sich deshalb als Formalismus, da sie
+den universellen Vergleich der Ausgangslabellings und die existentielle
+Rekombinationsforderung unmittelbar ausdrücken können.
+
+Aus der theoretischen Eignung von QBFs folgt allerdings noch nicht, wie sich die
+entwickelten Kodierungen in der praktischen Anwendung verhalten.
+Insbesondere bleibt offen, ob bedingte Unabhängigkeit auf
+verschiendenen AFs innerhalb vertretbarer Zeit entschieden werden kann
+und in welchem Maß die gewählte Semantik sowie die
+Konditionierungsmenge \(Z\) den Solveraufwand beeinflussen. Die
+Worst-Case-Komplexität erlaubt hierzu keine unmittelbaren Aussagen.
+Daraus ergibt sich die Notwendigkeit, die praktische Leistungsfähigkeit
+der QBF-Kodierungen und mögliche semantikspezifische Unterschiede
+empirisch zu untersuchen.
+
+\section{Stand der Forschung}
+\label{sec:einleitung-related-work}
+
+Aufbauend auf ihrer semantischen Definition bedingter Unabhängigkeit
+entwickeln \textcite{rienstra:2020:independence-af} ein strukturelles
+Verfahren zur Erkennung entsprechender Relationen. Dazu wird der
+Angriffsgraph anhand seiner starken Zusammenhangskomponenten
+(engl.\ \emph{strongly connected components}, SCCs) in einen
+gerichteten azyklischen \(d\)-Graphen überführt, auf dem
+\(d\)-Separation geprüft werden kann. Für die \emph{complete}- und die
+\emph{preferred}-Semantik ist das daraus gewonnene Kriterium korrekt,
+aber nicht vollständig. Für die \emph{stable}-Semantik besteht keine
+allgemeine Korrektheitsgarantie.
+
+\textcite{bluemel:2025:independence-aba} übertragen bedingte
+Unabhängigkeit auf flache Systeme der annahmenbasierten Argumentation
+(engl.\ \emph{assumption-based argumentation}, ABA) und zeigen eine
+Korrespondenz zur AF-basierten Definition. Außerdem bestimmen sie die
+Komplexität des exakten Entscheidungsproblems:
+Unter der \emph{complete}- und der \emph{stable}-Semantik ist es
+\(\Pi_2^{\mathsf P}\)-vollständig, unter der
+\emph{preferred}-Semantik \(\Pi_3^{\mathsf P}\)-vollständig. Für ABA
+geben sie zwei polynomialzeitliche hinreichende Verfahren an, von denen
+eines die SCC-Struktur des instanziierten AFs und das andere den
+Abhängigkeitsgraphen des ABA-Systems verwendet.
+
+Einen allgemeineren Zugang verfolgt
+\textcite{heyninck:2025:algebraic-ci}, der bedingte Unabhängigkeit
+innerhalb der Approximation Fixpoint Theory algebraisch charakterisiert.
+Der sprachunabhängige Ansatz wird insbesondere auf normale
+Logikprogramme angewendet.
+
+Für klassische Auswertungsprobleme abstrakter Argumentationssysteme
+existiert eine Reihe solvergestützter Verfahren. ASPARTIX verwendet
+Answer Set Programming zur Berechnung von Extensionen und
+Akzeptanzproblemen \cite{egly:gaggl:woltran:2010:aspartix}. CEGARTIX,
+ArgSemSAT und \(\mu\)-toksia setzen unterschiedliche SAT-basierte
+beziehungsweise iterative CEGAR-Verfahren ein
+\cite{dvorak:etal:2014:cegartix,
+cerutti:giacomin:vallati:2019:argsemsat,
+niskanen:jarvisalo:2020:mu-toksia}.
+
+Auch QBFs werden als Zielformalismus für Argumentationsprobleme
+eingesetzt. \textcite{egly:woltran:2006:reasoning-qbf} entwickeln
+hierfür einen modularen Ansatz für ein generisches annahmenbasiertes
+Argumentationsframework, dessen Angriffsrelation auf einem
+Deduktionssystem beruht. Die QBF-Module erfassen unter anderem
+zulässige, stabile und präferierte Mengen sowie skeptische und
+kredulöse Schlussfolgerungsaufgaben.
+
+Eine labellingbasierte QBF-Formalisierung für endliche Dung-AFs geben
+\textcite{arieli:caminada:2013:qbf-af} an. Jedes Argument wird durch
+zwei signierte boolesche Variablen repräsentiert, deren Belegungen die
+Labels \(\mathsf{in}\), \(\mathsf{out}\) und \(\mathsf{und}\)
+kodieren. Die \emph{complete}- und die \emph{stable}-Semantik werden
+durch propositionale Theorien charakterisiert, während
+Minimalitäts- und Maximalitätsbedingungen weiterer Semantiken durch
+quantifizierte Vergleichsbelegungen ausgedrückt werden.
+
+Neuere Arbeiten von
+\textcite{mahmood:etal:2026:cliquewidth} entwickeln strukturgeleitete
+SAT- und QBF-Reduktionen für Existenz-, Akzeptanz- und Zählprobleme in
+AFs, welche die Clique-Width des Angriffsgraphen bis auf einen linearen
+Faktor erhalten.
+
+Die vorliegende Arbeit verbindet die labellingbasierte Definition
+bedingter Unabhängigkeit erstmals mit einer exakten QBF-Kodierung für
+endliche Dung-AFs. Dabei werden die Semantiken \emph{complete},
+\emph{stable} und \emph{preferred} betrachtet. Ergänzend wird die
+praktische Leistungsfähigkeit der Kodierungen empirisch untersucht.
+
+
+\section{Zielsetzung}
+\label{sec:einleitung-zielsetzung}
+
+Ziel dieser Arbeit ist die empirische und
+komplexitätstheoretische Untersuchung der bedingten
+Unabhängigkeit in AFs. Dazu werden für die
+\emph{complete}-, \emph{stable}- und \emph{preferred}-Semantik
+QBF-Kodierungen entwickelt, welche die semantische Definition
+bedingter Unabhängigkeit abbilden.
+
+Aufbauend auf etablierten Kodierungen von AF-Labellings werden mehrere
+semantisch zulässige Bewertungen durch getrennte Variablenblöcke
+repräsentiert. Gleichheitsbedingungen stellen sicher, dass zwei
+Ausgangslabellings auf der Konditionierungsmenge \(Z\) übereinstimmen.
+Eine Mischungsbedingung fordert anschließend die Existenz eines dritten
+Labellings, das die Bewertungen von \(X\), \(Y\) und \(Z\) in der
+vorgeschriebenen Weise kombiniert. Dadurch kann die
+Unabhängigkeitsentscheidung innerhalb einer einzelnen QBF formuliert
+werden, ohne zuvor sämtliche zulässigen Labellings explizit erzeugen zu
+müssen.
+
+Darauf aufbauend wird ein solvergestütztes Verfahren umgesetzt, das für
+einen AF und paarweise disjunkte Argumentmengen \(X\), \(Y\) und \(Z\)
+entscheidet, ob \(X\) und \(Y\) gegeben \(Z\) unter der gewählten
+Semantik bedingt unabhängig sind. Die Implementierung überführt die
+entwickelten Formeln in ein von QBF-Solvern unterstütztes Format und
+wertet deren Wahrheitsgehalt automatisiert aus.
+
+Das Verfahren wird anhand von AF-Instanzen aus den ICCMA-Benchmarks
+\cite{bistarelli:2025:iccma,apostolakis:2025:iccma-instances}
+empirisch untersucht. Im Mittelpunkt steht die Konditionierungsmenge
+\(Z\), die bestimmt, auf welchen Argumenten die zu rekombinierenden
+Labellings übereinstimmen müssen. Durch eine systematische Variation
+ihrer Größe wird untersucht, in welchem Zusammenhang die Größe von
+\(Z\) mit dem Ergebnis der Unabhängigkeitsentscheidung und dem
+solverseitigen Rechenaufwand steht. Die Auswertung soll insbesondere
+zeigen, ob sich dabei semantikübergreifende oder semantikspezifische
+Muster erkennen lassen.
+
+Ergänzend wird die Komplexität der exakten
+Unabhängigkeitsentscheidung für ausgewählte Klassen von
+Angriffsgraphen untersucht. Strukturelle Einschränkungen können
+klassische Auswertungsprobleme in AFs vereinfachen. Auf die bedingte
+Unabhängigkeit lässt sich dies jedoch nicht unmittelbar übertragen, da
+sie Beziehungen zwischen mehreren zulässigen Labellings erfasst. Für
+die betrachteten Graphklassen wird daher bestimmt, ob das
+Entscheidungsproblem in einer niedrigeren Komplexitätsklasse liegt oder
+ob die Härte des allgemeinen Falls erhalten bleibt.
+
+
+\section{Beitrag und Aufbau}
+\label{sec:einleitung-beitrag-aufbau}
+
+Die vorliegende Arbeit leistet drei zentrale Beiträge:
+
+\begin{itemize}
+    \item
+    \textbf{Exakte QBF-Kodierung.}
+    Aufbauend auf etablierten labellingbasierten Kodierungen von
+    AF-Semantiken werden Gleichheits- und Mischungsbausteine entwickelt,
+    welche drei semantisch zulässige Labellings entsprechend der
+    Definition bedingter Unabhängigkeit miteinander verknüpfen. Die
+    resultierenden QBFs charakterisieren die
+    Unabhängigkeitsentscheidung unter der \emph{complete}-,
+    \emph{stable}- und \emph{preferred}-Semantik exakt und ermöglichen
+    ihre solvergestützte Prüfung.
+
+    \item
+    \textbf{Empirische Untersuchung.}
+    Die QBF-Kodierungen werden implementiert und in insgesamt
+    \(9\,450\) Solverläufen auf \(105\) ICCMA-Instanzen ausgewertet.
+    In der untersuchten Benchmarkstichprobe gehen größere
+    Konditionierungsmengen unter allen drei Semantiken mit einem
+    geringeren Anteil als abhängig entschiedener Fälle und insgesamt
+    höheren medianen Solverlaufzeiten einher. Zugleich sinkt die
+    Entscheidungsquote insbesondere unter der \emph{complete}- und der
+    \emph{stable}-Semantik.
+
+    \item
+    \textbf{Komplexität auf eingeschränkten Graphklassen.}
+    Für azyklische und, allgemeiner, für geradezykelfreie AFs wird
+    gezeigt, dass jede Anfrage nach bedingter Unabhängigkeit unter der
+    \emph{complete}-, \emph{stable}- und
+    \emph{preferred}-Semantik positiv beantwortet wird. Auf
+    ungeradezykelfreien AFs ist das Entscheidungsproblem unter allen
+    drei Semantiken \(\Pi_2^{\mathsf P}\)-vollständig. Damit bleibt die
+    Komplexität des allgemeinen Falls für \emph{complete} und
+    \emph{stable} erhalten, während sie für \emph{preferred} von
+    \(\Pi_3^{\mathsf P}\) auf \(\Pi_2^{\mathsf P}\) sinkt.
+\end{itemize}
+Die weitere Arbeit ist wie folgt aufgebaut. Kapitel~\ref{ch:grundlagen} führt die
+notwendigen Grundlagen zu abstrakten Argumentationssystemen, den
+betrachteten Semantiken, bedingter Unabhängigkeit, quantifizierten
+booleschen Formeln und den verwendeten Komplexitätsklassen ein.
+Kapitel~\ref{ch:semantic-independence} entwickelt die labellingbasierten Semantikkodierungen sowie
+die Gleichheits- und Mischungsbedingungen und führt diese zur exakten
+QBF-Kodierung der bedingten Unabhängigkeit zusammen. Kapitel~\ref{ch:empirical-analysis}
+beschreibt die Implementierung, den Versuchsaufbau und die Ergebnisse
+der empirischen Untersuchung. Kapitel~\ref{ch:graphclasses} analysiert die Komplexität der
+Unabhängigkeitsentscheidung auf ausgewählten Klassen von
+Angriffsgraphen. Abschließend fasst das Fazit~\ref{ch:summary} die wesentlichen
+Ergebnisse zusammen, diskutiert die Grenzen der Untersuchung und zeigt
+mögliche weiterführende Forschungsrichtungen auf.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\iffalse
+\citeauthor*{bluemel:2025:independence-aba} 
+\cite{bluemel:2025:independence-aba} übertragen die Definition 
+auf flache Systeme der annahmenbasierten Argumentation 
+(engl.\ \emph{assumption-based argumentation}) und weisen für 
+die betrachteten Semantiken eine Korrespondenz zur AF-basierten 
+Definition nach. Zudem zeigen sie, dass das Entscheidungsproblem 
+für bedingte Unabhängigkeit unter den Semantiken \emph{complete} 
+und \emph{stable} \(\Pi_2^{\mathsf{P}}\)-vollständig und 
+unter \emph{preferred} \(\Pi_3^{\mathsf{P}}\)-vollständig ist.
+
+Angesichts dieser Komplexität entwickeln \textcite{rienstra:2020:independence-af} 
+ein polynomialzeitlich prüfbares strukturelles Kriterium. 
+Dabei transformieren sie den Angriffsgraphen eines AFs mithilfe 
+seiner starken Zusammenhangskomponenten in einen gerichteten 
+azyklischen \(d\)-Graphen, auf dem \(d\)-Separation geprüft werden 
+kann. Für die Semantiken \emph{complete} und \emph{preferred} 
+liefert das Kriterium ausschließlich korrekte, jedoch nicht 
+alle bestehenden Unabhängigkeiten. 
+Für \emph{stable} besteht keine allgemeine Korrektheitsgarantie.
+
+Solvergestützte Reduktionen sind für die automatisierte Verarbeitung von
+AFs etabliert. ASPARTIX nutzt hierfür Answer Set Programming
+\cite{egly:gaggl:woltran:2010:aspartix}, während CEGARTIX, ArgSemSAT und
+\(\mu\)-toksia unterschiedliche SAT-basierte Verfahren einsetzen
+\cite{dvorak:etal:2014:cegartix,
+cerutti:giacomin:vallati:2019:argsemsat,
+niskanen:jarvisalo:2020:mu-toksia}. Diese Systeme belegen die
+Leistungsfähigkeit solvergestützter Reduktionen, richten sich jedoch 
+nicht unmittelbar auf die für bedingte Unabhängigkeit erforderliche 
+Rekombination mehrerer Labellings.
+
+Quantifizierte boolesche Formeln (QBF) ermöglichen den Vergleich 
+mehrerer Belegungen innerhalb einer Formel und eignen sich daher 
+zur Untersuchung bedingter Unabhängigkeit. In der formalen 
+Argumentation sind sie bereits etabliert: 
+\citeauthor*{egly:woltran:2006:reasoning-qbf} \cite{egly:woltran:2006:reasoning-qbf} 
+entwickeln QBF-Module für verschiedene Semantiken 
+und Schlussfolgerungsaufgaben in AFs.
+
+Aus dem bisherigen Forschungsstand ergibt sich somit eine Lücke: Die
+bekannten graphstrukturellen Verfahren erfassen nur einen Teil der
+tatsächlich bestehenden Unabhängigkeiten und besitzen für die
+\emph{stable}-Semantik keine allgemeine Korrektheitsgarantie. Zugleich
+stehen QBF-Kodierungen für verschiedene AF-Semantiken und
+Schlussfolgerungsprobleme zur Verfügung, nicht jedoch für die hier
+betrachtete exakte Entscheidung der bedingten Unabhängigkeit. Offen 
+bleibt damit, wie bedingte
+Unabhängigkeit unter der \emph{complete}-, \emph{stable}- und
+\emph{preferred}-Semantik exakt als QBF kodiert und solvergestützt
+entschieden werden kann. An dieser Stelle setzt die vorliegende Arbeit an.
+Die daraus abgeleiteten Ziele und Forschungsfragen werden im folgenden
+Abschnitt präzisiert.
 
 \section{Zielsetzung}
 \label{sec:einleitung-motivation}
 
-Ziel dieser Arbeit ist es, bedingte Unabhängigkeit in abstrakten Argumentationssystemen sowohl praktisch als auch theoretisch zu untersuchen. 
-Dazu wird die Unabhängigkeitsentscheidung für die \emph{stable}-, \emph{complete}- und \emph{preferred}-Semantik als QBF formuliert.
-Die Kodierung ermöglicht eine exakte und automatisierte Prüfung, ohne die zulässigen Bewertungen eines Argumentationssystems vorab vollständig aufzählen zu müssen. 
-Dadurch wird eine empirische Analyse auf größeren Benchmarkinstanzen ermöglicht.
+Ziel dieser Arbeit ist die algorithmische, empirische und
+komplexitätstheoretische Untersuchung der exakten bedingten Unabhängigkeit
+in abstrakten Argumentationssystemen. Dazu werden für die
+\emph{complete}-, \emph{stable}- und \emph{preferred}-Semantik
+QBF-Kodierungen entwickelt, welche die semantische Definition bedingter
+Unabhängigkeit exakt abbilden. Darauf aufbauend wird ein solvergestütztes
+Verfahren umgesetzt, das für einen AF und paarweise disjunkte
+Argumentmengen \(X\), \(Y\) und \(Z\) entscheidet, ob \(X\) und \(Y\)
+gegeben \(Z\) bedingt unabhängig sind. Die relevanten Labellings werden
+innerhalb der QBF symbolisch repräsentiert und müssen daher nicht vorab
+vollständig erzeugt werden.
 
-Von besonderem Interesse ist die Konditionierungsmenge \(Z\); sie bestimmt, welche Argumentbewertungen bereits als festgelegt gelten. 
-Eine Veränderung ihrer Größe kann beeinflussen, ob zwei Argumentmengen unabhängig sind und wie aufwendig die entsprechende Solveranfrage ist. 
-Die Untersuchung auf ICCMA-Instanzen soll zeigen, ob sich hierbei systematische Zusammenhänge beobachten lassen.
+Das Verfahren wird anhand von AF-Instanzen aus den ICCMA-Benchmarks
+\cite{bistarelli:2025:iccma,apostolakis:2025:iccma-instances} empirisch untersucht. 
+Im Mittelpunkt steht die Konditionierungsmenge \(Z\), die bestimmt, auf
+welchen Argumenten die zu rekombinierenden Labellings übereinstimmen
+müssen. Durch eine systematische Variation ihrer Größe wird
+untersucht, in welchem Zusammenhang die Größe von \(Z\) mit dem Ergebnis
+der Unabhängigkeitsentscheidung und dem solverseitigen Rechenaufwand
+steht. Die Auswertung soll insbesondere zeigen, ob sich dabei
+semantikübergreifende oder semantikspezifische Muster erkennen lassen.
 
-Ergänzend wird analysiert, welchen Einfluss die Graphstruktur eines Argumentationssystems auf die Schwierigkeit der Unabhängigkeitsentscheidung besitzt. 
-Strukturelle Einschränkungen können die Auswertung eines Argumentationssystems vereinfachen. Dies muss jedoch nicht unmittelbar für bedingte Unabhängigkeit gelten, 
-da diese die Beziehungen zwischen mehreren zulässigen Bewertungen betrachtet. Die komplexitätstheoretische Analyse soll daher feststellen,
-in welchen Graphklassen tatsächlich eine Vereinfachung erreicht wird und in welchen die Schwierigkeit des allgemeinen Falls bestehen bleibt.
+Ergänzend wird die Komplexität der exakten Unabhängigkeitsentscheidung
+für ausgewählte Klassen von Angriffsgraphen untersucht. Strukturelle
+Einschränkungen können klassische Auswertungsprobleme in AFs vereinfachen.
+Auf die bedingte Unabhängigkeit lässt sich dies jedoch nicht unmittelbar
+übertragen, da sie Beziehungen zwischen mehreren zulässigen Labellings
+erfasst. Für die betrachteten Graphklassen wird daher bestimmt, ob das
+Entscheidungsproblem in einer niedrigeren Komplexitätsklasse liegt oder
+ob die Härte des allgemeinen Falls erhalten bleibt.
 
 \section{Beitrag der Arbeit}
 \label{sec:einleitung-roadmap}
-HIER BEREITS ERFOLGE UND ERGEBNISSE DER ARBEIT AUFZÄHLEN
+
+Die vorliegende Arbeit leistet drei zentrale Beiträge:
+
 \begin{itemize}
-    \item Kapitel~2 führt die formalen Grundlagen der Arbeit ein. Dazu gehören abstrakte Argumentationssysteme, die betrachteten Auswertungsweisen, 
-    bedingte Unabhängigkeit, quantifizierte boolesche Formeln sowie die benötigten komplexitätstheoretischen Begriffe.
-    
     \item
-    Kapitel~3 entwickelt labellingbasierte Kodierungen der \emph{stable}-, \emph{complete}- und \emph{preferred}-Semantik.
-    Diese sind Ausgangspunkt für die anschließende QBF-Kodierung der bedingten Unabhängigkeit unter der \emph{stable}-, \emph{complete}- und \emph{preferred}-Semantik.
-    
+    \textbf{Exakte QBF-Kodierung.}
+    Es werden labellingbasierte Kodierungen der
+    \emph{complete}-, \emph{stable}- und \emph{preferred}-Semantik
+    entwickelt und zu QBF-Kodierungen der bedingten Unabhängigkeit
+    zusammengeführt. Diese charakterisieren das Entscheidungsproblem
+    unter den drei betrachteten Semantiken exakt und ermöglichen seine
+    solvergestützte Prüfung, ohne zuvor sämtliche zulässigen Labellings
+    explizit erzeugen zu müssen. Die Konstruktion der Kodierungen wird
+    in Kapitel~3 vorgestellt.
 
     \item
-    Kapitel~4 Nutzt die zuvor entwickelten QBF-Kodierungen der bedingten Unabhängigkeit, um den Zusammenhang zwischen der Konditionierungsmenge und dem Unabhängigkeitsstatu
-    beziehungsweise der Solverlaufzeit zu analysieren. 
+    \textbf{Empirische Untersuchung.}
+    Die QBF-Kodierungen werden implementiert und in insgesamt
+    \(9\,450\) Solverläufen auf \(105\) ICCMA-Instanzen ausgewertet.
+    In der untersuchten Benchmarkstichprobe gehen größere
+    Konditionierungsmengen unter allen drei Semantiken mit einem
+    geringeren Anteil als abhängig entschiedener Fälle und insgesamt
+    höheren medianen Solverlaufzeiten einher. Zugleich sinkt die
+    Entscheidungsquote insbesondere unter der \emph{complete}- und der
+    \emph{stable}-Semantik. Durchführung und Ergebnisse dieser
+    Untersuchung werden in Kapitel~4 dargestellt.
 
     \item
-    Kapitel~5 analysiert die Komplexität der bedingten Unabhängigkeit für ausgewählte Graphklassen. Wir zeigen, dass bedingte Unabhängigkeit für azyklische und geradezykelfreie
-    AFs allgemeingültig ist und für ungeradezykelfreie AFs die Schwierigkeit des allgemeinen Falls behält.
+    \textbf{Komplexität auf eingeschränkten Graphklassen.}
+    Für azyklische und, allgemeiner, für geradezykelfreie AFs wird
+    gezeigt, dass jede Anfrage nach bedingter Unabhängigkeit unter der
+    \emph{complete}-, \emph{stable}- und \emph{preferred}-Semantik
+    positiv beantwortet wird. Auf ungeradezykelfreien AFs ist das
+    Entscheidungsproblem unter allen drei Semantiken
+    \(\Pi_2^{\mathsf{P}}\)-vollständig. Damit bleibt die Komplexität des
+    allgemeinen Falls für \emph{complete} und \emph{stable} erhalten,
+    während sie für \emph{preferred} von
+    \(\Pi_3^{\mathsf{P}}\) auf \(\Pi_2^{\mathsf{P}}\) sinkt.
+    Diese Ergebnisse werden in Kapitel~5 hergeleitet.
 \end{itemize}
-
+\fi

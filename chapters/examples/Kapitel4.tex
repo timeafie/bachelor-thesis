@@ -3,17 +3,19 @@
 
 Die zuvor eingeführte Kodierung durch QBFs ermöglicht es, bedingte Unabhängigkeit in 
 AFs automatisiert zu entscheiden. Über die formale Entscheidbarkeit hinaus stellt 
-sich jedoch die Frage, wie häufig Abhängigkeit und Unabhängigkeit in heterogenen 
-Benchmarkinstanzen auftreten, welchen Einfluss die Konditionierungsmenge besitzt 
-und wie aufwendig die entsprechenden Solverentscheidungen sind. Das vorliegende 
-Kapitel untersucht diese Aspekte empirisch für die Semantiken \(\mathsf{st}\), 
-\(\mathsf{co}\) und \(\mathsf{pr}\).
+sich jedoch die Frage, wie häufig Abhängigkeit (\texttt{AB}) und Unabhängigkeit 
+(\texttt{UNAB}) in heterogenen Benchmarkinstanzen auftreten, 
+wie die Größe der Konditionierungsmenge mit dem beobachteten Unabhängigkeitsstatus 
+und dem praktischen Rechenaufwand der Solverentscheidung zusammenhängt.
+Das vorliegende Kapitel untersucht diese Aspekte empirisch für die Semantiken 
+\(\mathsf{st}\), \(\mathsf{co}\) und \(\mathsf{pr}\).
 
 Der Untersuchung liegen die folgenden Forschungsfragen zugrunde:
 
 \begin{enumerate}
-    \item[\textbf{Frage 1}] In welchem generellen Verhältnis stehen beobachtete Abhängigkeit 
-    (\texttt{AB}) und Unabhängigkeit (\texttt{UNAB})?
+    \item[\textbf{Frage 1}] In welchem generellen Verhältnis stehen  
+    (\texttt{AB}) und (\texttt{UNAB}), und unterscheidet sich dieses
+    Verhältnis zwischen den betrachteten Semantiken?
     \item[\textbf{Frage 2}] Wie verändert sich der beobachtete Unabhängigkeitsstatus von 
     \(X\perp_\sigma Y\mid Z\) mit der Konditionierungsstufe von \(Z\)?
     \item[\textbf{Frage 3}] Wie wirken sich höhere Konditionierungsstufen auf die 
@@ -31,9 +33,8 @@ Im Vergleich zwischen \(Z_0\) und \(Z_5\) wird zudem in keiner Semantik ein
 Konditionierungsstufen tendenziell mit längeren Solverlaufzeiten und geringeren 
 Lösungsquoten einher. Dieser Zusammenhang ist unter \emph{complete} und \emph{stable} 
 deutlicher ausgeprägt als unter \emph{preferred}. Aufgrund des Anteils nicht 
-entschiedener Anfragen, der nicht geschachtelten Konditionierungsmengen und 
-der nicht durchgehend monotonen Verläufe werden die Befunde ausschließlich 
-deskriptiv interpretiert.
+entschiedener Anfragen und der nicht durchgehend monotonen Verläufe kann jedoch 
+kein kausaler Zusammenhang gezeigt werden.
 
 Das Kapitel beginnt in Abschnitt~\ref{sec:trial-design} mit dem methodischen 
 und technischen Versuchsaufbau. Abschnitt~\ref{sec:ci-status} untersucht 
@@ -46,48 +47,91 @@ Konditionierungsstufe auf die Solverlaufzeit und die praktische Lösungsquote.
 \section{Versuchsaufbau}
 \label{sec:trial-design}
 
-Dieses Kapitel beschreibt den methodischen und technischen Versuchsaufbau der empirischen 
+Dieser Abschnitt beschreibt den methodischen und technischen Versuchsaufbau der empirischen 
 Untersuchung. Es begründet die Auswahl der Instanzen und Werkzeuge, erläutert die 
 Verarbeitung der Solveranfragen und dokumentiert deren Ergebniserfassung, Fehlerbehandlung 
 sowie die verwendete Rechenumgebung. Damit wird die Grundlage für eine reproduzierbare 
 Durchführung und die anschließende Einordnung der Ergebnisse geschaffen.
 
 \paragraph{Instanzauswahl und Untersuchungsdesign.}
-Die empirische Untersuchung betrachtet die bedingte Unabhängigkeit \(X\perp_\sigma Y\mid Z\) für 
+Die empirische Untersuchung betrachtet die bedingte Unabhängigkeit \(X\perp_\sigma Y\mid Z\) für
+Singleton Paare, d.h. \(X = \{x\}, Y = \{y\}\) mit
 \(\sigma\in\{\mathsf{st},\mathsf{co},\mathsf{pr}\}\). Als Datengrundlage dienen 105 AFs 
 aus der Kuration der International Competition on Computational 
 Models of Argumentation 2025 (ICCMA'25), die nach dem vorab festgelegten Größenkriterium 
-\(100\leq n\leq1\,000\) ausgewählt wurden \parencite{apostolakis:2025:iccma-instances}. Der Bestand umfasst 
-sieben Instanzfamilien mit 100 bis 981 Argumenten. Für jedes AF werden mit \(\texttt{SEED}=42\) 
+\(100\leq n\leq1\,000\) ausgewählt wurden \parencite{apostolakis:2025:iccma-instances}. 
+Der Bestand umfasst sieben Instanzfamilien mit 100 bis 981 Argumenten.
+Konkret entfallen 14 Instanzen auf ABA2AF, jeweils 20 auf die
+Barabási--Albert-, Erdős--Rényi-, Stable-Generator- und
+Watts--Strogatz-Familien, fünf auf Planning2AF und sechs auf den
+SCC-Generator. Die Familien sind damit im untersuchten Bestand nicht
+gleich stark vertreten. Da jedes AF dieselbe Anzahl an Anfragen beiträgt,
+stellen die aggregierten Ergebnisse insbesondere keine
+familienbalancierte Auswertung dar. Für jedes AF werden mit \(\texttt{SEED}=42\) 
 fünf verschiedene ungeordnete Argumentpaare reproduzierbar ausgewählt und mit sechs unabhängig 
 gezogenen, nicht geschachtelten Konditionierungsmengen kombiniert. Für \(k\in\{0,\ldots,5\}\) 
 gilt \(\lvert Z_k^\sigma\rvert=\lfloor k\,s_{\max}^\sigma(n)/5+1/2\rfloor\), wobei 
 \(s_{\max}^\sigma(n)=\lfloor n/5\rfloor\) für \emph{stable} und \emph{complete} sowie 
-\(s_{\max}^\sigma(n)=\lfloor n/10\rfloor\) für \emph{preferred} ist. Dadurch entstehen 
-\(3\,150\) Anfragen je Semantik und insgesamt \(9\,450\) quantifizierte boolesche Formeln (QBFs).
+\(s_{\max}^\sigma(n)=\lfloor n/10\rfloor\) für \emph{preferred} ist. 
+Damit werden unter \emph{stable} und \emph{complete}
+Konditionierungsmengen bis zu ungefähr \(20,\%\) der Argumente,
+unter \emph{preferred} dagegen nur bis zu ungefähr \(10,\%\)
+betrachtet. Einen unmittelbar vergleichbaren
+semantikübergreifenden Referenzpunkt bildet insbesondere
+\(Z_0=\emptyset\). Dadurch entstehen 
+\(3\,150\) Anfragen je Semantik und insgesamt \(9\,450\) 
+quantifizierte boolesche Formeln (QBFs).
 
 \paragraph{Implementierung und Solverwahl.}
-Drei semantikspezifische Python-Programme übersetzen die AFs unmittelbar in das Format 
-\texttt{QCIR-G14}, wobei die Kodierungen \(3n\), \(9n\) beziehungsweise \(18n\) 
-quantifizierte Variablen verwenden. Die erzeugten Formeln werden ohne weitere Konvertierung an 
-den Quantified Abstraction Solver (QuAbS) übergeben. QuAbS wurde aufgrund des 
-Siegs der QBF Solver Evaluation 2022 (QBFEVAL'22) des \emph{Prenex non-CNF Track}s ausgewählt \parencite{qbflib:2022:qbfeval-results}.
+Die drei semantikspezifischen Python-Programme
+\texttt{af\_to\_stind\_qcir.py},
+\texttt{af\_to\_coind\_qcir.py} und
+\texttt{af\_to\_prind\_qcir.py} lesen die AFs im ICCMA-Format ein und
+übersetzen die erzeugten Anfragen unmittelbar in das Format
+\texttt{QCIR-G14}. Die Kodierung für \emph{stable} verwendet (3n),
+diejenige für \emph{complete} (9n) und diejenige für
+\emph{preferred} (18n) quantifizierte Variablen. Vor der
+Formelerzeugung prüfen die Programme, ob die übergebenen
+Argumentindizes im zulässigen Bereich liegen, innerhalb von (X),
+(Y) und (Z) keine Duplikate auftreten und die drei Mengen paarweise
+disjunkt sind. Die erzeugten QCIR-Dateien werden ohne weitere
+Formatkonvertierung an QuAbS übergeben. Der Quantified 
+Abstraction Solver (QuAbS) wurde aufgrund seines Siegs
+im \emph{Prenex non-CNF Track} der QBF Evaluation 2022
+(QBFEVAL'22) ausgewählt \parencite{qbflib:2022:qbfeval-results}. 
+QuAbS wurde ohne zusätzliche solverspezifische 
+Kommandozeilenoptionen aufgerufen.
 
 \paragraph{Ausführung und Ergebniserfassung.}
-Ein erfüllbares Ergebnis (\texttt{SAT}) wird als Unabhängigkeit, ein unerfüllbares Ergebnis 
-(\texttt{UNSAT}) als Abhängigkeit interpretiert. Jeder Solveraufruf ist auf \(600\,\mathrm{s}\) 
+Gibt QuAbS für die kodierte QBF \(\texttt{SAT}\) aus, wird die Anfrage als \texttt{UNAB} klassifiziert; 
+bei \(\texttt{UNSAT}\) als \texttt{AB}. Die Rückgabecodes 10 und 20 werden als
+\texttt{SAT} beziehungsweise \texttt{UNSAT} interpretiert. Der durch
+GNU \texttt{timeout} zurückgegebene Code 124 bezeichnet einen
+\texttt{TIMEOUT}. Jeder QuAbS-Aufruf ist auf \(600,\mathrm{s}\)
 begrenzt. Der Hauptlauf verwendet 32 parallele AF-Worker und protokolliert Anfrageparameter, 
 Formelgröße sowie Übersetzungs- und Solverlaufzeit in kommagetrennten Ergebnisdateien (CSV-Dateien). 
-Anschließend bestimmt TweetY die Extensionszahlen unter den drei Semantiken \parencite{thimm:2018}.
+
+\paragraph{Bestimmung und Verfügbarkeit der Extensionszahlen.}
+Für die nachgelagerte Bestimmung der Anzahl der Extensionen wurde
+TweetyProject in Version~1.2 verwendet
+\parencite{thimm:2018}. Die Extensionszählung lieferte je Semantik für
+72 der 105 AFs einen numerischen Wert. Für die verbleibenden 33 AFs
+blieb die Anzahl der Extensionen unbekannt. Unter \emph{complete}
+wurden neun Fälle als \texttt{ERR} und 24 als \texttt{TIMEOUT}, unter
+\emph{preferred} 16 als \texttt{ERR} und 17 als \texttt{TIMEOUT}
+sowie unter \emph{stable} 18 als \texttt{ERR} und 15 als
+\texttt{TIMEOUT} protokolliert. Diese AFs werden bei Auswertungen nach
+der Anzahl der Extensionen nicht als nicht trivial eingeordnet,
+sondern als nicht numerisch klassifizierbare dritte Gruppe behandelt.
 
 \paragraph{Umgang mit Solverfehlern.}
 Insgesamt wurden 95 Anfragen ausschließlich unter der \emph{preferred}-Semantik als \texttt{SOLVER\_ERR} 
 protokolliert. Betroffen sind acht AFs: 84 Fehler entfallen auf Watts--Strogatz- und elf 
-auf Stable-Generator-Instanzen. Dabei konzentrieren sich 60 der 95 Fälle auf zwei Instanzen. 
+auf Stable-Generator-Instanzen.
 Die betroffenen Zeilen verbleiben in den Rohdaten und werden als logisch unbekannt behandelt. 
 Bei der Auswertung des Unabhängigkeitsstatus werden ausschließlich \texttt{SAT} und \texttt{UNSAT} 
 als entschiedene Anfragen berücksichtigt und gemeinsam mit der jeweiligen Entscheidungsquote berichtet. 
-In Performanceprofilen verbleiben die \texttt{SOLVER\_ERR} als nicht gelöste Anfragen im festen Nenner.
+In Performanceprofilen verbleiben die \texttt{SOLVER\_ERR} als nicht gelöste Anfragen im Nenner.
 
 Der vollständige Ablauf der Untersuchung ist in
 Abbildung~\ref{fig:trial-design-workflow} zusammengefasst.
@@ -110,7 +154,8 @@ Benutzerprozesse freigegeben. Auf dieser Umgebung wurde das Batchverfahren
 mit 32 parallelen AF-Workern gestartet. Da jeder Worker höchstens einen Solverprozess 
 gleichzeitig ausführte, konnten bis zu 32 Anfragen parallel durch QuAbS bearbeitet werden. 
 Die Skriptumgebung bestand aus Python 3.13.5 und Bash 5.2.37. Für die 
-Bestimmung der Extensionszahlen wurde der TweetY-Solver in Version 1.2 eingesetzt.
+Bestimmung der Extensionszahlen wurde der TweetyProject-Solver mit 
+OpenJDK-Laufzeitumgebung in Version~25.0.4 genutzt.
 
 \iffalse
 \subsection{Versuchsdesign und Auswertungsmethode}
@@ -566,9 +611,6 @@ Jede Konditionierungsstufe greift auf dieselbe Grundmenge untersuchter Argumentp
 Aus jedem der 105 AFs stammen fünf Paare, sodass sich \(105\cdot5=525\) Anfragen pro 
 Semantik und Stufe ergeben. Da jedes Paar auf allen sechs Stufen betrachtet wird, 
 umfasst eine vollständige Semantikphase insgesamt \(525\cdot6=3\,150\) Solverläufe.
-Ein Ergebnis \texttt{UNAB} bezeichnet eine bestätigte Unabhängigkeit, 
-ein Ergebnis \texttt{AB} eine bestätigte Abhängigkeit. 
-\texttt{TIMEOUT} und \texttt{SOLVER\_ERR} bleiben als nicht entschiedene Kategorien erhalten.
 
 \paragraph{Ergebniszusammensetzung.}
 Abbildung~\ref{fig:z-ci-composition-trivial} zeigt die Ergebnisanteile 

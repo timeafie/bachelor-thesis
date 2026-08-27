@@ -103,6 +103,13 @@
 
 \PassOptionsToPackage{doublespacing}{hdathesis}  % options: abbrev exam big wiwi english master
   \usepackage{hdathesis}
+{
+  \theoremstyle{plain}
+  \theorembodyfont{\normalfont}
+  \newtheorem{Example}{Beispiel}[chapter]
+}
+
+\providecommand*{\Exampleautorefname}{Beispiel}
 
 \usepackage{pdflscape}
 
