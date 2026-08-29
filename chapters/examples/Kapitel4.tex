@@ -1,137 +1,143 @@
 \chapter{Empirische Analyse bedingter Unabhängigkeit}
 \label{ch:empirical-analysis}
 
-Die zuvor eingeführte Kodierung durch QBFs ermöglicht es, bedingte Unabhängigkeit in 
-AFs automatisiert zu entscheiden. Über die formale Entscheidbarkeit hinaus stellt 
-sich jedoch die Frage, wie häufig Abhängigkeit (\texttt{AB}) und Unabhängigkeit 
-(\texttt{UNAB}) in heterogenen Benchmarkinstanzen auftreten, 
-wie die Größe der Konditionierungsmenge mit dem beobachteten Unabhängigkeitsstatus 
-und dem praktischen Rechenaufwand der Solverentscheidung zusammenhängt.
-Das vorliegende Kapitel untersucht diese Aspekte empirisch für die Semantiken 
-\(\mathsf{st}\), \(\mathsf{co}\) und \(\mathsf{pr}\).
+Die in Kapitel~\ref{ch:semantic-independence} eingeführte QBF-Kodierung
+ermöglicht es, bedingte Unabhängigkeit in AFs automatisiert zu entscheiden.
+Über die formale Entscheidbarkeit hinaus stellt sich jedoch die Frage, wie
+häufig Abhängigkeit (\texttt{AB}) und Unabhängigkeit (\texttt{UNAB}) in
+heterogenen Benchmarkinstanzen auftreten und wie die Größe der
+Konditionierungsmenge mit dem Unabhängigkeitsstatus sowie dem praktischen
+Rechenaufwand der Solverentscheidung zusammenhängt. Das vorliegende Kapitel
+untersucht diese Aspekte empirisch für die Semantiken \(\mathsf{st}\),
+\(\mathsf{co}\) und \(\mathsf{pr}\). Die zur Durchführung und Auswertung der
+Experimente verwendeten Programme und Skripte sind in der digitalen
+ZIP-Beilage zu dieser Arbeit enthalten.
 
 Der Untersuchung liegen die folgenden Forschungsfragen zugrunde:
 
 \begin{enumerate}
-    \item[\textbf{Frage 1}] In welchem generellen Verhältnis stehen  
-    (\texttt{AB}) und (\texttt{UNAB}), und unterscheidet sich dieses
+    \item[\textbf{Frage 1}] In welchem generellen Verhältnis stehen
+    \texttt{AB} und \texttt{UNAB}, und unterscheidet sich dieses
     Verhältnis zwischen den betrachteten Semantiken?
-    \item[\textbf{Frage 2}] Wie verändert sich der beobachtete Unabhängigkeitsstatus von 
-    \(X\perp_\sigma Y\mid Z\) mit der Konditionierungsstufe von \(Z\)?
-    \item[\textbf{Frage 3}] Wie wirken sich höhere Konditionierungsstufen auf die 
-    Solverlaufzeit und die praktische Lösungsquote aus?
+    \item[\textbf{Frage 2}] Wie verändert sich der Anteil der als
+    \texttt{AB} beziehungsweise \texttt{UNAB} entschiedenen Anfragen mit
+    zunehmender Größe der Konditionierungsmenge \(Z\)?
+    \item[\textbf{Frage 3}] Wie wirkt sich eine zunehmende Größe der
+    Konditionierungsmenge \(Z\) auf die Solverlaufzeit und die praktische
+    Lösungsquote aus?
 \end{enumerate}
 
-Die Auswertung von \(9\,450\) Anfragen zeigt eine deutliche Dominanz beobachteter 
-Unabhängigkeit. Unter den \(7\,164\) entschiedenen Anfragen entfallen \(97{,}52\,\%\) 
-auf \texttt{UNAB} und \(2{,}48\,\%\) auf \texttt{AB}. Dieses Verhältnis zeigt sich 
-grundsätzlich unter allen drei Semantiken, wobei der \texttt{AB}-Anteil unter 
-\emph{complete} am höchsten und unter \emph{stable} am niedrigsten ausfällt. 
-Mit höheren Konditionierungsstufen nimmt der beobachtete \texttt{AB}-Anteil ab. 
-Im Vergleich zwischen \(Z_0\) und \(Z_5\) wird zudem in keiner Semantik ein 
-Übergang von \texttt{UNAB} zu \texttt{AB} beobachtet. Gleichzeitig gehen höhere 
-Konditionierungsstufen tendenziell mit längeren Solverlaufzeiten und geringeren 
-Lösungsquoten einher. Dieser Zusammenhang ist unter \emph{complete} und \emph{stable} 
-deutlicher ausgeprägt als unter \emph{preferred}. Aufgrund des Anteils nicht 
-entschiedener Anfragen und der nicht durchgehend monotonen Verläufe kann jedoch 
-kein kausaler Zusammenhang gezeigt werden.
+Die Auswertung von \(9\,450\) Anfragen zeigt eine deutliche Dominanz
+beobachteter Unabhängigkeit. Unter den \(7\,164\) entschiedenen Anfragen
+entfallen \(97{,}52\,\%\) auf \texttt{UNAB} und \(2{,}48\,\%\) auf
+\texttt{AB}. Dieses Verhältnis zeigt sich unter allen drei Semantiken, wobei
+der \texttt{AB}-Anteil unter \emph{complete} am höchsten und unter
+\emph{stable} am niedrigsten ausfällt. Für jedes Argumentpaar werden sechs
+Größen der Konditionierungsmenge untersucht: unter \emph{complete} und
+\emph{stable} näherungsweise \(0\,\%\), \(4\,\%\), \(8\,\%\),
+\(12\,\%\), \(16\,\%\) und \(20\,\%\) der Argumente, unter
+\emph{preferred} näherungsweise \(0\,\%\), \(2\,\%\), \(4\,\%\),
+\(6\,\%\), \(8\,\%\) und \(10\,\%\). Unter den entschiedenen Anfragen
+nimmt der \texttt{AB}-Anteil von einer Stufe zur nächsten entweder ab oder
+bleibt unverändert. Beim Vergleich derselben Argumentpaare zwischen der leeren
+Konditionierungsmenge \(Z_0=\emptyset\) und der jeweils größten untersuchten
+Konditionierungsmenge \(Z_5\) tritt in keiner Semantik ein Übergang von
+\texttt{UNAB} zu \texttt{AB} auf. Zugleich sind größere
+Konditionierungsmengen tendenziell mit längeren Solverlaufzeiten und geringeren
+Lösungsquoten verbunden. Dieser deskriptive Zusammenhang ist unter
+\emph{complete} und \emph{stable} deutlicher ausgeprägt als unter
+\emph{preferred}. Da die positiven Konditionierungsmengen unabhängig gezogen
+und nicht geschachtelt sind und der logische Status der nicht entschiedenen
+Anfragen unbekannt bleibt, belegen die Ergebnisse keinen allgemeinen kausalen
+Effekt einer Vergrößerung von \(Z\).
 
 Das Kapitel beginnt in Abschnitt~\ref{sec:trial-design} mit dem methodischen 
 und technischen Versuchsaufbau. Abschnitt~\ref{sec:ci-status} untersucht 
 anschließend das Gesamtverhältnis von Abhängigkeit und Unabhängigkeit. 
-Darauf aufbauend betrachtet Abschnitt~\ref{subsec:z-ci-status} den Zusammenhang 
-zwischen der Konditionierungsstufe und dem beobachteten Unabhängigkeitsstatus. 
-Abschließend analysiert Abschnitt~\ref{subsec:z-runtime} den Einfluss der 
-Konditionierungsstufe auf die Solverlaufzeit und die praktische Lösungsquote.
+Darauf aufbauend betrachtet Abschnitt~\ref{subsec:z-ci-status} den Zusammenhang
+zwischen der Größe der Konditionierungsmenge und dem Unabhängigkeitsstatus.
+Abschließend analysiert Abschnitt~\ref{subsec:z-runtime} den Zusammenhang
+zwischen der Größe der Konditionierungsmenge, der Solverlaufzeit und der
+praktischen Lösungsquote.
 
 \section{Versuchsaufbau}
 \label{sec:trial-design}
 
-Dieser Abschnitt beschreibt den methodischen und technischen Versuchsaufbau der empirischen 
-Untersuchung. Es begründet die Auswahl der Instanzen und Werkzeuge, erläutert die 
-Verarbeitung der Solveranfragen und dokumentiert deren Ergebniserfassung, Fehlerbehandlung 
-sowie die verwendete Rechenumgebung. Damit wird die Grundlage für eine reproduzierbare 
-Durchführung und die anschließende Einordnung der Ergebnisse geschaffen.
+\paragraph{Instanzauswahl.}
+Die empirische Untersuchung betrachtet die bedingte Unabhängigkeit
+\(X\perp_\sigma Y\mid Z\) für Singleton-Paare, d.\,h. \(X=\{x\}\) und
+\(Y=\{y\}\), unter
+\(\sigma\in\{\mathsf{st},\mathsf{co},\mathsf{pr}\}\). Als Datengrundlage
+dienen 105 AFs aus der Instanzsammlung der International Competition on
+Computational Models of Argumentation 2025 (ICCMA'25)
+\parencite{apostolakis:2025:iccma-instances}. Sie wurden
+nach dem vorab festgelegten Größenkriterium
+\(100\leq n=\lvert A\rvert\leq 1\,000\)
+ausgewählt und umfassen zwischen 100 und 981 Argumente. Die Auswahl enthält 14
+ABA2AF-, fünf Planning2AF- und sechs SCC-Generator-Instanzen. Aus den Familien
+Barabási--Albert, Erdős--Rényi, Stable-Generator und Watts--Strogatz stammen
+jeweils 20 Instanzen \parencite{apostolakis:2025:iccma-instances}.%
+\footnote{Die Familien sind im untersuchten Bestand unterschiedlich stark
+vertreten. Da jedes AF dieselbe Anzahl an Anfragen beiträgt, ist die
+aggregierte Auswertung nicht familienbalanciert.}
 
-\paragraph{Instanzauswahl und Untersuchungsdesign.}
-Die empirische Untersuchung betrachtet die bedingte Unabhängigkeit \(X\perp_\sigma Y\mid Z\) für
-Singleton Paare, d.h. \(X = \{x\}, Y = \{y\}\) mit
-\(\sigma\in\{\mathsf{st},\mathsf{co},\mathsf{pr}\}\). Als Datengrundlage dienen 105 AFs 
-aus der Kuration der International Competition on Computational 
-Models of Argumentation 2025 (ICCMA'25), die nach dem vorab festgelegten Größenkriterium 
-\(100\leq n\leq1\,000\) ausgewählt wurden \parencite{apostolakis:2025:iccma-instances}. 
-Der Bestand umfasst sieben Instanzfamilien mit 100 bis 981 Argumenten.
-Konkret entfallen 14 Instanzen auf ABA2AF, jeweils 20 auf die
-Barabási--Albert-, Erdős--Rényi-, Stable-Generator- und
-Watts--Strogatz-Familien, fünf auf Planning2AF und sechs auf den
-SCC-Generator. Die Familien sind damit im untersuchten Bestand nicht
-gleich stark vertreten. Da jedes AF dieselbe Anzahl an Anfragen beiträgt,
-stellen die aggregierten Ergebnisse insbesondere keine
-familienbalancierte Auswertung dar. Für jedes AF werden mit \(\texttt{SEED}=42\) 
-fünf verschiedene ungeordnete Argumentpaare reproduzierbar ausgewählt und mit sechs unabhängig 
-gezogenen, nicht geschachtelten Konditionierungsmengen kombiniert. Für \(k\in\{0,\ldots,5\}\) 
-gilt \(\lvert Z_k^\sigma\rvert=\lfloor k\,s_{\max}^\sigma(n)/5+1/2\rfloor\), wobei 
-\(s_{\max}^\sigma(n)=\lfloor n/5\rfloor\) für \emph{stable} und \emph{complete} sowie 
-\(s_{\max}^\sigma(n)=\lfloor n/10\rfloor\) für \emph{preferred} ist. 
-Damit werden unter \emph{stable} und \emph{complete}
-Konditionierungsmengen bis zu ungefähr \(20,\%\) der Argumente,
-unter \emph{preferred} dagegen nur bis zu ungefähr \(10,\%\)
-betrachtet. Einen unmittelbar vergleichbaren
-semantikübergreifenden Referenzpunkt bildet insbesondere
-\(Z_0=\emptyset\). Dadurch entstehen 
-\(3\,150\) Anfragen je Semantik und insgesamt \(9\,450\) 
-quantifizierte boolesche Formeln (QBFs).
+\paragraph{Stichproben- und Konditionierungsdesign.}
+Für jedes AF werden mit \(\texttt{SEED}=42\) fünf verschiedene ungeordnete
+Argumentpaare reproduzierbar ausgewählt. Für jede untersuchte Semantik wird
+jedes Paar mit sechs unabhängig gezogenen Konditionierungsmengen
+\(Z_0,\ldots,Z_5\) kombiniert. Diese Mengen sind nicht geschachtelt und
+erfüllen \(Z_k\subseteq A\setminus(X\cup Y)\). Der Index
+\(k\in\{0,\ldots,5\}\) bezeichnet die
+Konditionierungsstufe; mit wachsendem \(k\) nimmt die vorgegebene Größe von
+\(Z_k\) zu. Für ein AF mit \(n\) Argumenten wird zunächst
+\[
+    s_{\max}=
+    \begin{cases}
+        \lfloor n/5\rfloor,
+            & \sigma\in\{\mathsf{st},\mathsf{co}\},\\
+        \lfloor n/10\rfloor,
+            & \sigma=\mathsf{pr}
+    \end{cases}
+\]
+gesetzt. Für die Größe der \(k\)-ten Konditionierungsmenge gilt dann
+\[
+    \lvert Z_k\rvert=
+    \left\lfloor\frac{k\,s_{\max}}{5}+\frac{1}{2}\right\rfloor.
+\]
+Damit werden unter \emph{stable} und \emph{complete} Konditionierungsmengen
+bis zu ungefähr \(20\,\%\) der Argumente, unter \emph{preferred} bis zu
+ungefähr \(10\,\%\) betrachtet. Für alle drei Semantiken gilt
+\(Z_0=\emptyset\). Dadurch entstehen \(3\,150\) Anfragen je Semantik und
+insgesamt \(9\,450\) QBFs.
 
-\paragraph{Implementierung und Solverwahl.}
-Die drei semantikspezifischen Python-Programme
-\texttt{af\_to\_stind\_qcir.py},
-\texttt{af\_to\_coind\_qcir.py} und
-\texttt{af\_to\_prind\_qcir.py} lesen die AFs im ICCMA-Format ein und
-übersetzen die erzeugten Anfragen unmittelbar in das Format
-\texttt{QCIR-G14}. Die Kodierung für \emph{stable} verwendet (3n),
-diejenige für \emph{complete} (9n) und diejenige für
-\emph{preferred} (18n) quantifizierte Variablen. Vor der
-Formelerzeugung prüfen die Programme, ob die übergebenen
-Argumentindizes im zulässigen Bereich liegen, innerhalb von (X),
-(Y) und (Z) keine Duplikate auftreten und die drei Mengen paarweise
-disjunkt sind. Die erzeugten QCIR-Dateien werden ohne weitere
-Formatkonvertierung an QuAbS übergeben. Der Quantified 
-Abstraction Solver (QuAbS) wurde aufgrund seines Siegs
-im \emph{Prenex non-CNF Track} der QBF Evaluation 2022
-(QBFEVAL'22) ausgewählt \parencite{qbflib:2022:qbfeval-results}. 
-QuAbS wurde ohne zusätzliche solverspezifische 
+\paragraph{Experimenteller Ablauf und Ergebniserfassung.}
+Die in der digitalen ZIP-Beilage enthaltenen semantikspezifischen
+Python-Programme \path{af_to_stind_qcir.py},
+\path{af_to_coind_qcir.py} und \path{af_to_prind_qcir.py} lesen
+die AFs im ICCMA-Format ein und übersetzen die erzeugten Anfragen unmittelbar
+in das Format \texttt{QCIR-G14} \parencite{qcir:g14-specification}. Die
+Kodierung für \emph{stable} verwendet \(3n\), diejenige für \emph{complete}
+\(9n\) und diejenige für \emph{preferred} \(18n\) quantifizierte Variablen.
+Vor der Formelerzeugung prüfen die Programme, ob die übergebenen
+Argumentindizes im zulässigen Bereich liegen, ob die Eingaben für \(X\),
+\(Y\) und \(Z\) jeweils keine Duplikate enthalten und ob die drei Mengen
+paarweise disjunkt sind. Die erzeugten QCIR-Dateien werden ohne weitere
+Formatkonvertierung an den Quantified Abstraction Solver (QuAbS)
+\parencite{tentrup:2019:caqe-quabs} übergeben. QuAbS gewann den
+\emph{Prenex non-CNF Track} der QBF Evaluation 2022 (QBFEVAL'22)
+\parencite{qbflib:2022:qbfeval-results} und wurde daher als Solver
+ausgewählt. Er wird ohne zusätzliche solverspezifische
 Kommandozeilenoptionen aufgerufen.
 
-\paragraph{Ausführung und Ergebniserfassung.}
-Gibt QuAbS für die kodierte QBF \(\texttt{SAT}\) aus, wird die Anfrage als \texttt{UNAB} klassifiziert; 
-bei \(\texttt{UNSAT}\) als \texttt{AB}. Die Rückgabecodes 10 und 20 werden als
-\texttt{SAT} beziehungsweise \texttt{UNSAT} interpretiert. Der durch
-GNU \texttt{timeout} zurückgegebene Code 124 bezeichnet einen
-\texttt{TIMEOUT}. Jeder QuAbS-Aufruf ist auf \(600,\mathrm{s}\)
-begrenzt. Der Hauptlauf verwendet 32 parallele AF-Worker und protokolliert Anfrageparameter, 
-Formelgröße sowie Übersetzungs- und Solverlaufzeit in kommagetrennten Ergebnisdateien (CSV-Dateien). 
-
-\paragraph{Bestimmung und Verfügbarkeit der Extensionszahlen.}
-Für die nachgelagerte Bestimmung der Anzahl der Extensionen wurde
-TweetyProject in Version~1.2 verwendet
-\parencite{thimm:2018}. Die Extensionszählung lieferte je Semantik für
-72 der 105 AFs einen numerischen Wert. Für die verbleibenden 33 AFs
-blieb die Anzahl der Extensionen unbekannt. Unter \emph{complete}
-wurden neun Fälle als \texttt{ERR} und 24 als \texttt{TIMEOUT}, unter
-\emph{preferred} 16 als \texttt{ERR} und 17 als \texttt{TIMEOUT}
-sowie unter \emph{stable} 18 als \texttt{ERR} und 15 als
-\texttt{TIMEOUT} protokolliert. Diese AFs werden bei Auswertungen nach
-der Anzahl der Extensionen nicht als nicht trivial eingeordnet,
-sondern als nicht numerisch klassifizierbare dritte Gruppe behandelt.
-
-\paragraph{Umgang mit Solverfehlern.}
-Insgesamt wurden 95 Anfragen ausschließlich unter der \emph{preferred}-Semantik als \texttt{SOLVER\_ERR} 
-protokolliert. Betroffen sind acht AFs: 84 Fehler entfallen auf Watts--Strogatz- und elf 
-auf Stable-Generator-Instanzen.
-Die betroffenen Zeilen verbleiben in den Rohdaten und werden als logisch unbekannt behandelt. 
-Bei der Auswertung des Unabhängigkeitsstatus werden ausschließlich \texttt{SAT} und \texttt{UNSAT} 
-als entschiedene Anfragen berücksichtigt und gemeinsam mit der jeweiligen Entscheidungsquote berichtet. 
-In Performanceprofilen verbleiben die \texttt{SOLVER\_ERR} als nicht gelöste Anfragen im Nenner.
+Gibt QuAbS für die kodierte QBF \(\texttt{SAT}\) aus, wird die Anfrage als
+\texttt{UNAB} klassifiziert, bei \(\texttt{UNSAT}\) als \texttt{AB}. Die
+Rückgabecodes 10 und 20 werden als \texttt{SAT} beziehungsweise
+\texttt{UNSAT} interpretiert. Der von GNU \texttt{timeout} zurückgegebene
+Code 124 bezeichnet einen \texttt{TIMEOUT}. Jeder QuAbS-Aufruf ist auf
+\(600\,\mathrm{s}\) begrenzt; das Zeitlimit betrifft ausschließlich die
+Solverausführung. Die davor liegende QBF-Erzeugung ist nicht Teil dieses
+Zeitlimits. Anfrageparameter, Formelgröße, Übersetzungszeit und Solverlaufzeit
+werden getrennt in CSV-Dateien protokolliert.
 
 Der vollständige Ablauf der Untersuchung ist in
 Abbildung~\ref{fig:trial-design-workflow} zusammengefasst.
@@ -146,16 +152,44 @@ Abbildung~\ref{fig:trial-design-workflow} zusammengefasst.
     \label{fig:trial-design-workflow}
 \end{figure}
 
+\paragraph{Extensionszählung.}
+Für die nachgelagerte Bestimmung der Anzahl der Extensionen wird
+TweetyProject in Version~1.2 verwendet \parencite{thimm:2018}. Die
+Extensionszählung liefert je Semantik für 72 der 105 AFs einen numerischen
+Wert. Für die verbleibenden 33 AFs bleibt die Anzahl der Extensionen
+unbekannt.
+
+\paragraph{Fehlerbehandlung.}
+Unter \emph{complete} werden bei der Extensionszählung neun Fälle als
+\texttt{ERR} und 24 als \texttt{TIMEOUT}, unter \emph{preferred} 16 als
+\texttt{ERR} und 17 als \texttt{TIMEOUT} sowie unter \emph{stable} 18 als
+\texttt{ERR} und 15 als \texttt{TIMEOUT} protokolliert. 
+NOCHMAL GENAU PRÜFEN
+Diese AFs werden bei
+Auswertungen nach der Anzahl der Extensionen nicht als nicht trivial
+eingeordnet, sondern als nicht numerisch klassifizierbare dritte Gruppe
+behandelt. 
+
+Zusätzlich werden 95 Anfragen ausschließlich unter der
+\emph{preferred}-Semantik als \texttt{SOLVER\_ERR} protokolliert. Betroffen
+sind acht AFs: 84 Fehler entfallen auf Watts--Strogatz- und elf auf
+Stable-Generator-Instanzen. Die betroffenen Zeilen verbleiben in den Rohdaten
+und werden als logisch unbekannt behandelt. Bei der Auswertung des
+Unabhängigkeitsstatus werden ausschließlich \texttt{SAT} und \texttt{UNSAT}
+als entschiedene Anfragen berücksichtigt und gemeinsam mit der jeweiligen
+Entscheidungsquote berichtet. In Performanceprofilen verbleiben die
+\texttt{SOLVER\_ERR} als nicht gelöste Anfragen im Nenner.
+
 \paragraph{Rechenumgebung.}
-Für die Durchführung der Experimente stand eine virtuelle Maschine mit 
-\(32\,\mathrm{GiB}\) Arbeitsspeicher und Debian GNU/Linux 13.3 (\emph{trixie}) zur Verfügung. 
-Insgesamt waren 48 virtuelle Prozessoren für die 
-Benutzerprozesse freigegeben. Auf dieser Umgebung wurde das Batchverfahren 
-mit 32 parallelen AF-Workern gestartet. Da jeder Worker höchstens einen Solverprozess 
-gleichzeitig ausführte, konnten bis zu 32 Anfragen parallel durch QuAbS bearbeitet werden. 
-Die Skriptumgebung bestand aus Python 3.13.5 und Bash 5.2.37. Für die 
-Bestimmung der Extensionszahlen wurde der TweetyProject-Solver mit 
-OpenJDK-Laufzeitumgebung in Version~25.0.4 genutzt.
+Für die Durchführung der Experimente stand eine virtuelle Maschine mit
+\(32\,\mathrm{GiB}\) Arbeitsspeicher und Debian GNU/Linux 13.3
+(\emph{trixie}) zur Verfügung. Insgesamt waren 48 virtuelle Prozessoren für
+die Benutzerprozesse freigegeben. Das Batchverfahren wurde mit 32 parallelen
+AF-Workern gestartet. Da jeder Worker höchstens einen Solverprozess
+gleichzeitig ausführte, konnten bis zu 32 Anfragen parallel durch QuAbS
+bearbeitet werden. Die Skriptumgebung bestand aus Python 3.13.5 und Bash
+5.2.37. Für die Bestimmung der Extensionszahlen wurde der TweetyProject-Solver
+mit einer OpenJDK-Laufzeitumgebung in Version~25.0.4 genutzt.
 
 \iffalse
 \subsection{Versuchsdesign und Auswertungsmethode}
@@ -518,33 +552,34 @@ Barabási--Albert- und Planning2AF-Instanzen nicht aus.
 
 \section{Gesamtverhältnis von Abhängigkeit und Unabhängigkeit}
 \label{sec:ci-status}
-In diesem Abschnitt untersuchen wir die Frage, 
-in welchem generellen Verhältnis beobachtete Abhängigkeit (\texttt{AB}) 
-und Unabhängigkeit (\texttt{UNAB}) zueinander stehen und ob sich dieses 
-Verhältnis zwischen den Semantiken unterscheidet. Dabei ergibt sich ein 
-deutliches Bild: Von den entschiedenen Anfragen werden \(97{,}52\%\) 
-als unabhängig und lediglich \(2{,}48\%\) als abhängig klassifiziert. 
-Die Dominanz von \texttt{UNAB} zeigt sich unter allen drei Semantiken, 
-ist wegen der nicht entschiedenen Anfragen jedoch mit der jeweiligen 
-Entscheidungsquote gemeinsam zu interpretieren.
+Dieser Abschnitt untersucht, in welchem generellen Verhältnis beobachtete
+Abhängigkeit (\texttt{AB}) und Unabhängigkeit (\texttt{UNAB}) zueinander
+stehen und ob sich dieses Verhältnis zwischen den Semantiken unterscheidet.
+Dabei ergibt sich ein deutliches Bild: Von den entschiedenen Anfragen werden
+\(97{,}52\,\%\) als unabhängig und lediglich \(2{,}48\,\%\) als abhängig
+klassifiziert. Die Dominanz von \texttt{UNAB} zeigt sich unter allen drei
+Semantiken, ist wegen der nicht entschiedenen Anfragen jedoch gemeinsam mit
+der jeweiligen Entscheidungsquote zu interpretieren.
 
-Die Untersuchung des generellen Verhältnisses von Abhängigkeit und Unabhängigkeit 
-fasst zunächst alle sechs Konditionierungsstufen zusammen. Da für jede Semantik 
-dieselben 105 AFs mit jeweils fünf Argumentpaaren und sechs Konditionierungsmengen 
-untersucht wurden, liegen pro Semantik \(3,150\) und insgesamt \(9,450\) Anfragen vor. 
-Ein Ergebnis \texttt{UNAB} bezeichnet eine bestätigte Unabhängigkeit, während 
-\texttt{AB} eine bestätigte Abhängigkeit bezeichnet. \texttt{TIMEOUT} und 
-\texttt{SOLVER\_ERR} werden keiner der beiden Kategorien zugerechnet, 
-da der logische Status dieser Anfragen unbekannt bleibt.
+Die Untersuchung des generellen Verhältnisses fasst zunächst alle sechs
+Konditionierungsstufen zusammen. Da für jede Semantik dieselben 105 AFs mit
+jeweils fünf Argumentpaaren und sechs Konditionierungsmengen untersucht
+werden, liegen pro Semantik \(3\,150\) und insgesamt \(9\,450\) Anfragen
+vor. Ein Ergebnis \texttt{UNAB} bezeichnet eine bestätigte Unabhängigkeit,
+während \texttt{AB} eine bestätigte Abhängigkeit bezeichnet.
+\texttt{TIMEOUT} und \texttt{SOLVER\_ERR} werden keiner der beiden
+Kategorien zugerechnet, da der logische Status dieser Anfragen unbekannt
+bleibt.
 
-Über alle Semantiken hinweg wurden \(6,986\) Anfragen als \texttt{UNAB} und 
-178 als \texttt{AB} entschieden. Weitere \(2,286\) Anfragen blieben unbekannt. 
-Bezogen auf den festen Nenner aller (9,450) Anfragen entsprechen diese Werte 
-einem Anteil von \(73{,}93\%\) für \texttt{UNAB}, \(1{,}88\%\) für \texttt{AB} 
-und \(24{,}19\%\) für nicht entschiedene Ergebnisse. Diese Zusammensetzung 
-beschreibt die tatsächlich beobachteten Solverergebnisse, erlaubt jedoch 
-keine Aussage darüber, wie sich die unbekannten Anfragen logisch auf 
-\texttt{AB} und \texttt{UNAB} verteilen würden.
+Über alle Semantiken hinweg werden \(6\,986\) Anfragen als \texttt{UNAB}
+und 178 als \texttt{AB} entschieden. Weitere \(2\,286\) Anfragen bleiben
+unbekannt. Bezogen auf den festen Nenner aller \(9\,450\) Anfragen
+entsprechen diese Werte einem Anteil von \(73{,}93\,\%\) für
+\texttt{UNAB}, \(1{,}88\,\%\) für \texttt{AB} und \(24{,}19\,\%\) für
+nicht entschiedene Ergebnisse. Diese Zusammensetzung beschreibt die
+tatsächlich beobachteten Solverergebnisse, erlaubt jedoch keine Aussage
+darüber, wie sich die unbekannten Anfragen logisch auf \texttt{AB} und
+\texttt{UNAB} verteilen würden.
 
 \begin{figure}[htbp]
     \centering
@@ -555,30 +590,53 @@ keine Aussage darüber, wie sich die unbekannten Anfragen logisch auf
     \caption{Gesamtverhältnis von Abhängigkeit und Unabhängigkeit.}
     \label{fig:relationship-ci-nci}
 \end{figure}
+Für das unmittelbare Verhältnis von Abhängigkeit und Unabhängigkeit werden
+daher ergänzend ausschließlich die \(7\,164\) entschiedenen Anfragen
+betrachtet. Unter diesem Nenner entfallen \(97{,}52\,\%\) auf
+\texttt{UNAB} und \(2{,}48\,\%\) auf \texttt{AB}. Bedingte
+Unabhängigkeit bildet somit unter den entschiedenen Anfragen mit deutlichem
+Abstand den Regelfall. Dieses Verhältnis ist jedoch nicht gleichmäßig über
+die Semantiken verteilt. Unter \emph{complete} werden \(2\,341\) Anfragen
+als \texttt{UNAB} und 83 als \texttt{AB} entschieden, sodass der
+\texttt{AB}-Anteil \(3{,}42\,\%\) beträgt. Unter \emph{preferred} stehen
+\(2\,077\) \texttt{UNAB}-Ergebnissen 56 \texttt{AB}-Ergebnisse gegenüber,
+was einem Anteil von \(2{,}63\,\%\) entspricht. Unter \emph{stable}
+werden \(2\,568\) Anfragen als \texttt{UNAB} und 39 als \texttt{AB}
+entschieden. Der \texttt{AB}-Anteil fällt dort mit \(1{,}50\,\%\) am
+geringsten aus.
 
-Für das unmittelbare Verhältnis von Abhängigkeit und Unabhängigkeit 
-werden daher ergänzend ausschließlich die (7,164) entschiedenen Anfragen 
-betrachtet. Unter diesem Nenner entfallen (97{,}52,\%) auf \texttt{UNAB} 
-und \(2{,}48\%\) auf \texttt{AB}. Bedingte Unabhängigkeit bildet somit 
-unter den entschiedenen Anfragen mit deutlichem Abstand den Regelfall. 
-Dieses Verhältnis ist jedoch nicht gleichmäßig über die Semantiken verteilt. 
-Unter \emph{complete} wurden \(2,341\) Anfragen als \texttt{UNAB} und 83 als 
-\texttt{AB} entschieden, sodass der \texttt{AB}-Anteil \(3{,}42\%\) beträgt. 
-Unter \emph{preferred} stehen (2,077) \texttt{UNAB}-Ergebnissen 56 \texttt{AB}-
-Ergebnisse gegenüber, was einem Anteil von \(2{,}63\%\) entspricht. 
-Unter \emph{stable} wurden (2,568) Anfragen als \texttt{UNAB} und 39 als 
-\texttt{AB} entschieden. Der \texttt{AB}-Anteil fällt dort mit \(1{,}50\%\) 
-am geringsten aus.
+\paragraph{Einfluss trivialer Instanzen.}
+Eine Instanz gilt unter einer Semantik als trivial, wenn ihre numerisch
+bestimmte semantikspezifische Extensionszahl null oder eins beträgt. Nach
+Lemma~\ref{lem:independence-trivial-labelling-set} sind sämtliche Anfragen
+einer solchen Instanz unabhängig. Von den 105 AFs sind 43 unter
+\emph{complete}, 57 unter \emph{preferred} und 60 unter \emph{stable}
+trivial. Unter \emph{complete} und \emph{preferred} besitzen diese Instanzen
+jeweils genau eine Extension. Unter \emph{stable} entfallen 41 triviale
+Instanzen auf den Fall ohne Extension und 19 auf den Fall mit genau einer
+Extension.
 
-Die semantikspezifischen Anteile müssen gemeinsam mit den jeweiligen 
-Entscheidungsquoten betrachtet werden. Unter \emph{stable} wurden 
-\(82{,}76\%\), unter \emph{complete} \(76{,}95\%\) und unter 
-\emph{preferred} \(67{,}71\%\) aller Anfragen entschieden. 
-Der niedrigere beobachtete \texttt{AB}-Anteil einer Semantik bedeutet 
-daher nicht zwangsläufig, dass Abhängigkeit dort auch unter den 
-unbekannten Anfragen seltener auftritt. Dies betrifft insbesondere 
-die \emph{preferred}-Semantik, unter der neben 922 \texttt{TIMEOUT}-
-Ergebnissen auch 95 \texttt{SOLVER\_ERR} vorliegen.
+Als triviale \texttt{UNAB} werden nur die tatsächlich mit \texttt{UNAB}
+entschiedenen Anfragen dieser Instanzen gezählt; \texttt{TIMEOUT} und
+\texttt{SOLVER\_ERR} werden nicht umklassifiziert. Von den \(6\,986\)
+\texttt{UNAB}-Ergebnissen entfallen \(4\,362\), also \(62{,}44\,\%\), auf
+triviale Instanzen. Semantikspezifisch beträgt dieser Anteil unter
+\emph{complete} \(1\,150/2\,341=49{,}12\,\%\), unter \emph{preferred}
+\(1\,512/2\,077=72{,}80\,\%\) und unter \emph{stable}
+\(1\,700/2\,568=66{,}20\,\%\). Die Dominanz von \texttt{UNAB} wird somit
+zu einem wesentlichen Teil, aber nicht vollständig, durch triviale Instanzen
+erklärt. AFs mit unbekannter Extensionszahl werden keiner der beiden numerisch
+bestimmten Gruppen zugeordnet.
+
+Die semantikspezifischen Anteile müssen gemeinsam mit den jeweiligen
+Entscheidungsquoten betrachtet werden. Unter \emph{stable} werden
+\(82{,}76\,\%\), unter \emph{complete} \(76{,}95\,\%\) und unter
+\emph{preferred} \(67{,}71\,\%\) aller Anfragen entschieden. Der niedrigere
+beobachtete \texttt{AB}-Anteil einer Semantik bedeutet daher nicht
+zwangsläufig, dass Abhängigkeit dort auch unter den unbekannten Anfragen
+seltener auftritt. Dies betrifft insbesondere die \emph{preferred}-Semantik,
+unter der neben 922 \texttt{TIMEOUT}-Ergebnissen auch 95
+\texttt{SOLVER\_ERR} vorliegen.
 
 Abbildung~\ref{fig:relationship-ci-nci} stellt beide Bezugsgrößen gegenüber. 
 Die linke Darstellung verwendet den festen Nenner aller geplanten Anfragen 
@@ -586,42 +644,43 @@ und erhält die unbekannten Ergebnisse als eigene Kategorie.
 Die rechte Darstellung zeigt ausschließlich das Verhältnis von 
 \texttt{AB} und \texttt{UNAB} unter den entschiedenen Anfragen.
 
-Insgesamt zeigen die Ergebnisse eine deutliche Dominanz beobachteter 
-Unabhängigkeit. Diese Aussage gilt sowohl für den aggregierten Bestand 
-als auch für jede einzelne Semantik. Die Unterschiede zwischen den Semantiken 
-und der beträchtliche Anteil unbekannter Ergebnisse sprechen jedoch dagegen, 
-aus den beobachteten Anteilen unmittelbar auf die tatsächliche Verteilung 
-sämtlicher Anfragen zu schließen. Darüber hinaus sind die \(9,450\) Anfragen 
-keine voneinander unabhängigen Beobachtungen, da jedes AF mehrfach und unter 
+Insgesamt zeigen die Ergebnisse eine deutliche Dominanz beobachteter
+Unabhängigkeit. Diese Aussage gilt sowohl für den aggregierten Bestand als
+auch für jede einzelne Semantik. Die Unterschiede zwischen den Semantiken und
+der beträchtliche Anteil unbekannter Ergebnisse sprechen jedoch dagegen, aus
+den beobachteten Anteilen unmittelbar auf die tatsächliche Verteilung
+sämtlicher Anfragen zu schließen. Darüber hinaus sind die \(9\,450\) Anfragen
+keine voneinander unabhängigen Beobachtungen, da jedes AF mehrfach und unter
 verschiedenen Semantiken sowie Konditionierungsstufen untersucht wird.
 
-\section{Einfluss der Konditionierungsmenge auf den Unabhängigkeitsstatus}
+\section{Konditionierungsgröße und Unabhängigkeitsstatus}
 \label{subsec:z-ci-status}
 
 Nachdem das generelle Verhältnis von Abhängigkeit und Unabhängigkeit 
 betrachtet wurde, richtet sich der Blick nun auf die Größe der Konditionierungsmenge. 
-Untersucht wird, ob sich der beobachtete Status von \(X\perp_\sigma Y\mid Z\) 
-zwischen den sechs \(Z\)-Stufen verändert. Dabei zeigt sich über alle drei 
-Semantiken hinweg ein gemeinsames Muster: \texttt{UNAB} bleibt auf jeder Stufe 
-dominant, während beobachtete \texttt{AB}-Ergebnisse mit wachsender Konditionierungsstufe 
-seltener werden. Der gleichzeitig auftretende Anteil unbekannter Ergebnisse begrenzt
- allerdings, wie weit dieses Muster logisch interpretiert werden kann.
+Untersucht wird, wie sich das Verhältnis von \texttt{AB} und \texttt{UNAB}
+unter den entschiedenen Anfragen zwischen den sechs \(Z\)-Stufen verändert.
+Dabei zeigt sich über alle drei Semantiken hinweg ein gemeinsames Muster:
+\texttt{UNAB} bleibt auf jeder Stufe dominant, während \texttt{AB}-Ergebnisse
+mit wachsender Konditionierungsstufe seltener werden. Der gleichzeitig
+auftretende Anteil unbekannter Ergebnisse begrenzt allerdings, wie weit dieses
+Muster auf sämtliche Anfragen übertragen werden kann.
 
-Jede Konditionierungsstufe greift auf dieselbe Grundmenge untersuchter Argumentpaare zurück. 
-Aus jedem der 105 AFs stammen fünf Paare, sodass sich \(105\cdot5=525\) Anfragen pro 
-Semantik und Stufe ergeben. Da jedes Paar auf allen sechs Stufen betrachtet wird, 
-umfasst eine vollständige Semantikphase insgesamt \(525\cdot6=3\,150\) Solverläufe.
+Jede Konditionierungsstufe greift auf dieselbe Grundmenge untersuchter
+Argumentpaare zurück. Aus jedem der 105 AFs stammen fünf Paare, sodass sich
+\(105\cdot5=525\) Anfragen pro Semantik und Stufe ergeben. Da jedes Paar auf
+allen sechs Stufen betrachtet wird, umfasst eine vollständige Semantikphase
+insgesamt \(525\cdot6=3\,150\) Solverläufe.
 
 \paragraph{Ergebniszusammensetzung.}
 Abbildung~\ref{fig:z-ci-composition-trivial} zeigt die Ergebnisanteile 
-bezogen auf den festen Nenner von 525 Läufen. Die Kategorie \texttt{UNAB} 
-wird zusätzlich in triviale und übrige \texttt{UNAB} unterteilt. 
-Eine Instanz gilt unter einer Semantik als trivial, wenn ihre numerisch 
-bestimmte semantikspezifische Extensionszahl null oder eins beträgt. 
-Als triviale \texttt{UNAB} werden ausschließlich tatsächlich mit 
-\texttt{UNAB} entschiedene Läufe dieser Instanzen gezählt. 
-Läufe mit \texttt{TIMEOUT} oder \texttt{SOLVER\_ERR} werden
- auch bei trivialen Instanzen nicht umklassifiziert.
+bezogen auf den festen Nenner von 525 Läufen. Entsprechend der in
+Abschnitt~\ref{sec:ci-status} eingeführten Unterscheidung wird die Kategorie
+\texttt{UNAB} in triviale und übrige \texttt{UNAB} unterteilt. Als triviale
+\texttt{UNAB} werden ausschließlich tatsächlich mit \texttt{UNAB}
+entschiedene Läufe trivialer Instanzen gezählt. Läufe mit \texttt{TIMEOUT}
+oder \texttt{SOLVER\_ERR} werden auch bei diesen Instanzen nicht
+umklassifiziert.
 
 \begin{figure}[t]
     \centering
@@ -638,12 +697,6 @@ Läufe mit \texttt{TIMEOUT} oder \texttt{SOLVER\_ERR} werden
     \label{fig:z-ci-composition-trivial}
 \end{figure}
 
-Von den 105 AFs sind 43 unter \emph{complete}, 57 unter \emph{preferred} und 
-60 unter \emph{stable} trivial. Unter \emph{complete} und \emph{preferred} 
-besitzen diese Instanzen jeweils genau eine Extension. Unter \emph{stable} 
-entfallen 41 triviale Instanzen auf den Fall ohne Extension und 19 auf den 
-Fall mit genau einer Extension. 
-
 In allen drei Semantiken bildet \texttt{UNAB} auf jeder Stufe die größte 
 Ergebniskategorie. Die Zahl der \texttt{AB}-Ergebnisse sinkt zwischen 
 \(Z_0\) und \(Z_5\) unter \emph{complete} von 59 auf zwei, unter 
@@ -658,7 +711,7 @@ Gleichzeitig steigt der Anteil nicht entschiedener Läufe unter \emph{complete} 
 
 \paragraph{AB-Anteil unter den entschiedenen Läufen.}
 Aufgrund des wechselnden Anteils nicht entschiedener Läufe wird ergänzend
-der \texttt{AB}-Anteil und den entschiedenen Läufen
+der \texttt{AB}-Anteil unter den entschiedenen Läufen
 betrachtet. Der Nenner enthält damit ausschließlich Läufe, 
 deren logischer Status feststeht. Abbildung~\ref{fig:z-ci-ab-decided} 
 zeigt diesen Anteil über die sechs Konditionierungsstufen.
@@ -682,10 +735,11 @@ Dies entspricht einer Abnahme um \(13{,}4\) Prozentpunkte. Unter
 \emph{preferred} geht der Anteil von \(17/361=4{,}7\,\%\) auf
 \(5/355=1{,}4\,\%\) zurück, entsprechend \(3{,}3\) Prozentpunkten.
 Unter \emph{stable} sinkt er von \(16/443=3{,}6\,\%\) auf
-\(2/417=0{,}5\,\%\), entsprechend \(3{,}1\) Prozentpunkten. Der Verlauf ist
-innerhalb aller drei Semantiken über die sechs Stufen nicht zunehmend. Am
-stärksten ist der Unterschied unter \emph{complete} ausgeprägt; dort fällt
-der Anteil bereits zwischen \(Z_0\) und \(Z_1\) von \(13{,}9\,\%\) auf
+\(2/417=0{,}5\,\%\), entsprechend \(3{,}1\) Prozentpunkten. In keiner der
+drei Semantiken steigt der Anteil von einer Stufe zur nächsten; er sinkt oder
+bleibt unverändert. Am
+stärksten ist der Unterschied unter \emph{complete} ausgeprägt; dort fällt der
+Anteil bereits zwischen \(Z_0\) und \(Z_1\) von \(13{,}9\,\%\) auf
 \(2{,}1\,\%\).
 
 \paragraph{Statusübergänge zwischen \(Z_0\) und \(Z_5\).}
@@ -720,26 +774,41 @@ entschiedenen Paare bei \(Z_5\) zu \texttt{UNAB}. Zwei Paare verbleiben bei
 \emph{preferred} wechseln acht der 17 anfänglichen \texttt{AB}-Fälle zu
 \texttt{UNAB}, fünf verbleiben bei \texttt{AB} und vier enden mit
 \texttt{TIMEOUT}. Unter \emph{stable} wechseln 13 der 16
-\texttt{AB}-Fälle zu \texttt{UNAB}. In keiner Semantik wird ein Übergang
-von \texttt{UNAB} bei \(Z_0\) zu \texttt{AB} bei \(Z_5\) beobachtet.
+\texttt{AB}-Fälle zu \texttt{UNAB}, zwei verbleiben bei \texttt{AB} und
+einer endet mit \texttt{TIMEOUT}. In keiner Semantik wird ein Übergang von
+\texttt{UNAB} bei \(Z_0\) zu \texttt{AB} bei \(Z_5\) beobachtet.
 
 Dem stehen Übergänge von \texttt{UNAB} zu \texttt{TIMEOUT} gegenüber. Davon
 treten 57 unter \emph{complete}, 20 unter \emph{preferred} und 26 unter
-\emph{stable} auf. Der Rückgang beobachteter Abhängigkeit kann daher nicht
-vollständig als Wechsel zu beobachteter Unabhängigkeit interpretiert werden.
+\emph{stable} auf. In der Gegenrichtung wechseln 16, zwölf beziehungsweise
+ein Paar von \texttt{TIMEOUT} zu \texttt{UNAB}; unter \emph{preferred}
+wechseln zusätzlich sechs Paare von \texttt{SOLVER\_ERR} zu \texttt{UNAB}.
+Der Rückgang beobachteter Abhängigkeit kann daher nicht vollständig als
+Wechsel zu beobachteter Unabhängigkeit interpretiert werden. Zugleich zeigen
+diese Übergänge, dass die aggregierten Anteile auch durch Änderungen der
+Entscheidbarkeit innerhalb des Zeitlimits beeinflusst werden.
 
-Zusammenfassend geht eine höhere Konditionierungsstufe in der untersuchten 
-AF-Auswahl unter allen drei Semantiken mit einem geringeren beobachteten 
-\texttt{AB}-Anteil einher. Der Zusammenhang ist unter \emph{complete} 
-am stärksten ausgeprägt. Die gepaarten Endpunktvergleiche stützen dieses Ergebnis: 
-Zahlreiche bei \(Z_0\) abhängige Paare wechseln bei \(Z_5\) zu \texttt{UNAB}, 
-während kein Übergang von \texttt{UNAB} zu \texttt{AB} beobachtet wird. 
-Wegen der gleichzeitig auftretenden Übergänge zu \texttt{TIMEOUT} und 
-der nicht geschachtelten Konditionierungsmengen ist 
-der Befund jedoch deskriptiv und 
-nicht als allgemeiner kausaler Effekt der Vergrößerung von \(Z\) zu verstehen.
+Zusammenfassend zeigt sich unter den entschiedenen Anfragen in der
+untersuchten AF-Auswahl bei allen drei Semantiken ein klarer empirischer Trend
+zu einem geringeren \texttt{AB}-Anteil bei größeren Konditionierungsmengen.
+Der Zusammenhang ist unter \emph{complete} am stärksten ausgeprägt. Die
+gepaarten Endpunktvergleiche stützen dieses Ergebnis: Zahlreiche bei \(Z_0\)
+abhängige Paare wechseln bei \(Z_5\) zu \texttt{UNAB}, während kein Übergang
+von \texttt{UNAB} zu \texttt{AB} beobachtet wird.
 
-\section{Einfluss der Konditionierungsmenge auf die Solverlaufzeit}
+Aus der Definition der bedingten Unabhängigkeit folgt allerdings keine
+allgemeine Monotonie bezüglich \(Z\). Ein größeres \(Z\) schränkt einerseits
+die Menge der Labellingpaare ein, die auf \(Z\) übereinstimmen. Andererseits
+muss das existentiell geforderte rekombinierende Labelling auf einer größeren
+Menge mit ihnen übereinstimmen. Hinzu kommt, dass die untersuchten Mengen
+\(Z_1,\ldots,Z_5\) nicht geschachtelt sind und sich daher Größe und
+Zusammensetzung gleichzeitig ändern. Da der logische Status der
+\texttt{TIMEOUT}-Fälle unbekannt bleibt, lässt sich der Trend zudem nicht ohne
+Weiteres auf sämtliche geplanten Anfragen übertragen. Der Befund ist deshalb
+deskriptiv und nicht als allgemeiner kausaler Effekt der Vergrößerung von
+\(Z\) zu verstehen.
+
+\section{Konditionierungsgröße und Solverlaufzeit}
 \label{subsec:z-runtime}
 
 Neben dem logischen Ergebnis stellt sich die Frage, wie sich eine 
@@ -751,13 +820,28 @@ Verschiebung zu längeren Laufzeiten. Besonders deutlich fällt sie
 unter \emph{complete} und \emph{stable} aus, 
 während die Unterschiede unter \emph{preferred} geringer bleiben.
 
-Als Solverlaufzeit wird ausschließlich die protokollierte Größe
-\texttt{solve\_seconds} verwendet und mit \(t_{\mathrm{solve}}\) bezeichnet.
-Die Übersetzungszeit ist nicht Bestandteil der Auswertung. Ein regulärer
-Laufzeitwert liegt nur für als \texttt{UNAB} oder \texttt{AB} entschiedene
-Läufe vor. \texttt{TIMEOUT} wird als Rechtszensierung am Zeitlimit von
-\(600\,\mathrm{s}\) behandelt. Auch
-\texttt{SOLVER\_ERR} geht nicht in die Laufzeitbeobachtung ein.
+Ausgewertet wird ausschließlich das protokollierte Feld
+\texttt{solve\_\allowbreak seconds}. Im Folgenden bezeichnet
+\(t_{\mathrm{solve}}\) diese Solverlaufzeit. Die separat protokollierte
+Übersetzungszeit \texttt{translate\_\allowbreak seconds} ist darin nicht
+enthalten und wird im folgenden Absatz gesondert betrachtet. Ein regulärer
+Solverlaufzeitwert liegt nur für als \texttt{UNAB} oder \texttt{AB}
+entschiedene Läufe vor. \texttt{TIMEOUT} wird als Rechtszensierung am Zeitlimit
+von \(600\,\mathrm{s}\) behandelt. \texttt{SOLVER\_ERR} geht nicht in die
+Laufzeitbeobachtung ein.
+
+\paragraph{Übersetzungszeit.}
+Die QBF-Erzeugung wird vor dem QuAbS-Aufruf ausgeführt und unterliegt nicht
+dem Solverzeitlimit. Ihre getrennt protokollierte Laufzeit wird über alle 525
+Formelerzeugungen je Semantik und Stufe betrachtet und bleibt zwischen
+\(Z_0\) und \(Z_5\) nahezu konstant. Der Median verändert sich unter
+\emph{complete} von \(0{,}087\,\mathrm{s}\) auf
+\(0{,}089\,\mathrm{s}\), unter \emph{preferred} von
+\(0{,}126\,\mathrm{s}\) auf \(0{,}126\,\mathrm{s}\) und unter
+\emph{stable} von \(0{,}076\,\mathrm{s}\) auf
+\(0{,}076\,\mathrm{s}\). Die in der folgenden Auswertung sichtbare
+Endpunktverschiebung betrifft damit vor allem die Solverphase und nicht die
+Übersetzung.
 
 \paragraph{Verteilung der entschiedenen Laufzeiten.}
 Abbildung~\ref{fig:z-runtime-distribution} zeigt die Verteilungen der
@@ -811,13 +895,12 @@ bei \(Z_4\) geringfügig unter demjenigen bei \(Z_3\); unter
 
 \paragraph{Kumulative Solverleistung.}
 Die Boxplots beschreiben nur die Laufzeiten der tatsächlich entschiedenen
-Läufe. Nicht entschiedene und damit besonders für die praktische
-Solverleistung relevante Fälle bleiben darin unberücksichtigt. Ergänzend
-wird deshalb für jede Semantik und Stufe der Anteil tatsächlch berechneter Fälle 
-betrachtet. Der Nenner bleibt unabhängig von der Zahl der entschiedenen
-Läufe konstant. \texttt{TIMEOUT} und \texttt{SOLVER\_ERR} erhöhen den
-Zähler nicht und bleiben dadurch im Plateau unterhalb von \(100\,\%\)
-sichtbar.
+Läufe. Um die nicht entschiedenen Anfragen in der praktischen Lösungsquote zu
+berücksichtigen, wird ergänzend für jede Semantik und Konditionierungsstufe der
+kumulative Anteil der innerhalb eines Zeitbudgets entschiedenen Solverläufe
+betrachtet. Der Nenner bleibt mit 525 Läufen konstant.
+\texttt{TIMEOUT} und \texttt{SOLVER\_ERR} erhöhen den Zähler nicht; deshalb
+entspricht das abschließende Plateau der jeweiligen Entscheidungsquote.
 
 \begin{figure}[t]
     \centering
@@ -859,25 +942,16 @@ geringfügig über demjenigen bei \(Z_0\), bevor es auf den späteren Stufen
 abnimmt. Die Ergebnisse beschreiben somit keinen strikt monotonen Verlauf
 für jeden einzelnen Stufenschritt.
 
-Zusammenfassend sind höhere Konditionierungsstufen in der untersuchten
-Benchmark-Sammlung mit längeren Laufzeiten der entschiedenen Läufe und
-einem geringeren Anteil innerhalb fester Zeitbudgets entschiedener Anfragen
-verbunden. Dieser Zusammenhang ist unter \emph{complete} und
-\emph{stable} deutlicher ausgeprägt als unter \emph{preferred}.
+Zusammenfassend zeigt der Endpunktvergleich von \(Z_0\) und \(Z_5\) unter
+allen drei Semantiken höhere Mediane der entschiedenen Solverläufe und
+geringere Anteile innerhalb fester Zeitbudgets entschiedener Anfragen. Unter
+\emph{complete} und \emph{stable} ist diese Verschiebung deutlicher ausgeprägt
+als unter \emph{preferred}.
 
-Bei der Interpretation sind zwei Einschränkungen zu berücksichtigen.
-Erstens sind die positiven Mengen \(Z_1,\ldots,Z_5\) nicht geschachtelt,
-sodass sich mit der Stufe sowohl ihre Größe als auch ihre Zusammensetzung
-ändert. Zweitens entspricht dieselbe Stufe unter \emph{preferred} einer
-anderen relativen Größe als unter \emph{complete} und \emph{stable}. 
-
-Die Betrachtung der Laufzeitverteilungen und der kumulativen Solverleistung 
-führt zu einem gemeinsamen Ergebnis. Auf höheren Konditionierungsstufen 
-benötigen die erfolgreich entschiedenen Anfragen überwiegend mehr Zeit, 
-während zugleich ein geringerer Anteil aller vorgesehenen Läufe innerhalb 
-der betrachteten Zeitbudgets gelöst wird. Besonders sichtbar ist diese 
-Verschiebung unter \emph{complete} und \emph{stable}; unter \emph{preferred} 
-liegen die Stufen näher beieinander. Die Entwicklung erfolgt allerdings nicht 
-gleichmäßig von \(Z_0\) bis \(Z_5\). Größere Konditionierungsmengen gehen 
-im vorliegenden Experiment somit tendenziell, 
-aber nicht durchgehend, mit einer schwierigeren Solverentscheidung einher.
+Der Vergleich der Mediane ist auf die jeweils entschiedenen Anfragen bedingt.
+Da sich deren Zusammensetzung zwischen den Konditionierungsstufen ändert und
+\texttt{TIMEOUT}-Fälle nicht in die Boxplots eingehen, beschreibt er keine
+Laufzeitänderung für die Gesamtheit aller Anfragen. Die kumulative Auswertung
+verwendet dagegen den festen Nenner von 525 Läufen und bildet damit die
+praktische Entscheidungsleistung ab; die tatsächlich benötigte Laufzeit und
+der logische Status der nicht entschiedenen Fälle bleiben dennoch unbekannt.

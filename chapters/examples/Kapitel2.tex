@@ -1,15 +1,25 @@
 \chapter{Grundlagen}
 \label{ch:grundlagen}
+Dieses Kapitel führt die formalen Grundlagen ein, auf denen die weitere
+Untersuchung bedingter Unabhängigkeit in Argumentationssystemen aufbaut.
+Zunächst werden abstrakte Argumentationssysteme und ihre labellingbasierten
+Semantiken vorgestellt. Anschließend folgen bedingte Unabhängigkeit und
+quantifizierte boolesche Formeln als begriffliche beziehungsweise technische
+Grundlage. Abschließend werden die benötigten komplexitätstheoretischen
+Begriffe und Entscheidungsprobleme zusammengefasst.
 \section{Argumentationssysteme}
 \label{sec:af}
-
 \emph{Argumentationssysteme} (engl. \emph{argumentation frameworks}, AFs)
 modellieren Argumente als abstrakte Einheiten und erfassen ausschließlich die
-zwischen ihnen bestehenden Angriffe. Die grundlegenden Begriffe gehen auf
-\textcite{dung:1995:af} zurück. Die labellingbasierte Darstellung und die
-Notation folgen \citeauthor*{bluemel:2025:independence-aba} \cite{bluemel:2025:independence-aba}.
+zwischen ihnen bestehenden Angriffe. Die grundlegenden Begriffe gehen auf 
+\textcite{dung:1995:af} zurück.
+Die hier verwendete dreiwertige Labelling-Darstellung der Dung-Semantiken
+geht auf \textcite{caminada:2006:reinstatement} zurück. Die konkrete
+Darstellung und Notation folgen
+\citeauthor*{bluemel:2025:independence-aba}
+\cite{bluemel:2025:independence-aba}.
 
-\begin{Definition}
+\begin{Definition}[Argumentationssysteme]
     \label{def:af}
     Ein \emph{Argumentationssystem} ist ein Paar \(F=(A,R)\), wobei \(A\)
     eine Menge von Argumenten und \(R\subseteq A\times A\) eine
@@ -17,7 +27,7 @@ Notation folgen \citeauthor*{bluemel:2025:independence-aba} \cite{bluemel:2025:i
     \emph{Angreifer} von \(b\). Wir schreiben \(A_F\) und \(R_F\).
 \end{Definition}
 Im Folgenden werden ausschließlich endliche Argumentationssysteme betrachtet.
-\begin{Definition}
+\begin{Definition}[Angriffsnotation]
     \label{def:attack/defense}
     Sei \(F = (A,R)\) ein AF, \(a \in A\) und \(S \subseteq A\).     
     Mit
@@ -35,7 +45,7 @@ Im Folgenden werden ausschließlich endliche Argumentationssysteme betrachtet.
     \]
 \end{Definition}
 
-\begin{Definition}
+\begin{Definition}[Verteidigung]
     \label{def:defense}
     Sei \(F=(A,R)\) ein Argumentationssystem, \(S\subseteq A\) und
     \(a\in A\). Die Menge \(S\) \emph{verteidigt} \(a\), wenn sie jeden
@@ -48,7 +58,7 @@ verteidigt. Eine Menge \(S\) verteidigt eine Menge \(T\subseteq A\), wenn
 Eine Argumentationssemantik legt fest, welche Bewertungen der Argumente eines
 Argumentationssystems zulässig sind. In der labellingbasierten Darstellung
 erhält jedes Argument genau einen von drei Akzeptanzstatus.
-\begin{Definition}
+\begin{Definition}[Labelling]
     \label{def:labelling}
     Sei \(F=(A,R)\) ein Argumentationssystem und
     \(\mathcal{L}=\{\mathsf{in},\mathsf{out},\mathsf{und}\}\). Ein
@@ -63,7 +73,7 @@ erhält jedes Argument genau einen von drei Akzeptanzstatus.
 Somit bilden \(\mathsf{in}(\lambda)\),
 \(\mathsf{out}(\lambda)\) und \(\mathsf{und}(\lambda)\) eine Partition
 von \(A\).
-\begin{Definition}
+\begin{Definition}[complete-Labelling]
     \label{def:complete-labelling}
     Sei \(F=(A,R)\) ein AF.
     Ein Labelling \(\lambda\colon A\to\mathcal{L}\) heißt
@@ -88,9 +98,9 @@ seine Angreifer mit \(\mathsf{out}\) gelabelt sind.
     \label{ex:abendplanung-complete}
     Das in der Einleitung eingeführte Beispiel wird durch
     den AF \(F_{\mathrm{Ausflug}}=(A,R)\) mit
-    \[
+    \(
         A=\{m,d,r_1,r_2,k_1,k_2\}
-    \]
+    \)
     und
     \[
     \begin{aligned}
@@ -106,6 +116,27 @@ seine Angreifer mit \(\mathsf{out}\) gelabelt sind.
     Münster. Die beiden Stadtargumente sowie die jeweiligen Alternativen
     greifen sich gegenseitig an. Das Argument \(d\) greift außerdem alle
     Münsteraner Optionen an.
+    Abbildung~\ref{fig:ausflug-af} zeigt die zugehörige Graphdarstellung.
+
+    \begin{figure}[htbp]
+        \centering
+        \begin{tikzpicture}
+            \node[arg] (m)  at (-3,0)    {$m$};
+            \node[arg] (d)  at (-1,0)    {$d$};
+            \node[arg] (r1) at (1,1.2)   {$r_1$};
+            \node[arg] (r2) at (3,1.2)   {$r_2$};
+            \node[arg] (k1) at (1,-1.2)  {$k_1$};
+            \node[arg] (k2) at (3,-1.2)  {$k_2$};
+
+            \draw[attack,<->] (m) -- (d);
+            \draw[attack,<->] (r1) -- (r2);
+            \draw[attack,<->] (k1) -- (k2);
+            \foreach \x in {r1,r2,k1,k2}
+                \draw[attack] (d) -- (\x);
+        \end{tikzpicture}
+        \caption{Das Argumentationssystem \(F_{\mathrm{Ausflug}}\).}
+        \label{fig:ausflug-af}
+    \end{figure}
 
     Betrachte das Labelling \(\lambda^\ast\) mit
     \[
@@ -120,24 +151,24 @@ seine Angreifer mit \(\mathsf{out}\) gelabelt sind.
     Angreifer mit \(\mathsf{in}\), aber aufgrund des gegenseitigen
     Angriffs auch nicht jeder Angreifer mit \(\mathsf{out}\) gelabelt.
     Daher gilt
-    \[
+    \(
         \lambda^\ast\in\Lambda_{\mathrm{co}}(F_{\mathrm{Ausflug}}).
-    \]
+    \)
 \end{Example}
 
-\begin{Definition}
+\begin{Definition}[Grounded-, Preferred- und Stable-Labellings]
     \label{def:af-semantics}
     Sei \(F=(A,R)\) ein AF und sei \(\Lambda_{\mathrm{co}}(F)\) die Menge seiner vollständigen Labellings.  
     \begin{itemize}
-        \item Die Menge der \emph{grounded}-Semantiken von F ist definiert durch 
+        \item Die Menge der \emph{grounded}-Labellings von F ist definiert durch 
         \(\Lambda_{\mathrm{gr}}(F)=\{\lambda\in\Lambda_{\mathrm{co}}(F)
         \mid\nexists\lambda'\in\Lambda_{\mathrm{co}}(F):\mathsf{und}
         (\lambda)\subsetneq\mathsf{und}(\lambda')\}\). 
-        \item Die Menge der \emph{preferred}-Semantiken von F ist definiert durch 
+        \item Die Menge der \emph{preferred}-Labellings von F ist definiert durch 
         \(\Lambda_{\mathrm{pr}}(F)=\{\lambda\in\Lambda_{\mathrm{co}}(F)
         \mid\nexists\lambda'\in\Lambda_{\mathrm{co}}(F):\mathsf{in}
         (\lambda)\subsetneq\mathsf{in}(\lambda')\}\). 
-        \item Die Menge der \emph{stable}-Semantiken von F ist defninert durch 
+        \item Die Menge der \emph{stable}-Labellings von F ist defininert durch 
         \(\Lambda_{\mathrm{st}}(F)=\{\lambda\in\Lambda_{\mathrm{co}}
         (F)\mid\mathsf{und}(\lambda)=\emptyset\}\).
     \end{itemize}
@@ -225,6 +256,10 @@ mindestens ein \emph{complete}- sowie ein \emph{preferred}-Labelling. Die Menge
     \(\mathsf{und}(\lambda^\ast)\neq\emptyset\) gilt.
 \end{Example}
 
+Für die spätere Übertragung bedingter Unabhängigkeit auf
+Argumentationssysteme muss ausgedrückt werden können, dass Labellings auf
+ausgewählten Argumentmengen übereinstimmen. Dazu dient die folgende
+Restriktionsnotation.
 \begin{Definition}
     \label{def:labelling-restriction}
     Sei \(\lambda\colon A\to\mathcal{L}\) ein Labelling und \(X\subseteq A\).
@@ -236,12 +271,16 @@ mindestens ein \emph{complete}- sowie ein \emph{preferred}-Labelling. Die Menge
 
 \section{Bedingte Unabhängigkeit}
 \label{sec:conditional-independence}
-
-Die folgende Darstellung der bedingten Unabhängigkeit orientiert
+Das zentrale Ziel dieser Arbeit ist zu bestimmen, wann die Bewertungen
+zweier Argumentmengen unabhängig voneinander rekombiniert werden können,
+sobald die Bewertung eines gemeinsamen Kontextes feststeht. Der folgende
+allgemeine Begriff der bedingten Unabhängigkeit liefert dafür die
+begriffliche Grundlage.
+Die Darstellung der bedingten Unabhängigkeit orientiert
 sich an \textcite{pearl:paz:1986:graphoids}. Die Notation folgt
 \textcite{bluemel:2025:independence-aba}.
 
-\begin{Definition}
+\begin{Definition}[Abhhängigkeitsmodell]
     \label{def:dependency-model}
     Seien \(V, X, Y, Z\) Mengen und \(X,Y,Z \subseteq V\). Ein \emph{Abhängigkeitsmodell} \(I\) über \(V\)
     ist eine ternäre Relation über paarweise disjunkten Teilmengen von \(V\),
@@ -265,6 +304,7 @@ wird der Index \(I\) weggelassen. Für Elemente \(x,y\in V\) stehen
 \(\{x\}\perp\{y\}\mid Z\) beziehungsweise
 \(\{x\}\not\perp\{y\}\mid Z\).
 
+\iffalse
 \begin{Definition}
     \label{def:semi-graphoid}
     Ein Abhängigkeitsmodell \(I\) über \(V\) heißt \emph{Semi-Graphoid},
@@ -286,6 +326,7 @@ wird der Index \(I\) weggelassen. Für Elemente \(x,y\in V\) stehen
         \Longrightarrow X\perp (Y\cup Y')\mid Z.
     \end{align*}
 \end{Definition}
+\fi
 
 \section{Quantifizierte Boolesche Formeln}
 \label{sec:qbf}
@@ -295,22 +336,25 @@ existenzielle und universelle Quantoren. Dadurch können Aussagen über alle
 oder über mindestens eine Belegung boolescher Variablen ausgedrückt werden.
 Die folgenden Definitionen orientieren sich an \citeauthor*{handbook-satisfiability-2nd} \cite{handbook-satisfiability-2nd}.
 
-\begin{Definition}[QBF]
+\begin{Definition}[Syntax von QBFs]
     \label{def:qbf}
-    Die Menge der \emph{quantifizierten booleschen Formeln} ist induktiv definiert als:
+    Eine \emph{quantifizierte boolesche Formel} (QBF) wird induktiv
+    wie folgt gebildet:
     \begin{enumerate}
-        \item Aussagenlogische Formeln und die booleschen Konstanten 1 (wahr) und 0 (falsch) sind quantifizierte boolesche Formeln.
-        \item Ist \(\varPhi\) eine quantifizierte boolesche Formel, so sind \(\exists x \varPhi\) und 
-        \(\forall x \varPhi\) quantifizierte boolesche Formeln
-        \item Sind \(\varPhi_1\) und \(\varPhi_2\) quantifizierte boolesche Formel, so sind \(\neg \varPhi_1\), 
-        \(\varPhi_1 \lor \varPhi_2\) und \(\varPhi_1 \land \varPhi_2\) quantifizierte boolesche Formeln.
-        \item Keine weitere Formel neben (1)-(3) beschreibt quantifizierte boolesche Formeln.
+        \item Aussagenvariablen sowie die booleschen Konstanten
+        \(1\) (wahr) und \(0\) (falsch) sind QBFs.
+        \item Ist \(\varPhi\) eine QBF und \(x\) eine Aussagenvariable,
+        so sind \(\exists x\,\varPhi\) und \(\forall x\,\varPhi\) QBFs.
+        \item Sind \(\varPhi_1\) und \(\varPhi_2\) QBFs, so sind
+        \(\neg\varPhi_1\), \(\varPhi_1\lor\varPhi_2\) und
+        \(\varPhi_1\land\varPhi_2\) QBFs.
+        \item Keine weiteren Formeln sind QBFs.
     \end{enumerate}
 \end{Definition}
 
-\begin{Definition}
+\begin{Definition}[Auswertung einer QBF]
     \label{def:qbf-evaluation}
-    Sei \(\Phi\) eine quantifizierte boolesche Formel mit den freien
+    Sei \(\Phi\) eine QBF mit den freien
     Variablen \(z_1,\dots,z_n\). Eine \emph{Wahrheitsbelegung} ist eine
     Abbildung
     \(
@@ -372,7 +416,7 @@ Die folgenden Definitionen orientieren sich an \citeauthor*{handbook-satisfiabil
     \(a_i\) in \(\Phi'\).
 \end{Definition}
 
-\begin{Definition}
+\begin{Definition}[Erfüllbarkeit und Wahrheit einer QBF]
     \label{def:qbf-satisfiability}
     Sei \(\Phi\) eine QBF mit den freien Variablen
     \(z_1,\dots,z_n\). Die QBF \(\Phi\) heißt \emph{erfüllbar} genau
@@ -387,10 +431,14 @@ Die folgenden Definitionen orientieren sich an \citeauthor*{handbook-satisfiabil
 
 \section{Komplexitätstheoretische Grundlagen}
 \label{sec:complexity}
-
 Die folgenden Grundlagen orientieren sich an
 \textcite[Abschnitt~2.2]{dvorak:2012:computational-aspects}. Die Darstellung
 beschränkt sich auf die im weiteren Verlauf benötigten Begriffe.
+Zunächst werden die Basisklassen \(\mathrm{P}\), \(\mathrm{NP}\) und
+\(\mathrm{coNP}\) eingeführt und anschließend zur polynomiellen Hierarchie
+verallgemeinert. Darauf folgen polynomielle Reduktionen und
+Vollständigkeitsbegriffe, bevor die für diese Arbeit relevanten QBF- und
+AF-Entscheidungsprobleme eingeordnet werden.
 
 \begin{Definition}[Entscheidungsproblem]
     \label{def:decision-problem}
@@ -431,22 +479,17 @@ verwiesen.
     =\{D_Q\setminus Q\mid Q\in\mathcal{C}\}\) ihre
     \emph{Komplementklasse}.
 \end{Definition}
-
-\begin{Definition}[Orakel]
-    Ein \emph{\(\mathcal{C}\)-Orakel} entscheidet für ein Problem
-    \(Q\in\mathcal{C}\) in einem Berechnungsschritt, ob eine vorgelegte
-    Instanz \(x\) zu \(Q\) gehört. Mit
-    \(\mathrm{P}^{\mathcal{C}}\) beziehungsweise
-    \(\mathrm{NP}^{\mathcal{C}}\) wird die Klasse der Probleme
-    bezeichnet, die eine deterministische beziehungsweise
-    nichtdeterministische Turingmaschine in polynomieller Zeit mit
-    Zugriff auf ein \(\mathcal{C}\)-Orakel entscheidet.
-
-\end{Definition}
-
+Für die Definition höherer Komplexitätsklassen werden Orakel verwendet.
+Ein \(\mathcal{C}\)-Orakel beantwortet in einem Berechnungsschritt
+Zugehörigkeitsanfragen zu einem Problem aus \(\mathcal{C}\).
+Entsprechend bezeichnen \(\mathrm{P}^{\mathcal{C}}\) und
+\(\mathrm{NP}^{\mathcal{C}}\) die mit einem solchen Orakel in
+polynomieller Zeit deterministisch beziehungsweise nichtdeterministisch
+entscheidbaren Probleme. Mit dieser Notation lässt sich die polynomielle
+Hierarchie rekursiv definieren.
 \begin{Definition}[Polynomielle Hierarchie]
     \label{def:polynomial-hierarchy}
-    Die Klassen der \emph{polynomialen Hierarchie} sind für
+    Die Klassen der \emph{polynomiellen Hierarchie} sind für
     \(k\geq 0\) rekursiv durch
     \(\Delta_0^{\mathrm{P}}=\Sigma_0^{\mathrm{P}}
     =\Pi_0^{\mathrm{P}}=\mathrm{P}\),
@@ -460,10 +503,14 @@ verwiesen.
     \(\Delta_1^{\mathrm{P}}=\mathrm{P}\),
     \(\Sigma_1^{\mathrm{P}}=\mathrm{NP}\) und
     \(\Pi_1^{\mathrm{P}}=\mathrm{coNP}\).
-    Die polynomiale Hierarchie ist die Klasse
+    Die polynomielle Hierarchie ist die Klasse
     \(\mathrm{PH}=\bigcup_{k\geq 0}\Sigma_k^{\mathrm{P}}\).
 \end{Definition}
-
+Anschaulich spiegeln die Ebenen
+\(\Sigma_k^{\mathrm{P}}\) und \(\Pi_k^{\mathrm{P}}\)
+verschachtelte existenzielle und universelle Entscheidungen wider.
+Um die Schwierigkeit von Problemen vergleichen und Härteergebnisse
+übertragen zu können, verwenden wir polynomielle Reduktionen.
 \begin{Definition}[Polynomielle Reduktion]
     \label{def:polynomial-reduction}
     Seien \(Q\subseteq D_Q\) und \(Q'\subseteq D_{Q'}\)
@@ -473,10 +520,12 @@ verwiesen.
     berechenbare Funktion \(R\colon D_{Q'}\to D_Q\) existiert, sodass
     für jedes \(x\in D_{Q'}\) gilt:
     \(x\in Q'\) genau dann, wenn \(R(x)\in Q\) gilt. Die Funktion \(R\)
-    heißt eine \emph{polynomielle Many-one-Reduktion} von \(Q'\) auf
-    \(Q\).
+    heißt eine \emph{polynomielle Many-one-Reduktion} von \(Q'\) auf~\(Q\).
 \end{Definition}
-Im Folgenden sprechen wir vereinfachend von polynomiellen Reduktionen. 
+Anschaulich übersetzt \(R\) positive Instanzen von \(Q'\) in positive
+Instanzen von \(Q\) und ebenso negative Instanzen in negative Instanzen.
+Im Folgenden sprechen wir vereinfachend von polynomiellen Reduktionen,
+welche die Grundlage der folgenden Härte- und Vollständigkeitsbegriffe bilden. 
 
 \begin{Definition}[Härte und Vollständigkeit]
     \label{def:hardness-completeness}
@@ -487,8 +536,12 @@ Im Folgenden sprechen wir vereinfachend von polynomiellen Reduktionen.
     \emph{\(\mathcal{C}\)-vollständig}, wenn \(Q\)
     \(\mathcal{C}\)-hart ist und zusätzlich \(Q\in\mathcal{C}\) gilt.
 \end{Definition}
-
-\begin{Definition}
+Für einen \(\mathcal{C}\)-Härtebeweis genügt es somit, ein bereits
+\(\mathcal{C}\)-hartes Problem auf das untersuchte Problem zu reduzieren.
+Als Ausgangsprobleme dienen in dieser Arbeit insbesondere die beschränkten
+QBF-Wahrheitsprobleme aus Abschnitt~\ref{sec:qbf}. Ihre Komplexität wird
+durch Anzahl und Reihenfolge der Quantorenblöcke bestimmt.
+\begin{Definition}[Beschränkte QBF-Wahrheitsprobleme]
     \label{def:bounded-qbf-truth}
     Sei \(k\geq 1\), seien \(X_1,\dots,X_k\) paarweise disjunkte,
     nichtleere Mengen boolescher Variablen und seien
@@ -506,7 +559,12 @@ Im Folgenden sprechen wir vereinfachend von polynomiellen Reduktionen.
     \(\mathrm{QBF}^{\forall}_k\) enthält genau die wahren Formeln dieser
     Form mit \(Q_1=\forall\).
 \end{Definition}
+Für eine Variablenmenge \(X_i\) steht \(Q_iX_i\) für einen Block, in dem
+alle Variablen aus \(X_i\) mit \(Q_i\) quantifiziert werden.
 
+Der Index \(k\) gibt somit die Anzahl der Quantorenblöcke an, während der
+Hochindex den äußersten Quantor bezeichnet. Diese Problemfamilien
+charakterisieren die Ebenen der polynomiellen Hierarchie.
 \begin{Theorem}[QBF-Vollständigkeit\parencites{meyer:stockmeyer:1972:equivalence-regex}
     {stockmeyer:meyer:1973:word-problems}]
     \label{thm:qbf-ph-completeness}
@@ -517,7 +575,10 @@ Im Folgenden sprechen wir vereinfachend von polynomiellen Reduktionen.
     \(\Pi_k^{\mathrm{P}}\)-vollständig bezüglich polynomieller
     Reduktionen.
 \end{Theorem}
-
+Das Theorem liefert damit kanonische Ausgangsprobleme für die späteren
+Härtebeweise. Auf der Seite der Argumentationssysteme bilden Verifikation
+sowie kredulöse und skeptische Akzeptanz die grundlegenden
+Vergleichsprobleme.
 \begin{Definition}[Zentrale Entscheidungsprobleme für AFs]
     \label{def:standard-af-problems}
     Sei \(F=(A,R)\) ein AF und sei
@@ -543,8 +604,10 @@ Im Folgenden sprechen wir vereinfachend von polynomiellen Reduktionen.
     \)
     gilt.
 \end{Definition}
-Die bekannten Ergebnisse sind in
-Tabelle~\ref{tab:complexity-af-semantics} zusammengefasst
+Verifikation prüft somit ein konkret vorgegebenes Labelling, kredulöse
+Akzeptanz quantifiziert existenziell und skeptische Akzeptanz universell
+über die \(\sigma\)-Labellings. Die bekannten Komplexitätsergebnisse sind
+in Tabelle~\ref{tab:complexity-af-semantics} zusammengefasst
 \parencite[Tab.~3.3]{dvorak:2012:computational-aspects}.
 \begin{table}[h]
     \centering

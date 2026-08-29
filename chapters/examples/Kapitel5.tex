@@ -189,23 +189,22 @@ modifizierte Konstruktion benötigt wird, die totale und partielle Belegungen un
     \paragraph{Konstruktion.}
     Wir führen eine neue universelle
     Variable \(x_0\) ein und setzen
-    \( X^{+}=X\cup\{x_0\}~
+    \( X'=X\cup\{x_0\}~
         \text{und}~
         \widehat{\varphi}
         =
         \bigwedge_{k=1}^{m}(x_0\lor C_k).\)
-    Damit gilt
-    \(
-        \forall X\exists Y\,\varphi~
-        \Longleftrightarrow~
-        \forall X^{+}\exists Y\,\widehat{\varphi}.
-    \)   
+    Die Formel \(\forall X\exists Y\,\varphi\) ist genau dann gültig,
+    wenn die Formel \(\forall X'\exists Y\,\widehat{\varphi}\) gültig ist:
+    Für \(x_0=\top\) ist jede Klausel von \(\widehat{\varphi}\) erfüllt,
+    während \(\widehat{\varphi}\) für \(x_0=\bot\) mit \(\varphi\)
+    übereinstimmt.
     Aus \(\Psi\) konstruieren wir das AF
     \(F_{\Psi}=(A_{\Psi},R_{\Psi})\) mit
     \[
     \begin{split}
         A_{\Psi}={}&
-        \{x_i,\overline{x_i},d_i\mid x_i\in X^{+}\}
+        \{x_i,\overline{x_i},d_i\mid x_i\in X'\}
         \cup
         \{y_j,\overline{y_j}\mid y_j\in Y\}\\
         &{}\cup
@@ -217,7 +216,7 @@ modifizierte Konstruktion benötigt wird, die totale und partielle Belegungen un
     \begin{split}
         R_{\Psi}={}&
         \{(x_i,\overline{x_i}),(\overline{x_i},x_i)
-            \mid x_i\in X^{+}\}\\
+            \mid x_i\in X'\}\\
         &{}\cup
         \{(y_j,\overline{y_j}),(\overline{y_j},y_j)
             \mid y_j\in Y\}\\
@@ -231,7 +230,7 @@ modifizierte Konstruktion benötigt wird, die totale und partielle Belegungen un
         \{(\varphi,t),(t,\varphi)\}\\
         &{}\cup
         \{(x_i,d_i),(\overline{x_i},d_i),(d_i,s)
-            \mid x_i\in X^{+}\}\\
+            \mid x_i\in X'\}\\
         &{}\cup
         \{(s,g),(g,\varphi)\}\\
         &{}\cup
@@ -240,92 +239,159 @@ modifizierte Konstruktion benötigt wird, die totale und partielle Belegungen un
     \]
     Die Konstruktion ist offensichtlich polynomial in der
     Größe von \(\Psi\).
-    Die Argumente \(d_i\) erkennen, ob das jeweilige Paar
-    \(x_i,\overline{x_i}\) total gelabelt ist. Das Argument \(s\) erhält genau dann das Label \(in\), wenn alle
-    universellen Variablen total gelabelt sind. Das Argument
-    \(g\) deaktiviert im partiellen Fall die eigentliche
-    Formelauswertung.
-    Als Instanz der \(complete\)-Unabhängigkeit geben wir
-    \(
-        \{\varphi\}
-        \perp_{co}
-        X^{+}
-        \mid
-        \{s\}
-    \)
-    aus.  Im Folgenden zeigen wir:
-    \(
-        \Psi\text{ ist gültig}
-    \)
-    genau dann, wenn
-    \(
-        \{\varphi\}
-        \perp_{co}
-        X^{+}
-        \mid
-        \{s\}
-        \text{ in }F_{\Psi}.
-    \)
-    Zunächst gilt in jedem \(complete\)-Labelling \(\lambda\):
-    \(
-        \lambda(s)=in
-    \)
-    genau dann, wenn alle Variablen aus \(X^{+}\) total gelabelt sind.
-    In diesem Fall gilt \(\lambda(g)=out\). Ist dagegen mindestens
-    eine Variable aus \(X^{+}\) unentschieden, so gilt
-    \(\lambda(s)=\lambda(g)=und\).
 
-    \paragraph{Korrektheit.}
+    Abbildung~\ref{fig:reduktion-complete} veranschaulicht die Konstruktion
+    und zeigt insbesondere, wie die Kontrollstruktur aus \(d_i\), \(s\) und
+    \(g\) totale von partiellen Belegungen trennt. Die Konstruktion
+    berücksichtigt damit die zusätzlichen \emph{complete}-Labellings, während
+    alle gerichteten Zyklen weiterhin auf die Zweierzyklen innerhalb der
+    Variablenpaare und der Komponente \(\{\varphi,t\}\) beschränkt bleiben.
+
+    Als Instanz der \emph{complete}-Unabhängigkeit geben wir
+    \(
+        \{\varphi\}
+        \perp_{co}
+        X'
+        \mid
+        \{s\}
+    \)
+    aus.
+
+    \paragraph{Vorbeobachtungen.}
+    Sei \(\lambda\in\Lambda_{co}(F_{\Psi})\) ein beliebiges
+    \emph{complete}-Labelling. Für jedes \(x_i\in X'\) gilt
+    \[
+        \bigl(\lambda(x_i),\lambda(\overline{x_i})\bigr)
+        \in
+        \{(in,out),(out,in),(und,und)\}.
+    \]
+    In den ersten beiden Fällen ist die zugehörige Variable total
+    belegt; im dritten Fall ist sie unentschieden. Da \(d_i\) von beiden
+    Literalargumenten angegriffen wird, gilt \(\lambda(d_i)=out\) genau
+    im totalen Fall und \(\lambda(d_i)=und\) im unentschiedenen Fall.
+    Insbesondere erhält kein \(d_i\) das Label \(in\). Folglich gilt
+    \(\lambda(s)=in\) genau dann, wenn alle Variablenpaare für \(X'\)
+    total gelabelt sind; andernfalls ist \(\lambda(s)=und\). Da \(s\)
+    der einzige Angreifer von \(g\) ist, gilt entsprechend
+    \(\lambda(g)=out\) beziehungsweise \(\lambda(g)=und\). Im
+    partiellen Fall gilt also \(\lambda(g)=und\). Da \(g\) jedes
+    \(c_k\) und \(\varphi\) angreift, kann keines dieser Argumente mit
+    \(in\) gelabelt sein. Auf diese Weise wird die eigentliche
+    Formelauswertung ausgesetzt.
+
+    \paragraph{Zu zeigende Aussage.}
+    Wir zeigen die folgende Äquivalenz:
+    \begin{equation}
+        \Psi\text{ ist genau dann gültig, wenn }
+        \{\varphi\}\perp_{co}X'\mid\{s\}
+        \text{ in }F_{\Psi}\text{ gilt.}
+        \tag{$*$}
+    \end{equation}
+
+    \paragraph{Beweis von \((*)\).}
     Sei zunächst \(\Psi\) gültig und seien
     \(\lambda_1,\lambda_2\in\Lambda_{co}(F_{\Psi})\) mit
-    \(\lambda_1(s)=\lambda_2(s)\). Wir konstruieren ein vollständiges
-    Labelling \(\lambda_3\), das das Label von \(\varphi\) aus
-    \(\lambda_1\) und das Labelling von \(X^{+}\) aus \(\lambda_2\)
+    \(\lambda_1(s)=\lambda_2(s)\). Wir konstruieren ein
+    \emph{complete}-Labelling \(\lambda_3\), das das Label von \(\varphi\) aus
+    \(\lambda_1\) und das Labelling von \(X'\) aus \(\lambda_2\)
     übernimmt.
-    Falls \(\lambda_1(s)=\lambda_2(s)=und\), gilt \(g=und\).
-    Daher kann \(\varphi\) nicht mit \(in\), sondern nur mit \(out\)
-    oder \(und\) gelabelt sein. Beide Labels sind unabhängig vom
-    konkreten Labelling von \(X^{+}\) realisierbar: Für
-    \(\varphi=out\) wählen wir \(t=in\), für \(\varphi=und\) wählen
-    wir \(t=und\).
+    Falls \(\lambda_1(s)=\lambda_2(s)=und\), folgt aus den
+    Vorbeobachtungen, dass \(\lambda_1(g)=\lambda_2(g)=und\) gilt.
+    Da \(g\) das Argument \(\varphi\) angreift, kann \(\varphi\) in
+    \(\lambda_1\) nicht mit \(in\) gelabelt sein: Dafür müssten alle
+    Angreifer von \(\varphi\) mit \(out\) gelabelt sein. Für jedes
+    \(x_i\in X'\) übernehmen wir die Labels des Variablenpaars
+    \(x_i,\overline{x_i}\) aus \(\lambda_2\); jedes Variablenpaar
+    \(y_j,\overline{y_j}\) labeln wir mit \((und,und)\). Die dadurch
+    bestimmten Labels der Argumente \(d_i\) übernehmen wir ebenfalls;
+    ferner setzen wir \(\lambda_3(s)=\lambda_3(g)=und\). Jedes
+    Klauselargument \(c_k\), das von einem mit \(in\) gelabelten
+    Literal angegriffen wird, erhält in \(\lambda_3\) das Label \(out\);
+    alle übrigen Klauselargumente erhalten das Label \(und\). Wegen
+    \(\lambda_3(g)=und\) sind genau diese beiden Fälle möglich.
+    Abschließend wählen wir
+    \(\lambda_3(\varphi)=out\) und \(\lambda_3(t)=in\), falls
+    \(\lambda_1(\varphi)=out\) gilt. Falls
+    \(\lambda_1(\varphi)=und\) gilt, wählen wir dagegen
+    \(\lambda_3(\varphi)=\lambda_3(t)=und\). Damit übernimmt
+    \(\lambda_3\) in beiden Fällen das Label von \(\varphi\) aus
+    \(\lambda_1\).
     Falls \(\lambda_1(s)=\lambda_2(s)=in\), kodiert
-    \(\lambda_2|_{X^{+}}\) eine totale Belegung \(\alpha\) von
-    \(X^{+}\), und es gilt \(g=out\). Wegen der Gültigkeit von
-    \(\forall X^{+}\exists Y\,\widehat{\varphi}\) existiert eine
+    \(\lambda_2|_{X'}\) eine totale Belegung \(\alpha'\) von
+    \(X'\). Wegen der Gültigkeit von
+    \(\forall X'\exists Y\,\widehat{\varphi}\) existiert eine
     Belegung \(\beta\) von \(Y\) mit
-    \(\widehat{\varphi}(\alpha,\beta)=\top\). Wir labeln die
-    \(Y\)-Argumente gemäß \(\beta\). Dadurch wird jedes
+    \(\widehat{\varphi}(\alpha',\beta)=\top\). Für jedes \(x_i\in X'\)
+    übernehmen wir die Labels des Variablenpaars
+    \(x_i,\overline{x_i}\) aus \(\lambda_2\) und labeln die
+    \(Y\)-Argumente gemäß \(\beta\). Damit sind alle \(d_i\) mit
+    \(out\), das Argument \(s\) mit \(in\) und das Argument \(g\) mit
+    \(out\) gelabelt. Außerdem wird jedes
     Klauselargument von einem \(in\)-gelabelten Literal angegriffen
     und somit mit \(out\) gelabelt. Daher können die drei möglichen
     Labels von \(\varphi\) durch
     \(
-        (\varphi,t)\in
+        \bigl(\lambda_3(\varphi),\lambda_3(t)\bigr)\in
         \{(in,out),(out,in),(und,und)\}
     \)
-    realisiert werden. Somit existiert in beiden Fällen das
+    realisiert werden. Wir wählen dasjenige Paar, für das
+    \(\lambda_3(\varphi)=\lambda_1(\varphi)\) gilt. Somit existiert in
+    beiden Fällen das
     erforderliche Labelling \(\lambda_3\), und es gilt
-    \(\{\varphi\}\perp_{co}X^{+}\mid\{s\}\).
+    \(\{\varphi\}\perp_{co}X'\mid\{s\}\).
 
-    Sei nun \(\Psi\) nicht gültig. Dann existiert eine Belegung
-    \(\alpha\) von \(X\), sodass
-    \(
-        \forall\beta:Y\to\{\top,\bot\}\colon
-        \varphi(\alpha,\beta)=\bot.
-    \)
-    Erweitere \(\alpha\) durch \(x_0=\bot\) zu einer totalen Belegung
-    \(\alpha^{+}\) von \(X^{+}\). Wir erhalten ein \emph{complete}-Labelling \(\lambda_2\).
-    Separat existiert ein \emph{complete}-Labelling \(\lambda_1\) mit
-    \(\lambda_1(s)=in\) und \(\lambda_1(\varphi)=in\): Dazu wird
-    \(x_0=in\) gewählt, sodass \(x_0\) alle Klauselargumente angreift
-    und diese mit \(out\) gelabelt werden.
-    Damit sind \(\lambda_1~\text{und}~\lambda_2\) realisierbare \emph{complete}-Labellings, wohingegen ein 
-    kombinierendes Labelling \(\lambda_3\) nicht existieren kann. Denn in \(\lambda_2\) existiert immer mindestens ein
-    \(c_k\), das mit \(in\) gelabelt ist und in \(\lambda_1\) trägt \(\varphi\) das \(in\) Label. Dies ist ein Widerspruch, da 
-    \(c_k ~\varphi\) angreift. 
-    \paragraph{Graphklassenzugehörigkeit}
+    Für die umgekehrte Richtung zeigen wir die Kontraposition. Sei nun
+    \(\Psi\) nicht gültig. Dann existiert eine Belegung
+    \(\alpha\) der Variablen aus \(X\), sodass
+    \(\varphi(\alpha,\beta)=\bot\) für jede Belegung \(\beta\) der
+    Variablen aus \(Y\) gilt.
+    Wir erweitern \(\alpha\) durch \(x_0=\bot\) zu einer totalen
+    Belegung \(\alpha'\) von \(X'\) und wählen eine beliebige totale
+    Belegung der Variablen aus \(Y\). Für das zu konstruierende
+    Labelling \(\lambda_2\) labeln wir die Variablenpaare gemäß diesen
+    Belegungen. Dadurch sind alle \(d_i\) mit \(out\), das Argument
+    \(s\) mit \(in\) und das Argument \(g\) mit \(out\) gelabelt. Ein
+    Klauselargument erhält das Label \(out\), wenn die zugehörige
+    Klausel erfüllt ist, und andernfalls das Label \(in\). Da
+    \(x_0=\bot\) gilt und keine Belegung von \(Y\) die Formel
+    \(\varphi\) unter \(\alpha\) erfüllt, ist mindestens ein
+    Klauselargument mit \(in\) gelabelt. Daher gilt notwendigerweise
+    \(\lambda_2(\varphi)=out\) und folglich \(\lambda_2(t)=in\).
+    Die so festgelegten Labels bilden ein \emph{complete}-Labelling,
+    das \(\alpha'\) kodiert und für das \(\lambda_2(s)=in\) gilt.
+    Separat konstruieren wir ein \emph{complete}-Labelling \(\lambda_1\)
+    mit \(\lambda_1(s)=in\) und \(\lambda_1(\varphi)=in\). Dazu wählen
+    wir eine totale Belegung der Variablen aus \(X'\cup Y\) mit
+    \(x_0=\top\) und labeln die Variablenpaare entsprechend. Das
+    Argument \(x_0\) ist dann mit \(in\) gelabelt und greift alle
+    Klauselargumente an, sodass diese das Label \(out\) erhalten. Weil
+    alle Variablenpaare total gelabelt sind, gilt außerdem
+    \(\lambda_1(s)=in\) und \(\lambda_1(g)=out\). Schließlich setzen
+    wir \(\lambda_1(\varphi)=in\) und \(\lambda_1(t)=out\).
+
+    Angenommen, es gäbe ein \emph{complete}-Labelling \(\lambda_3\),
+    für das \(\lambda_3(\varphi)=\lambda_1(\varphi)=in\),
+    \(\lambda_3|_{X'}=\lambda_2|_{X'}\) und
+    \(\lambda_3(s)=\lambda_1(s)=\lambda_2(s)=in\) gilt. Aus
+    \(\lambda_3(\varphi)=in\) folgt, dass alle Klauselargumente \(c_k\)
+    mit \(out\) gelabelt sind. Wegen \(\lambda_3(s)=in\) gilt auch
+    \(\lambda_3(g)=out\). Daher muss
+    jedes \(c_k\) von einem mit \(in\) gelabelten Literalargument
+    angegriffen werden. Die mit \(in\) gelabelten \(Y\)-Literale
+    bestimmen eine partielle Belegung von \(Y\), die sich beliebig zu
+    einer totalen Belegung \(\beta\) erweitern lässt. Jede solche
+    Erweiterung erfüllt zusammen mit \(\alpha'\) alle Klauseln von
+    \(\widehat{\varphi}\). Wegen \(x_0=\bot\) folgt daraus
+    \(\varphi(\alpha,\beta)=\top\), im Widerspruch zur Wahl von
+    \(\alpha\). Ein solches \(\lambda_3\) existiert daher nicht, und
+    \(\{\varphi\}\not\perp_{co}X'\mid\{s\}\) gilt.
+
+    Damit ist die Aussage \((*)\) bewiesen.
+
+    \paragraph{Graphklassenzugehörigkeit.}
     Das konstruierte AF \(F_{\Psi}\) ist ungeradezykelfrei. 
     Seine einzigen nichttrivialen stark zusammenhängenden Komponenten sind
-    \(\{x_i,\overline{x_i}\}\) für \(x_i\in X^{+}\),
+    \(\{x_i,\overline{x_i}\}\) für \(x_i\in X'\),
     \(\{y_j,\overline{y_j}\}\) für \(y_j\in Y\) sowie
     \(\{\varphi,t\}\).
     Die Argumente \(d_i\), \(s\), \(g\) und \(c_k\) bilden jeweils
@@ -352,7 +418,7 @@ modifizierte Konstruktion benötigt wird, die totale und partielle Belegungen un
     \resizebox{\textwidth}{!}{
         \input{gfx/ocf_co_härte.tex}
     }
-    \caption{AF-Repräsentation der Reduktion in \ref{prop:ocf-af-ci-co-pi^2-c} für die Formel
+    \caption{AF-Repräsentation der Reduktion aus Proposition~\ref{prop:ocf-af-ci-co-pi^2-c} für die Formel
         \(\Psi = \forall x_1 \exists y_1 \varphi\) mit
         \(\varphi =
         (x_1 \lor y_1) \land
@@ -363,11 +429,6 @@ modifizierte Konstruktion benötigt wird, die totale und partielle Belegungen un
         gegeben.}
 \label{fig:reduktion-complete}
 \end{figure}
-
-Abbildung~\ref{fig:reduktion-complete} verdeutlicht, wie die Kontrollstruktur aus \(d_i\), 
-\(s\) und \(g\) totale von partiellen Belegungen trennt. Die Konstruktion berücksichtigt damit 
-die zusätzlichen \emph{complete}-Labellings, während alle gerichteten Zyklen weiterhin auf 
-die Zweierzyklen innerhalb der Variablenpaare und der Komponente \(\{\varphi,t\}\) beschränkt bleiben.
 
 \iffalse
 \section{Bipartite AFs}

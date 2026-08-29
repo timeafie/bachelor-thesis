@@ -1,77 +1,46 @@
 \chapter{QBF-Kodierung bedingter Unabhängigkeit}
 \label{ch:semantic-independence}
 
-Dieses Kapitel überführt den in der Einleitung beschriebenen
-semantischen Unabhängigkeitsbegriff in eine exakte QBF-Kodierung. Seien
-dazu \(F=(A,R)\) ein AF, \(\sigma\) eine Semantik und
-\(X,Y,Z\subseteq A\) paarweise disjunkt. Nach
-\citeauthor*{rienstra:2020:independence-af} 
-\cite{rienstra:2020:independence-af} gilt
-\(X\perp_\sigma Y\mid Z\), wenn sich für je zwei auf \(Z\)
-übereinstimmende \(\sigma\)-Labellings ein weiteres
-\(\sigma\)-Labelling mit der geforderten Rekombination auf \(X\),
-\(Y\) und \(Z\) finden lässt.
+AFs können unter einer Semantik mehrere zulässige
+Labellings besitzen. Bedingte Unabhängigkeit bietet eine Möglichkeit, die
+Beziehungen zwischen diesen alternativen Bewertungen zu untersuchen: Sie
+fragt, ob sich die Bewertungen zweier Argumentmengen bei festgehaltenem
+Kontext unabhängig voneinander wählen lassen.
 
-Die Definition besitzt damit im Kern die Quantorenstruktur
-\(\forall\lambda_1\,\forall\lambda_2\,\exists\lambda_3\). Zusätzlich
-muss für jedes beteiligte Labelling die Zulässigkeit unter
-\(\sigma\) sichergestellt werden. Bei der \emph{preferred}-Semantik
-kommt die Maximalität der akzeptierten Argumente hinzu.
-\citeauthor*{bluemel:2025:independence-aba} 
-\cite{bluemel:2025:independence-aba} weisen entsprechend
-\(\Pi_2^{\mathrm P}\)-Vollständigkeit für die
-\emph{complete}- und die \emph{stable}-Semantik sowie
-\(\Pi_3^{\mathrm P}\)-Vollständigkeit für die
-\emph{preferred}-Semantik nach. Die Verbindung universeller und
-existentieller Anforderungen macht QBFs zu einem geeigneten
-Zielformalismus für die exakte Entscheidung des Problems.
+Die Entscheidung dieser Eigenschaft ist bereits für die hier betrachteten
+Semantiken rechnerisch anspruchsvoll
+\parencite{bluemel:2025:independence-aba}. QBFs eignen sich dazu, 
+Anforderungen an alle Ausgangslabellings und die
+Existenz eines passenden rekombinierenden Labellings gemeinsam
+auszudrücken.
 
-QBF-basierte Kodierungen von Argumentationsproblemen wurden unter
-anderem von
-\citeauthor*{egly:woltran:2006:reasoning-qbf} \cite{egly:woltran:2006:reasoning-qbf} 
-untersucht. Eine labellingbasierte QBF-Charakterisierung 
-verschiedener Dung-Semantiken geben
-\citeauthor*{arieli:caminada:2013:qbf-af} \cite{arieli:caminada:2013:qbf-af} an. 
-Das vorliegende Kapitel greift diese grundlegende Idee auf, 
-verwendet jedoch für jedes Argument drei
-boolesche Variablen zur expliziten Repräsentation der Labels
-\(\mathsf{in}\), \(\mathsf{out}\) und \(\mathsf{und}\). Die so
-entstehenden Semantikkodierungen bilden anschließend den Ausgangspunkt
-für die zusätzliche Gleichheits- und Rekombinationsstruktur der
-bedingten Unabhängigkeit.
+Auf dieser Grundlage entwickelt dieses Kapitel eine einheitliche
+QBF-Kodierung bedingter Unabhängigkeit für die \emph{complete}-, die
+\emph{stable}- und die \emph{preferred}-Semantik. Die Kodierung
+repräsentiert Labellings boolesch und erfasst ihre Übereinstimmung und
+Rekombination. Anschließend wird ihre Korrektheit gezeigt.
 
-Ziel des Kapitels ist eine einheitliche Kodierung für die
-\emph{complete}-, die \emph{stable}- und die
-\emph{preferred}-Semantik. Dazu werden drei disjunkte
-Labellingvariablenblöcke verwendet: Zwei Blöcke repräsentieren die
-universell betrachteten Ausgangslabellings, während ein dritter Block
-das existentiell geforderte rekombinierende Labelling beschreibt.
-Gleichheitsformeln stellen die Übereinstimmung auf \(Z\) sicher und eine
-Mischungsformel verbindet die Bewertungen von \(X\), \(Y\) und \(Z\).
-Berücksichtigt werden außerdem Fälle, in denen \(F\) unter der
-betrachteten Semantik höchstens ein Labelling besitzt und die
-Unabhängigkeitsbedingung daher trivial erfüllt ist.
+QBF-basierte Kodierungen von Argumentationsproblemen untersuchen
+\textcite{egly:woltran:2006:reasoning-qbf}. Eine labellingbasierte
+QBF-Charakterisierung verschiedener Dung-Semantiken geben
+\textcite{arieli:caminada:2013:qbf-af} an. Die hier verwendete
+Repräsentation knüpft an diese Grundidee an und bildet die drei möglichen
+Labels eines Arguments durch jeweils eigene boolesche Variablen ab.
 
-Das Kapitel ist in drei Schritte gegliedert. Zunächst werden der
-semantische Unabhängigkeitsbegriff, grundlegende Eigenschaften, triviale
-Fälle und die Komplexität des Entscheidungsproblems behandelt.
-Anschließend werden die boolesche Repräsentation von Labellings und die
-Kodierungen der drei betrachteten Semantiken eingeführt. Im letzten
-Schritt werden die Gleichheits- und Mischungsformeln mit den
-Semantikkodierungen zur QBF
-\(\Phi_F^\sigma(X,Y\mid Z)\) zusammengesetzt und die Korrektheit der
-resultierenden Kodierung bewiesen.
+Abschnitt~\ref{sec:sigma-independence-af-complexity} wiederholt die
+bedingte Unabhängigkeit in Argumentationssystemen nach
+\textcite{rienstra:2020:independence-af}. Die
+Abschnitte~\ref{sec:semantics-encoding} und
+\ref{sec:uniform-independence-qbf} entwickeln anschließend die Semantik-
+und Unabhängigkeitskodierung und zeigen deren Korrektheit.
 \section{Bedingte Unabhängigkeit in Argumentationssystemen}
 \label{sec:sigma-independence-af-complexity}
 
-Dieses Unterkapitel führt bedingte Unabhängigkeit in Argumentationssystemen 
-ein und bereitet ihre Kodierung durch quantifizierte boolesche Formeln vor. 
-Die konkrete Formulierung des Unabhängigkeitsbegriffs, die verwendete Notation 
-und die dargestellten Komplexitätsergebnisse orientieren sich an 
-\citeauthor*{bluemel:2025:independence-aba}~\cite{bluemel:2025:independence-aba}. 
-Dazu werden zunächst der semantische Unabhängigkeitsbegriff und das zugehörige Entscheidungsproblem vorgestellt. 
-Anschließend werden die relevanten Komplexitätsergebnisse und jene Sonderfälle betrachtet, 
-die für die Konstruktion und empirische Auswertung der QBF-Kodierungen von Bedeutung sind.
+Dieser Abschnitt wiederholt die Definition der bedingten Unabhängigkeit
+in Argumentationssystemen nach
+\textcite{rienstra:2020:independence-af} und fasst das zugehörige
+Entscheidungsproblem sowie die bekannten Komplexitätsergebnisse nach
+\textcite{bluemel:2025:independence-aba} zusammen.
 
 Intuitiv beschreibt bedingte Unabhängigkeit die Möglichkeit, 
 Bewertungen verschiedener Argumentmengen miteinander zu kombinieren.
@@ -658,9 +627,7 @@ Prämisse der Implikation beschränkt die universellen Belegungen auf
     der universellen Blöcke, also ist die QBF wahr.
 \end{proof}
 
-Das Ergebnis zeigt, dass die bedingte Unabhängigkeit vollständig durch die 
-Wahrheit von \(\Phi_F^\sigma(X,Y\mid Z)\) charakterisiert wird. Die entwickelte 
-QBF-Kodierung schafft damit die Grundlage für die algorithmische 
-Umsetzung und die anschließende empirische Untersuchung. Die genaue 
-Überführung der Formel in Pränexform sowie ihre anschließende Übersetzung 
-in das QCIR-Format werden im Anhang dargestellt.
+Damit ist die bedingte Unabhängigkeit durch die Wahrheit von
+\(\Phi_F^\sigma(X,Y\mid Z)\) charakterisiert. Die entwickelte
+QBF-Kodierung bildet die Grundlage für die algorithmische Umsetzung und
+die empirische Untersuchung im folgenden Kapitel.
