@@ -49,14 +49,18 @@
 \RequirePackage{amssymb}
 \RequirePackage{theorem}
 \theoremstyle{plain} {
- \newtheorem{Theorem}{Theorem}
- \newtheorem{Proposition}{Proposition}
- \newtheorem{Lemma}{Lemma}
- \newtheorem{Corollary}{Corollary}
+  % Gemeinsamer Hauptzähler, kapitelweise zurückgesetzt
+  \newtheorem{Theorem}{Theorem}[section]
+
+  % Diese Umgebungen verwenden denselben Zähler
+  \newtheorem{Proposition}[Theorem]{Proposition}
+  \newtheorem{Lemma}[Theorem]{Lemma}
+  \newtheorem{Corollary}[Theorem]{Corollary}
 }
+
 \theoremstyle{plain} {
   \theorembodyfont{\itshape}
-  \newtheorem{Definition}{Definition}
+  \newtheorem{Definition}[Theorem]{Definition}
 }
 \newcommand{\qed}{\hfill \mbox{\raggedright \rule{.07in}{.1in}}}
 \newenvironment{proof}{\vspace{1ex}\noindent{\textbf{Beweis}}\hspace{0.5em}}

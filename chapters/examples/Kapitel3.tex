@@ -82,7 +82,6 @@ so sollen die Bewertung von \(X\) aus dem ersten und die Bewertung von
     \]
     Die Mengen \(X\) und \(Y\) enthalten damit die Restaurant- beziehungsweise
     Kinoargumente, während \(Z\) die Stadtentscheidung festhält.
-
     Für die \emph{complete}-Semantik betrachten wir die Labellings
     \(\lambda_1,\lambda_2,\lambda_3\in
     \Lambda_{\mathsf{co}}(F_{\mathrm{Ausflug}})\) mit
@@ -106,24 +105,23 @@ so sollen die Bewertung von \(X\) aus dem ersten und die Bewertung von
         \lambda_3|_Y=\lambda_2|_Y,\qquad
         \lambda_3|_Z=\lambda_1|_Z=\lambda_2|_Z.
     \]
-
     Diese Rekombination ist für alle auf \(Z\) übereinstimmenden
     \emph{complete}-Labellings möglich. Sind \(m\) mit
     \(\mathsf{in}\) und \(d\) mit \(\mathsf{out}\) gelabelt, können das
     Restaurant- und das Kinopaar unabhängig voneinander jeweils eine
     der Bewertungen
-    \[
-        (\mathsf{in},\mathsf{out}),\qquad
-        (\mathsf{out},\mathsf{in}),\qquad
+    \(
+        (\mathsf{in},\mathsf{out}),~
+        (\mathsf{out},\mathsf{in}),~
         (\mathsf{und},\mathsf{und})
-    \]
+    \)
     annehmen. Ist \(d\) mit \(\mathsf{in}\) gelabelt, sind alle Argumente
     aus \(X\cup Y\) mit \(\mathsf{out}\) gelabelt. Sind \(m\) und \(d\)
     beide mit \(\mathsf{und}\) gelabelt, gilt dies auch für alle Argumente
     aus \(X\cup Y\). Folglich gilt
-    \[
+    \(
         X\perp_{\mathsf{co}}Y\mid Z.
-    \]
+    \)
 
     Ohne die Festlegung der Stadt besteht diese Unabhängigkeit nicht.
     Das \emph{complete}-Labelling \(\lambda_D\) mit
@@ -136,9 +134,9 @@ so sollen die Bewertung von \(X\) aus dem ersten und die Bewertung von
     kombinieren: Aus \(\lambda(r_1)=\mathsf{in}\) folgt
     \(\lambda(d)=\mathsf{out}\). Dann können \(k_1\) und \(k_2\) jedoch
     nicht beide mit \(\mathsf{out}\) gelabelt sein. Daher gilt
-    \[
+    \(
         X\not\perp_{\mathsf{co}}Y\mid\emptyset.
-    \]
+    \)
 \end{Example}
 
 Bislang wurde bedingte Unabhängigkeit als semantische Eigenschaft beschrieben. 
@@ -191,8 +189,7 @@ gilt die Unabhängigkeit hier trivial, wie das folgende Lemma festhält.
     \(\Lambda_\sigma(F)\) aus genau einem Labelling \(\lambda\), so kann
     für das einzige Paar \((\lambda,\lambda)\) dieses Labelling selbst als
     \(\lambda_3\) gewählt werden.
-\end{proof}
-
+\end{proof}\\
 Das Lemma ist für die spätere empirische Auswertung wesentlich: Eine hohe
 Unabhängigkeitsrate kann sowohl durch viele Kombinationsmöglichkeiten als auch 
 durch die Existenz von einem oder keinem Labelling entstehen.
@@ -214,9 +211,9 @@ Hierzu erhält jedes Argument drei Variablen, die seine möglichen Labels reprä
     \emph{Labellingvariablenblock} für \(F\) ist ein Tripel
     \(\mathbf{V}=(I,O,U)\) paarweise disjunkter Variablenmengen
 \(
-        I=\{i_a\mid a\in A\},~
-        O=\{o_a\mid a\in A\},~
-        U=\{u_a\mid a\in A\}.
+        I=\{i_a\mid~a\in~A\}, 
+        O=\{o_a\mid~a\in~A\}, 
+        U=\{u_a\mid~a\in~A\}.
 \)
 \end{Definition}
 Die Variablen \(i_a\), \(o_a\) und \(u_a\) kodieren die Labels

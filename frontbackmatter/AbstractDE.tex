@@ -2,21 +2,63 @@
 % Abstract in German
 %*******************************************************
 \begin{otherlanguage}{ngerman}
-	\pdfbookmark[0]{Zusammenfassung}{Zusammenfassung}
-	\chapter*{Zusammenfassung}
-	Kurze Zusammenfassung des Inhaltes in deutscher Sprache von ca. einer Seite länge. Dabei sollte vor allem auf die folgenden Punkte eingegangen werden:
-	%
-	\begin{itemize}
-	  \item Motivation: Wieso ist diese Arbeit entstanden? Warum ist das Thema der Arbeit (für die Allgemeinheit) interessant? Dabei sollte die Motivation von der konkreten Aufgabenstellung, z.B. durch eine Firma, weitestgehend abstrahiert werden. 
-          \item Inhalt: Was ist Inhalt der Arbeit? Was genau wird in der Arbeit behandelt? Hier sollte kurz auf Methodik und Arbeitsweise eingegangen werden.
-          \item Ergebnisse: Was sind die Ergebnisse der Arbeit? Ein kurzer Überblick über die wichtigsten Ergebnisse als Teaser, um die Arbeit vollständig zu lesen.
-	\end{itemize}
-	\medskip
+    \pdfbookmark[0]{Zusammenfassung}{Zusammenfassung}
+    \chapter*{Zusammenfassung}
 
-	\noindent
-	Eine großartige Anleitung von Kent Beck, wie man gute Abstracts schreibt, finden Sie hier:
-	\begin{center}
-                \url{https://plg.uwaterloo.ca/~migod/research/beckOOPSLA.html}
-        \end{center}
+    Wenn widersprüchliche Informationen mehrere zulässige Bewertungen
+    erlauben, ist nicht nur relevant, welche Argumente akzeptiert werden,
+    sondern auch, ob Teilentscheidungen bei festgehaltenem Kontext
+    unabhängig kombiniert werden können. Abstrakte Argumentationssysteme
+    (engl.\ \emph{abstract argumentation frameworks}, AFs) modellieren
+    solche Situationen durch Argumente und gerichtete Angriffe. Bedingte
+    Unabhängigkeit beschreibt darin, ob sich die Bewertungen zweier
+    Argumentmengen \(X\) und \(Y\), deren Ausgangslabellings auf einer
+    Konditionierungsmenge \(Z\) übereinstimmen, in einem weiteren
+    zulässigen Labelling rekombinieren lassen. Die exakte Prüfung dieser
+    Eigenschaft ist aufgrund ihrer universell-existentiellen Struktur
+    rechnerisch anspruchsvoll. Zugleich erfassen bestehende
+    graphstrukturelle Kriterien nur einen Teil der tatsächlich geltenden
+    Unabhängigkeiten. Ausgangspunkt dieser Arbeit ist daher das Fehlen
+    eines exakten und praktisch untersuchten Entscheidungsverfahrens.
 
+    Für die \emph{complete}-, \emph{stable}- und
+    \emph{preferred}-Semantik wird eine einheitliche Kodierung durch
+    quantifizierte boolesche Formeln (QBFs) entwickelt. Dabei repräsentieren
+    boolesche Variablen die Labels \(\mathsf{in}\), \(\mathsf{out}\) und
+    \(\mathsf{und}\) jedes Arguments. Semantikkodierungen,
+    Gleichheitsbedingungen und eine Mischungsformel verbinden zwei
+    universell betrachtete Ausgangslabellings mit einem existentiell
+    geforderten Rekombinationslabelling. Für die
+    \emph{preferred}-Semantik wird zusätzlich die Maximalität der
+    akzeptierten Argumente berücksichtigt. Der Korrektheitsnachweis zeigt,
+    dass die resultierende QBF genau dann wahr ist, wenn die angefragte
+    bedingte Unabhängigkeit gilt. Sämtliche zulässigen Labellings müssen
+    dafür nicht vorab explizit erzeugt werden.
+
+    Die Kodierungen werden als \texttt{QCIR-G14} ausgegeben und
+    anschließend mit QuAbS ausgewertet. Die empirische Untersuchung umfasst
+    \(9\,450\) Anfragen für \(105\) AFs aus der Benchmarkauswahl der ICCMA
+    2025. Für jedes AF werden fünf Paare einzelner Argumente mit sechs
+    Konditionierungsstufen unter den drei betrachteten Semantiken untersucht.
+    Von den \(7\,164\) entschiedenen
+    Anfragen werden \(6\,986\), entsprechend \(97{,}52\,\%\), als
+    unabhängig und \(178\), entsprechend \(2{,}48\,\%\), als abhängig
+    klassifiziert. Größere Konditionierungsmengen gehen unter den
+    entschiedenen Anfragen mit weniger beobachteter Abhängigkeit sowie
+    tendenziell mit längeren Solverlaufzeiten und geringeren Lösungsquoten
+    einher. Diese Laufzeiteffekte sind unter \emph{complete} und
+    \emph{stable} deutlicher ausgeprägt als unter \emph{preferred}.
+
+    Für die untersuchte Benchmarkauswahl zeigen die Ergebnisse, dass bedingte
+    Unabhängigkeit unter den entschiedenen Anfragen in allen drei Semantiken
+    den überwiegenden Fall bildet und größere Konditionierungsmengen mit
+    weniger beobachteter Abhängigkeit sowie einem höheren praktischen
+    Rechenaufwand einhergehen. Die berechnungstheoretische Analyse ergänzt
+    dieses Bild: In azyklischen und allgemeiner in geradezykelfreien AFs wird
+    jede Unabhängigkeitsanfrage positiv beantwortet, während das
+    Entscheidungsproblem auf ungeradezykelfreien AFs unter allen drei
+    Semantiken \(\Pi_2^{\mathsf P}\)-vollständig ist. Zusammen bilden die
+    exakte QBF-Kodierung, die empirische Evaluation und die
+    Komplexitätsergebnisse eine einheitliche Grundlage, um bedingte Unabhängigkeit
+    in Argumentationssystemen zu analysieren.
 \end{otherlanguage}

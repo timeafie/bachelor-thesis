@@ -1,0 +1,475 @@
+\chapter{Pränexierung und QCIR-Repräsentation der
+\emph{preferred}-Kodierung}
+\label{ch:preferred-prenex-qcir}
+
+Kapitel~\ref{ch:semantic-independence} charakterisiert die bedingte
+Unabhängigkeit durch die QBF
+\(\Phi_F^\sigma(X,Y\mid Z)\). Für die algorithmische Auswertung muss
+diese mathematische Darstellung in eine konkrete Solverrepräsentation
+überführt werden. Der vorliegende Anhang beschreibt diesen Schritt für
+die \emph{preferred}-Semantik.
+
+Dabei sind zwei Transformationen zu unterscheiden. Zunächst werden die
+innerhalb der \emph{preferred}-Prädikate auftretenden Quantoren in einen
+gemeinsamen Quantorenpräfix überführt. Anschließend wird die
+quantorenfreie Matrix als boolescher Schaltkreis im Format
+\texttt{QCIR-G14} dargestellt.
+
+Die resultierende Formel besitzt somit Pränexform, ihre Matrix liegt
+jedoch nicht in konjunktiver Normalform vor. Es handelt sich insbesondere
+nicht um eine PCNF- beziehungsweise QDIMACS-Kodierung. Eine solche
+Konvertierung ist für die verwendete Werkzeugkette nicht erforderlich:
+Wie in Kapitel~\ref{ch:empirical-analysis} beschrieben, werden die
+erzeugten \texttt{QCIR-G14}-Dateien ohne weitere Formatumwandlung an
+QuAbS übergeben. Obwohl \texttt{QCIR-G14} auch nicht-pränexe Formeln
+darstellen kann, erzeugt der verwendete Übersetzer einen vollständig
+pränexen Quantorenpräfix mit einer nicht-KNF-Schaltkreismatrix.
+
+\section{Überführung der \emph{preferred}-QBF in Pränexform}
+\label{sec:preferred-prenex}
+
+Für \(\sigma=\mathsf{pr}\) ergibt sich aus
+Definition~\ref{def:generic-independence-qbf} zunächst
+\[
+\begin{split}
+\Phi_F^{\mathsf{pr}}(X,Y\mid Z)
+:=
+\forall\mathbf V^1\,\forall\mathbf V^2\,
+\Bigl(&
+    \operatorname{Pr}_F(\mathbf V^1)
+    \land
+    \operatorname{Pr}_F(\mathbf V^2)
+    \land
+    \operatorname{Eq}^{1,2}_Z
+\\
+&\rightarrow
+    \exists\mathbf V^3\,
+    \bigl(
+        \operatorname{Pr}_F(\mathbf V^3)
+        \land
+        \operatorname{Mix}^{1,2,3}_{X,Y\mid Z}
+    \bigr)
+\Bigr).
+\end{split}
+\]
+
+Vor der Pränexierung werden die gebundenen Variablen der drei
+\emph{preferred}-Prädikate durch paarweise disjunkte Blöcke
+\(\widehat{\mathbf V}^{1}\),
+\(\widehat{\mathbf V}^{2}\) und
+\(\widehat{\mathbf V}^{3}\) ersetzt. Für \(k\in\{1,2,3\}\) sei
+\[
+\operatorname{Max}_F^k
+:=
+\neg\Bigl(
+    \operatorname{Co}_F(\widehat{\mathbf V}^{k})
+    \land
+    I^k<\widehat{I}^{k}
+\Bigr).
+\]
+Damit gilt
+\[
+\operatorname{Pr}_F(\mathbf V^k)
+=
+\operatorname{Co}_F(\mathbf V^k)
+\land
+\forall\widehat{\mathbf V}^{k}\,
+\operatorname{Max}_F^k.
+\]
+
+Für die spätere Matrix werden die beiden quantorenfreien Teilformeln
+\[
+\begin{aligned}
+\mathcal A_F
+:={}&
+    \operatorname{Co}_F(\mathbf V^1)
+    \land
+    \operatorname{Co}_F(\mathbf V^2)
+    \land
+    \operatorname{Eq}^{1,2}_Z
+    \land
+    \operatorname{Max}_F^1
+    \land
+    \operatorname{Max}_F^2,
+\\
+\mathcal C_F
+:={}&
+    \operatorname{Co}_F(\mathbf V^3)
+    \land
+    \operatorname{Mix}^{1,2,3}_{X,Y\mid Z}
+    \land
+    \operatorname{Max}_F^3
+\end{aligned}
+\]
+verwendet.
+
+\begin{Proposition}
+\label{prop:preferred-prenex-equivalent}
+Die QBF \(\Phi_F^{\mathsf{pr}}(X,Y\mid Z)\) ist äquivalent zu der
+pränexen QBF
+\[
+\begin{split}
+\forall\mathbf V^1\,
+\forall\mathbf V^2\,
+\exists\mathbf V^3\,
+\exists\widehat{\mathbf V}^{1}\,
+\exists\widehat{\mathbf V}^{2}\,
+\forall\widehat{\mathbf V}^{3}\,
+\bigl(
+    \mathcal A_F\rightarrow\mathcal C_F
+\bigr).
+\end{split}
+\]
+Zusammengefasst besitzt ihr Präfix die Alternationsstruktur
+\[
+\forall(\mathbf V^1\cup\mathbf V^2)\,
+\exists(\mathbf V^3\cup
+        \widehat{\mathbf V}^{1}\cup
+        \widehat{\mathbf V}^{2})\,
+\forall\widehat{\mathbf V}^{3}.
+\]
+\end{Proposition}
+
+\begin{proof}
+Nach der Umbenennung der gebundenen Variablen sind alle sechs
+Labellingvariablenblöcke paarweise disjunkt. Für eine Variable
+beziehungsweise einen Variablenblock \(\mathbf W\), der nicht frei in
+\(\beta\) vorkommt, gilt
+\[
+(\forall\mathbf W\,\alpha)\rightarrow\beta
+\equiv
+\exists\mathbf W\,(\alpha\rightarrow\beta).
+\]
+Daher wechseln die Quantoren über
+\(\widehat{\mathbf V}^{1}\) und
+\(\widehat{\mathbf V}^{2}\) beim Herausziehen aus dem Antezedens ihre
+Polarität: Aus den universellen Maximalitätsprüfungen innerhalb der
+beiden \emph{preferred}-Prädikate werden existentielle Blöcke im
+gemeinsamen Präfix.
+
+Für den existentiellen Block des rekombinierenden Labellings gilt
+dagegen
+\[
+\alpha\rightarrow\exists\mathbf W\,\beta
+\equiv
+\exists\mathbf W\,(\alpha\rightarrow\beta),
+\]
+sofern \(\mathbf W\) nicht frei in \(\alpha\) vorkommt. Der Block
+\(\mathbf V^3\) bleibt daher existentiell. Die Maximalitätsprüfung von
+\(\mathbf V^3\) steht im Konsequens und behält ihren universellen
+Quantor über \(\widehat{\mathbf V}^{3}\).
+
+Die Blöcke \(\mathbf V^3\),
+\(\widehat{\mathbf V}^{1}\) und
+\(\widehat{\mathbf V}^{2}\) sind sämtlich existentiell und können daher
+innerhalb des mittleren Quantorenblocks vertauscht werden. Die
+angegebene Reihenfolge entspricht der verwendeten Implementierung.
+\end{proof}
+
+Nach Eliminierung der letzten Implikation ist die quantorenfreie Matrix
+\[
+\Psi_F
+:=
+\neg\mathcal A_F\lor\mathcal C_F.
+\]
+Diese Matrix muss für die Übergabe an QuAbS nicht in KNF umgewandelt
+werden. Sie wird im nächsten Abschnitt unmittelbar als boolescher
+Schaltkreis dargestellt.
+
+Jeder der sechs Labellingvariablenblöcke enthält für jedes Argument die
+drei Variablen für \(\mathsf{in}\), \(\mathsf{out}\) und
+\(\mathsf{und}\). Für \(n=|A|\) besitzt die pränexe QBF daher insgesamt
+\[
+6\cdot 3n=18n
+\]
+quantifizierte Variablen.
+
+\begin{Example}[Zweizyklus]
+\label{ex:preferred-prenex-two-cycle}
+Sei
+\[
+F_{\leftrightarrow}
+=
+\bigl(
+    \{a_1,a_2\},
+    \{(a_1,a_2),(a_2,a_1)\}
+\bigr)
+\]
+und seien
+\[
+X=\{a_1\},
+\qquad
+Y=\{a_2\},
+\qquad
+Z=\emptyset.
+\]
+Der AF besitzt die beiden \emph{preferred}-Labellings
+\[
+\begin{array}{c|ccc}
+    & \mathsf{in} & \mathsf{out} & \mathsf{und}\\
+    \midrule
+    \lambda_1 & \{a_1\} & \{a_2\} & \emptyset\\
+    \lambda_2 & \{a_2\} & \{a_1\} & \emptyset
+\end{array}
+\]
+sowie ein nicht maximales \emph{complete}-Labelling, in dem beide
+Argumente mit \(\mathsf{und}\) bezeichnet sind.
+
+Für dieses nicht maximale Labelling kann ein existentieller
+Vergleichsblock, beispielsweise
+\(\widehat{\mathbf V}^{1}\), das Labelling \(\lambda_1\) kodieren. Dann
+gilt
+\[
+\emptyset
+<
+\mathsf{in}(\lambda_1)=\{a_1\},
+\]
+wodurch \(\operatorname{Max}_F^1\) falsch und damit das Antezedens der
+Implikation deaktiviert wird. Auf diese Weise werden Belegungen, die
+keine \emph{preferred}-Labellings kodieren, korrekt von der
+Rekombinationsanforderung ausgeschlossen.
+
+Kodieren \(\mathbf V^1\) und \(\mathbf V^2\) dagegen
+\(\lambda_1\) beziehungsweise \(\lambda_2\), so verlangt
+\(\operatorname{Mix}^{1,2,3}_{X,Y\mid Z}\), dass das dritte Labelling
+sowohl \(a_1\) als auch \(a_2\) mit \(\mathsf{in}\) bezeichnet. Ein
+solches \emph{complete}- und damit auch kein solches
+\emph{preferred}-Labelling existiert. Folglich ist
+\[
+\Phi_{F_{\leftrightarrow}}^{\mathsf{pr}}
+    (\{a_1\},\{a_2\}\mid\emptyset)
+\]
+falsch. Für \(n=2\) enthält die pränexe Formel \(36\) quantifizierte
+Variablen und besitzt die Blockstruktur
+\[
+\underbrace{\forall\,12}_{\mathbf V^1,\mathbf V^2}\;
+\underbrace{\exists\,18}_{\mathbf V^3,
+    \widehat{\mathbf V}^{1},\widehat{\mathbf V}^{2}}\;
+\underbrace{\forall\,6}_{\widehat{\mathbf V}^{3}}.
+\]
+\end{Example}
+
+\section{Übersetzung in das QCIR-G14-Format}
+\label{sec:preferred-qcir}
+
+QuAbS verarbeitet die QBF als booleschen Schaltkreis im Format
+\texttt{QCIR-G14}. Quantifizierte Variablen und Gatter werden dabei
+durch positive ganzzahlige Bezeichner repräsentiert; ein negatives
+Vorzeichen bezeichnet die Negation eines Variablen- oder
+Gatterausgangs. Konjunktionen und Disjunktionen werden durch
+\texttt{and}- beziehungsweise \texttt{or}-Gatter dargestellt.
+
+\subsection{Variablen- und Gatterbelegung}
+
+Die Implementierung verwendet sechs Labellingkopien:
+\[
+\mathbf V^1,\quad
+\mathbf V^2,\quad
+\mathbf V^3,\quad
+\widehat{\mathbf V}^{1},\quad
+\widehat{\mathbf V}^{2},\quad
+\widehat{\mathbf V}^{3}.
+\]
+Sie werden intern als Kopien \(k=1,\ldots,6\) geführt. Für
+\(A=\{1,\ldots,n\}\) lautet die Variablenzuordnung
+\[
+\begin{aligned}
+\operatorname{id}(i_a^k)
+    &=(k-1)3n+a,\\
+\operatorname{id}(o_a^k)
+    &=(k-1)3n+n+a,\\
+\operatorname{id}(u_a^k)
+    &=(k-1)3n+2n+a.
+\end{aligned}
+\]
+Innerhalb jeder Kopie werden somit zuerst alle
+\(\mathsf{in}\)-Variablen, anschließend alle
+\(\mathsf{out}\)-Variablen und zuletzt alle
+\(\mathsf{und}\)-Variablen ausgegeben. Die IDs \(1,\ldots,18n\) sind
+quantifizierten Variablen vorbehalten; das erste Gatter erhält die ID
+\(18n+1\).
+
+Der Quantorenpräfix wird blockweise durch
+\texttt{forall(...)} und \texttt{exists(...)} dargestellt. Aufeinander
+folgende gleichartige Zeilen gehören zum selben Quantorenblock. Danach
+bestimmt
+\[
+\texttt{output(}g_{\Phi}\texttt{)}
+\]
+das Ausgabegatter der gesamten QBF.
+
+Jede zusammengesetzte Teilformel erhält ein eigenes Gatter. Für
+Literale \(\ell_1,\ldots,\ell_m\) werden insbesondere
+\[
+\begin{array}{rcl}
+\ell_1\land\cdots\land\ell_m
+    &\longmapsto&
+    \texttt{g = and(}\ell_1\texttt{, \ldots, }\ell_m\texttt{)},\\
+\ell_1\lor\cdots\lor\ell_m
+    &\longmapsto&
+    \texttt{g = or(}\ell_1\texttt{, \ldots, }\ell_m\texttt{)}
+\end{array}
+\]
+verwendet. Eine Äquivalenz wird ausschließlich durch
+\texttt{and}- und \texttt{or}-Gatter ausgedrückt:
+\[
+x\leftrightarrow y
+\equiv
+(\neg x\lor y)\land(x\lor\neg y).
+\]
+Die Maximalitätsbedingung
+\[
+\neg\bigl(
+    \operatorname{Co}_F(\widehat{\mathbf V}^{k})
+    \land I^k<\widehat I^k
+\bigr)
+\]
+wird daher durch
+\[
+\texttt{g\_max = or(-g\_cohat, -g\_lt)}
+\]
+repräsentiert. Für die äußere Implikation
+\(\mathcal A_F\rightarrow\mathcal C_F\) entsteht schließlich das
+Ausgabegatter
+\[
+\texttt{g\_phi = or(-g\_A, g\_C)}.
+\]
+Die leere Konjunktion \texttt{and()} repräsentiert \(\top\). Dies tritt
+beispielsweise bei
+\(\operatorname{Eq}^{j,k}_{\emptyset}\) sowie bei der
+\emph{complete}-Kodierung eines Arguments ohne Angreifer auf.
+
+\paragraph{Minimales Syntaxbeispiel.}
+Die wahre QBF
+\[
+\forall x\,\exists y\,
+\bigl((x\lor\neg y)\land(\neg x\lor y)\bigr)
+\]
+erhält die folgende vollständige QCIR-Darstellung:
+\begin{lstlisting}[
+    language={},
+    caption={Minimale pränexe QCIR-G14-Eingabe},
+    label={lst:qcir-minimal}
+]
+#QCIR-G14 5
+forall(1)
+exists(2)
+output(5)
+3 = or(1, -2)
+4 = or(-1, 2)
+5 = and(3, 4)
+\end{lstlisting}
+Für jede Belegung von \(x\) kann \(y=x\) gewählt werden. QuAbS gibt
+daher \texttt{r SAT} aus. Die Zahl hinter \texttt{\#QCIR-G14} gibt die
+höchste verwendete ID an. QuAbS akzeptiert außerdem die vom
+vorliegenden Übersetzer erzeugte Kurzform \texttt{\#QCIR-G14}.
+
+\subsection{Übersetzung des Zweizyklen-Beispiels}
+
+Der AF aus Beispiel~\ref{ex:preferred-prenex-two-cycle} wird im
+verwendeten ICCMA-Format durch
+\begin{lstlisting}[
+    language={},
+    caption={ICCMA-Darstellung des Zweizyklus},
+    label={lst:iccma-preferred-two-cycle}
+]
+p af 2
+# a1
+# a2
+1 2
+2 1
+\end{lstlisting}
+beschrieben. Die beiden letzten Zeilen repräsentieren die Angriffe
+\(a_1\rightarrow a_2\) und \(a_2\rightarrow a_1\).
+
+Für \(X=\{a_1\}\), \(Y=\{a_2\}\) und \(Z=\emptyset\) kann die
+QCIR-Datei durch
+\begin{lstlisting}[language={}]
+python3 af_to_prind_qcir.py zweizyklus.af -x 1 -y 2 \
+    -o zweizyklus.qcir
+\end{lstlisting}
+erzeugt werden. Da \(n=2\) gilt, belegt jede Labellingkopie sechs
+Variablen. Der erzeugte Quantorenpräfix lautet:
+\begin{lstlisting}[
+    language={},
+    caption={QCIR-Präfix des Zweizyklen-Beispiels},
+    label={lst:qcir-prefix-two-cycle}
+]
+#QCIR-G14
+forall(1, 2, 3, 4, 5, 6)
+forall(7, 8, 9, 10, 11, 12)
+exists(13, 14, 15, 16, 17, 18)
+exists(19, 20, 21, 22, 23, 24)
+exists(25, 26, 27, 28, 29, 30)
+forall(31, 32, 33, 34, 35, 36)
+output(253)
+\end{lstlisting}
+Dabei entsprechen die IDs \(1,\ldots,6\) dem Block
+\(\mathbf V^1\), die IDs \(7,\ldots,12\) dem Block
+\(\mathbf V^2\) und die IDs \(13,\ldots,18\) dem Block
+\(\mathbf V^3\). Die Bereiche \(19,\ldots,24\),
+\(25,\ldots,30\) und \(31,\ldots,36\) repräsentieren
+\(\widehat{\mathbf V}^{1}\),
+\(\widehat{\mathbf V}^{2}\) beziehungsweise
+\(\widehat{\mathbf V}^{3}\).
+
+Der folgende Auszug zeigt exemplarisch die Schaltkreisübersetzung. Die
+ersten fünf Gatter erzwingen für \(a_1\) in \(\mathbf V^1\) genau eines
+der drei Labels. Die Gatter \(205\) bis \(211\) kodieren die echte
+Inklusion \(I^1<\widehat I^1\). Die abschließenden Gatter setzen die
+Antezedens- und Konsequensbausteine zur Gesamtformel zusammen.
+\begin{lstlisting}[
+    language={},
+    caption={Auszug aus der QCIR-Schaltkreismatrix},
+    label={lst:qcir-gates-two-cycle}
+]
+37 = or(1, 3, 5)
+38 = or(-1, -3)
+39 = or(-1, -5)
+40 = or(-5, -3)
+41 = and(37, 38, 39, 40)
+
+# I^1 < I^1hat
+205 = or(-1, 19)
+206 = or(-2, 20)
+207 = and(205, 206)
+208 = and(19, -1)
+209 = and(20, -2)
+210 = or(208, 209)
+211 = and(207, 210)
+
+# Maximalitaetsbedingungen
+226 = or(-148, -211)
+227 = or(-176, -218)
+228 = or(-204, -225)
+
+# Gleichheit auf dem leeren Z
+229 = and()
+250 = and()
+
+# Antezedens, Konsequens und Implikation
+251 = and(64, 92, 229, 226, 227)
+252 = and(120, 239, 249, 250, 228)
+253 = or(-251, 252)
+\end{lstlisting}
+Hier bezeichnen die Gatter \(64\), \(92\) und \(120\) die
+\emph{complete}-Kodierungen von
+\(\mathbf V^1\), \(\mathbf V^2\) und \(\mathbf V^3\). Die Gatter
+\(148\), \(176\) und \(204\) kodieren die entsprechenden
+Vergleichslabellings. Die Gatter \(239\) und \(249\) stellen die
+Gleichheit auf \(X\) beziehungsweise \(Y\) sicher.
+
+Der Solver wird anschließend ohne weitere Formatkonvertierung
+aufgerufen:
+\begin{lstlisting}[language={}]
+$QUABS zweizyklus.qcir
+r UNSAT
+\end{lstlisting}
+Das Ergebnis stimmt mit der semantischen Betrachtung aus
+Beispiel~\ref{ex:preferred-prenex-two-cycle} überein: Das erforderliche
+rekombinierende \emph{preferred}-Labelling existiert nicht. Im
+verwendeten Auswertungsschema entspricht \texttt{UNSAT} daher dem
+Status \texttt{AB}; \texttt{SAT} würde den Status \texttt{UNAB}
+bezeichnen.
+
+

@@ -1,0 +1,634 @@
+\chapter{Implementierung und Ausführung der QBF-Übersetzer}
+\label{ch:appendix-qbf-tools}
+
+Dieses Kapitel dokumentiert die Programme, mit denen Anfragen der Form
+\(X\perp_\sigma Y\mid Z\) in quantifizierte boolesche Formeln
+übersetzt und mit QuAbS ausgewertet werden. Berücksichtigt werden die
+Semantiken
+\(\sigma\in\{\mathsf{st},\mathsf{co},\mathsf{pr}\}\).
+
+Die mathematische Herleitung der Kodierungen wurde in
+Kapitel~\ref{ch:semantic-independence} behandelt. Im Mittelpunkt dieses
+Kapitels stehen der Aufbau der Implementierung, die erwarteten
+Ein- und Ausgaben sowie die reproduzierbare Ausführung der Programme.
+
+Die Übersetzer erzeugen unmittelbar Dateien im schaltkreisbasierten
+Format \texttt{QCIR-G14}. Die erzeugten Dateien können direkt an den 
+QBF-Solver QuAbS übergeben werden.
+
+\section{Werkzeuge und Einzelübersetzung}
+\label{sec:appendix-qbf-single-translation}
+
+\paragraph{Dateien und Verzeichnisstruktur.}
+
+Die vier betrachteten Dateien und ihre Aufgaben sind in
+Tabelle~\ref{tab:appendix-qbf-files} zusammengefasst.
+
+\begin{table}[htb]
+    \centering
+    \begin{tabularx}{\textwidth}{@{}lX@{}}
+        \toprule
+        Datei & Aufgabe\\
+        \midrule
+        \texttt{af\_to\_stind\_qcir.py}
+            & Übersetzt eine Anfrage zur
+              \emph{stable}-Unabhängigkeit in \texttt{QCIR-G14}.\\
+        \texttt{af\_to\_coind\_qcir.py}
+            & Übersetzt eine Anfrage zur
+              \emph{complete}-Unabhängigkeit in \texttt{QCIR-G14}.\\
+        \texttt{af\_to\_prind\_qcir.py}
+            & Übersetzt eine Anfrage zur
+              \emph{preferred}-Unabhängigkeit einschließlich der
+              Maximalitätsprüfung in \texttt{QCIR-G14}.\\
+        \texttt{run\_batch\_singleton\_z.sh}
+            & Führt die drei Übersetzer auf mehreren AFs und
+              reproduzierbar gewählten Singleton-Anfragen aus, startet
+              QuAbS und erfasst die Ergebnisse in CSV-Dateien.\\
+        \bottomrule
+    \end{tabularx}
+    \caption{Dateien der QBF-basierten Auswertung}
+    \label{tab:appendix-qbf-files}
+\end{table}
+Das Batchskript enthält zusätzlich eine optionale Phase zur Zählung von
+Extensionen. Diese Phase gehört nicht zum hier dokumentierten
+Dateiumfang. Deshalb wird sie in allen nachfolgenden Beispielaufrufen
+mit \path{RUN_EXTENSION_COUNT=0} deaktiviert.
+
+Bei Verwendung der im Batchskript hinterlegten Standardpfade wird die
+folgende Verzeichnisstruktur erwartet:
+\begin{lstlisting}[language={}]
+Code/
+|-- translate/
+|   |-- af_to_stind_qcir.py
+|   |-- af_to_coind_qcir.py
+|   |-- af_to_prind_qcir.py
+|   `-- run_batch_singleton_z.sh
+|-- Test_Instances/
+|   `-- final_curation/
+|       `-- *.af
+`-- quabs/
+    `-- build/
+        `-- quabs
+\end{lstlisting}
+
+Wird das Batchskript aus dem Verzeichnis
+\texttt{Code/translate} gestartet, entstehen standardmäßig die
+folgenden Ausgaben:
+\begin{lstlisting}[language={}]
+out_singleton_z/
+|-- stable/
+|-- complete/
+`-- preferred/
+
+results_singleton_z_stable.csv
+results_singleton_z_complete.csv
+results_singleton_z_preferred.csv
+\end{lstlisting}
+
+Die Eingabe-, Werkzeug- und Ausgabepfade können über
+Umgebungsvariablen angepasst werden. Dabei ist zu beachten, dass die
+Standardpfade der Ergebnisdateien und des Verzeichnisses
+\texttt{out\_singleton\_z} relativ zum aktuellen Arbeitsverzeichnis
+ausgewertet werden.
+
+\paragraph{Voraussetzungen.}
+
+Für die einzelnen Python-Übersetzer werden lediglich Python ab
+Version~3.10 und die Python-Standardbibliothek benötigt. Die
+Batchausführung setzt zusätzlich eine Linux- oder WSL-Umgebung mit
+Bash ab Version~4.3 sowie üblichen GNU-Werkzeugen voraus. Hierzu zählen
+insbesondere \texttt{awk}, \texttt{grep}, \texttt{sort},
+\texttt{sha256sum}, \texttt{timeout} und \texttt{wc}. Bei paralleler
+Ausführung wird außerdem \texttt{flock} benötigt.
+
+Sofern nicht ausschließlich QCIR-Dateien erzeugt werden sollen, muss
+eine ausführbare QuAbS-Binärdatei vorhanden sein. Ihr Pfad kann durch
+die Umgebungsvariable \texttt{QUABS} festgelegt werden. Ohne explizite
+Angabe verwendet das Batchskript
+\texttt{../quabs/build/quabs} relativ zum übergeordneten
+\texttt{Code}-Verzeichnis.
+
+
+\paragraph{Eingabeformat.}
+
+Die Übersetzer erwarten einen AF im ICCMA-Format. Die erste Zeile gibt
+mit \texttt{p af \(n\)} die Anzahl der Argumente an. Optionale
+Kommentarzeilen können anschließend die Argumentnamen in der
+Reihenfolge ihrer 1-basierten Indizes festlegen. Eine Zeile
+\texttt{\(i\) \(j\)} repräsentiert einen Angriff vom Argument \(i\) auf
+das Argument \(j\).
+
+\begin{Example}[ICCMA-Darstellung eines Zweizyklus]
+\label{ex:appendix-qbf-af-input}
+Der Zweizyklus
+\[
+F_{\leftrightarrow}
+=
+\bigl(
+    \{a_1,a_2\},
+    \{(a_1,a_2),(a_2,a_1)\}
+\bigr)
+\]
+wird beispielsweise folgendermaßen dargestellt:
+\begin{lstlisting}[
+    language={},
+    caption={AF im ICCMA-Format},
+    label={lst:appendix-qbf-af-example}
+]
+p af 2
+# a1
+# a2
+1 2
+2 1
+\end{lstlisting}
+\end{Example}
+
+Werden keine Namen angegeben, verwenden die Programme automatisch
+\texttt{a1},\ldots,\texttt{a\(n\)}. Werden Namenskommentare verwendet,
+sollten genau \(n\) eindeutige Namen angegeben werden.
+
+Die Mengen \(X\), \(Y\) und \(Z\) werden über die Optionen
+\texttt{-x}, \texttt{-y} und \texttt{-z} als kommaseparierte Listen
+übergeben. Sie müssen paarweise disjunkt sein und dürfen intern keine
+Duplikate enthalten. Die Programme akzeptieren sowohl Argumentnamen
+als auch 1-basierte Indizes:
+\begin{description}
+    \item[\texttt{--argument-mode auto}]
+        Namen werden bevorzugt; nicht als Name erkannte Eingaben
+        werden als Indizes interpretiert. Dies ist der Standardmodus.
+    \item[\texttt{--argument-mode index}]
+        Sämtliche Angaben werden ausdrücklich als 1-basierte Indizes
+        interpretiert. Das Batchskript verwendet stets diesen Modus.
+\end{description}
+
+\paragraph{Aufbau der Übersetzer und der QCIR-Ausgabe.}
+
+Alle drei Programme folgen demselben grundlegenden Ablauf:
+\begin{enumerate}
+    \item Einlesen des AF und Aufbau der Angreifermengen,
+    \item Einlesen und Validieren von \(X\), \(Y\) und \(Z\),
+    \item Vergabe numerischer IDs für die quantifizierten Variablen,
+    \item Erzeugung der semantikspezifischen Gatter sowie der
+          Gleichheits- und Rekombinationsbedingungen,
+    \item Ausgabe der QCIR-Datei. Sie umfasst Header und
+          Quantorenpräfix sowie Ausgabegatter und Schaltkreismatrix.
+\end{enumerate}
+Die wesentlichen semantikspezifischen Unterschiede sind in
+Tabelle~\ref{tab:appendix-qbf-encodings} zusammengefasst.
+
+\begin{table}[htb]
+    \centering
+    \begin{tabularx}{\textwidth}{@{}lclX@{}}
+        \toprule
+        Semantik & Variablen & Präfix & Repräsentation\\
+        \midrule
+        \(\mathsf{st}\)
+            & \(3n\)
+            & \(\forall I^1\,\forall I^2\,\exists I^3\)
+            & Eine In-Variable je Argument und Labellingkopie.\\
+        \(\mathsf{co}\)
+            & \(9n\)
+            & \(\forall\mathbf V^1\,
+               \forall\mathbf V^2\,
+               \exists\mathbf V^3\)
+            & Drei Variablen für die Labels
+              \(\mathsf{in}\), \(\mathsf{out}\) und
+              \(\mathsf{und}\).\\
+        \(\mathsf{pr}\)
+            & \(18n\)
+            & \(\forall\mathbf V^1\,
+               \forall\mathbf V^2\,
+               \exists\mathbf V^3\,
+               \exists\widehat{\mathbf V}^{1}\,
+               \exists\widehat{\mathbf V}^{2}\,
+               \forall\widehat{\mathbf V}^{3}\)
+            & Drei Haupt- und drei Vergleichskopien zur Prüfung
+              maximaler In-Mengen.\\
+        \bottomrule
+    \end{tabularx}
+    \caption{Struktur der semantikspezifischen QCIR-Kodierungen}
+    \label{tab:appendix-qbf-encodings}
+\end{table}
+
+Die QCIR-Ausgabe besteht jeweils aus
+\begin{enumerate}
+    \item der Kopfzeile \texttt{\#QCIR-G14} und kommentierten Metadaten,
+    \item dem semantikspezifischen Quantorenpräfix,
+    \item einer Anweisung \texttt{output(\(g\))} für das oberste Gatter
+          und
+    \item fortlaufend nummerierten \texttt{and}- und
+          \texttt{or}-Gattern.
+\end{enumerate}
+Negative Gatter- oder Variablen-IDs bezeichnen Negationen.
+
+\begin{Example}[Stable-Kodierung des Zweizyklus]
+\label{ex:appendix-qbf-stable-encoding}
+Als durchgängiges Beispiel dient der Zweizyklus
+\(F_{\leftrightarrow}\) aus
+Beispiel~\ref{ex:appendix-qbf-af-input}. Seine ICCMA-Darstellung ist in
+Listing~\ref{lst:appendix-qbf-af-example} angegeben. Betrachtet wird die Anfrage
+\(
+    X=\{a_1\},
+    Y=\{a_2\},
+    Z=\emptyset.
+\)
+Die beiden \emph{stable}-Labellings des AFs sind durch
+\(
+    \mathsf{in}(\lambda_1)=\{a_1\}
+    \text{ und }
+    \mathsf{in}(\lambda_2)=\{a_2\}
+\)
+gegeben.
+
+Da \emph{stable}-Labellings keine mit \(\mathsf{und}\) bezeichneten
+Argumente enthalten, werden in der Implementierung ausschließlich
+In-Variablen verwendet. Für jede Labellingkopie
+\(I^k=\{i_a^k\mid a\in A\}\) lautet die verwendete Kodierung
+\[
+    \operatorname{St}^{I}_F(I^k)
+    :=
+    \bigwedge_{a\in A}
+    \left(
+        i_a^k
+        \leftrightarrow
+        \bigwedge_{b\in a^-}\neg i_b^k
+    \right).
+\]
+Eine Variable \(i_a^k\) ist somit genau dann wahr, wenn keiner der
+Angreifer von \(a\) in der zugehörigen In-Menge enthalten ist.
+
+Für den Zweizyklus gilt daher
+\[
+\begin{split}
+    \operatorname{St}^{I}_{F_{\leftrightarrow}}(I^k)
+    =
+    (i_{a_1}^k\leftrightarrow\neg i_{a_2}^k)
+    \land
+    (i_{a_2}^k\leftrightarrow\neg i_{a_1}^k).
+\end{split}
+\]
+Da Gleichheitsbedingungen über der leeren Menge wahr sind, vereinfacht
+sich die QBF der Anfrage zu
+\[
+\begin{split}
+    \Phi^{\mathsf{st}}_{F_{\leftrightarrow}}
+        (\{a_1\},\{a_2\}\mid\emptyset)
+    :=
+    \forall I^1\,\forall I^2\,\exists I^3\,
+    \Bigl(
+        &\operatorname{St}^{I}_{F_{\leftrightarrow}}(I^1)
+        \land
+        \operatorname{St}^{I}_{F_{\leftrightarrow}}(I^2)
+        \\
+        {}\rightarrow{}&
+        \operatorname{St}^{I}_{F_{\leftrightarrow}}(I^3)
+        \land
+        (i_{a_1}^1\leftrightarrow i_{a_1}^3)
+        \land
+        (i_{a_2}^2\leftrightarrow i_{a_2}^3)
+    \Bigr).
+\end{split}
+\]
+Der Existenzquantor über \(I^3\) kann in das Präfix gezogen werden, da
+dessen Variablen nicht in der Prämisse vorkommen.
+\begin{table}[H]
+    \centering
+    \begin{tabularx}{\textwidth}{@{}clX@{}}
+        \toprule
+        QCIR-IDs & Variablen & Funktion\\
+        \midrule
+        \(1,2\)
+            & \(i_{a_1}^1,i_{a_2}^1\)
+            & Erste universell quantifizierte Labellingkopie.\\
+        \(3,4\)
+            & \(i_{a_1}^2,i_{a_2}^2\)
+            & Zweite universell quantifizierte Labellingkopie.\\
+        \(5,6\)
+            & \(i_{a_1}^3,i_{a_2}^3\)
+            & Existentiell quantifizierte Rekombination.\\
+        \(7,\ldots,46\)
+            & Hilfsgatter
+            & Semantik-, Gleichheits- und Implikationsgatter.\\
+        \bottomrule
+    \end{tabularx}
+    \caption{Variablenabbildung des Stable-Beispiels}
+    \label{tab:appendix-qbf-stable-variables}
+\end{table}
+Die Zuordnung der QCIR-IDs ist in
+Tabelle~\ref{tab:appendix-qbf-stable-variables} zusammengefasst.
+
+Äquivalenzen werden gemäß
+\(
+    u\leftrightarrow v
+    \equiv
+    (\neg u\lor v)\land(u\lor\neg v)
+\)
+in \texttt{and}- und \texttt{or}-Gatter zerlegt. Die abschließende
+Implikation wird als \(\neg A\lor B\) ausgegeben. Dadurch entsteht die
+folgende vollständige QuAbS-Eingabe:
+
+\begin{lstlisting}[
+    language={},
+    caption={QCIR-G14-Eingabe des Stable-Beispiels},
+    label={lst:appendix-qbf-stable-qcir-example}
+]
+#QCIR-G14
+# AF source: beispiel.af
+# |A| = 2
+# X = {a1}
+# Y = {a2}
+# Z = {}
+# Variablen-Mapping:
+#   I^1: 1..2, I^2: 3..4, I^3: 5..6
+
+forall(1, 2)
+forall(3, 4)
+exists(5, 6)
+output(46)
+
+7 = and(-2)
+8 = or(-1, 7)
+9 = or(1, -7)
+10 = and(8, 9)
+11 = and(-1)
+12 = or(-2, 11)
+13 = or(2, -11)
+14 = and(12, 13)
+15 = and(10, 14)
+16 = and(-4)
+17 = or(-3, 16)
+18 = or(3, -16)
+19 = and(17, 18)
+20 = and(-3)
+21 = or(-4, 20)
+22 = or(4, -20)
+23 = and(21, 22)
+24 = and(19, 23)
+25 = and(-6)
+26 = or(-5, 25)
+27 = or(5, -25)
+28 = and(26, 27)
+29 = and(-5)
+30 = or(-6, 29)
+31 = or(6, -29)
+32 = and(30, 31)
+33 = and(28, 32)
+34 = and()
+35 = or(-1, 5)
+36 = or(1, -5)
+37 = and(35, 36)
+38 = and(37)
+39 = or(-4, 6)
+40 = or(4, -6)
+41 = and(39, 40)
+42 = and(41)
+43 = and()
+44 = and(15, 24, 34)
+45 = and(33, 38, 42, 43)
+46 = or(-44, 45)
+\end{lstlisting}
+Die drei Gattergruppen kodieren jeweils eine Kopie des
+\emph{stable}-Labellings: \texttt{7} bis \texttt{15},
+\texttt{16} bis \texttt{24} und \texttt{25} bis \texttt{33}.
+Die Gatter \texttt{35} bis \texttt{38} erzwingen die Übereinstimmung
+auf \(X\), die Gatter \texttt{39} bis \texttt{42} entsprechend auf
+\(Y\). Die Gatter \texttt{34} und
+\texttt{43} repräsentieren mit \texttt{and()} die wahre leere
+Konjunktion für \(Z=\emptyset\). Schließlich bilden \texttt{44} die
+Prämisse, \texttt{45} die Konklusion und \texttt{46} die Implikation.
+
+Die entscheidende Ergebniszeile des Solveraufrufs lautet:
+\begin{lstlisting}[language={}]
+$QUABS out/beispiel_stable.qcir
+r UNSAT
+\end{lstlisting}
+Zur Begründung können die universellen Blöcke die beiden
+\emph{stable}-Labellings mit
+\(
+    I^1=(1,0)
+    \text{ und }
+    I^2=(0,1)
+\)
+kodieren. Die Gleichheitsbedingungen würden dann für \(I^3\) sowohl
+\(i_{a_1}^3=1\) als auch \(i_{a_2}^3=1\) verlangen. Wegen des
+gegenseitigen Angriffs ist \(\{a_1,a_2\}\) jedoch keine stabile
+In-Menge. Es existiert somit keine passende Belegung von \(I^3\).
+Die QBF ist falsch und entsprechend gilt
+\(
+    \{a_1\}
+    \not\perp_{\mathsf{st}}
+    \{a_2\}
+    \mid\emptyset.
+\)
+\end{Example}
+
+\paragraph{Einzelübersetzung und Solveraufruf.}
+
+Zunächst wird ein vorhandenes Zielverzeichnis für die QCIR-Dateien
+angelegt:
+\begin{lstlisting}[language={}]
+mkdir -p out
+\end{lstlisting}
+Für \(X=\{a_1\}\), \(Y=\{a_2\}\) und \(Z=\emptyset\) können anschließend
+die drei Kodierungen erzeugt werden:
+\begin{lstlisting}[
+    language={},
+    caption={Erzeugung der drei QCIR-Kodierungen},
+    label={lst:appendix-qbf-translation}
+]
+python3 af_to_stind_qcir.py beispiel.af \
+    --argument-mode index -x 1 -y 2 -z "" \
+    -o out/beispiel_stable.qcir
+
+python3 af_to_coind_qcir.py beispiel.af \
+    --argument-mode index -x 1 -y 2 -z "" \
+    -o out/beispiel_complete.qcir
+
+python3 af_to_prind_qcir.py beispiel.af \
+    --argument-mode index -x 1 -y 2 -z "" \
+    -o out/beispiel_preferred.qcir
+\end{lstlisting}
+Ohne \texttt{-o} schreiben die Programme die erzeugte QCIR-Darstellung
+auf die Standardausgabe. Bei Verwendung von \texttt{-o} muss das
+übergeordnete Zielverzeichnis bereits existieren.
+
+Eine erzeugte Datei wird QuAbS unmittelbar als Positionsargument
+übergeben:
+\begin{lstlisting}[language={}]
+$QUABS out/beispiel_preferred.qcir
+\end{lstlisting}
+QuAbS gibt für eine wahre QBF \texttt{r SAT} und für eine falsche QBF
+\texttt{r UNSAT} aus. In der vorliegenden Kodierung bedeutet
+\texttt{SAT}, dass die untersuchte bedingte Unabhängigkeit gilt;
+\texttt{UNSAT} bezeichnet entsprechend eine Abhängigkeit.
+
+\section{Batchausführung und Ergebnisdateien}
+\label{sec:appendix-qbf-batch-execution}
+
+\paragraph{Batchablauf.}
+
+Das Batchskript führt die drei Semantikphasen in der festen Reihenfolge
+\emph{stable}, \emph{complete} und \emph{preferred} aus. Innerhalb
+jeder Phase werden die ausgewählten AFs verarbeitet, bevor die nächste
+Semantik beginnt.
+
+Für jeden berücksichtigten AF führt das Skript die folgenden Schritte
+aus:
+\begin{enumerate}
+    \item reproduzierbare Auswahl ungeordneter Singleton-Paare
+          \(X=\{x\}\) und \(Y=\{y\}\),
+    \item Erzeugung von sechs unabhängig gezogenen
+          Konditionierungsmengen \(Z_0,\ldots,Z_5\),
+    \item Übersetzung jeder Anfrage durch das zugehörige
+          Python-Programm,
+    \item Ausführung von QuAbS mit einem Zeitlimit und
+    \item Erfassung von Anfrage, Formelgröße, Laufzeit und Ergebnis in
+          der semantikspezifischen CSV-Datei.
+\end{enumerate}
+Standardmäßig werden fünf Argumentpaare je AF verwendet. Dabei gilt
+\[
+|Z_0|=0,
+\qquad
+|Z_5|=
+\begin{cases}
+\lfloor n/5\rfloor,
+    &\text{für }\mathsf{st}\text{ und }\mathsf{co},\\
+\lfloor n/10\rfloor,
+    &\text{für }\mathsf{pr}.
+\end{cases}
+\]
+Die vier Zwischengrößen werden gleichmäßig zwischen diesen Werten
+verteilt. Die \(Z\)-Mengen werden für jedes Level neu gezogen und sind
+daher im Allgemeinen nicht ineinander enthalten. Sie bleiben stets
+disjunkt zu \(\{x,y\}\).
+
+\paragraph{Aufruf und Konfiguration.}
+Das Skript wird zweckmäßig aus seinem eigenen Verzeichnis gestartet:
+\begin{lstlisting}[language={}]
+cd Code/translate
+chmod +x run_batch_singleton_z.sh
+RUN_EXTENSION_COUNT=0 ./run_batch_singleton_z.sh
+\end{lstlisting}
+Ohne weiteres Argument verwendet das Skript den voreingestellten
+AF-Ordner. Dieser lautet \path{../Test_Instances/final_curation}.
+Ein abweichender Ordner kann als erstes Positionsargument angegeben werden:
+\begin{lstlisting}[language={}]
+RUN_EXTENSION_COUNT=0 \
+./run_batch_singleton_z.sh /pfad/zu/af-dateien
+\end{lstlisting}
+Für einen kurzen Funktionstest mit einer einzelnen kleinen Instanz
+eignet sich beispielsweise:
+\begin{lstlisting}[
+    language={},
+    caption={Kleiner reproduzierbarer Batchtest},
+    label={lst:appendix-qbf-batch-smoke-test}
+]
+MIN_SIZE=2 LIMIT=1 NUM_PAIRS=1 KEEP_QCIR=1 \
+RUN_EXTENSION_COUNT=0 \
+./run_batch_singleton_z.sh /pfad/zu/af-dateien
+\end{lstlisting}
+Die explizite Angabe \texttt{MIN\_SIZE=2} ist erforderlich, weil der
+Standardwert \(100\) beträgt und kleine Testinstanzen andernfalls
+übersprungen werden.
+
+\begin{table}[htb]
+    \centering
+    \begin{tabularx}{\textwidth}{@{}lcX@{}}
+        \toprule
+        Variable & Standard & Bedeutung\\
+        \midrule
+        \texttt{MIN\_SIZE} & \(100\)
+            & Kleinste berücksichtigte Argumentzahl.\\
+        \texttt{MAX\_SIZE} & \(1000\)
+            & Größte berücksichtigte Argumentzahl.\\
+        \texttt{LIMIT} & \(0\)
+            & Maximale Zahl von AF-Dateien; \(0\) bedeutet ohne
+              Begrenzung.\\
+        \texttt{NUM\_PAIRS} & \(5\)
+            & Zahl der Singleton-Paare je AF.\\
+        \texttt{SEED} & \(42\)
+            & Ausgangswert der reproduzierbaren Zufallsauswahl.\\
+        \texttt{TIMEOUT\_S} & \(600\)
+            & Zeitlimit eines QuAbS-Aufrufs in Sekunden.\\
+        \texttt{PARALLEL\_JOBS} & \(1\)
+            & Maximale Zahl gleichzeitig bearbeiteter AFs innerhalb
+              einer Semantikphase.\\
+        \texttt{KEEP\_QCIR} & \(0\)
+            & Bei \(1\) bleiben die erzeugten QCIR-Dateien erhalten.\\
+        \texttt{TRANSLATE\_ONLY} & \(0\)
+            & Bei \(1\) wird QuAbS nicht gestartet.\\
+        \texttt{RESUME} & \(1\)
+            & Bereits in der jeweiligen CSV enthaltene Anfragen werden
+              übersprungen.\\
+        \texttt{RUN\_STABLE} & \(1\)
+            & Aktiviert die \emph{stable}-Phase.\\
+        \texttt{RUN\_COMPLETE} & \(1\)
+            & Aktiviert die \emph{complete}-Phase.\\
+        \texttt{RUN\_PREFERRED} & \(1\)
+            & Aktiviert die \emph{preferred}-Phase.\\
+        \texttt{RUN\_EXTENSION\_COUNT} & \(1\)
+            & Aktiviert die hier nicht betrachtete Extensionszählung;
+              für den dokumentierten Dateiumfang ist \(0\) zu setzen.\\
+        \bottomrule
+    \end{tabularx}
+    \caption{Zentrale Parameter des Batchskripts}
+    \label{tab:appendix-qbf-batch-options}
+\end{table}
+
+\paragraph{Ergebnisdateien und Statuswerte.}
+Für jede Semantik wird eine eigene CSV-Datei erzeugt. Ihre Spalten
+lassen sich in fünf Gruppen einteilen:
+\begin{description}
+    \item[Instanz:]
+        \texttt{instance}, \texttt{n} und \texttt{R};
+    \item[Anfrage:]
+        \texttt{pair\_index}, \texttt{x}, \texttt{y},
+        \texttt{attack}, \texttt{z\_level}, \texttt{z\_size} und
+        \texttt{z\_args};
+    \item[Formelgröße:]
+        \path{qbf_vars}, \path{qbf_gates} und \path{qbf_bytes};
+    \item[Laufzeit:]
+        \path{translate_seconds} und \path{solve_seconds};
+    \item[Ergebnis:]
+        \texttt{status}, \texttt{solver\_exit\_code},
+        \texttt{solver\_message} und \texttt{independent}.
+\end{description}
+Die wichtigsten Statuswerte besitzen folgende Bedeutung:
+\begin{table}[htb]
+    \centering
+    \begin{tabularx}{\textwidth}{@{}lcX@{}}
+        \toprule
+        Status & \texttt{independent} & Bedeutung\\
+        \midrule
+        \texttt{SAT} & \texttt{yes}
+            & Die kodierte bedingte Unabhängigkeit gilt.\\
+        \texttt{UNSAT} & \texttt{no}
+            & Die kodierte bedingte Unabhängigkeit gilt nicht.\\
+        \texttt{TIMEOUT} & \texttt{?}
+            & QuAbS überschritt das vorgegebene Zeitlimit.\\
+        \texttt{TRANSLATE\_ERR} & \texttt{?}
+            & Die QCIR-Datei konnte nicht erzeugt werden.\\
+        \texttt{SOLVER\_ERR} & \texttt{?}
+            & QuAbS lieferte kein auswertbares Ergebnis.\\
+        \texttt{TRANSLATED} & \texttt{?}
+            & Die Datei wurde mit
+              \texttt{TRANSLATE\_ONLY=1} erzeugt, aber nicht gelöst.\\
+        \bottomrule
+    \end{tabularx}
+    \caption{Statuswerte der Batchausführung}
+    \label{tab:appendix-qbf-status}
+\end{table}
+
+QuAbS verwendet den Exitcode \(10\) für \texttt{SAT} und \(20\) für
+\texttt{UNSAT}. Der durch das Zeitlimit erzeugte Exitcode \(124\) wird
+als \texttt{TIMEOUT} erfasst.
+
+\paragraph{Reproduzierbarkeit und Wiederaufnahme.}
+Die Zufallsauswahl wird aus \texttt{SEED} und dem Instanznamen
+abgeleitet und ist bei unveränderten Eingaben reproduzierbar. Bei einer
+Änderung von Seed, Instanzen oder Studiendesign sollten neue
+Ergebnisdateien verwendet werden. Die Resume-Prüfung identifiziert
+bestehende Anfragen lediglich anhand von Instanz, \(x\), \(y\) und
+\(Z\)-Level. \texttt{RESUME=0} allein leert eine vorhandene CSV-Datei
+nicht, sondern kann zusätzliche Zeilen an die bestehende Datei
+anhängen.

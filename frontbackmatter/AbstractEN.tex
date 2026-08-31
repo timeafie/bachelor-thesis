@@ -3,20 +3,59 @@
 %*******************************************************
 \pdfbookmark[0]{Abstract}{Abstract}
 
-
 \begin{otherlanguage}{american}
-	\chapter*{Abstract}
-	A short summary of the contents in English of about one page. The following points should be addressed in particular:
-	\begin{itemize}
-		\item Motivation: Why did this work come about? Why is the topic of the work interesting (for the general public)? The motivation should be abstracted as far as possible from the specific tasks that may be given by a company.
-		\item Content: What is the content of this thesis? What exactly is covered in the thesis? The methodology and working method should be briefly discussed here.
-		\item Results: What are the results of this work? A brief overview of the most important results as a teaser to read the complete thesis.
-	\end{itemize}
-	\medskip
-	
-	\noindent
-	BTW: A great guide by Kent Beck how to write good abstracts can be found here:
-	\begin{center}
-		\url{https://plg.uwaterloo.ca/~migod/research/beckOOPSLA.html}
-	\end{center}
+    \chapter*{Abstract}
+
+    When conflicting information admits several valid assessments, the
+    relevant question is not only which arguments can be accepted, but
+    also whether partial decisions can be combined independently while a
+    shared context is held fixed. Abstract argumentation frameworks (AFs)
+    model such situations through arguments and directed attacks.
+    Conditional independence asks whether the assessments of two sets of
+    arguments \(X\) and \(Y\), taken from labellings that agree on a
+    conditioning set \(Z\), can be recombined in another valid labelling.
+    Deciding this property exactly is computationally demanding because
+    of its universal-existential structure. Moreover, existing
+    graph-based criteria identify only some of the independences that
+    actually hold. This thesis therefore addresses the absence of an
+    exact decision procedure whose practical behavior has been
+    investigated empirically.
+
+    A uniform encoding using quantified Boolean formulas (QBFs) is
+    developed for the \emph{complete}, \emph{stable}, and
+    \emph{preferred} semantics. Boolean variables represent the labels
+    \(\mathsf{in}\), \(\mathsf{out}\), and \(\mathsf{und}\) of each
+    argument. Semantic encodings, equality constraints, and a mixing
+    formula connect two universally considered source labellings with an
+    existentially required recombination labelling. For the
+    \emph{preferred} semantics, the maximality of the accepted arguments
+    is additionally encoded. A correctness proof establishes that the
+    resulting QBF is true if and only if the requested conditional
+    independence holds. Consequently, all valid labellings do not have to
+    be generated explicitly before the query can be decided.
+
+    The encodings are translated into the \texttt{QCIR-G14} format and
+    evaluated with QuAbS. The empirical study comprises \(9\,450\)
+    queries on \(105\) AFs from the ICCMA'25 benchmark collection, using
+    five singleton argument pairs, six conditioning levels, and the
+    three considered semantics. Of the \(7\,164\) decided queries,
+    \(6\,986\), or \(97.52\,\%\), are classified as independent, whereas
+    \(178\), or \(2.48\,\%\), are classified as dependent. Among the
+    decided queries, larger conditioning sets are associated with less
+    observed dependence, as well as with generally longer solver
+    runtimes and lower solution rates. The runtime effects are more
+    pronounced for the \emph{complete} and \emph{stable} semantics than
+    for the \emph{preferred} semantics.
+
+    For the benchmark collection studied, the results show that conditional
+    independence predominates among the decided queries under all three
+    semantics and that larger conditioning sets are associated with less
+    observed dependence and greater practical computational effort. The
+    complexity analysis complements this picture: every independence query
+    has a positive answer in acyclic and, more generally, even-cycle-free
+    AFs, whereas the decision problem is
+    \(\Pi_2^{\mathsf P}\)-complete under all three semantics in
+    odd-cycle-free AFs. Together, the exact QBF encoding, the empirical
+    evaluation, and the complexity results provide a unified foundation 
+    for analyzing conditional independence in argumentation frameworks.
 \end{otherlanguage}

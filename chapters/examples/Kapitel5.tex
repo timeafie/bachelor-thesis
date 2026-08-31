@@ -89,54 +89,47 @@ alternativer Labellings. Mit den ungeradezykelfreien AFs ändert sich diese Ausg
 Zyklen bleiben nun zulässig, sofern sie eine gerade Länge besitzen. Damit bleiben gerade 
 jene Rückkopplungen erhalten, die größere Labellingvariationen ermögichen. 
 
-Dennoch ist die Struktur ungeradezykelfreier AFs nicht beliebig. Insbesondere fallen auf dieser 
-Graphklasse die \emph{stable}- und die \emph{preferred}-Semantik zusammen \cite{DUNNE2002187}.
-Die folgenden Ergebnisse zeigen, dass die strukturelle Einschränkung keine entsprechende Verringerung 
+Dennoch fallen in ungeradezykelfreien AFs die \emph{stable}- und die \emph{preferred}-Semantik zusammen \cite{DUNNE2002187}.
+Die folgenden Ergebnisse zeigen, dass die strukturelle Einschränkung keine weitere Verringerung 
 der Komplexität bewirkt. Während sich dies für die \emph{stable}- und die \emph{preferred}-Semantik 
 aus bekannten Reduktion von \textcite{bluemel:2025:independence-aba} und ihrer Graphstruktur ableiten lässt, 
 erfordert die \emph{complete}-Semantik eine neue Konstruktion.
 
-Wir zeigen zuerst, dass sich für die \emph{stable}-Semantik keine Vereinfachung ergibt.
+Die Beschränkung auf ungeradezykelfreie AFs senkt die Komplexität der \emph{stable}-Unabhängigkeit nicht.
+
 \begin{Proposition}
     \label{prop:ocf-af-ci-st-pi^2}
-    \(stable\)-Unabhängigkeit ist auch in ungeradezykelfreien AFs \(\Pi_2^\text{P}\)-vollständig.
+    Die \emph{stable}-Unabhängigkeit ist auch auf ungeradezykelfreien AFs
+    \(\Pi_2^{\mathrm P}\)-vollständig.
 \end{Proposition}
 
 \begin{proof}
     \label{pr:ocf-af-ci-st-pi^2-is-correct}
-    Zugehörigkeits- und Härtebeweis wurden zuerst von \textcite{bluemel:2025:independence-aba} bewiesen. 
-    Es bleibt zu zeigen, dass es sich bei der Konstruktion um einen ungeradezykelfreien Graphen handelt.
-    Wir betrachten zunächst die stark zusammenhängenden Komponenten von \(F_{\Psi}\). 
-    Für jede universell quantifizierte Variable \(x_i\) bildet das zugehörige Argumentpaar 
-    \(\{x_i,\overline{x_i}\}\) eine stark zusammenhängende Komponente. Entsprechend bildet 
-    für jede existenziell quantifizierte Variable \(y_j\) das Argumentpaar 
-    \(\{y_j,\overline{y_j}\}\) eine stark zusammenhängende Komponente. Darüber hinaus bildet 
-    jedes Klauselargument \(c_k\) eine einelementige stark zusammenhängende Komponente, während 
-    die Argumente \(\varphi\) und \(t\) gemeinsam die stark zusammenhängende Komponente 
-    \(\{\varphi,t\}\) bilden.
-    Somit gilt
-       \( \operatorname{SCC}(F_{\Psi})
-        =
-        \bigl\{\{x_i,\overline{x_i}\} \mid x_i \in \{x_0\} \cup X\bigr\}
-        \cup
-        \bigl\{\{y_j,\overline{y_j}\} \mid y_j \in Y\bigr\}
-        \cup
-        \bigl\{\{c_k\} \mid 1 \leq k \leq m\bigr\}
-        \cup
-        \bigl\{\{\varphi,t\}\bigr\}.\)
-
-    Zwischen den stark zusammenhängenden Komponenten verlaufen die Angriffe ausschließlich 
-    in der Richtung Variablen nach Klauseln nach \(\{\varphi, t\}\). Der Kondensationsgraph von \(F_{\Psi}\) ist daher azyklisch.
-    Gerichtete Zyklen können also nur in den oben beschriebenen Komponenten auftreten.
-    Die einzigen nichttrivialen stark zusammenhängenden Komponenten sind die Argumentpaare
-        \(x_i \leftrightarrow \overline{x_i},
-        y_j \leftrightarrow \overline{y_j},
-        \varphi \leftrightarrow t.\)
-    Jede dieser Komponenten enthält ausschließlich einen gerichteten Zyklus der Länge zwei. 
-    Die einelementigen Komponenten \(\{c_k\}\) enthalten keine Zyklen, da die Klauselargumente 
-    sich nicht selbst angreifen.
-    Damit besitzt jeder gerichtete Zyklus in \(F_{\Psi}\) gerade Länge. Folglich enthält 
-    \(F_{\Psi}\) keinen gerichteten Zyklus ungerader Länge und ist somit ungeradezykelfrei.
+    Die Zugehörigkeit zu \(\Pi_2^{\mathrm P}\) folgt aus dem entsprechenden
+    Ergebnis für allgemeine AFs
+    \parencite[Proposition~4.10]{bluemel:2025:independence-aba}.
+    Für die Härte betrachten wir die direkte AF-Konstruktion aus
+    \textcite[Proposition~C.4]{bluemel:2025:independence-aba}.
+    Für jedes \(v\in X\cup Y\cup\{x_0\}\) bildet
+    \(\{v,\overline v\}\) eine stark zusammenhängende Komponente.
+    Daneben bilden \(\{\varphi,t\}\) sowie jedes Singleton
+    \(\{c_k\}\) die übrigen stark zusammenhängenden Komponenten.
+    Jeder Angriff zwischen verschiedenen Komponenten verläuft gemäß der
+    Richtung:
+    \(
+        \{v,\overline v\}
+        \rightarrow
+        \{c_k\}
+        \rightarrow
+        \{\varphi,t\}.
+    \)
+    Ein gerichteter Zyklus kann daher keine Komponente verlassen. Innerhalb
+    der nichttrivialen Komponenten existieren ausschließlich die Zweierzyklen
+    \(v\leftrightarrow\overline v\) und
+    \(\varphi\leftrightarrow t\).Außerdem bseitzen die Klauselargumente keine
+    Selbstangriffe. Somit hat jeder gerichtete Zyklus gerade Länge und jedes
+    durch die Reduktion erzeugte AF ist ungeradezykelfrei. Die
+    \(\Pi_2^{\mathrm P}\)-Härte gilt folglich auch auf dieser Graphklasse.
 \end{proof}
 
 \begin{figure}
@@ -144,9 +137,16 @@ Wir zeigen zuerst, dass sich für die \emph{stable}-Semantik keine Vereinfachung
     \resizebox{\textwidth}{!}{
         \input{gfx/Blümel_Reduktion.tex}
     }
-    \caption{AF Repräsentation der Reduktion in Proposition C.1 für eine Formel 
-    \(\forall X \exists Y \varphi\) wo \(\phi\) durch die folgenden Klauseln gegeben ist: \(\{\{x_0, x_2, y_1\}, \{x_0, \overline{x_2}, \overline{y_1}, \overline{x_1}\},
-    \{x_0, \overline{x_2}, x_1\}\}\), adaptiert von \cite{bluemel:2025:independence-aba}.}
+    \caption[Reduktion für \emph{stable}-Unabhängigkeit]{
+    AF-Repräsentation einer Instanz der Reduktion aus Proposition~C.1
+    für die Formel \(\Psi=\forall X\,\exists Y\,\varphi\).
+    Die Matrix \(\varphi\) ist durch die Klauselmenge
+    \(\{\{x_0,x_2,y_1\},
+    \{x_0,\overline{x_2},\overline{y_1},\overline{x_1}\},
+    \{x_0,\overline{x_2},x_1\}\}\)
+    gegeben. Darstellung adaptiert nach
+    \cite{bluemel:2025:independence-aba}.
+    }   
     \label{fig:reduktion-stable}
 \end{figure}
 
@@ -156,7 +156,7 @@ Maßgeblich ist die Gleichheit \(\Lambda_{st}(F)=\Lambda_{pr}(F)\),
 aufgrund derer beide Unabhängigkeitsbegriffe auf derselben Menge von Labellings ausgewertet werden.
 \begin{Proposition}
     \label{prop:ocf-af-ci-pr-pi^2-c}
-    \(preferred\)-Unabhängigkeit ist auch in ungeradezykelfreien AFs \(\Pi_2^\text{P}\)-vollständig .
+    Die \(preferred\)-Unabhängigkeit ist auch in ungeradezykelfreien AFs \(\Pi_2^\text{P}\)-vollständig .
 \end{Proposition}
 
 \begin{proof}
@@ -170,7 +170,7 @@ Insbesondere können Variablenpaare mit \(und\) gelabelt sein, weshalb eine
 modifizierte Konstruktion benötigt wird, die totale und partielle Belegungen unterscheidet.
 \begin{Proposition}
     \label{prop:ocf-af-ci-co-pi^2-c}
-    \(complete\)-Unabhängigkeit ist auch in ungeradezykelfreien AFs \(\Pi_2^\text{P}\)-vollständig.
+    Die \(complete\)-Unabhängigkeit ist auch in ungeradezykelfreien AFs \(\Pi_2^\text{P}\)-vollständig.
 \end{Proposition}
 
 \begin{proof}
@@ -184,7 +184,6 @@ modifizierte Konstruktion benötigt wird, die totale und partielle Belegungen un
     Normalform vorliegt. Gefragt ist, ob für jede Belegung der
     Variablen aus \(X\) eine Belegung der Variablen aus \(Y\)
     existiert, welche \(\varphi\) erfüllt.
-
 
     \paragraph{Konstruktion.}
     Wir führen eine neue universelle
@@ -266,7 +265,7 @@ modifizierte Konstruktion benötigt wird, die totale und partielle Belegungen un
         \{(in,out),(out,in),(und,und)\}.
     \]
     In den ersten beiden Fällen ist die zugehörige Variable total
-    belegt; im dritten Fall ist sie unentschieden. Da \(d_i\) von beiden
+    belegt und im dritten Fall ist sie unentschieden belegt. Da \(d_i\) von beiden
     Literalargumenten angegriffen wird, gilt \(\lambda(d_i)=out\) genau
     im totalen Fall und \(\lambda(d_i)=und\) im unentschiedenen Fall.
     Insbesondere erhält kein \(d_i\) das Label \(in\). Folglich gilt
@@ -301,10 +300,10 @@ modifizierte Konstruktion benötigt wird, die totale und partielle Belegungen un
     \(\lambda_1\) nicht mit \(in\) gelabelt sein: Dafür müssten alle
     Angreifer von \(\varphi\) mit \(out\) gelabelt sein. Für jedes
     \(x_i\in X'\) übernehmen wir die Labels des Variablenpaars
-    \(x_i,\overline{x_i}\) aus \(\lambda_2\); jedes Variablenpaar
+    \(x_i,\overline{x_i}\) aus \(\lambda_2\) und jedes Variablenpaar
     \(y_j,\overline{y_j}\) labeln wir mit \((und,und)\). Die dadurch
-    bestimmten Labels der Argumente \(d_i\) übernehmen wir ebenfalls;
-    ferner setzen wir \(\lambda_3(s)=\lambda_3(g)=und\). Jedes
+    bestimmten Labels der Argumente \(d_i\) übernehmen wir ebenfalls und 
+    setzen ferner \(\lambda_3(s)=\lambda_3(g)=und\). Jedes
     Klauselargument \(c_k\), das von einem mit \(in\) gelabelten
     Literal angegriffen wird, erhält in \(\lambda_3\) das Label \(out\);
     alle übrigen Klauselargumente erhalten das Label \(und\). Wegen
@@ -334,7 +333,7 @@ modifizierte Konstruktion benötigt wird, die totale und partielle Belegungen un
         \bigl(\lambda_3(\varphi),\lambda_3(t)\bigr)\in
         \{(in,out),(out,in),(und,und)\}
     \)
-    realisiert werden. Wir wählen dasjenige Paar, für das
+    realisiert werden. Wir wählen das Paar, für das
     \(\lambda_3(\varphi)=\lambda_1(\varphi)\) gilt. Somit existiert in
     beiden Fällen das
     erforderliche Labelling \(\lambda_3\), und es gilt
@@ -402,7 +401,6 @@ modifizierte Konstruktion benötigt wird, die totale und partielle Belegungen un
     \(\{x_i,\overline{x_i}\},\{y_j,\overline{y_j}\}\to c_k\),
     \(g\to c_k\) und
     \(g,c_k\to\{\varphi,t\}\).
-    Der Kondensationsgraph von \(F_{\Psi}\) ist daher azyklisch.
     Folglich liegt jeder gerichtete Zyklus vollständig in einer der
     nichttrivialen Komponenten. Diese enthalten jeweils ausschließlich den
     Zweierzyklus
@@ -418,17 +416,64 @@ modifizierte Konstruktion benötigt wird, die totale und partielle Belegungen un
     \resizebox{\textwidth}{!}{
         \input{gfx/ocf_co_härte.tex}
     }
-    \caption{AF-Repräsentation der Reduktion aus Proposition~\ref{prop:ocf-af-ci-co-pi^2-c} für die Formel
-        \(\Psi = \forall x_1 \exists y_1 \varphi\) mit
-        \(\varphi =
-        (x_1 \lor y_1) \land
-        (\overline{x_1} \lor \overline{y_1})\).
-        Die reduzierte Formel \(\widehat{\varphi}\) ist durch die Klauseln
-        \(\{\{x_0,x_1,y_1\},
-        \{x_0,\overline{x_1},\overline{y_1}\}\}\)
-        gegeben.}
+    \caption[Reduktion für \emph{complete}-Unabhängigkeit]{
+    AF-Repräsentation einer Instanz der Reduktion aus
+    Proposition~\ref{prop:ocf-af-ci-co-pi^2-c}
+    für die Formel
+    \(\Psi=\forall x_1\,\exists y_1\,\varphi\) mit
+    \(\varphi=(x_1\lor y_1)
+    \land(\overline{x_1}\lor\overline{y_1})\).
+    Die daraus konstruierte Formel \(\widehat{\varphi}\)
+    ist durch die Klauselmenge
+    \(\{\{x_0,x_1,y_1\},
+    \{x_0,\overline{x_1},\overline{y_1}\}\}\)
+    gegeben. Die dunkler hinterlegten Knoten kennzeichnen
+    die zusätzlichen Hilfsargumente \(d_0,d_1,s\) und \(g\).
+    }
 \label{fig:reduktion-complete}
 \end{figure}
+
+
+
+\begin{table}[H]
+    \myfloatalign
+    \small
+    \renewcommand{\arraystretch}{1.15}
+    \begin{tabular}{@{}lccc@{}}
+        \toprule
+        AF-Klasse
+            & \(\mathsf{co}\)
+            & \(\mathsf{st}\)
+            & \(\mathsf{pr}\) \\
+        \midrule
+        azyklisch
+            & trivial & trivial & trivial \\
+        geradezykelfrei
+            & trivial & trivial & trivial \\
+        ungeradezykelfrei
+            & \(\Pi_2^{\mathrm{P}}\)-c
+            & \(\Pi_2^{\mathrm{P}}\)-c
+            & \(\Pi_2^{\mathrm{P}}\)-c \\
+        \bottomrule
+    \end{tabular}
+    \caption[Komplexität der bedingten Unabhängigkeit in ausgewählten Graphklassen]{
+        Komplexität der bedingten \(\sigma\)-Unabhängigkeit in den
+        betrachteten Graphklassen. Dabei bezeichnet \(C\)-c die
+        Vollständigkeit für die Komplexitätsklasse \(C\).
+    }
+    \label{tab:komplexitaet-graphklassen}
+\end{table}
+
+Wie Tabelle~\ref{tab:komplexitaet-graphklassen} zusammenfasst, ist die
+bedingte \(\sigma\)-Unabhängigkeit für \(\sigma\in\{co,st,pr\}\) auf
+azyklischen und geradezykelfreien AFs trivial; jede Anfrage wird positiv
+beantwortet. Auf ungeradezykelfreien AFs ist das Entscheidungsproblem
+dagegen für alle drei Semantiken \(\Pi_2^{\mathrm{P}}\)-vollständig und liegt
+damit auf der zweiten Ebene der polynomialen Hierarchie.
+
+
+
+
 
 \iffalse
 \section{Bipartite AFs}
@@ -796,39 +841,6 @@ Umso verbundener der Graph, umso geringer der Anteil an unabhängigen Paaren.
 
 Kaum \emph{stable}-Labellings vorhanden. 
 
-\begin{table}[htbp]
-    \centering
-    \renewcommand{\arraystretch}{1.15}
-    \setlength{\tabcolsep}{1.2em}
-    \begin{tabular}{c|ccc}
-        \(\sigma\) 
-        & \(co\) 
-        & \(st\) 
-        & \(pr\) \\
-        \hline
-        \emph{azyklisch}
-        & trivial
-        & trivial
-        & trivial \\
-        \emph{geradezykelfrei}
-        & trivial
-        & trivial
-        & trivial \\
-        \emph{ungeradezykelfrei}
-        & \(\Pi_2^P\)-c
-        & \(\Pi_2^P\)-c
-        & \(\Pi_2^P\)-c \\
-        \emph{bipartit}
-        & ---
-        & \(\Pi_2^P\)-c
-        & \(\Pi_2^P\)-c
-    \end{tabular}
-    \caption{Komplexitätsergebnisse für \(\sigma\)-Unabhängigkeit auf ausgewählten
-    Klassen von Argumentationsframeworks. Dabei bezeichnet
-    \(\Pi_2^P\text{-c}\) die \(\Pi_2^P\)-Vollständigkeit; --- kennzeichnet einen
-    bislang nicht gezeigten Fall.}
-    \label{tab:complexity-results-graph-classes}
-\end{table}
 
 \fi
 \fi
