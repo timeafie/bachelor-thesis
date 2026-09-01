@@ -23,8 +23,8 @@ Der Untersuchung liegen die folgenden Forschungsfragen zugrunde:
     \texttt{AB} beziehungsweise \texttt{UNAB} entschiedenen Anfragen mit
     zunehmender Größe der Konditionierungsmenge \(Z\)?
     \item[\textbf{Frage 3}] Wie wirkt sich eine zunehmende Größe der
-    Konditionierungsmenge \(Z\) auf die Solverlaufzeit und die praktische
-    Lösungsquote aus?
+    Konditionierungsmenge \(Z\) auf die Solverlaufzeit und die kumulative
+    Entscheidungsquote aus?
 \end{enumerate}
 
 Die Auswertung von \(9\,450\) Anfragen zeigt eine deutliche Dominanz
@@ -43,8 +43,8 @@ bleibt unverändert. Beim Vergleich derselben Argumentpaare zwischen der leeren
 Konditionierungsmenge \(Z_0=\emptyset\) und der jeweils größten untersuchten
 Konditionierungsmenge \(Z_5\) tritt in keiner Semantik ein Übergang von
 \texttt{UNAB} zu \texttt{AB} auf. Zugleich sind größere
-Konditionierungsmengen tendenziell mit längeren Solverlaufzeiten und geringeren
-Lösungsquoten verbunden. Dieser deskriptive Zusammenhang ist unter
+Konditionierungsmengen tendenziell mit längeren Solverlaufzeiten und niedrigeren
+kumulativen Entscheidungsquoten verbunden. Dieser deskriptive Zusammenhang ist unter
 \emph{complete} und \emph{stable} deutlicher ausgeprägt als unter
 \emph{preferred}. Da die Konditionierungsmengen unabhängig gezogen
 und nicht geschachtelt sind und der logische Status der nicht entschiedenen
@@ -58,7 +58,7 @@ Darauf aufbauend betrachtet Abschnitt~\ref{subsec:z-ci-status} den Zusammenhang
 zwischen der Größe der Konditionierungsmenge und dem Unabhängigkeitsstatus.
 Abschließend analysiert Abschnitt~\ref{subsec:z-runtime} den Zusammenhang
 zwischen der Größe der Konditionierungsmenge, der Solverlaufzeit und der
-praktischen Lösungsquote.
+kumulativen Entscheidungsquote.
 
 \section{Versuchsaufbau}
 \label{sec:trial-design}
@@ -175,8 +175,9 @@ Stable-Generator-Instanzen. Die betroffenen Zeilen verbleiben in den Rohdaten
 und werden als logisch unbekannt behandelt. Bei der Auswertung des
 Unabhängigkeitsstatus werden ausschließlich \texttt{SAT} und \texttt{UNSAT}
 als entschiedene Anfragen berücksichtigt und gemeinsam mit der jeweiligen
-Entscheidungsquote berichtet. In Performanceprofilen verbleiben die
-\texttt{SOLVER\_ERR} als nicht gelöste Anfragen im Nenner.
+Entscheidungsquote am Solverzeitlimit berichtet. In den Kurven der kumulativen
+Entscheidungsquote verbleiben die
+\texttt{SOLVER\_ERR} als nicht entschiedene Anfragen im Nenner.
 
 \paragraph{Rechenumgebung.}
 Für die Durchführung der Experimente stand eine virtuelle Maschine mit
@@ -231,10 +232,10 @@ Anfragen, die bereits bei der Übersetzung nicht erzeugt werden können, werden 
 Die Ergebnisverteilung wird zunächst durch absolute Häufigkeiten und
 Anteile beschrieben. Für die TIMEOUT-Rate werden nur tatsächlich gestartete
 Solverläufe verwendet.
-Der UNSAT-Anteil wird ausschließlich unter den gelösten Anfragen, also unter
+Der UNSAT-Anteil wird ausschließlich unter den entschiedenen Anfragen, also unter
 SAT und UNSAT, berechnet. Zur Darstellung der Laufzeit wird für verschiedene
 Zeitbudgets der Anteil aller 535 vorgesehenen Anfragen einer Stufe
-angegeben, der innerhalb des Budgets gelöst wurde.
+angegeben, der innerhalb des Budgets entschieden wurde.
 
 Zusätzlich werden die TIMEOUT-Anteile der Stufen \(Z_0\) und \(Z_5\)
 miteinander verglichen. Hierzu wird für jedes Argumentationssystem und
@@ -305,7 +306,7 @@ Die bereinigte TIMEOUT-Rate nimmt von \(15{,}33\,\%\) bei \(Z_0\) auf
 \(21{,}20\,\%\) bei \(Z_5\) zu. Dies entspricht einem Zuwachs von \(5{,}87\) Prozentpunkten. 
 Die Rate steigt über alle sechs
 Stufen hinweg schrittweise an. Demgegenüber sinkt der Anteil beobachteter
-UNSAT-Ergebnisse unter den gelösten Anfragen von \(3{,}97\,\%\) auf
+UNSAT-Ergebnisse unter den entschiedenen Anfragen von \(3{,}97\,\%\) auf
 \(0{,}48\,\%\). Beide Verläufe sind in
 Abbildung~\ref{fig:empirical-stable-z-rates} dargestellt.
 
@@ -314,7 +315,7 @@ Abbildung~\ref{fig:empirical-stable-z-rates} dargestellt.
     \includegraphics[width=\textwidth]
         {gfx/analysis_singleton_z_simple/ergebnistrends.pdf}
     \caption[Ergebnistrends nach Größenstufe]{TIMEOUT-Anteil unter den
-    gültigen Solverläufen (oben) und UNSAT-Anteil unter den gelösten
+    gültigen Solverläufen (oben) und UNSAT-Anteil unter den entschiedenen
     Anfragen (unten). Übersetzungsfehler sind aus der Berechnung
     ausgeschlossen. Die gestrichelte Linie markiert den Ausgangswert bei
     \(Z_0\).}
@@ -325,7 +326,7 @@ Der Rückgang der beobachteten UNSAT-Ergebnisse darf nicht unmittelbar als
 Rückgang der tatsächlichen Abhängigkeit interpretiert werden. Mit wachsendem
 \(Z\) nimmt zugleich der Anteil der Anfragen zu, deren logischer Status
 wegen eines TIMEOUTs unbekannt bleibt. Die Aussage beschränkt sich daher
-darauf, dass unter den erfolgreich gelösten Anfragen seltener UNSAT
+darauf, dass unter den entschiedenen Anfragen seltener UNSAT
 beobachtet wurde.
 
 Für den Vorzeichentest können 105 Argumentationssysteme vollständig an
@@ -403,14 +404,14 @@ der vorliegenden Daten nicht möglich.
 \label{subsec:empirical-stable-z-runtime}
 
 Neben der höheren TIMEOUT-Rate verschiebt sich auch der Anteil schnell
-gelöster Anfragen. Abbildung~\ref{fig:empirical-stable-z-performance}
+entschiedener Anfragen. Abbildung~\ref{fig:empirical-stable-z-performance}
 zeigt für jedes Zeitbudget \(t\), welcher Anteil aller 535 Anfragen einer
-Stufe bis zu diesem Zeitpunkt gelöst wurde. Bei einem Budget von einer Sekunde
+Stufe bis zu diesem Zeitpunkt entschieden wurde. Bei einem Budget von einer Sekunde
 sinkt dieser Anteil von \(57{,}0\,\%\) bei \(Z_0\) auf \(45{,}2\,\%\) bei
 \(Z_5\). Bei 100 Sekunden beträgt er \(81{,}3\,\%\) beziehungsweise
 \(74{,}2\,\%\). Der Verlauf der Performanceprofile zeigt insgesamt: Mit
 wachsendem \(Z\) wird ein kleinerer Anteil der Anfragen innerhalb desselben
-Budgets gelöst.
+Budgets entschieden.
 
 \begin{figure}[H]
     \centering
@@ -419,13 +420,13 @@ Budgets gelöst.
     \caption[Performanceprofile nach Größe der Konditionierungsmenge]{Empirische
     Performanceprofile der sechs Größenstufen. Dargestellt ist für jedes
     Zeitbudget \(t\) der Anteil der je Stufe 535 vorgesehenen Anfragen, die
-    bis \(t\) gelöst wurden. Die Zeitachse ist logarithmisch.}
+    bis \(t\) entschieden wurden. Die Zeitachse ist logarithmisch.}
     \label{fig:empirical-stable-z-performance}
 \end{figure}
 
 Dieser Unterschied lässt sich auch durch die Zeit bis zur Lösung der Hälfte
 aller Anfragen ausdrücken. Bei \(Z_0\) sind \(50\,\%\) nach
-\(0{,}198\) Sekunden gelöst, bei \(Z_5\) erst nach \(1{,}482\) Sekunden.
+\(0{,}198\) Sekunden entschieden, bei \(Z_5\) erst nach \(1{,}482\) Sekunden.
 Das entspricht ungefähr dem Faktor \(7{,}5\).
 
 \subsection{QBF-Größe und Erzeugungszeit}
@@ -499,7 +500,7 @@ Erklärung für die beobachtete Verlangsamung.
     paarweisen Faktoren von \(Z_5\) gegenüber \(Z_0\), getrennt nach
     Instanzfamilie. Für die Gatterzahl werden Paare mit erfolgreicher
     Übersetzung an beiden Endpunkten berücksichtigt. Der Laufzeitfaktor
-    umfasst nur Paare, die an beiden Endpunkten gelöst wurden. Die
+    umfasst nur Paare, die an beiden Endpunkten entschieden wurden. Die
     Laufzeitfaktoren beruhen in der dargestellten Reihenfolge auf 80, 71,
     85, 30, 60, 20 und 73 Paaren.}
     \label{fig:empirical-stable-z-qbf-runtime}
@@ -517,7 +518,7 @@ gleichzeitig den Umfang und den logischen Inhalt der QBF verändert.
 
 Die Auswertung zeigt im Durchschnitt einen klaren Zusammenhang zwischen einem
 größeren \(Z\) und einer schwierigeren praktischen Lösung: für feste Zeitbudgets 
-werden weniger Anfragen gelöst. Der
+werden weniger Anfragen entschieden. Der
 Vorzeichentest liefert zusätzliche Evidenz für die gerichtete Zunahme der
 TIMEOUT-Rate zwischen \(Z_0\) und \(Z_5\). Die Auswertung der einzelnen Instanzfamilien
 relativiert dieses Ergebnis jedoch: Die Erhöhung des TIMEOUT-Anteils im
@@ -533,7 +534,7 @@ und Größenstufe nur eine Ziehung von \(Z_k\). Der Einfluss der Größe kann
 somit nicht vollständig vom Einfluss der konkreten Zusammensetzung
 getrennt werden. Drittens verdecken TIMEOUTs den logischen SAT- oder
 UNSAT-Status. Insbesondere erlaubt der beobachtete Rückgang des
-UNSAT-Anteils keine Aussage über den unbekannten Status der nicht gelösten
+UNSAT-Anteils keine Aussage über den unbekannten Status der nicht entschiedenen
 Anfragen. Viertens besteht die Datengrundlage aus einer Auswahl von
 Benchmarkinstanzen. Eine uneingeschränkte Verallgemeinerung auf beliebige
 andere Argumentationssysteme ist deshalb nicht gerechtfertigt.
@@ -541,7 +542,7 @@ andere Argumentationssysteme ist deshalb nicht gerechtfertigt.
 Insgesamt stützen die Daten die Aussage, dass größere
 Konditionierungsmengen die Lösung der Stable-QBFs im untersuchten
 Benchmark erschweren können. Dieser Effekt ist in der Ergebnisverteilung
-und in den Lösungsquoten sichtbar, fällt aber stark
+und in den Entscheidungsquoten am Solverzeitlimit sichtbar, fällt aber stark
 familienabhängig aus und ist nicht bei jedem Argumentationssystem zu
 beobachten. Der geringe Zuwachs von QBF-Größe und Übersetzungszeit reicht
 als alleinige Erklärung für die ausgeprägten Laufzeiteffekte in den
@@ -797,7 +798,7 @@ von \texttt{UNAB} zu \texttt{AB} beobachtet wird.
 Aus der Definition der bedingten Unabhängigkeit folgt allerdings keine
 allgemeine Monotonie bezüglich \(Z\). Ein größeres \(Z\) schränkt einerseits
 die Menge der Labellingpaare ein, die auf \(Z\) übereinstimmen. Andererseits
-muss das existentiell geforderte rekombinierende Labelling auf einer größeren
+muss das existenziell geforderte rekombinierende Labelling auf einer größeren
 Menge mit ihnen übereinstimmen. Hinzu kommt, dass die untersuchten Mengen
 \(Z_1,\ldots,Z_5\) nicht geschachtelt sind und sich daher Größe und
 Zusammensetzung gleichzeitig ändern. Da der logische Status der
@@ -812,7 +813,7 @@ deskriptiv und nicht als allgemeiner kausaler Effekt der Vergrößerung von
 Neben dem logischen Ergebnis stellt sich die Frage, wie sich eine 
 größere Konditionierungsmenge auf den Aufwand der Entscheidung auswirkt. 
 Dieser Abschnitt untersucht daher, ob höhere \(Z\)-Stufen mit längeren 
-Solverlaufzeiten und einer geringeren praktischen Lösungsquote verbunden 
+Solverlaufzeiten und einer niedrigeren kumulativen Entscheidungsquote verbunden 
 sind. Im Endpunktvergleich zeigt sich unter allen drei Semantiken eine 
 Verschiebung zu längeren Laufzeiten. Besonders deutlich fällt sie 
 unter \emph{complete} und \emph{stable} aus, 
@@ -832,14 +833,12 @@ Laufzeitbeobachtung ein.
 Die QBF-Erzeugung wird vor dem QuAbS-Aufruf ausgeführt und unterliegt nicht
 dem Solverzeitlimit. Ihre getrennt protokollierte Laufzeit wird über alle 525
 Formelerzeugungen je Semantik und Stufe betrachtet und bleibt zwischen
-\(Z_0\) und \(Z_5\) nahezu konstant. Der Median verändert sich unter
+\(Z_0\) und \(Z_5\) nahezu konstant: der Median verändert sich unter
 \emph{complete} von \(0{,}087\,\mathrm{s}\) auf
 \(0{,}089\,\mathrm{s}\), unter \emph{preferred} von
 \(0{,}126\,\mathrm{s}\) auf \(0{,}126\,\mathrm{s}\) und unter
 \emph{stable} von \(0{,}076\,\mathrm{s}\) auf
-\(0{,}076\,\mathrm{s}\). Die in der folgenden Auswertung sichtbare
-Endpunktverschiebung betrifft damit vor allem die Solverphase und nicht die
-Übersetzung.
+\(0{,}076\,\mathrm{s}\).
 
 \paragraph{Verteilung der entschiedenen Laufzeiten.}
 Abbildung~\ref{fig:z-runtime-distribution} zeigt die Laufzeiten entschiedener 
@@ -891,14 +890,14 @@ Stufen jedoch nicht streng monoton. Unter \emph{complete} liegt der Median
 bei \(Z_4\) geringfügig unter demjenigen bei \(Z_3\); unter
 \emph{stable} ist er bei \(Z_5\) etwas niedriger als bei \(Z_4\).
 
-\paragraph{Kumulative Solverleistung.}
+\paragraph{Kumulative Entscheidungsquote.}
 Die Boxplots beschreiben nur die Laufzeiten der tatsächlich entschiedenen
-Läufe. Um die nicht entschiedenen Anfragen in der praktischen Lösungsquote zu
-berücksichtigen, wird ergänzend für jede Semantik und Konditionierungsstufe der
-kumulative Anteil der innerhalb eines Zeitbudgets entschiedenen Solverläufe
-betrachtet. Der Nenner bleibt mit 525 Läufen konstant.
+Läufe. Um auch die nicht entschiedenen Anfragen zu berücksichtigen, wird
+ergänzend für jede Semantik und Konditionierungsstufe die kumulative
+Entscheidungsquote betrachtet. Sie bezeichnet den Anteil der bis zu einem
+Zeitbudget \(t\) entschiedenen Solverläufe am festen Nenner von 525 Läufen.
 \texttt{TIMEOUT} und \texttt{SOLVER\_ERR} erhöhen den Zähler nicht; deshalb
-entspricht das abschließende Plateau der jeweiligen Entscheidungsquote.
+entspricht das abschließende Plateau der Entscheidungsquote am Solverzeitlimit.
 
 \begin{figure}[t]
     \centering
@@ -907,16 +906,17 @@ entspricht das abschließende Plateau der jeweiligen Entscheidungsquote.
         \includegraphics[width=1.30\linewidth]
         {../../Themen/Conditional Indepence in AF/analysis_outputs/conditioning_set_z_large_text/fig04_kumulative_solverleistung.png}   
     }
-    \caption[Kumulative Solverleistung nach Konditionierungsstufe]{%
-        Anteil der jeweils 525 Solverläufe, die bis zum Zeitbudget \(t\)
-        mit \texttt{UNAB} oder \texttt{AB} entschieden wurden. Die
+    \caption[Kumulative Entscheidungsquote nach Konditionierungsstufe]{%
+        Kumulative Entscheidungsquote, also der Anteil der jeweils 525
+        Solverläufe, die bis zum Zeitbudget \(t\) mit \texttt{UNAB} oder
+        \texttt{AB} entschieden wurden. Die
         Zeitachse ist logarithmisch. \texttt{TIMEOUT} und
         \texttt{SOLVER\_ERR} verbleiben als nicht entschiedene Läufe im
         festen Nenner.}
     \label{fig:z-runtime-performance}
 \end{figure}
 
-Bei einem Zeitbudget von einer Sekunde sinkt die Solverleistung zwischen
+Bei einem Zeitbudget von einer Sekunde sinkt die kumulative Entscheidungsquote zwischen
 \(Z_0\) und \(Z_5\) unter \emph{complete} von \(52{,}2\,\%\) auf
 \(34{,}7\,\%\), unter \emph{preferred} von \(29{,}5\,\%\) auf
 \(23{,}8\,\%\) und unter \emph{stable} von \(57{,}1\,\%\) auf
@@ -926,7 +926,7 @@ bestehen. Die entsprechenden Anteile verändern sich unter
 \emph{preferred} von \(59{,}0\,\%\) auf \(57{,}0\,\%\) und unter
 \emph{stable} von \(81{,}0\,\%\) auf \(75{,}0\,\%\).
 
-Das abschließende Plateau sinkt unter \emph{complete} von
+Die Entscheidungsquote am Solverzeitlimit sinkt unter \emph{complete} von
 \(424/525=80{,}8\,\%\) auf \(376/525=71{,}6\,\%\). Unter
 \emph{preferred} verändert es sich von \(361/525=68{,}8\,\%\) auf
 \(355/525=67{,}6\,\%\), unter \emph{stable} von
@@ -935,21 +935,21 @@ Endpunktunterschied zeigt sich damit unter \emph{complete}; unter
 \emph{preferred} liegen die Kurven deutlich enger zusammen.
 
 Die Kurven sind über alle sechs Stufen nicht vollständig geordnet. Unter
-\emph{complete} und \emph{stable} liegt das Plateau bei \(Z_1\)
+\emph{complete} und \emph{stable} liegt die Entscheidungsquote am Solverzeitlimit bei \(Z_1\)
 geringfügig über demjenigen bei \(Z_0\), bevor es auf den späteren Stufen
 abnimmt. Die Ergebnisse beschreiben somit keinen strikt monotonen Verlauf
 für jeden einzelnen Stufenschritt.
 
 Zusammenfassend zeigt der Endpunktvergleich von \(Z_0\) und \(Z_5\) unter
 allen drei Semantiken höhere Mediane der entschiedenen Solverläufe und
-geringere Anteile innerhalb fester Zeitbudgets entschiedener Anfragen. Unter
+niedrigere kumulative Entscheidungsquoten bei festen Zeitbudgets. Unter
 \emph{complete} und \emph{stable} ist diese Verschiebung deutlicher ausgeprägt
 als unter \emph{preferred}.
 
 Der Vergleich der Mediane ist auf die jeweils entschiedenen Anfragen beschränkt.
 Da sich deren Zusammensetzung zwischen den Konditionierungsstufen ändert und
 \texttt{TIMEOUT}-Fälle nicht in die Boxplots eingehen, beschreibt er keine
-Laufzeitänderung für die Gesamtheit aller Anfragen. Die kumulative Auswertung
-verwendet dagegen den festen Nenner von 525 Läufen und bildet damit die
-praktische Entscheidungsleistung ab; die tatsächlich benötigte Laufzeit und
+Laufzeitänderung für die Gesamtheit aller Anfragen. Die Auswertung der
+kumulativen Entscheidungsquote verwendet dagegen den festen Nenner von 525
+Läufen; die tatsächlich benötigte Laufzeit und
 der logische Status der nicht entschiedenen Fälle bleiben dennoch unbekannt.

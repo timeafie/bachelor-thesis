@@ -13,26 +13,26 @@
 ]
     % Mittlere Ebene (Delta-Klassen)
     \node[ph class] (delta1) at (0,0)
-        {$\mathsf{P} = \Delta_{1}^{\mathsf{P}}$};
+        {$\mathrm{P} = \Delta_{1}^{\mathrm{P}}$};
     \node[ph class] (delta2) at (2.5,0)
-        {$\Delta_{2}^{\mathsf{P}}$};
+        {$\Delta_{2}^{\mathrm{P}}$};
     \node[ph class] (delta3) at (5,0)
-        {$\Delta_{3}^{\mathsf{P}}$};
+        {$\Delta_{3}^{\mathrm{P}}$};
     \node[ph class] (delta4) at (7.5,0)
-        {$\Delta_{4}^{\mathsf{P}}$};
+        {$\Delta_{4}^{\mathrm{P}}$};
     \node[ph class] at (10,0) {$\ldots$};
 
     % Obere und untere Ebenen (Sigma- und Pi-Klassen)
     \node[ph class] (sigma1) at (1.25,0.9)
-        {$\mathsf{NP} = \Sigma_{1}^{\mathsf{P}}$};
+        {$\mathrm{NP} = \Sigma_{1}^{\mathrm{P}}$};
     \node[ph class] (pi1) at (1.25,-0.9)
-        {$\mathsf{coNP} = \Pi_{1}^{\mathsf{P}}$};
+        {$\mathrm{coNP} = \Pi_{1}^{\mathrm{P}}$};
 
     \foreach \level/\xpos in {2/3.75,3/6.25,4/8.75} {
         \node[ph class] (sigma\level) at (\xpos,0.9)
-            {$\Sigma_{\level}^{\mathsf{P}}$};
+            {$\Sigma_{\level}^{\mathrm{P}}$};
         \node[ph class] (pi\level) at (\xpos,-0.9)
-            {$\Pi_{\level}^{\mathsf{P}}$};
+            {$\Pi_{\level}^{\mathrm{P}}$};
     }
 
     % Pfeile bezeichnen Mengeninklusionen; alle verlaufen von links nach rechts.

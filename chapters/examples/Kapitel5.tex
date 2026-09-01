@@ -12,7 +12,8 @@ Graphklassen, die aufgrund ihrer vorteilhaften Eigenschaften und geringerer Komp
 in der Literatur betrachtet werden \cite{dung:1995:af,DUNNE2002187,handbook__of_formal_argumentation__vol__3:2024}, verhält.
 
 Zunächst werden in Abschnitt~\ref{sec:acyc-afs} AFs ohne gerichteten Zyklus betrachtet. 
-Da ihre Struktur die semantische Bewertung für \(\sigma\in\{co,st,pr\}\) 
+Da ihre Struktur die semantische Bewertung für
+\(\sigma\in\{\mathsf{co},\mathsf{st},\mathsf{pr}\}\) 
 eindeutig festlegt, gilt \(X\perp_\sigma Y\mid Z\) unabhängig von der Wahl 
 der paarweise disjunkten Mengen \(X,Y,Z\). Abschnitt~\ref{sec:even-cycle-free-afs} 
 schwächt diese Voraussetzung ab und erlaubt gerichtete Zyklen ungerader Länge. 
@@ -26,10 +27,10 @@ Komplexität der \emph{stable}-, \emph{preferred}- und \emph{complete}-Unabhäng
 auf dieser Graphklasse. Für die \emph{stable}-Semantik wird gezeigt, dass die bekannte 
 Härtereduktion von \textcite{bluemel:2025:independence-aba} ausschließlich 
 ungeradezykelfreie AFs erzeugt; das Ergebnis für die \emph{preferred}-Semantik folgt 
-aus der Übereinstimmung beider Semantiken auf dieser Graphklasse. Für die \emph{complete}-
-Semantik wird eine neue Konstruktion entwickelt, welche die zusätzlich möglichen 
+aus der Übereinstimmung beider Semantiken auf dieser Graphklasse. Für die \emph{complete}-Semantik 
+wird eine neue Konstruktion entwickelt, welche die zusätzlich möglichen 
 partiellen Labellings kontrolliert. 
-Damit wird für alle drei Semantiken \(\Pi_2^\text{P}\)-Vollständigkeit nachgewiesen.
+Damit wird für alle drei Semantiken \(\Pi_2^{\mathrm{P}}\)-Vollständigkeit nachgewiesen.
 
 \section{Azyklische AFs}
 \label{sec:acyc-afs}
@@ -41,7 +42,7 @@ eine unmittelbare Aussage über \(X\perp_\sigma Y\mid Z\) erlaubt.
 \begin{Proposition}
 \label{prop:acyc-af-ci-st-top}
     Sei \(F=(A,R)\) ein azyklisches AF und \(\sigma\) eine Semantik mit
-    \(\sigma \in \{co,st,pr\}\). Dann gilt für alle paarweise disjunkten
+    \(\sigma \in \{\mathsf{co},\mathsf{st},\mathsf{pr}\}\). Dann gilt für alle paarweise disjunkten
     \(X,Y,Z \subseteq A\), dass \(X\perp_\sigma Y\mid Z\).
 \end{Proposition}
 
@@ -50,8 +51,8 @@ eine unmittelbare Aussage über \(X\perp_\sigma Y\mid Z\) erlaubt.
     Sei \(F=(A,R)\) ein azyklisches AF. Für azyklische AFs fallen die \emph{complete}-, 
     \emph{preferred}- und \emph{stable}-Semantik mit der \emph{grounded}-Semantik zusammen. 
     Da das \emph{grounded}-Labelling eindeutig ist, existiert genau ein Labelling \(\lambda\),
-     sodass \(\Lambda_{co}(F)=\Lambda_{pr}(F)=\Lambda_{st}(F)=\{\lambda\}\).
-    Sei nun \(\sigma \in \{co,st,pr\}\). Dann gilt insbesondere \(|\Lambda_\sigma(F)|=1\).
+     sodass \(\Lambda_{\mathrm{co}}(F)=\Lambda_{\mathrm{pr}}(F)=\Lambda_{\mathrm{st}}(F)=\{\lambda\}\).
+    Sei nun \(\sigma \in \{\mathsf{co},\mathsf{st},\mathsf{pr}\}\). Dann gilt insbesondere \(|\Lambda_{\sigma}(F)|=1\).
      Nach Lemma~\ref{lem:independence-trivial-labelling-set} folgt für alle 
      paarweise disjunkten \(X,Y,Z \subseteq A\), dass \(X \perp_\sigma Y \mid Z\) gilt.
 \end{proof}
@@ -64,18 +65,18 @@ dass sich erneut allgemeine Aussagen über \(X\perp_\sigma Y\mid Z\) ableiten la
 \begin{Proposition}
 \label{prop:even-cycle-free-af-ci-st-top}
     Sei \(F=(A,R)\) ein AF ohne gerade Zyklen und \(\sigma\) eine Semantik mit
-    \(\sigma \in \{co,st,pr\}\). Dann gilt für alle paarweise disjunkten
+    \(\sigma \in \{\mathsf{co},\mathsf{st},\mathsf{pr}\}\). Dann gilt für alle paarweise disjunkten
     \(X,Y,Z \subseteq A\), dass \(X\perp_\sigma Y\mid Z\).
 \end{Proposition}
 
 \begin{proof}
 \label{even-cycle-free-af-ci-top-true}
-    Sei \(F=(A,R)\) ein AF ohne gerade Zyklen. Für diese Klasse fallen die \emph{complete}- und die \emph{preferred}-Semantik mit der \emph{grounded}-Semantik zusammen. 
-    Da das grounded Labelling eindeutig ist, gilt \(|\Lambda_{co}(F)|= |\Lambda_{pr}(F)|=1\).
-    Für die \emph{stable}-Semantik ist das grounded Labelling der einzige mögliche Kandidat. 
-    Daher gilt entweder \(\Lambda_{st}(F)=\emptyset\), falls das \emph{grounded }Labelling nicht \emph{stable} ist, oder \(\Lambda_{st}(F)=\{\lambda\}\), 
-    falls das \emph{grounded} Labelling \emph{stable} ist. In beiden Fällen gilt \(|\Lambda_{st}(F)| \leq 1\).
-    Somit gilt für jedes \(\sigma \in \{co,st,pr\}\), dass \(|\Lambda_\sigma(F)| \leq 1\). 
+    Sei \(F=(A,R)\) ein AF ohne gerade Zyklen. Für diese Klasse fallen die \emph{complete}- und die \emph{preferred}-Labellings mit dem \emph{grounded}-Labelling zusammen. 
+    Da das \emph{grounded}-Labelling eindeutig ist, gilt \(|\Lambda_{\mathrm{co}}(F)|= |\Lambda_{\mathrm{pr}}(F)|=1\).
+    Für die \emph{stable}-Semantik ist das \emph{grounded}-Labelling der einzige mögliche Kandidat. 
+    Daher gilt entweder \(\Lambda_{\mathrm{st}}(F)=\emptyset\), falls das \emph{grounded}-Labelling nicht \emph{stable} ist, oder \(\Lambda_{\mathrm{st}}(F)=\{\lambda\}\), 
+    falls das \emph{grounded}-Labelling \emph{stable} ist. In beiden Fällen gilt \(|\Lambda_{\mathrm{st}}(F)| \leq 1\).
+    Somit gilt für jedes \(\sigma \in \{\mathsf{co},\mathsf{st},\mathsf{pr}\}\), dass \(|\Lambda_{\sigma}(F)| \leq 1\). 
     Nach Lemma~\ref{lem:independence-trivial-labelling-set} folgt für alle paarweise disjunkten \(X,Y,Z \subseteq A\), dass \(X \perp_\sigma Y \mid Z\) gilt.
 \end{proof}
 
@@ -100,12 +101,12 @@ Die Beschränkung auf ungeradezykelfreie AFs senkt die Komplexität der \emph{st
 \begin{Proposition}
     \label{prop:ocf-af-ci-st-pi^2}
     Die \emph{stable}-Unabhängigkeit ist auch auf ungeradezykelfreien AFs
-    \(\Pi_2^{\mathrm P}\)-vollständig.
+    \(\Pi_2^{\mathrm{P}}\)-vollständig.
 \end{Proposition}
 
 \begin{proof}
     \label{pr:ocf-af-ci-st-pi^2-is-correct}
-    Die Zugehörigkeit zu \(\Pi_2^{\mathrm P}\) folgt aus dem entsprechenden
+    Die Zugehörigkeit zu \(\Pi_2^{\mathrm{P}}\) folgt aus dem entsprechenden
     Ergebnis für allgemeine AFs
     \parencite[Proposition~4.10]{bluemel:2025:independence-aba}.
     Für die Härte betrachten wir die direkte AF-Konstruktion aus
@@ -129,7 +130,7 @@ Die Beschränkung auf ungeradezykelfreie AFs senkt die Komplexität der \emph{st
     \(\varphi\leftrightarrow t\).Außerdem besitzen die Klauselargumente keine
     Selbstangriffe. Somit hat jeder gerichtete Zyklus gerade Länge und jedes
     durch die Reduktion erzeugte AF ist ungeradezykelfrei. Die
-    \(\Pi_2^{\mathrm P}\)-Härte gilt folglich auch auf dieser Graphklasse.
+    \(\Pi_2^{\mathrm{P}}\)-Härte gilt folglich auch auf dieser Graphklasse.
 \end{proof}
 
 \begin{figure}
@@ -151,32 +152,32 @@ Die Beschränkung auf ungeradezykelfreie AFs senkt die Komplexität der \emph{st
 \end{figure}
 
 Abbildung~\ref{fig:reduktion-stable} zeigt eine konkrete Instanz der Reduktion.
-Das vorangegangene Ergebnis lässt sich auf ungeradezykelfreien AFs unmittelbar auf die \emph{preferred}-Unabhängigkeit übertragen. 
-Maßgeblich ist die Gleichheit \(\Lambda_{st}(F)=\Lambda_{pr}(F)\), 
+Das vorangegangene Ergebnis lässt sich für ungeradezykelfreien AFs unmittelbar auf die \emph{preferred}-Unabhängigkeit übertragen. 
+Maßgeblich ist die Gleichheit \(\Lambda_{\mathrm{st}}(F)=\Lambda_{\mathrm{pr}}(F)\), 
 aufgrund derer beide Unabhängigkeitsbegriffe auf derselben Menge von Labellings ausgewertet werden.
 \begin{Proposition}
     \label{prop:ocf-af-ci-pr-pi^2-c}
-    Die \(preferred\)-Unabhängigkeit ist auch in ungeradezykelfreien AFs \(\Pi_2^\text{P}\)-vollständig .
+    Die \emph{preferred}-Unabhängigkeit ist auch in ungeradezykelfreien AFs \(\Pi_2^{\mathrm{P}}\)-vollständig.
 \end{Proposition}
 
 \begin{proof}
     \label{pr:ocf-af-ci-pr-pi^2-c-is-correct}
-    Dies folgt direkt aus Proposition \ref{prop:ocf-af-ci-st-pi^2} und der Tatsache, dass in ungeradezykelfreien AFs \(\Lambda_{st} = \Lambda_{pr}\).
+    Dies folgt direkt aus Proposition~\ref{prop:ocf-af-ci-st-pi^2} und der Tatsache, dass in ungeradezykelfreien AFs \(\Lambda_{\mathrm{st}}(F)=\Lambda_{\mathrm{pr}}(F)\).
 \end{proof}
 
 Für die \emph{complete}-Unabhängigkeit ist ein entsprechender Übertrag nicht möglich, 
-da \(\Lambda_{co}(F)\) zusätzliche, nichtmaximale Labellings enthalten kann. 
-Insbesondere können Variablenpaare mit \(und\) gelabelt sein, weshalb eine 
+da \(\Lambda_{\mathrm{co}}(F)\) zusätzliche, nichtmaximale Labellings enthalten kann. 
+Insbesondere können Variablenpaare mit \(\mathsf{und}\) gelabelt sein, weshalb eine 
 modifizierte Konstruktion benötigt wird, die totale und partielle Belegungen unterscheidet.
 \begin{Proposition}
     \label{prop:ocf-af-ci-co-pi^2-c}
-    Die \(complete\)-Unabhängigkeit ist auch in ungeradezykelfreien AFs \(\Pi_2^\text{P}\)-vollständig.
+    Die \emph{complete}-Unabhängigkeit ist auch in ungeradezykelfreien AFs \(\Pi_2^{\mathrm{P}}\)-vollständig.
 \end{Proposition}
 
 \begin{proof}
     \label{pr:ocf-af-ci-co-pi^2-c-is-correct}
     Wir modifizieren die Konstruktion von \textcite{bluemel:2025:independence-aba}.
-    Reduziert wird vom \(\Pi_2^P\)-vollständigen Problem
+    Reduziert wird vom \(\Pi_2^{\mathrm{P}}\)-vollständigen Problem
     \(\mathrm{QBF}^{2}_{\forall}\). Eine Instanz dieses Problems ist
     eine quantifizierte boolesche Formel der Form
     \(\Psi=\forall X\exists Y\,\varphi(X,Y), \)
@@ -249,7 +250,7 @@ modifizierte Konstruktion benötigt wird, die totale und partielle Belegungen un
     Als Instanz der \emph{complete}-Unabhängigkeit geben wir
     \(
         \{\varphi\}
-        \perp_{co}
+        \perp_{\mathrm{co}}
         X'
         \mid
         \{s\}
@@ -257,65 +258,67 @@ modifizierte Konstruktion benötigt wird, die totale und partielle Belegungen un
     aus.
 
     \paragraph{Vorbeobachtungen.}
-    Sei \(\lambda\in\Lambda_{co}(F_{\Psi})\) ein beliebiges
+    Sei \(\lambda\in\Lambda_{\mathrm{co}}(F_{\Psi})\) ein beliebiges
     \emph{complete}-Labelling. Für jedes \(x_i\in X'\) gilt
     \[
         \bigl(\lambda(x_i),\lambda(\overline{x_i})\bigr)
         \in
-        \{(in,out),(out,in),(und,und)\}.
+        \{(\mathsf{in},\mathsf{out}),
+          (\mathsf{out},\mathsf{in}),
+          (\mathsf{und},\mathsf{und})\}.
     \]
     In den ersten beiden Fällen ist die zugehörige Variable total
     belegt und im dritten Fall ist sie unentschieden belegt. Da \(d_i\) von beiden
-    Literalargumenten angegriffen wird, gilt \(\lambda(d_i)=out\) genau
-    im totalen Fall und \(\lambda(d_i)=und\) im unentschiedenen Fall.
-    Insbesondere erhält kein \(d_i\) das Label \(in\). Folglich gilt
-    \(\lambda(s)=in\) genau dann, wenn alle Variablenpaare für \(X'\)
-    total gelabelt sind; andernfalls ist \(\lambda(s)=und\). Da \(s\)
+    Literalargumenten angegriffen wird, gilt \(\lambda(d_i)=\mathsf{out}\) genau
+    im totalen Fall und \(\lambda(d_i)=\mathsf{und}\) im unentschiedenen Fall.
+    Insbesondere erhält kein \(d_i\) das Label \(\mathsf{in}\). Folglich gilt
+    \(\lambda(s)=\mathsf{in}\) genau dann, wenn alle Variablenpaare für \(X'\)
+    total gelabelt sind; andernfalls ist \(\lambda(s)=\mathsf{und}\). Da \(s\)
     der einzige Angreifer von \(g\) ist, gilt entsprechend
-    \(\lambda(g)=out\) beziehungsweise \(\lambda(g)=und\). Im
-    partiellen Fall gilt also \(\lambda(g)=und\). Da \(g\) jedes
+    \(\lambda(g)=\mathsf{out}\) beziehungsweise \(\lambda(g)=\mathsf{und}\). Im
+    partiellen Fall gilt also \(\lambda(g)=\mathsf{und}\). Da \(g\) jedes
     \(c_k\) und \(\varphi\) angreift, kann keines dieser Argumente mit
-    \(in\) gelabelt sein. Auf diese Weise wird die eigentliche
+    \(\mathsf{in}\) gelabelt sein. Auf diese Weise wird die eigentliche
     Formelauswertung ausgesetzt.
 
     \paragraph{Zu zeigende Aussage.}
     Wir zeigen die folgende Äquivalenz:
     \begin{equation}
         \Psi\text{ ist genau dann gültig, wenn }
-        \{\varphi\}\perp_{co}X'\mid\{s\}
+        \{\varphi\}\perp_{\mathrm{co}}X'\mid\{s\}
         \text{ in }F_{\Psi}\text{ gilt.}
         \tag{$*$}
     \end{equation}
 
     \paragraph{Beweis von \((*)\).}
     Sei zunächst \(\Psi\) gültig und seien
-    \(\lambda_1,\lambda_2\in\Lambda_{co}(F_{\Psi})\) mit
+    \(\lambda_1,\lambda_2\in\Lambda_{\mathrm{co}}(F_{\Psi})\) mit
     \(\lambda_1(s)=\lambda_2(s)\). Wir konstruieren ein
     \emph{complete}-Labelling \(\lambda_3\), das das Label von \(\varphi\) aus
     \(\lambda_1\) und das Labelling von \(X'\) aus \(\lambda_2\)
     übernimmt.
-    Falls \(\lambda_1(s)=\lambda_2(s)=und\), folgt aus den
-    Vorbeobachtungen, dass \(\lambda_1(g)=\lambda_2(g)=und\) gilt.
+    Falls \(\lambda_1(s)=\lambda_2(s)=\mathsf{und}\), folgt aus den
+    Vorbeobachtungen, dass \(\lambda_1(g)=\lambda_2(g)=\mathsf{und}\) gilt.
     Da \(g\) das Argument \(\varphi\) angreift, kann \(\varphi\) in
-    \(\lambda_1\) nicht mit \(in\) gelabelt sein: Dafür müssten alle
-    Angreifer von \(\varphi\) mit \(out\) gelabelt sein. Für jedes
+    \(\lambda_1\) nicht mit \(\mathsf{in}\) gelabelt sein: Dafür müssten alle
+    Angreifer von \(\varphi\) mit \(\mathsf{out}\) gelabelt sein. Für jedes
     \(x_i\in X'\) übernehmen wir die Labels des Variablenpaars
     \(x_i,\overline{x_i}\) aus \(\lambda_2\) und jedes Variablenpaar
-    \(y_j,\overline{y_j}\) labeln wir mit \((und,und)\). Die dadurch
+    \(y_j,\overline{y_j}\) labeln wir mit \((\mathsf{und},\mathsf{und})\). Die dadurch
     bestimmten Labels der Argumente \(d_i\) übernehmen wir ebenfalls und 
-    setzen ferner \(\lambda_3(s)=\lambda_3(g)=und\). Jedes
-    Klauselargument \(c_k\), das von einem mit \(in\) gelabelten
-    Literal angegriffen wird, erhält in \(\lambda_3\) das Label \(out\);
-    alle übrigen Klauselargumente erhalten das Label \(und\). Wegen
-    \(\lambda_3(g)=und\) sind genau diese beiden Fälle möglich.
+    setzen ferner \(\lambda_3(s)=\lambda_3(g)=\mathsf{und}\). Jedes
+    Klauselargument \(c_k\), das von einem mit \(\mathsf{in}\) gelabelten
+    Literal angegriffen wird, erhält in \(\lambda_3\) das Label \(\mathsf{out}\);
+    alle übrigen Klauselargumente erhalten das Label \(\mathsf{und}\). Wegen
+    \(\lambda_3(g)=\mathsf{und}\) sind genau diese beiden Fälle möglich.
     Abschließend wählen wir
-    \(\lambda_3(\varphi)=out\) und \(\lambda_3(t)=in\), falls
-    \(\lambda_1(\varphi)=out\) gilt. Falls
-    \(\lambda_1(\varphi)=und\) gilt, wählen wir dagegen
-    \(\lambda_3(\varphi)=\lambda_3(t)=und\). Damit übernimmt
+    \(\lambda_3(\varphi)=\mathsf{out}\) und \(\lambda_3(t)=\mathsf{in}\), falls
+    \(\lambda_1(\varphi)=\mathsf{out}\) gilt. Falls
+    \(\lambda_1(\varphi)=\mathsf{und}\) gilt, wählen wir dagegen
+    \(\lambda_3(\varphi)=\lambda_3(t)=\mathsf{und}\). Damit übernimmt
     \(\lambda_3\) in beiden Fällen das Label von \(\varphi\) aus
     \(\lambda_1\).
-    Falls \(\lambda_1(s)=\lambda_2(s)=in\), kodiert
+    Falls \(\lambda_1(s)=\lambda_2(s)=\mathsf{in}\), kodiert
     \(\lambda_2|_{X'}\) eine totale Belegung \(\alpha'\) von
     \(X'\). Wegen der Gültigkeit von
     \(\forall X'\exists Y\,\widehat{\varphi}\) existiert eine
@@ -324,20 +327,22 @@ modifizierte Konstruktion benötigt wird, die totale und partielle Belegungen un
     übernehmen wir die Labels des Variablenpaars
     \(x_i,\overline{x_i}\) aus \(\lambda_2\) und labeln die
     \(Y\)-Argumente gemäß \(\beta\). Damit sind alle \(d_i\) mit
-    \(out\), das Argument \(s\) mit \(in\) und das Argument \(g\) mit
-    \(out\) gelabelt. Außerdem wird jedes
-    Klauselargument von einem \(in\)-gelabelten Literal angegriffen
-    und somit mit \(out\) gelabelt. Daher können die drei möglichen
+    \(\mathsf{out}\), das Argument \(s\) mit \(\mathsf{in}\) und das Argument \(g\) mit
+    \(\mathsf{out}\) gelabelt. Außerdem wird jedes
+    Klauselargument von einem \(\mathsf{in}\)-gelabelten Literal angegriffen
+    und somit mit \(\mathsf{out}\) gelabelt. Daher können die drei möglichen
     Labels von \(\varphi\) durch
     \(
         \bigl(\lambda_3(\varphi),\lambda_3(t)\bigr)\in
-        \{(in,out),(out,in),(und,und)\}
+        \{(\mathsf{in},\mathsf{out}),
+          (\mathsf{out},\mathsf{in}),
+          (\mathsf{und},\mathsf{und})\}
     \)
     realisiert werden. Wir wählen das Paar, für das
     \(\lambda_3(\varphi)=\lambda_1(\varphi)\) gilt. Somit existiert in
     beiden Fällen das
     erforderliche Labelling \(\lambda_3\), und es gilt
-    \(\{\varphi\}\perp_{co}X'\mid\{s\}\).
+    \(\{\varphi\}\perp_{\mathrm{co}}X'\mid\{s\}\).
 
     Für die umgekehrte Richtung zeigen wir die Kontraposition. Sei nun
     \(\Psi\) nicht gültig. Dann existiert eine Belegung
@@ -348,42 +353,42 @@ modifizierte Konstruktion benötigt wird, die totale und partielle Belegungen un
     Belegung \(\alpha'\) von \(X'\) und wählen eine beliebige totale
     Belegung der Variablen aus \(Y\). Für das zu konstruierende
     Labelling \(\lambda_2\) labeln wir die Variablenpaare gemäß diesen
-    Belegungen. Dadurch sind alle \(d_i\) mit \(out\), das Argument
-    \(s\) mit \(in\) und das Argument \(g\) mit \(out\) gelabelt. Ein
-    Klauselargument erhält das Label \(out\), wenn die zugehörige
-    Klausel erfüllt ist, und andernfalls das Label \(in\). Da
+    Belegungen. Dadurch sind alle \(d_i\) mit \(\mathsf{out}\), das Argument
+    \(s\) mit \(\mathsf{in}\) und das Argument \(g\) mit \(\mathsf{out}\) gelabelt. Ein
+    Klauselargument erhält das Label \(\mathsf{out}\), wenn die zugehörige
+    Klausel erfüllt ist, und andernfalls das Label \(\mathsf{in}\). Da
     \(x_0=\bot\) gilt und keine Belegung von \(Y\) die Formel
     \(\varphi\) unter \(\alpha\) erfüllt, ist mindestens ein
-    Klauselargument mit \(in\) gelabelt. Daher gilt notwendigerweise
-    \(\lambda_2(\varphi)=out\) und folglich \(\lambda_2(t)=in\).
+    Klauselargument mit \(\mathsf{in}\) gelabelt. Daher gilt notwendigerweise
+    \(\lambda_2(\varphi)=\mathsf{out}\) und folglich \(\lambda_2(t)=\mathsf{in}\).
     Die so festgelegten Labels bilden ein \emph{complete}-Labelling,
-    das \(\alpha'\) kodiert und für das \(\lambda_2(s)=in\) gilt.
+    das \(\alpha'\) kodiert und für das \(\lambda_2(s)=\mathsf{in}\) gilt.
     Separat konstruieren wir ein \emph{complete}-Labelling \(\lambda_1\)
-    mit \(\lambda_1(s)=in\) und \(\lambda_1(\varphi)=in\). Dazu wählen
+    mit \(\lambda_1(s)=\mathsf{in}\) und \(\lambda_1(\varphi)=\mathsf{in}\). Dazu wählen
     wir eine totale Belegung der Variablen aus \(X'\cup Y\) mit
     \(x_0=\top\) und labeln die Variablenpaare entsprechend. Das
-    Argument \(x_0\) ist dann mit \(in\) gelabelt und greift alle
-    Klauselargumente an, sodass diese das Label \(out\) erhalten. Weil
+    Argument \(x_0\) ist dann mit \(\mathsf{in}\) gelabelt und greift alle
+    Klauselargumente an, sodass diese das Label \(\mathsf{out}\) erhalten. Weil
     alle Variablenpaare total gelabelt sind, gilt außerdem
-    \(\lambda_1(s)=in\) und \(\lambda_1(g)=out\). Schließlich setzen
-    wir \(\lambda_1(\varphi)=in\) und \(\lambda_1(t)=out\).
+    \(\lambda_1(s)=\mathsf{in}\) und \(\lambda_1(g)=\mathsf{out}\). Schließlich setzen
+    wir \(\lambda_1(\varphi)=\mathsf{in}\) und \(\lambda_1(t)=\mathsf{out}\).
 
     Angenommen, es gäbe ein \emph{complete}-Labelling \(\lambda_3\),
-    für das \(\lambda_3(\varphi)=\lambda_1(\varphi)=in\),
+    für das \(\lambda_3(\varphi)=\lambda_1(\varphi)=\mathsf{in}\),
     \(\lambda_3|_{X'}=\lambda_2|_{X'}\) und
-    \(\lambda_3(s)=\lambda_1(s)=\lambda_2(s)=in\) gilt. Aus
-    \(\lambda_3(\varphi)=in\) folgt, dass alle Klauselargumente \(c_k\)
-    mit \(out\) gelabelt sind. Wegen \(\lambda_3(s)=in\) gilt auch
-    \(\lambda_3(g)=out\). Daher muss
-    jedes \(c_k\) von einem mit \(in\) gelabelten Literalargument
-    angegriffen werden. Die mit \(in\) gelabelten \(Y\)-Literale
+    \(\lambda_3(s)=\lambda_1(s)=\lambda_2(s)=\mathsf{in}\) gilt. Aus
+    \(\lambda_3(\varphi)=\mathsf{in}\) folgt, dass alle Klauselargumente \(c_k\)
+    mit \(\mathsf{out}\) gelabelt sind. Wegen \(\lambda_3(s)=\mathsf{in}\) gilt auch
+    \(\lambda_3(g)=\mathsf{out}\). Daher muss
+    jedes \(c_k\) von einem mit \(\mathsf{in}\) gelabelten Literalargument
+    angegriffen werden. Die mit \(\mathsf{in}\) gelabelten \(Y\)-Literale
     bestimmen eine partielle Belegung von \(Y\), die sich beliebig zu
     einer totalen Belegung \(\beta\) erweitern lässt. Jede solche
     Erweiterung erfüllt zusammen mit \(\alpha'\) alle Klauseln von
     \(\widehat{\varphi}\). Wegen \(x_0=\bot\) folgt daraus
     \(\varphi(\alpha,\beta)=\top\), im Widerspruch zur Wahl von
     \(\alpha\). Ein solches \(\lambda_3\) existiert daher nicht, und
-    \(\{\varphi\}\not\perp_{co}X'\mid\{s\}\) gilt.
+    \(\{\varphi\}\not\perp_{\mathrm{co}}X'\mid\{s\}\) gilt.
 
     Damit ist die Aussage \((*)\) bewiesen.
 
@@ -464,9 +469,9 @@ modifizierte Konstruktion benötigt wird, die totale und partielle Belegungen un
     \label{tab:komplexitaet-graphklassen}
 \end{table}
 
-Wie die Tabelle~\ref{tab:komplexitaet-graphklassen} zusammenfassend zeigt, ist die
-bedingte \(\sigma\)-Unabhängigkeit für \(\sigma\in\{co,st,pr\}\) auf
-azyklischen und geradezykelfreien AFs trivial; jede Anfrage wird positiv
+Tabelle~\ref{tab:komplexitaet-graphklassen} zeigt: Die bedingte
+\(\sigma\)-Unabhängigkeit ist auf azyklischen und geradezykelfreien AFs
+für alle drei betrachteten Semantiken trivial; jede Anfrage wird positiv
 beantwortet. Auf ungeradezykelfreien AFs ist das Entscheidungsproblem
 dagegen für alle drei Semantiken \(\Pi_2^{\mathrm{P}}\)-vollständig und liegt
 damit auf der zweiten Ebene der polynomiellen Hierarchie.
@@ -479,11 +484,11 @@ damit auf der zweiten Ebene der polynomiellen Hierarchie.
 \section{Bipartite AFs}
 \begin{Proposition}
 \label{prop:bip-st-ind-hard}
-    \(stable\)-Unabhängigkeit ist auch in bipartiten AFs \(\Pi_2^\text{P}\)-vollständig.
+    \(stable\)-Unabhängigkeit ist auch in bipartiten AFs \(\Pi_2^{\mathrm{P}}\)-vollständig.
 \end{Proposition}
 
 \begin{proof}
-    Wir reduzieren vom \(\Pi_2^P\)-vollständigen Problem
+    Wir reduzieren vom \(\Pi_2^{\mathrm{P}}\)-vollständigen Problem
     \textsc{Balanced Monotone \(\forall\exists\)-3-SAT-\((1,1,2,2)\)}.
 
     \paragraph{Konstruktion.}
@@ -539,41 +544,41 @@ Die Angriffsrelation ist
 \end{aligned}
 \]
 Als \(stable\)-Unabhängigkeitsinstanz wählen wir
-\(\{\varphi^{+},\varphi^{-}\} \perp_{st} X \cup \{p,n\} \mid \emptyset\).
+\(\{\varphi^{+},\varphi^{-}\} \perp_{\mathrm{st}} X \cup \{p,n\} \mid \emptyset\).
 
 Die gegenseitigen Angriffe
 \(
     v\leftrightarrow\overline{v}
 \)
 erzwingen unter stabiler Semantik, dass genau eines der beiden
-Literalargumente \(in\) ist. Jedes stabile Labelling kodiert damit eine
+Literalargumente \(\mathsf{in}\) ist. Jedes stabile Labelling kodiert damit eine
 totale Wahrheitsbelegung.
 Ein positives Klauselargument \(c_C\) wird von den positiven
 Literalargumenten seiner Klausel sowie von \(p\) angegriffen. Ein negatives
 Klauselargument wird von den entsprechenden negativen Literalargumenten
 sowie von \(\overline{n}\) angegriffen. Wenn
 \(
-    p=out
+    p=\mathsf{out}
     \text{und}
-    n=in,
+    n=\mathsf{in},
 \)
 dann werden die Klauselargumente ausschließlich durch die ursprünglichen Literale
 kontrolliert werden.
 Falls
 \(
-    p=in
+    p=\mathsf{in}
     \text{und}
-    n=out
+    n=\mathsf{out}
 \)
-sind \(p\) und \(\overline{n}\) jeweils \(in\). Dadurch werden alle positiven
+sind \(p\) und \(\overline{n}\) jeweils \(\mathsf{in}\). Dadurch werden alle positiven
 beziehungsweise negativen Klauselargumente angegriffen. Somit ist
 \(
-    \varphi^{+}=\varphi^{-}=in
+    \varphi^{+}=\varphi^{-}=\mathsf{in}
 \)
 unabhängig von der ursprünglichen Formel separat realisierbar.
 Die Argumente \(t^{+}\) und \(t^{-}\) erlauben es, die Labels von
-\(\varphi^{+}\) und \(\varphi^{-}\) unabhängig auf \(in\) oder \(out\) zu
-setzen, sofern die zugehörigen Klauselargumente \(out\) sind.
+\(\varphi^{+}\) und \(\varphi^{-}\) unabhängig auf \(\mathsf{in}\) oder \(\mathsf{out}\) zu
+setzen, sofern die zugehörigen Klauselargumente \(\mathsf{out}\) sind.
 
 \paragraph{Graphklassenzugehörigkeit.}
 Definiere
@@ -614,7 +619,7 @@ und \(F_{\Psi}\) ist bipartit.
 
     \paragraph{Korrektheit.}
     In jedem stabilen Labelling ist aus jedem Paar \(v,\overline{v}\) genau ein Argument
-    mit \(in\) gelabelt. Die Einschränkung eines stabilen Labellings auf die
+    mit \(\mathsf{in}\) gelabelt. Die Einschränkung eines stabilen Labellings auf die
     Variablenargumente entspricht daher einer totalen Wahrheitsbelegung.
 
     Angenommen, \(\Psi\) ist gültig. Seien \(\lambda_1\) und \(\lambda_2\) beliebige
@@ -624,11 +629,11 @@ und \(F_{\Psi}\) ist bipartit.
     \(\lambda_2\) bestimmten \(X\)-Belegung eine Belegung von \(Y\), welche alle
     ursprünglichen Klauseln von \(\varphi\) erfüllt. Diese Belegung erfüllt die
     Klauseln unabhängig von den Werten der Variablen \(p\) und \(n\). Daher werden
-    sämtliche Klauselargumente mit \(out\) gelabelt.
+    sämtliche Klauselargumente mit \(\mathsf{out}\) gelabelt.
 
     Anschließend können die Labels von \(\varphi^{+}\) und \(\varphi^{-}\) unabhängig
-    gewählt werden: Für \(\varphi^{+}=in\) wird \(t^{+}=out\) gesetzt, während für
-    \(\varphi^{+}=out\) das Argument \(t^{+}\) mit \(in\) gelabelt wird. Analog wird
+    gewählt werden: Für \(\varphi^{+}=\mathsf{in}\) wird \(t^{+}=\mathsf{out}\) gesetzt, während für
+    \(\varphi^{+}=\mathsf{out}\) das Argument \(t^{+}\) mit \(\mathsf{in}\) gelabelt wird. Analog wird
     mit \(\varphi^{-}\) und \(t^{-}\) verfahren. Somit existiert ein stabiles Labelling,
     das die Einschränkung von \(\lambda_1\) auf \(A\) und die Einschränkung von
     \(\lambda_2\) auf \(B\) kombiniert.
@@ -636,35 +641,35 @@ und \(F_{\Psi}\) ist bipartit.
     Sei nun \(\Psi\) nicht gültig. Dann existiert eine Belegung
     \(\alpha\) von \(X\), sodass keine Belegung von \(Y\) die Formel \(\varphi\)
     unter \(\alpha\) erfüllt. Ergänze diese Belegung durch \(p=\perp\) und \(n=\top\).
-    Im zugehörigen stabilen Labelling \(\lambda_1\) sind \(p\) und \(\overline{n}\) mit \(out\)
+    Im zugehörigen stabilen Labelling \(\lambda_1\) sind \(p\) und \(\overline{n}\) mit \(\mathsf{out}\)
     gelabelt.
 
     Andererseits ist das Labelling
-    \(\varphi^{+}=in\) und \(\varphi^{-}=in\) als \(\lambda_2\) realisierbar. Hierzu wird
+    \(\varphi^{+}=\mathsf{in}\) und \(\varphi^{-}=\mathsf{in}\) als \(\lambda_2\) realisierbar. Hierzu wird
     \(p=\top\) und \(n=\perp\) gewählt. Dann sind \(p\) und \(\overline{n}\) mit
-    \(in\) gelabelt und greifen alle positiven beziehungsweise negativen
-    Klauselargumente an. Daher sind sämtliche Klauselargumente \(out\), sodass
-    \(\varphi^{+}\) und \(\varphi^{-}\) gleichzeitig \(in\) sein können.
+    \(\mathsf{in}\) gelabelt und greifen alle positiven beziehungsweise negativen
+    Klauselargumente an. Daher sind sämtliche Klauselargumente \(\mathsf{out}\), sodass
+    \(\varphi^{+}\) und \(\varphi^{-}\) gleichzeitig \(\mathsf{in}\) sein können.
 
     Ein kombinierendes stabiles Labelling müsste gleichzeitig die nicht erfüllende
-    Belegung \(\alpha\), die Labels \(p=out,n=in\) und
-    \(\varphi^{+}=\varphi^{-}=in\) realisieren. Aus
-    \(\varphi^{+}=\varphi^{-}=in\) folgt, dass alle positiven und negativen
-    Klauselargumente \(out\) sind. Da \(p\text{ und } \overline{n}\) keine Klauselargumente
-    angreifen, muss jede Klausel von mindestens einem \(in\)-gelabelten ursprünglichen
+    Belegung \(\alpha\), die Labels \(p=\mathsf{out},n=\mathsf{in}\) und
+    \(\varphi^{+}=\varphi^{-}=\mathsf{in}\) realisieren. Aus
+    \(\varphi^{+}=\varphi^{-}=\mathsf{in}\) folgt, dass alle positiven und negativen
+    Klauselargumente \(\mathsf{out}\) sind. Da \(p\text{ und } \overline{n}\) keine Klauselargumente
+    angreifen, muss jede Klausel von mindestens einem \(\mathsf{in}\)-gelabelten ursprünglichen
     Literalargument angegriffen werden. Die dadurch bestimmte Belegung von \(Y\) würde
     \(\varphi\) unter \(\alpha\) erfüllen, im Widerspruch zur Wahl von \(\alpha\).
 \end{proof}
 
 \begin{Proposition}
     \label{prop:bip-prf-ind-hard}
-    \(preferred\)-Unabhängigkeit ist auch in bipartiten AFs \(\Pi_2^\text{P}\)-vollständig.
+    \(preferred\)-Unabhängigkeit ist auch in bipartiten AFs \(\Pi_2^{\mathrm{P}}\)-vollständig.
 \end{Proposition}
 
 \begin{proof}
     Folgt direkt aus Proposition \ref{prop:bip-st-ind-hard} und der Tatsache, dass 
     bipartite Graphen eine Unterklasse der ungeradezykelfreien Graphen sind. Womit direkt
-    \(\Lambda_{st} = \Lambda_{pr}\) gilt. 
+    \(\Lambda_{\mathrm{st}}(F)=\Lambda_{\mathrm{pr}}(F)\) gilt. 
 \end{proof}
 
 \iffalse
@@ -703,15 +708,15 @@ vollständig gerichteten AFs.
     Für jedes Argument \(a\in A\) definieren wir ein Labelling \(\lambda_a\)
     durch
     \[
-        \mathit{in}(\lambda_a)=\{a\}
+        \mathsf{in}(\lambda_a)=\{a\}
         \qquad\text{und}\qquad
-        \mathit{out}(\lambda_a)=A\setminus\{a\}.
+        \mathsf{out}(\lambda_a)=A\setminus\{a\}.
     \]
     Da \(a\) jedes Argument aus \(A\setminus\{a\}\) angreift, ist jedes
-    Argument mit Label \(\mathit{out}\) von einem Argument mit Label
-    \(\mathit{in}\) angegriffen. Zugleich wird \(a\) von keinem Argument mit
-    Label \(\mathit{in}\) angegriffen, da \(a\) das einzige Argument mit Label
-    \(\mathit{in}\) ist. Somit ist \(\lambda_a\) ein
+    Argument mit Label \(\mathsf{out}\) von einem Argument mit Label
+    \(\mathsf{in}\) angegriffen. Zugleich wird \(a\) von keinem Argument mit
+    Label \(\mathsf{in}\) angegriffen, da \(a\) das einzige Argument mit Label
+    \(\mathsf{in}\) ist. Somit ist \(\lambda_a\) ein
     \textit{stable}-Labelling von \(F\). Da jedes \(a\in A\) ein solches
     Labelling liefert, folgt
     \[
@@ -720,26 +725,26 @@ vollständig gerichteten AFs.
 
     Umgekehrt sei \(\lambda\in\Lambda_{\mathrm{st}}(F)\). Da
     \(\lambda\) ein \textit{stable}-Labelling ist, gilt
-    \(\mathit{und}(\lambda)=\emptyset\). Außerdem kann
-    \(\mathit{in}(\lambda)\) nicht leer sein: Wäre
-    \(\mathit{in}(\lambda)=\emptyset\), so hätte kein Argument mit Label
-    \(\mathit{out}\) einen Angreifer mit Label \(\mathit{in}\), im Widerspruch
+    \(\mathsf{und}(\lambda)=\emptyset\). Außerdem kann
+    \(\mathsf{in}(\lambda)\) nicht leer sein: Wäre
+    \(\mathsf{in}(\lambda)=\emptyset\), so hätte kein Argument mit Label
+    \(\mathsf{out}\) einen Angreifer mit Label \(\mathsf{in}\), im Widerspruch
     zur \textit{stable}-Bedingung.
 
     Es bleibt zu zeigen, dass höchstens ein Argument mit Label
-    \(\mathit{in}\) existieren kann. Angenommen, es gäbe zwei verschiedene
+    \(\mathsf{in}\) existieren kann. Angenommen, es gäbe zwei verschiedene
     Argumente \(a,b\in A\) mit
     \[
-        \lambda(a)=\mathit{in}
+        \lambda(a)=\mathsf{in}
         \qquad\text{und}\qquad
-        \lambda(b)=\mathit{in}.
+        \lambda(b)=\mathsf{in}.
     \]
     Da \(F\) vollständig gerichtet ist, gilt \((a,b)\in R\). Damit wird ein
-    Argument mit Label \(\mathit{in}\) von einem Argument mit Label
-    \(\mathit{in}\) angegriffen. Dies widerspricht der Bedingung, dass ein
-    Argument genau dann \(\mathit{in}\) ist, wenn alle seine Angreifer
-    \(\mathit{out}\) sind. Also enthält jedes \textit{stable}-Labelling genau
-    ein Argument mit Label \(\mathit{in}\).
+    Argument mit Label \(\mathsf{in}\) von einem Argument mit Label
+    \(\mathsf{in}\) angegriffen. Dies widerspricht der Bedingung, dass ein
+    Argument genau dann \(\mathsf{in}\) ist, wenn alle seine Angreifer
+    \(\mathsf{out}\) sind. Also enthält jedes \textit{stable}-Labelling genau
+    ein Argument mit Label \(\mathsf{in}\).
 
     Folglich sind die \textit{stable}-Labellings von \(F\) genau die
     Labellings \(\lambda_a\) mit \(a\in A\). Daher gilt
@@ -751,7 +756,7 @@ vollständig gerichteten AFs.
 Insbesondere existiert für jedes \(a\in A\) genau ein
 \textit{stable}-Labelling \(\lambda_a\) mit
 \[
-    \mathit{in}(\lambda_a)=\{a\}.
+    \mathsf{in}(\lambda_a)=\{a\}.
 \]
 Damit kann jedes einzelne Argument in einem \textit{stable}-Labelling
 akzeptiert werden, aber niemals gemeinsam mit einem anderen Argument.
@@ -775,12 +780,12 @@ akzeptiert werden, aber niemals gemeinsam mit einem anderen Argument.
     \textit{stable}-Labellings \(\lambda_x,\lambda_y\in
     \Lambda_{\mathrm{st}}(F)\) mit
     \[
-        \mathit{in}(\lambda_x)=\{x\}
+        \mathsf{in}(\lambda_x)=\{x\}
         \qquad\text{und}\qquad
-        \mathit{in}(\lambda_y)=\{y\}.
+        \mathsf{in}(\lambda_y)=\{y\}.
     \]
     Da weder \(x\) noch \(y\) in \(Z\) liegt, erhalten alle Argumente aus
-    \(Z\) in beiden Labellings das Label \(\mathit{out}\). Also gilt
+    \(Z\) in beiden Labellings das Label \(\mathsf{out}\). Also gilt
     \[
         \lambda_x|_Z=\lambda_y|_Z.
     \]
@@ -797,12 +802,12 @@ akzeptiert werden, aber niemals gemeinsam mit einem anderen Argument.
     \]
     Insbesondere folgt daraus
     \[
-        \lambda_3(x)=\mathit{in}
+        \lambda_3(x)=\mathsf{in}
         \qquad\text{und}\qquad
-        \lambda_3(y)=\mathit{in}.
+        \lambda_3(y)=\mathsf{in}.
     \]
-    Dies ergibt allerdings sofort einen Widerspruch, da \((a,b) \in R\) ist und somit ein mit dem \(\mathit{in}\)-\emph{Label} versehenes Argument ein weiteres mit
-    dem \(\mathit{in}\)-\emph{Label} versehenes Argument angreifen würde.  
+    Dies ergibt allerdings sofort einen Widerspruch, da \((a,b) \in R\) ist und somit ein mit dem \(\mathsf{in}\)-\emph{Label} versehenes Argument ein weiteres mit
+    dem \(\mathsf{in}\)-\emph{Label} versehenes Argument angreifen würde.  
 
     Also kann kein solches \(\lambda_3\) existieren. Damit gilt
     \[

@@ -6,56 +6,43 @@
 \begin{otherlanguage}{american}
     \chapter*{Abstract}
 
-    When conflicting information admits several valid assessments, the
-    relevant question is not only which arguments can be accepted, but
-    also whether partial decisions can be combined independently while a
-    shared context is held fixed. Abstract argumentation frameworks (AFs)
-    model such situations through arguments and directed attacks.
-    Conditional independence asks whether the assessments of two sets of
-    arguments \(X\) and \(Y\), taken from labellings that agree on a
-    conditioning set \(Z\), can be recombined in another valid labelling.
-    Deciding this property exactly is computationally demanding because
-    of its universal-existential structure. Moreover, existing
-    graph-based criteria identify only some of the independences that
-    actually hold. This thesis therefore addresses the absence of an
-    exact decision procedure whose practical behavior has been
-    investigated empirically.
+    Abstract argumentation frameworks (AFs) model conflicts through
+    arguments and directed attacks. Conditional independence asks whether
+    assessments of disjoint argument sets \(X\) and \(Y\), taken from valid
+    labelings that agree on a conditioning set \(Z\), can be recombined in
+    another valid labeling. Because graph-based criteria capture only some
+    cases in which independence holds, an exact decision procedure is
+    required.
 
-    A uniform encoding using quantified Boolean formulas (QBFs) is
-    developed for the \emph{complete}, \emph{stable}, and
-    \emph{preferred} semantics. Boolean variables represent the labels
-    \(\mathsf{in}\), \(\mathsf{out}\), and \(\mathsf{und}\) of each
-    argument. Semantic encodings, equality constraints, and a mixing
-    formula connect two universally considered source labellings with an
-    existentially required recombination labelling. For the
-    \emph{preferred} semantics, the maximality of the accepted arguments
-    is additionally encoded. A correctness proof establishes that the
-    resulting QBF is true if and only if the requested conditional
-    independence holds. Consequently, all valid labellings do not have to
-    be generated explicitly before the query can be decided.
+    This thesis develops a uniform encoding using quantified Boolean
+    formulas (QBFs) for the \emph{complete}, \emph{stable}, and
+    \emph{preferred} semantics. Boolean variables encode the labels
+    \(\mathsf{in}\), \(\mathsf{out}\), and \(\mathsf{und}\); semantic,
+    equality, and mixing constraints connect two universally quantified
+    source labelings with an existentially quantified recombination
+    labeling. For the \emph{preferred} semantics, the inclusion-maximality
+    of the set of accepted arguments is additionally encoded. A correctness
+    proof shows that the resulting QBF is true exactly when the requested
+    conditional independence holds, without requiring all valid labelings
+    to be enumerated explicitly.
 
-    The encodings are translated into the \texttt{QCIR-G14} format and
-    evaluated with QuAbS. The empirical study comprises \(9\,450\)
-    queries on \(105\) AFs from the ICCMA'25 benchmark collection, using
-    five singleton argument pairs, six conditioning levels, and the
-    three considered semantics. Of the \(7\,164\) decided queries,
-    \(6\,986\), or \(97.52\,\%\), are classified as independent, whereas
-    \(178\), or \(2.48\,\%\), are classified as dependent. Among the
-    decided queries, larger conditioning sets are associated with less
-    observed dependence, as well as with generally longer solver
-    runtimes and lower solution rates. The runtime effects are more
-    pronounced for the \emph{complete} and \emph{stable} semantics than
-    for the \emph{preferred} semantics.
+    The encodings are generated in the \texttt{QCIR-G14} format and
+    evaluated with QuAbS. The empirical evaluation uses \(105\) AFs from
+    the benchmark collection of the International Competition on
+    Computational Models of Argumentation 2025 (ICCMA 2025). For each AF
+    under each of the three semantics, five reproducibly sampled unordered
+    argument pairs are combined with six independently sampled, non-nested
+    conditioning sets. This yields \(9\,450\) queries, of which \(7\,164\)
+    are decided: \(6\,986\) (\(97.52\,\%\)) as independent and \(178\)
+    (\(2.48\,\%\)) as dependent. Among the decided queries, larger
+    conditioning sets are associated with a lower proportion of dependent
+    outcomes; they are also associated with longer solver runtimes and lower
+    cumulative decision rates. Because the conditioning sets are non-nested and the
+    logical status of undecided queries is unknown, these associations are
+    descriptive rather than causal.
 
-    For the benchmark collection studied, the results show that conditional
-    independence predominates among the decided queries under all three
-    semantics and that larger conditioning sets are associated with less
-    observed dependence and greater practical computational effort. The
-    complexity analysis complements this picture: every independence query
-    has a positive answer in acyclic and, more generally, even-cycle-free
-    AFs, whereas the decision problem is
-    \(\Pi_2^{\mathsf P}\)-complete under all three semantics in
-    odd-cycle-free AFs. Together, the exact QBF encoding, the empirical
-    evaluation, and the complexity results provide a unified foundation 
-    for analyzing conditional independence in argumentation frameworks.
+    The complexity analysis shows that every independence query has a
+    positive answer for acyclic and, more generally, even-cycle-free AFs,
+    whereas the problem restricted to odd-cycle-free AFs is
+    \(\Pi_2^{\mathrm{P}}\)-complete under all three semantics.
 \end{otherlanguage}

@@ -5,60 +5,45 @@
     \pdfbookmark[0]{Zusammenfassung}{Zusammenfassung}
     \chapter*{Zusammenfassung}
 
-    Wenn widersprüchliche Informationen mehrere zulässige Bewertungen
-    erlauben, ist nicht nur relevant, welche Argumente akzeptiert werden,
-    sondern auch, ob Teilentscheidungen bei festgehaltenem Kontext
-    unabhängig kombiniert werden können. Abstrakte Argumentationssysteme
-    (engl.\ \emph{abstract argumentation frameworks}, AFs) modellieren
-    solche Situationen durch Argumente und gerichtete Angriffe. Bedingte
-    Unabhängigkeit beschreibt darin, ob sich die Bewertungen zweier
-    Argumentmengen \(X\) und \(Y\), deren Ausgangslabellings auf einer
-    Konditionierungsmenge \(Z\) übereinstimmen, in einem weiteren
-    zulässigen Labelling rekombinieren lassen. Die exakte Prüfung dieser
-    Eigenschaft ist aufgrund ihrer universell-existentiellen Struktur
-    rechnerisch anspruchsvoll. Zugleich erfassen bestehende
-    graphstrukturelle Kriterien nur einen Teil der tatsächlich geltenden
-    Unabhängigkeiten. Ausgangspunkt dieser Arbeit ist daher das Fehlen
-    eines exakten und praktisch untersuchten Entscheidungsverfahrens.
+    Abstrakte Argumentationssysteme (AFs) modellieren Konflikte durch
+    Argumente und gerichtete Angriffe. Bedingte Unabhängigkeit fragt, ob
+    Bewertungen disjunkter Argumentmengen \(X\) und \(Y\) aus zulässigen
+    Labellings, die auf einer Konditionierungsmenge \(Z\) übereinstimmen, in
+    einem weiteren zulässigen Labelling rekombiniert werden können. Da
+    graphstrukturelle Kriterien nur einen Teil der geltenden
+    Unabhängigkeiten erfassen, ist eine exakte Prüfung erforderlich.
 
     Für die \emph{complete}-, \emph{stable}- und
-    \emph{preferred}-Semantik wird eine einheitliche Kodierung durch
-    quantifizierte boolesche Formeln (QBFs) entwickelt. Dabei repräsentieren
-    boolesche Variablen die Labels \(\mathsf{in}\), \(\mathsf{out}\) und
-    \(\mathsf{und}\) jedes Arguments. Semantikkodierungen,
-    Gleichheitsbedingungen und eine Mischungsformel verbinden zwei
-    universell betrachtete Ausgangslabellings mit einem existentiell
-    geforderten Rekombinationslabelling. Für die
-    \emph{preferred}-Semantik wird zusätzlich die Maximalität der
-    akzeptierten Argumente berücksichtigt. Der Korrektheitsnachweis zeigt,
-    dass die resultierende QBF genau dann wahr ist, wenn die angefragte
-    bedingte Unabhängigkeit gilt. Sämtliche zulässigen Labellings müssen
-    dafür nicht vorab explizit erzeugt werden.
+    \emph{preferred}-Semantik entwickelt diese Arbeit eine einheitliche
+    Kodierung durch quantifizierte boolesche Formeln (QBFs). Boolesche
+    Variablen kodieren die Labels \(\mathsf{in}\), \(\mathsf{out}\) und
+    \(\mathsf{und}\); Semantik-, Gleichheits- und Mischungsbedingungen
+    verbinden zwei universell betrachtete Ausgangslabellings mit einem
+    existenziell geforderten Rekombinationslabelling. Für die
+    \emph{preferred}-Semantik wird zusätzlich die Inklusionsmaximalität der
+    Menge akzeptierter Argumente kodiert. Ein Korrektheitsnachweis zeigt,
+    dass die Formel genau dann wahr ist, wenn die angefragte bedingte
+    Unabhängigkeit gilt, ohne dass sämtliche zulässigen Labellings vorab
+    explizit erzeugt werden müssen.
 
-    Die Kodierungen werden als \texttt{QCIR-G14} ausgegeben und
-    anschließend mit QuAbS ausgewertet. Die empirische Untersuchung umfasst
-    \(9\,450\) Anfragen für \(105\) AFs aus der Benchmarkauswahl der ICCMA
-    2025. Für jedes AF werden fünf Paare einzelner Argumente mit sechs
-    Konditionierungsstufen unter den drei betrachteten Semantiken untersucht.
-    Von den \(7\,164\) entschiedenen
-    Anfragen werden \(6\,986\), entsprechend \(97{,}52\,\%\), als
-    unabhängig und \(178\), entsprechend \(2{,}48\,\%\), als abhängig
-    klassifiziert. Größere Konditionierungsmengen gehen unter den
-    entschiedenen Anfragen mit weniger beobachteter Abhängigkeit sowie
-    tendenziell mit längeren Solverlaufzeiten und geringeren Lösungsquoten
-    einher. Diese Laufzeiteffekte sind unter \emph{complete} und
-    \emph{stable} deutlicher ausgeprägt als unter \emph{preferred}.
+    Die Kodierungen werden im Format \texttt{QCIR-G14} erzeugt und mit QuAbS
+    ausgewertet. Untersucht werden \(105\) AFs aus der Instanzsammlung der
+    International Competition on Computational Models of Argumentation 2025
+    (ICCMA 2025). Für jedes AF werden unter jeder der drei Semantiken fünf
+    reproduzierbar ausgewählte ungeordnete Argumentpaare mit sechs unabhängig
+    gezogenen, nicht geschachtelten Konditionierungsmengen kombiniert. Dies
+    ergibt \(9\,450\) Anfragen, von denen \(7\,164\) entschieden werden:
+    \(6\,986\) (\(97{,}52\,\%\)) als unabhängig und \(178\)
+    (\(2{,}48\,\%\)) als abhängig. Unter den entschiedenen Anfragen sind
+    größere Konditionierungsmengen mit einem geringeren Anteil abhängiger
+    Ergebnisse verbunden; zugleich gehen sie tendenziell mit längeren
+    Solverlaufzeiten und niedrigeren kumulativen Entscheidungsquoten einher. Wegen der
+    nicht geschachtelten Mengen und des unbekannten logischen Status nicht
+    entschiedener Anfragen ist dieser Zusammenhang rein deskriptiv.
 
-    Für die untersuchte Benchmarkauswahl zeigen die Ergebnisse, dass bedingte
-    Unabhängigkeit unter den entschiedenen Anfragen in allen drei Semantiken
-    den überwiegenden Fall bildet und größere Konditionierungsmengen mit
-    weniger beobachteter Abhängigkeit sowie einem höheren praktischen
-    Rechenaufwand einhergehen. Die berechnungstheoretische Analyse ergänzt
-    dieses Bild: In azyklischen und allgemeiner in geradezykelfreien AFs wird
-    jede Unabhängigkeitsanfrage positiv beantwortet, während das
-    Entscheidungsproblem auf ungeradezykelfreien AFs unter allen drei
-    Semantiken \(\Pi_2^{\mathsf P}\)-vollständig ist. Zusammen bilden die
-    exakte QBF-Kodierung, die empirische Evaluation und die
-    Komplexitätsergebnisse eine einheitliche Grundlage, um bedingte Unabhängigkeit
-    in Argumentationssystemen zu analysieren.
+    Komplexitätstheoretisch wird gezeigt, dass für azyklische und,
+    allgemeiner, für geradezykelfreie AFs jede Anfrage positiv beantwortet
+    wird, während das auf ungeradezykelfreie AFs eingeschränkte
+    Entscheidungsproblem unter allen drei Semantiken
+    \(\Pi_2^{\mathrm{P}}\)-vollständig ist.
 \end{otherlanguage}

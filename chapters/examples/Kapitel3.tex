@@ -150,7 +150,7 @@ Daher wird die Rekombinationsbedingung im nächsten Schritt als Entscheidungspro
     \[
         \begin{array}{ll}
         \text{Eingabe:}
-            &AF~F =(A,R)\text{ sowie paarweise disjunkte Mengen }
+            &\text{AF } F=(A,R)\text{ sowie paarweise disjunkte Mengen }
              X,Y,Z\subseteq A\\
         \text{Frage:}
             &\text{Gilt }X\perp_\sigma Y\mid Z\text{ in }F\,?
@@ -164,12 +164,12 @@ bereits für die betrachteten Standardsemantiken eine hohe Komplexität auf.
 Die Entscheidungsprobleme
 \(\mathrm{IND}_{\mathsf{co}}\) und
 \(\mathrm{IND}_{\mathsf{st}}\) sind
-\(\Pi^{\mathrm P}_2\)-vollständig.
+\(\Pi_2^{\mathrm{P}}\)-vollständig.
 Das Entscheidungsproblem
 \(\mathrm{IND}_{\mathsf{pr}}\) ist
-\(\Pi^{\mathrm P}_3\)-vollständig.
+\(\Pi_3^{\mathrm{P}}\)-vollständig.
 \end{Theorem}
-Die Komplexität entsteht durch die Betrachtung aller auf \(Z\) übereinstimmenden Labelling-Paare, 
+Die Komplexität entsteht durch die Betrachtung aller auf \(Z\) übereinstimmenden Labellingpaare, 
 für die jeweils ein geeignetes drittes Labelling existieren muss. 
 Bei \emph{preferred}-Labellings erzeugt die zusätzliche Maximalitätsprüfung eine weitere Prüfebene.
 
@@ -189,10 +189,11 @@ gilt die Unabhängigkeit hier trivial, wie das folgende Lemma festhält.
     \(\Lambda_\sigma(F)\) aus genau einem Labelling \(\lambda\), so kann
     für das einzige Paar \((\lambda,\lambda)\) dieses Labelling selbst als
     \(\lambda_3\) gewählt werden.
-\end{proof}\\
+\end{proof}
+
 Das Lemma ist für die spätere empirische Auswertung wesentlich: Eine hohe
 Unabhängigkeitsrate kann sowohl durch viele Kombinationsmöglichkeiten als auch 
-durch die Existenz von einem oder keinem Labelling entstehen.
+durch die Existenz genau eines oder keines Labellings entstehen.
 
 \section{Labellingbasierte Semantikkodierung}
 \label{sec:semantics-encoding}
@@ -246,7 +247,7 @@ gleichzeitig wahr sind.
 Intuitiv wählt eine Belegung, die \(\operatorname{One}_F(\mathbf V)\) erfüllt, 
 für jedes Argument genau eine der drei Labelvariablen \(i_a\), \(o_a\) und \(u_a\) aus. 
 Die jeweils wahre Variable legt das Label des Arguments fest. 
-Somit lässt sich eine solche Belegung unmittelbar als Labelling lesen - und umgekehrt.
+Somit lässt sich eine solche Belegung unmittelbar als Labelling lesen, und umgekehrt.
 \begin{Definition}
     \label{def:One-model}
     Sei \(\mathbf V=(I,O,U)\) ein Labellingvariablenblock für das AF
@@ -371,7 +372,7 @@ anderen Variablenblöcken disjunkte \emph{\(k\)-te Kopie} eines Variablenblocks.
     \label{def:strict-inclusion}
     Seien \(\mathbf V=(I,O,U)\) und
     \(\widehat{\mathbf V}=(\widehat{I},\widehat{O},\widehat{U})\) zwei Labellingvariablenblöcke für das 
-    \(AF ~F=(A,R)\).
+    \(\text{AF } F=(A,R)\).
     \[
         I < \widehat{I}
         :=
@@ -392,7 +393,7 @@ dass mindestens ein weiteres Argument in \(\widehat I\) enthalten ist.
 Damit haben wir alle nötigen Bausteine, um die \emph{preferred}-Semantik zu kodieren.
 \begin{Definition}
     \label{def:preferred-encoding}
-    Sei \(F=(A,R)\) ein AF und seien \(\mathbf V \text{ und } \widehat{\mathbf V}\) Labellingvariablenblöcke.
+    Sei \(F=(A,R)\) ein AF und seien \(\mathbf V\) und \(\widehat{\mathbf V}\) Labellingvariablenblöcke.
     \[
         \operatorname{Pr}_F(\mathbf V)
         :=
@@ -508,7 +509,7 @@ auf \(Y\) mit dem zweiten und auf \(Z\) mit dem gemeinsamen Kontext übereinstim
 Wir fassen diese Anforderungen zu einem eigenständigen Baustein zusammen.
 \begin{Definition}
 \label{def:eq-mix-formula}
-    Sei \(F =(A,R)\) ein AF, \(X,Y,Z\subseteq A\) paarweise disjunkte Mengen, 
+    Sei \(F =(A,R)\) ein AF. Seien \(X,Y,Z\subseteq A\) paarweise disjunkte Mengen, 
     \(\mathbf V^1\), \(\mathbf V^2\) und \(\mathbf V^3\) paarweise disjunkte Variablenblöcke 
     und \(\operatorname{Eq}^{j,k}_S\) wie in \ref{def:equality-formula} definiert.
     \[
@@ -555,7 +556,7 @@ Verfügung. Wir setzen diese nun entsprechend der Quantorenstruktur der
 Unabhängigkeitsdefinition zusammen.
 \begin{Definition}
     \label{def:generic-independence-qbf}
-    Sei \(F=(A,R)\) ein \(AF\), seien \(X,Y,Z\subseteq A\) paarweise disjunkt, \(\mathbf V^1, 
+    Sei \(F=(A,R)\) ein AF, seien \(X,Y,Z\subseteq A\) paarweise disjunkt, \(\mathbf V^1, 
     \mathbf V^2, \mathbf V^3\) paarweise disjunkte Labellingvariablenblöcke und
     \(\sigma\in\{\mathsf{co},\mathsf{st},\mathsf{pr}\}\).
     \[
@@ -588,13 +589,13 @@ paarweise disjunkte Labellingvariablenblöcke
 verwendet.
 
 Die beiden universellen Variablenblöcke repräsentieren die beliebig
-gewählten Labellings \(\lambda_1\) und \(\lambda_2\). Der existentielle
+gewählten Labellings \(\lambda_1\) und \(\lambda_2\). Der existenzielle
 Block repräsentiert das kombinierende Labelling \(\lambda_3\). Die
 Prämisse der Implikation beschränkt die universellen Belegungen auf
 \(\sigma\)-Labellings, die auf \(Z\) übereinstimmen.
 \begin{Theorem}
     \label{thm:generic-independence-qbf-correct}
-    Für jedes \(AF~F=(A,R)\), alle paarweise disjunkten Mengen
+    Für jedes \(\text{AF }F=(A,R)\), alle paarweise disjunkten Mengen
     \(X,Y,Z\subseteq A\) und jedes
     \(\sigma\in\{\mathsf{co},\mathsf{st},\mathsf{pr}\}\) gilt
     \[
