@@ -164,14 +164,12 @@ Unter \emph{complete} werden bei der Extensionszählung neun Fälle als
 \texttt{ERR} und 24 als \texttt{TIMEOUT}, unter \emph{preferred} 16 als
 \texttt{ERR} und 17 als \texttt{TIMEOUT} sowie unter \emph{stable} 18 als
 \texttt{ERR} und 15 als \texttt{TIMEOUT} protokolliert. 
-NOCHMAL GENAU PRÜFEN
 Diese AFs werden bei
-Auswertungen nach der Anzahl der Extensionen nicht als nicht trivial
-eingeordnet, sondern als nicht numerisch klassifizierbare dritte Gruppe
-behandelt. 
+Auswertungen nach der Anzahl der Extensionen zusammen mit den nicht 
+trivialen AFs als übrige AFs zusammengefasst. 
 
-Zusätzlich werden 95 Anfragen ausschließlich unter der
-\emph{preferred}-Semantik als \texttt{SOLVER\_ERR} protokolliert. Betroffen
+Zusätzlich werden nur für \emph{preferred} 95 Anfragen als
+\texttt{SOLVER\_ERR} protokolliert. Betroffen
 sind acht AFs: 84 Fehler entfallen auf Watts--Strogatz- und elf auf
 Stable-Generator-Instanzen. Die betroffenen Zeilen verbleiben in den Rohdaten
 und werden als logisch unbekannt behandelt. Bei der Auswertung des

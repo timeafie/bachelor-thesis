@@ -78,17 +78,14 @@ von \(A\).
     Sei \(F=(A,R)\) ein AF.
     Ein Labelling \(\lambda\colon A\to\mathcal{L}\) heißt
     \emph{complete}, wenn für jedes \(a\in A\) gilt:
-    \(
-        \lambda(a)=\mathsf{in}
+    \begin{align*}
+        &\lambda(a)=\mathsf{in}
         \text{ genau dann, wenn }
-        \lambda(b)=\mathsf{out}\text{ für alle }b\in a^-
-    \)
-    und 
-    \(
-        \lambda(a)=\mathsf{out}
+        \forall b\in a^-:\ \lambda(b)=\mathsf{out} \text{ und}\\
+        &\lambda(a)=\mathsf{out}
         \text{ genau dann, wenn }
-        \lambda(b)=\mathsf{in}\text{ für mindestens ein }b\in a^-.
-    \)
+        \exists b\in a^-:\ \lambda(b)=\mathsf{in}.
+    \end{align*}
     \(\Lambda_{\mathrm{co}}(F)\) ist die Menge aller \emph{complete}-Labellings von F.
 \end{Definition}
 Ein Argument erhält folglich genau dann das Label \(\mathsf{und}\), wenn
@@ -280,11 +277,11 @@ Die Darstellung der bedingten Unabhängigkeit orientiert
 sich an \textcite{pearl:paz:1986:graphoids}. Die Notation folgt
 \textcite{bluemel:2025:independence-aba}.
 
-\begin{Definition}[Abhhängigkeitsmodell]
+\begin{Definition}[Abhängigkeitsmodell]
     \label{def:dependency-model}
-    Seien \(V, X, Y, Z\) Mengen und \(X,Y,Z \subseteq V\). Ein \emph{Abhängigkeitsmodell} \(I\) über \(V\)
-    ist eine ternäre Relation über paarweise disjunkten Teilmengen von \(V\),
-    das heißt
+    Sei \(V\) eine Menge. Ein \emph{Abhängigkeitsmodell} \(I\) über
+    \(V\) ist eine ternäre Relation über paarweise disjunkten
+    Teilmengen von \(V\), das heißt
     \[
         I \subseteq
         \bigl\{(X,Y,Z) \bigm| X,Y,Z\subseteq V,\,
@@ -533,7 +530,7 @@ Um die Schwierigkeit von Problemen vergleichen und Härteergebnisse
     \(x\in Q'\) genau dann, wenn \(R(x)\in Q\) gilt. Die Funktion \(R\)
     heißt eine \emph{polynomielle Many-one-Reduktion} von \(Q'\) auf~\(Q\).
 \end{Definition}
-Anschaulich übersetzt \(R\) positive Instanzen von \(Q'\) in positive
+Kurz gesagt übersetzt \(R\) positive Instanzen von \(Q'\) in positive
 Instanzen von \(Q\) und ebenso negative Instanzen in negative Instanzen.
 Im Folgenden sprechen wir vereinfachend von polynomiellen Reduktionen,
 welche die Grundlage der folgenden Härte- und Vollständigkeitsbegriffe bilden. 
@@ -590,7 +587,7 @@ Das Theorem liefert damit kanonische Ausgangsprobleme für die späteren
 Härtebeweise. Auf der Seite der Argumentationssysteme bilden Verifikation
 sowie kredulöse und skeptische Akzeptanz die grundlegenden
 Vergleichsprobleme.
-\begin{Definition}[Zentrale Entscheidungsprobleme für AFs]
+\begin{Definition}[Entscheidungsprobleme für AFs]
     \label{def:standard-af-problems}
     Sei \(F=(A,R)\) ein AF und sei
     \(\sigma\in
