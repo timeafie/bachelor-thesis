@@ -49,7 +49,7 @@ Im Folgenden werden ausschließlich endliche Argumentationssysteme betrachtet.
     \label{def:defense}
     Sei \(F=(A,R)\) ein Argumentationssystem, \(S\subseteq A\) und
     \(a\in A\). Die Menge \(S\) \emph{verteidigt} \(a\), wenn sie jeden
-    Angreifer von \(a\) angreift, das heißt, genau dann wenn \(a^-\subseteq S^+\).
+    Angreifer von \(a\) angreift, das heißt, genau dann, wenn \(a^-\subseteq S^+\).
 \end{Definition}
 Insbesondere wird jedes unangreifbare Argument durch die leere Menge
 verteidigt. Eine Menge \(S\) verteidigt eine Menge \(T\subseteq A\), wenn
@@ -165,7 +165,7 @@ seine Angreifer mit \(\mathsf{out}\) gelabelt sind.
         \(\Lambda_{\mathrm{pr}}(F)=\{\lambda\in\Lambda_{\mathrm{co}}(F)
         \mid\nexists\lambda'\in\Lambda_{\mathrm{co}}(F):\mathsf{in}
         (\lambda)\subsetneq\mathsf{in}(\lambda')\}\). 
-        \item Die Menge der \emph{stable}-Labellings von F ist defininert durch 
+        \item Die Menge der \emph{stable}-Labellings von F ist definiert durch 
         \(\Lambda_{\mathrm{st}}(F)=\{\lambda\in\Lambda_{\mathrm{co}}
         (F)\mid\mathsf{und}(\lambda)=\emptyset\}\).
     \end{itemize}
@@ -547,7 +547,7 @@ welche die Grundlage der folgenden Härte- und Vollständigkeitsbegriffe bilden.
 Für einen \(\mathcal{C}\)-Härtebeweis genügt es somit, ein bereits
 \(\mathcal{C}\)-hartes Problem auf das untersuchte Problem zu reduzieren.
 Als Ausgangsprobleme dienen in dieser Arbeit insbesondere die beschränkten
-QBF-Wahrheitsprobleme aus Abschnitt~\ref{sec:qbf}. Ihre Komplexität wird
+QBF-Wahrheitsprobleme. Ihre Komplexität wird
 durch Anzahl und Reihenfolge der Quantorenblöcke bestimmt.
 \begin{Definition}[Beschränkte QBF-Wahrheitsprobleme]
     \label{def:bounded-qbf-truth}
@@ -573,7 +573,7 @@ alle Variablen aus \(X_i\) mit \(Q_i\) quantifiziert werden.
 Der Index \(k\) gibt somit die Anzahl der Quantorenblöcke an, während der
 Hochindex den äußersten Quantor bezeichnet. Diese Problemfamilien
 charakterisieren die Ebenen der polynomiellen Hierarchie.
-\begin{Theorem}[QBF-Vollständigkeit\parencites{meyer:stockmeyer:1972:equivalence-regex}
+\begin{Theorem}[QBF-Vollständigkeit \parencites{meyer:stockmeyer:1972:equivalence-regex}
     {stockmeyer:meyer:1973:word-problems}]
     \label{thm:qbf-ph-completeness}
     Für jedes \(k\geq 1\) ist

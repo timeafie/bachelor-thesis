@@ -46,7 +46,7 @@ Konditionierungsmenge \(Z_5\) tritt in keiner Semantik ein Übergang von
 Konditionierungsmengen tendenziell mit längeren Solverlaufzeiten und geringeren
 Lösungsquoten verbunden. Dieser deskriptive Zusammenhang ist unter
 \emph{complete} und \emph{stable} deutlicher ausgeprägt als unter
-\emph{preferred}. Da die positiven Konditionierungsmengen unabhängig gezogen
+\emph{preferred}. Da die Konditionierungsmengen unabhängig gezogen
 und nicht geschachtelt sind und der logische Status der nicht entschiedenen
 Anfragen unbekannt bleibt, belegen die Ergebnisse keinen allgemeinen kausalen
 Effekt einer Vergrößerung von \(Z\).
@@ -842,8 +842,8 @@ Endpunktverschiebung betrifft damit vor allem die Solverphase und nicht die
 Übersetzung.
 
 \paragraph{Verteilung der entschiedenen Laufzeiten.}
-Abbildung~\ref{fig:z-runtime-distribution} zeigt die Verteilungen der
-entschiedenen Läufe. Aufgrund ihrer starken Rechtsschiefe wird eine
+Abbildung~\ref{fig:z-runtime-distribution} zeigt die Laufzeiten entschiedener 
+Anfragen. Aufgrund ihrer starken Rechtsschiefe wird eine
 logarithmische Zeitachse verwendet.
 \begin{figure}[t]
     \centering
@@ -946,7 +946,7 @@ geringere Anteile innerhalb fester Zeitbudgets entschiedener Anfragen. Unter
 \emph{complete} und \emph{stable} ist diese Verschiebung deutlicher ausgeprägt
 als unter \emph{preferred}.
 
-Der Vergleich der Mediane ist auf die jeweils entschiedenen Anfragen bedingt.
+Der Vergleich der Mediane ist auf die jeweils entschiedenen Anfragen beschränkt.
 Da sich deren Zusammensetzung zwischen den Konditionierungsstufen ändert und
 \texttt{TIMEOUT}-Fälle nicht in die Boxplots eingehen, beschreibt er keine
 Laufzeitänderung für die Gesamtheit aller Anfragen. Die kumulative Auswertung

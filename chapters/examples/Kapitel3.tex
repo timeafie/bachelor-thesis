@@ -392,7 +392,7 @@ dass mindestens ein weiteres Argument in \(\widehat I\) enthalten ist.
 Damit haben wir alle nötigen Bausteine, um die \emph{preferred}-Semantik zu kodieren.
 \begin{Definition}
     \label{def:preferred-encoding}
-    Sei \(F=(A,R)\) ein AF und \(\mathbf V \text{ und } \widehat{\mathbf V}\) Labellingvariablenblöcke.
+    Sei \(F=(A,R)\) ein AF und seien \(\mathbf V \text{ und } \widehat{\mathbf V}\) Labellingvariablenblöcke.
     \[
         \operatorname{Pr}_F(\mathbf V)
         :=
@@ -428,7 +428,7 @@ folgender Formel zusammen.
     \]
 \end{Definition}
 Das Prädikat \(\operatorname{Sem}^{\sigma}_F\) fasst die drei Semantikkodierungen in einer einheitlichen Notation zusammen. 
-Abhängig von \(\sigma\) bezeichnet es die Formel für \emph{complete}-, \emph{stable}- oder \emph{preferred}- Labellings. 
+Abhängig von \(\sigma\) bezeichnet es die Formel für \emph{complete}-, \emph{stable}- oder \emph{preferred}-Labellings. 
 Dadurch können die nachfolgenden Konstruktionen unabhängig von der jeweils betrachteten Semantik formuliert werden.
 \begin{Lemma}
     \label{lem:semantics-encoding-correct}
@@ -443,8 +443,8 @@ Dadurch können die nachfolgenden Konstruktionen unabhängig von der jeweils bet
 \end{Lemma}
 \begin{proof}
     Für \(\sigma=\mathsf{co}\) geben die beiden Äquivalenzen in
-    \(\operatorname{Co}_F\) genau die Definition eines \emph{complete}
-    Labellings wieder. Für \(\sigma=\mathsf{st}\) kommt die Bedingung
+    \(\operatorname{Co}_F\) genau die Definition eines \emph{complete}-Labellings wieder. 
+    Für \(\sigma=\mathsf{st}\) kommt die Bedingung
     \(\mathsf{und}(\lambda_\nu)=\emptyset\) hinzu.
 
     Für \(\sigma=\mathsf{pr}\) ist
@@ -470,7 +470,7 @@ deren Korrektheit abschließend gezeigt wird.
 Wir beginnen mit der Kodierung der Gleichheit zweier Labellings auf einer Teilmenge der Argumente des dazugehörigen AFs.
 \begin{Definition}
     \label{def:equality-formula}
-    Sei \(F =(A,R)\) ein AF, \(S\subseteq A\) und \(\mathbf V^j\) und \(\mathbf V^k\) zwei Kopien eines
+    Sei \(F =(A,R)\) ein AF, \(S\subseteq A\) und seien \(\mathbf V^j\) und \(\mathbf V^k\) zwei Kopien eines
     Labellingvariablenblocks.
     \[
         \operatorname{Eq}^{j,k}_S
@@ -555,8 +555,8 @@ Verfügung. Wir setzen diese nun entsprechend der Quantorenstruktur der
 Unabhängigkeitsdefinition zusammen.
 \begin{Definition}
     \label{def:generic-independence-qbf}
-    Sei \(F=(A,R)\) ein \(AF\), \(X,Y,Z\subseteq A\) paarweise disjunkt, \(\mathbf V^1, 
-    \mathbf V^2, \mathbf V^3\) paarweise disunkte Labellingvariablenblöcke und
+    Sei \(F=(A,R)\) ein \(AF\), seien \(X,Y,Z\subseteq A\) paarweise disjunkt, \(\mathbf V^1, 
+    \mathbf V^2, \mathbf V^3\) paarweise disjunkte Labellingvariablenblöcke und
     \(\sigma\in\{\mathsf{co},\mathsf{st},\mathsf{pr}\}\).
     \[
     \begin{split}

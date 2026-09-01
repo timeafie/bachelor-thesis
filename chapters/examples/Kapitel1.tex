@@ -24,7 +24,7 @@ kein Angriff bestehen. Unter der \emph{stable}-Semantik treten zudem
 keine unentschiedenen Argumente auf.
 
 Betrachten wir beispielhaft die Planung eines Ausflugs nach Münster
-(\(m\)) oder Dortmund (\(d\)). Die Symbole \(m\) und \(d\) werden als
+\(m\) oder Dortmund \(d\). Die Symbole \(m\) und \(d\) werden als
 Argumente aufgefasst. Da sie einander angreifen, können sie aufgrund
 der Konfliktfreiheit nicht gemeinsam akzeptiert werden. Für Münster
 stehen zusätzlich zwei Restaurantargumente \(r_1,r_2\) und zwei
@@ -32,8 +32,7 @@ Kinoargumente \(k_1,k_2\) zur Auswahl; die beiden Alternativen jeder
 Kategorie greifen einander an. Das Argument \(d\) greift außerdem alle
 vier Münsteraner Restaurant- und Kinoargumente an. Wird Dortmund
 akzeptiert, müssen diese daher verworfen werden.
-
-VERWEIS AUF GRAFIK
+Das AF ist in~\ref{fig:ausflug-af} dargestellt.
 
 Auf den ersten Blick können Restaurant und Kino unabhängig voneinander
 gewählt werden, denn die Entscheidung für ein Restaurant sagt noch nichts
@@ -73,10 +72,11 @@ existieren, das die Bewertung von \(X\) aus dem ersten und die
 Bewertung von \(Y\) aus dem zweiten Labelling übernimmt. Die gemeinsame
 Bewertung von \(Z\) bleibt dabei erhalten.
 
-HIER NOCHMAL GUCKEN
-Übertragen auf den geplanten Ausflug sehen wir: Solange unterschiedliche Bewertungen für Münster und 
+Übertragen auf den geplanten Ausflug sehen wir: 
+solange unterschiedliche Bewertungen für Münster und 
 Dortmund zugelassen sind, passen Restaurant- und Kinobewertungen
-verschiedener Planungen nicht immer zusammen. Werden dagegen nur
+verschiedener Planungen nicht immer zusammen; Dortmund greift jedes 
+Restaurant- und Kinoargument an. Werden dagegen nur
 Planungen mit derselben Stadtentscheidung verglichen, kann die
 Restaurantwahl der einen mit der Kinowahl der anderen Planung verbunden
 werden. Die Stadtwahl erklärt somit ihre zunächst bestehende
@@ -186,7 +186,7 @@ Faktor erhalten.
 Nach dem dargestellten Forschungsstand bleiben die Forschung zu
 bedingter Unabhängigkeit und die QBF-basierten Verfahren bislang
 unverbunden. Für die exakte Entscheidung bedingter Unabhängigkeit von
-Argumentmengen in endlichen Dung-AFs fehlt sowohl eine QBF-Kodierung
+Argumentmengen in endlichen Dung-AFs fehlen sowohl eine QBF-Kodierung
 mit Korrektheitsnachweis als auch eine empirische Untersuchung ihres
 Solververhaltens. Diese theoretische und empirische Forschungslücke
 bildet den Ausgangspunkt der vorliegenden Arbeit.
@@ -273,7 +273,7 @@ Korrektheit. Kapitel~\ref{ch:empirical-analysis}
 beschreibt die Implementierung, den Versuchsaufbau und die Ergebnisse
 der empirischen Untersuchung. Kapitel~\ref{ch:graphclasses} analysiert die Komplexität der
 Unabhängigkeitsentscheidung auf ausgewählten Klassen von
-Angriffsgraphen. Abschließend fasst das Fazit~\ref{ch:summary} die wesentlichen
+Angriffsgraphen. Abschließend fasst Kapitel~\ref{ch:summary} die wesentlichen
 Ergebnisse zusammen, diskutiert die Grenzen der Untersuchung und zeigt
 mögliche weiterführende Forschungsrichtungen auf.
 

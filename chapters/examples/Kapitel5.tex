@@ -79,7 +79,7 @@ dass sich erneut allgemeine Aussagen über \(X\perp_\sigma Y\mid Z\) ableiten la
     Nach Lemma~\ref{lem:independence-trivial-labelling-set} folgt für alle paarweise disjunkten \(X,Y,Z \subseteq A\), dass \(X \perp_\sigma Y \mid Z\) gilt.
 \end{proof}
 
-Auch in AFs ohne Zykel gerader Länge beruht die Allgmeingültigkeit der 
+Auch in AFs ohne Zyklen gerader Länge beruht die Allgemeingültigkeit der 
 bedingten Unabhängigkeit damit lediglich auf der fehlenden Variation
 der Labellings.  
 \section{Ungeradezykelfreie AFs}
@@ -87,12 +87,12 @@ der Labellings.
 In den bisher betrachteten Graphklassen entstand bedingte Unabhängigkeit aus dem Fehlen 
 alternativer Labellings. Mit den ungeradezykelfreien AFs ändert sich diese Ausgangslage: 
 Zyklen bleiben nun zulässig, sofern sie eine gerade Länge besitzen. Damit bleiben gerade 
-jene Rückkopplungen erhalten, die größere Labellingvariationen ermögichen. 
+jene Rückkopplungen erhalten, die größere Labellingvariationen ermöglichen. 
 
 Dennoch fallen in ungeradezykelfreien AFs die \emph{stable}- und die \emph{preferred}-Semantik zusammen \cite{DUNNE2002187}.
 Die folgenden Ergebnisse zeigen, dass die strukturelle Einschränkung keine weitere Verringerung 
 der Komplexität bewirkt. Während sich dies für die \emph{stable}- und die \emph{preferred}-Semantik 
-aus bekannten Reduktion von \textcite{bluemel:2025:independence-aba} und ihrer Graphstruktur ableiten lässt, 
+aus der bekannten Reduktion von \textcite{bluemel:2025:independence-aba} und ihrer Graphstruktur ableiten lässt, 
 erfordert die \emph{complete}-Semantik eine neue Konstruktion.
 
 Die Beschränkung auf ungeradezykelfreie AFs senkt die Komplexität der \emph{stable}-Unabhängigkeit nicht.
@@ -126,7 +126,7 @@ Die Beschränkung auf ungeradezykelfreie AFs senkt die Komplexität der \emph{st
     Ein gerichteter Zyklus kann daher keine Komponente verlassen. Innerhalb
     der nichttrivialen Komponenten existieren ausschließlich die Zweierzyklen
     \(v\leftrightarrow\overline v\) und
-    \(\varphi\leftrightarrow t\).Außerdem bseitzen die Klauselargumente keine
+    \(\varphi\leftrightarrow t\).Außerdem besitzen die Klauselargumente keine
     Selbstangriffe. Somit hat jeder gerichtete Zyklus gerade Länge und jedes
     durch die Reduktion erzeugte AF ist ungeradezykelfrei. Die
     \(\Pi_2^{\mathrm P}\)-Härte gilt folglich auch auf dieser Graphklasse.
@@ -138,7 +138,7 @@ Die Beschränkung auf ungeradezykelfreie AFs senkt die Komplexität der \emph{st
         \input{gfx/Blümel_Reduktion.tex}
     }
     \caption[Reduktion für \emph{stable}-Unabhängigkeit]{
-    AF-Repräsentation einer Instanz der Reduktion aus Proposition~C.1
+    AF-Repräsentation einer Instanz der Reduktion aus Proposition~C.4
     für die Formel \(\Psi=\forall X\,\exists Y\,\varphi\).
     Die Matrix \(\varphi\) ist durch die Klauselmenge
     \(\{\{x_0,x_2,y_1\},
@@ -161,7 +161,7 @@ aufgrund derer beide Unabhängigkeitsbegriffe auf derselben Menge von Labellings
 
 \begin{proof}
     \label{pr:ocf-af-ci-pr-pi^2-c-is-correct}
-    Folgt direkt aus Proposition \ref{prop:ocf-af-ci-st-pi^2} und der Tatsache, dass in ungeradezykelfreien AFs \(\Lambda_{st} = \Lambda_{pr}\).
+    Dies folgt direkt aus Proposition \ref{prop:ocf-af-ci-st-pi^2} und der Tatsache, dass in ungeradezykelfreien AFs \(\Lambda_{st} = \Lambda_{pr}\).
 \end{proof}
 
 Für die \emph{complete}-Unabhängigkeit ist ein entsprechender Übertrag nicht möglich, 
@@ -210,7 +210,7 @@ modifizierte Konstruktion benötigt wird, die totale und partielle Belegungen un
         \{c_1,\ldots,c_m,\varphi,t,s,g\}.
     \end{split}
     \]
-    Die Angriffsmenge ist definiert als:
+    Die Angriffsmenge ist wie folgt definiert:
     \[
     \begin{split}
         R_{\Psi}={}&
@@ -236,7 +236,7 @@ modifizierte Konstruktion benötigt wird, die totale und partielle Belegungen un
         \{(g,c_k)\mid 1\leq k\leq m\}.
     \end{split}
     \]
-    Die Konstruktion ist offensichtlich polynomial in der
+    Die Konstruktion ist damit polynomiell in der
     Größe von \(\Psi\).
 
     Abbildung~\ref{fig:reduktion-complete} veranschaulicht die Konstruktion
@@ -464,12 +464,12 @@ modifizierte Konstruktion benötigt wird, die totale und partielle Belegungen un
     \label{tab:komplexitaet-graphklassen}
 \end{table}
 
-Wie Tabelle~\ref{tab:komplexitaet-graphklassen} zusammenfasst, ist die
+Wie die Tabelle~\ref{tab:komplexitaet-graphklassen} zusammenfassend zeigt, ist die
 bedingte \(\sigma\)-Unabhängigkeit für \(\sigma\in\{co,st,pr\}\) auf
 azyklischen und geradezykelfreien AFs trivial; jede Anfrage wird positiv
 beantwortet. Auf ungeradezykelfreien AFs ist das Entscheidungsproblem
 dagegen für alle drei Semantiken \(\Pi_2^{\mathrm{P}}\)-vollständig und liegt
-damit auf der zweiten Ebene der polynomialen Hierarchie.
+damit auf der zweiten Ebene der polynomiellen Hierarchie.
 
 
 
