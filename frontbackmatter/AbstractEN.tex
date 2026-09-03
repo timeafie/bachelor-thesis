@@ -6,43 +6,38 @@
 \begin{otherlanguage}{american}
     \chapter*{Abstract}
 
-    Abstract argumentation frameworks (AFs) model conflicts through
-    arguments and directed attacks. Conditional independence asks whether
-    assessments of disjoint argument sets \(X\) and \(Y\), taken from valid
-    labelings that agree on a conditioning set \(Z\), can be recombined in
-    another valid labeling. Because graph-based criteria capture only some
-    cases in which independence holds, an exact decision procedure is
-    required.
+    Abstract argumentation frameworks model reasoning with conflicting
+    information through arguments and directed attacks. A semantics
+    determines which overall assessments of the arguments are valid;
+    labelings represent these assessments by marking each argument as
+    accepted, rejected, or undecided. Two argument sets are conditionally
+    independent if their respective assessments from any two valid
+    labelings that agree on a third set can be combined in another valid
+    labeling. The assessment of this third set provides the context and
+    must remain unchanged.
 
-    This thesis develops a uniform encoding using quantified Boolean
-    formulas (QBFs) for the \emph{complete}, \emph{stable}, and
-    \emph{preferred} semantics. Boolean variables encode the labels
-    \(\mathsf{in}\), \(\mathsf{out}\), and \(\mathsf{und}\); semantic,
-    equality, and mixing constraints connect two universally quantified
-    source labelings with an existentially quantified recombination
-    labeling. For the \emph{preferred} semantics, the inclusion-maximality
-    of the set of accepted arguments is additionally encoded. A correctness
-    proof shows that the resulting QBF is true exactly when the requested
-    conditional independence holds, without requiring all valid labelings
-    to be enumerated explicitly.
+    The theoretical properties of conditional independence in these
+    frameworks remain only partly explored. Existing graph-based criteria
+    also capture only some cases in which independence holds. This thesis
+    investigates the computational complexity of the problem and develops
+    an exact decision procedure.
 
-    The encodings are generated in the \texttt{QCIR-G14} format and
-    evaluated with QuAbS. The empirical evaluation uses \(105\) AFs from
-    the benchmark collection of the International Competition on
-    Computational Models of Argumentation 2025 (ICCMA 2025). For each AF
-    under each of the three semantics, five reproducibly sampled unordered
-    argument pairs are combined with six independently sampled, non-nested
-    conditioning sets. This yields \(9\,450\) queries, of which \(7\,164\)
-    are decided: \(6\,986\) (\(97.52\,\%\)) as independent and \(178\)
-    (\(2.48\,\%\)) as dependent. Among the decided queries, larger
-    conditioning sets are associated with a lower proportion of dependent
-    outcomes; they are also associated with longer solver runtimes and lower
-    cumulative decision rates. Because the conditioning sets are non-nested and the
-    logical status of undecided queries is unknown, these associations are
-    descriptive rather than causal.
+    For the widely studied \emph{complete}, \emph{stable}, and
+    \emph{preferred} semantics, independence queries are uniformly
+    translated into quantified Boolean formulas (QBFs) and evaluated using
+    the QBF solver QuAbS. A correctness proof establishes that the resulting
+    formula is true if and only if the queried independence holds.
 
-    The complexity analysis shows that every independence query has a
-    positive answer for acyclic and, more generally, even-cycle-free AFs,
-    whereas the problem restricted to odd-cycle-free AFs is
-    \(\Pi_2^{\mathrm{P}}\)-complete under all three semantics.
+    The complexity analysis shows that independence holds for every query
+    in frameworks without directed cycles of even length. In frameworks
+    without directed cycles of odd length, however, deciding independence
+    remains computationally hard (\(\Pi_2^{\mathrm{P}}\)-complete) under all
+    three semantics.
+
+    An empirical evaluation of \(9\,450\) queries on \(105\) frameworks
+    resolves approximately three quarters of the queries. Of these, about
+    \(98\,\%\) confirm conditional independence. Larger context sets are
+    associated with less observed dependence among the resolved queries.
+    They also tend to coincide with longer runtimes and a smaller proportion
+    of resolved queries.
 \end{otherlanguage}

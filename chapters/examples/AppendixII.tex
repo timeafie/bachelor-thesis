@@ -5,7 +5,7 @@ Dieses Kapitel dokumentiert die Programme, mit denen Anfragen der Form
 \(X\perp_\sigma Y\mid Z\) in quantifizierte boolesche Formeln
 übersetzt und mit QuAbS ausgewertet werden. Berücksichtigt werden die
 Semantiken
-\(\sigma\in\{\mathsf{st},\mathsf{co},\mathsf{pr}\}\).
+\(\sigma\in\{\mathrm{st},\mathrm{co},\mathrm{pr}\}\).
 
 Die mathematische Herleitung der Kodierungen wurde in
 Kapitel~\ref{ch:semantic-independence} behandelt. Im Mittelpunkt dieses
@@ -182,11 +182,11 @@ Tabelle~\ref{tab:appendix-qbf-encodings} zusammengefasst.
         \toprule
         Semantik & Variablen & Präfix & Repräsentation\\
         \midrule
-        \(\mathsf{st}\)
+        \(\mathrm{st}\)
             & \(3n\)
             & \(\forall I^1\,\forall I^2\,\exists I^3\)
             & Eine In-Variable je Argument und Labellingkopie.\\
-        \(\mathsf{co}\)
+        \(\mathrm{co}\)
             & \(9n\)
             & \(\forall\mathbf V^1\,
                \forall\mathbf V^2\,
@@ -194,7 +194,7 @@ Tabelle~\ref{tab:appendix-qbf-encodings} zusammengefasst.
             & Drei Variablen für die Labels
               \(\mathsf{in}\), \(\mathsf{out}\) und
               \(\mathsf{und}\).\\
-        \(\mathsf{pr}\)
+        \(\mathrm{pr}\)
             & \(18n\)
             & \(\forall\mathbf V^1\,
                \forall\mathbf V^2\,
@@ -271,7 +271,7 @@ Da Gleichheitsbedingungen über der leeren Menge wahr sind, vereinfacht
 sich die QBF der Anfrage zu
 \[
 \begin{split}
-    \Phi^{\mathsf{st}}_{F_{\leftrightarrow}}
+    \Phi^{\mathrm{st}}_{F_{\leftrightarrow}}
         (\{a_1\},\{a_2\}\mid\emptyset)
     :=
     \forall I^1\,\forall I^2\,\exists I^3\,
@@ -324,8 +324,9 @@ Tabelle~\ref{tab:appendix-qbf-stable-variables} zusammengefasst.
     (\neg u\lor v)\land(u\lor\neg v)
 \)
 in \texttt{and}- und \texttt{or}-Gatter zerlegt. Die abschließende
-Implikation wird als \(\neg A\lor B\) ausgegeben. Dadurch entsteht die
-folgende vollständige QuAbS-Eingabe:
+Implikation wird als \(\neg A\lor B\) ausgegeben.
+Listing~\ref{lst:appendix-qbf-stable-qcir-example} zeigt die dadurch
+entstehende vollständige QuAbS-Eingabe.
 
 \begin{lstlisting}[
     language={},
@@ -416,7 +417,7 @@ In-Menge. Es existiert somit keine passende Belegung von \(I^3\).
 Die QBF ist falsch und entsprechend gilt
 \(
     \{a_1\}
-    \not\perp_{\mathsf{st}}
+    \not\perp_{\mathrm{st}}
     \{a_2\}
     \mid\emptyset.
 \)
@@ -429,8 +430,9 @@ angelegt:
 \begin{lstlisting}[language={}]
 mkdir -p out
 \end{lstlisting}
-Für \(X=\{a_1\}\), \(Y=\{a_2\}\) und \(Z=\emptyset\) können anschließend
-die drei Kodierungen erzeugt werden:
+Listing~\ref{lst:appendix-qbf-translation} zeigt die Aufrufe, mit denen für
+\(X=\{a_1\}\), \(Y=\{a_2\}\) und \(Z=\emptyset\) die drei Kodierungen
+erzeugt werden:
 \begin{lstlisting}[
     language={},
     caption={Erzeugung der drei QCIR-Kodierungen},
@@ -492,9 +494,9 @@ Standardmäßig werden fünf Argumentpaare je AF verwendet. Dabei gilt
 |Z_5|=
 \begin{cases}
 \lfloor n/5\rfloor,
-    &\text{für }\mathsf{st}\text{ und }\mathsf{co},\\
+    &\text{für }\mathrm{st}\text{ und }\mathrm{co},\\
 \lfloor n/10\rfloor,
-    &\text{für }\mathsf{pr}.
+    &\text{für }\mathrm{pr}.
 \end{cases}
 \]
 Die vier Zwischengrößen werden gleichmäßig zwischen diesen Werten
@@ -516,8 +518,8 @@ Ein abweichender Ordner kann als erstes Positionsargument angegeben werden:
 RUN_EXTENSION_COUNT=0 \
 ./run_batch_singleton_z.sh /pfad/zu/af-dateien
 \end{lstlisting}
-Für einen kurzen Funktionstest mit einer einzelnen kleinen Instanz
-eignet sich beispielsweise:
+Listing~\ref{lst:appendix-qbf-batch-smoke-test} zeigt einen kurzen
+reproduzierbaren Funktionstest mit einer einzelnen kleinen Instanz:
 \begin{lstlisting}[
     language={},
     caption={Kleiner reproduzierbarer Batchtest},
@@ -530,6 +532,9 @@ RUN_EXTENSION_COUNT=0 \
 Die explizite Angabe \texttt{MIN\_SIZE=2} ist erforderlich, weil der
 Standardwert \(100\) beträgt und kleine Testinstanzen andernfalls
 übersprungen werden.
+
+Die zentralen Konfigurationsvariablen und ihre Standardwerte sind in
+Tabelle~\ref{tab:appendix-qbf-batch-options} zusammengefasst.
 
 \begin{table}[htb]
     \centering
@@ -593,7 +598,8 @@ lassen sich in fünf Gruppen einteilen:
         \texttt{status}, \texttt{solver\_exit\_code},
         \texttt{solver\_message} und \texttt{independent}.
 \end{description}
-Die wichtigsten Statuswerte besitzen folgende Bedeutung:
+Die wichtigsten Statuswerte und ihre Bedeutung sind in
+Tabelle~\ref{tab:appendix-qbf-status} zusammengefasst.
 \begin{table}[htb]
     \centering
     \begin{tabularx}{\textwidth}{@{}lcX@{}}

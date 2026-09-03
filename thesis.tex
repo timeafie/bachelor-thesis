@@ -75,7 +75,13 @@
 \include{frontbackmatter/Titleback}
 %\cleardoublepage\include{frontbackmatter/Dedication}
 %\cleardoublepage\include{frontbackmatter/Foreword}
-\cleardoublepage\include{frontbackmatter/Declaration}
+\cleardoublepage
+\includepdf[
+  pages=1,
+  pagecommand*={%
+    \pdfbookmark[0]{Eigenständigkeitserklärung}{declaration}%
+  }
+]{frontbackmatter/Affidavit.pdf}
 \condLOCK{\cleardoublepage\include{frontbackmatter/BlockingNotice}}
 \cleardoublepage\include{frontbackmatter/AbstractEN}
 \cleardoublepage\include{frontbackmatter/AbstractDE}
@@ -116,7 +122,7 @@
 \appendix
 %\renewcommand{\thechapter}{\alph{chapter}}
 \cleardoublepage
-\part{Appendix}
+\part{Anhang}
 \include{chapters/examples/AppendixII}
 %\include{chapters/examples/appendix01}
 %\include{chapters/examples/appendix02}

@@ -7,11 +7,15 @@ ermöglicht es, bedingte Unabhängigkeit in AFs automatisiert zu entscheiden.
 häufig Abhängigkeit (\texttt{AB}) und Unabhängigkeit (\texttt{UNAB}) in
 heterogenen Benchmarkinstanzen auftreten und wie die Größe der
 Konditionierungsmenge mit dem Unabhängigkeitsstatus sowie dem praktischen
-Rechenaufwand der Solverentscheidung zusammenhängt. Das vorliegende Kapitel
-untersucht diese Aspekte empirisch für die Semantiken \(\mathsf{st}\),
-\(\mathsf{co}\) und \(\mathsf{pr}\). Die zur Durchführung und Auswertung der
+Rechenaufwand der Solverentscheidung zusammenhängt. Das vorliegende Kapitel 
+untersucht diese Aspekte empirisch für die Semantiken \emph{complete} 
+(\(\mathrm{co}\)), \emph{preferred} (\(\mathrm{pr}\)) und
+\emph{stable} (\(\mathrm{st}\)). Die zur Durchführung und Auswertung der
 Experimente verwendeten Programme und Skripte sind in der digitalen
 ZIP-Beilage zu dieser Arbeit enthalten.
+Eine Dokumentation der Implementierung, der Ein- und Ausgabeformate sowie der
+reproduzierbaren Ausführung findet sich in
+Anhang~\ref{ch:appendix-qbf-tools}.
 
 Der Untersuchung liegen die folgenden Forschungsfragen zugrunde:
 
@@ -67,7 +71,7 @@ kumulativen Entscheidungsquote.
 Die empirische Untersuchung betrachtet die bedingte Unabhängigkeit
 \(X\perp_\sigma Y\mid Z\) für Singleton-Paare, d.\,h. \(X=\{x\}\) und
 \(Y=\{y\}\), unter
-\(\sigma\in\{\mathsf{st},\mathsf{co},\mathsf{pr}\}\). Als Datengrundlage
+\(\sigma\in\{\mathrm{st},\mathrm{co},\mathrm{pr}\}\). Als Datengrundlage
 dienen 105 AFs aus der Instanzsammlung der International Competition on
 Computational Models of Argumentation 2025 (ICCMA'25)
 \parencite{apostolakis:2025:iccma-instances}. Sie wurden
@@ -85,18 +89,20 @@ aggregierte Auswertung nicht familienbalanciert.}
 Für jedes AF werden mit \(\texttt{SEED}=42\) fünf verschiedene ungeordnete
 Argumentpaare reproduzierbar ausgewählt. Für jede untersuchte Semantik wird
 jedes Paar mit sechs unabhängig gezogenen Konditionierungsmengen
-\(Z_0,\ldots,Z_5\) kombiniert. Diese Mengen sind nicht geschachtelt und
-erfüllen \(Z_k\subseteq A\setminus(X\cup Y)\). Der Index
-\(k\in\{0,\ldots,5\}\) bezeichnet die
-Konditionierungsstufe; mit wachsendem \(k\) nimmt die vorgegebene Größe von
-\(Z_k\) zu. Für ein AF mit \(n\) Argumenten wird zunächst
+\(Z_0,\ldots,Z_5\) kombiniert. Dabei bezeichnet
+\(k\in\{0,\ldots,5\}\) den Index der Konditionierungsstufe und \(Z_k\) die
+dieser Stufe zugeordnete Konditionierungsmenge. Die Mengen sind nicht
+geschachtelt und erfüllen \(Z_k\subseteq A\setminus(X\cup Y)\). Mit
+wachsendem \(k\) nimmt die vorgegebene Kardinalität \(\lvert Z_k\rvert\)
+nicht ab; aufgrund der unabhängigen Ziehung gilt im Allgemeinen jedoch nicht
+\(Z_k\subseteq Z_{k+1}\). Für ein AF mit \(n\) Argumenten wird zunächst
 \[
     s_{\max}=
     \begin{cases}
         \lfloor n/5\rfloor,
-            & \sigma\in\{\mathsf{st},\mathsf{co}\},\\
+            & \sigma\in\{\mathrm{st},\mathrm{co}\},\\
         \lfloor n/10\rfloor,
-            & \sigma=\mathsf{pr}
+            & \sigma=\mathrm{pr}
     \end{cases}
 \]
 gesetzt. Für die Größe der \(k\)-ten Konditionierungsmenge gilt dann
@@ -153,7 +159,8 @@ Abbildung~\ref{fig:trial-design-workflow} zusammengefasst.
 \end{figure}
 
 \paragraph{Extensionszählung.}
-Für die nachgelagerte Bestimmung der Anzahl der Extensionen wird
+Für die nachgelagerte Bestimmung der semantikspezifischen Extensionszahl
+aus Definition~\ref{def:af-extensions} wird
 TweetyProject in Version~1.2 verwendet \parencite{thimm:2018}. Die
 Extensionszählung liefert je Semantik für 72 der 105 AFs einen numerischen
 Wert. Für die verbleibenden 33 AFs bleibt die Anzahl der Extensionen
@@ -658,7 +665,8 @@ verschiedenen Semantiken sowie Konditionierungsstufen untersucht wird.
 Nachdem das generelle Verhältnis von Abhängigkeit und Unabhängigkeit 
 betrachtet wurde, richtet sich der Blick nun auf die Größe der Konditionierungsmenge. 
 Untersucht wird, wie sich das Verhältnis von \texttt{AB} und \texttt{UNAB}
-unter den entschiedenen Anfragen zwischen den sechs \(Z\)-Stufen verändert.
+unter den entschiedenen Anfragen über die sechs Konditionierungsstufen
+\(k=0,\ldots,5\) verändert.
 Dabei zeigt sich über alle drei Semantiken hinweg ein gemeinsames Muster:
 \texttt{UNAB} bleibt auf jeder Stufe dominant, während \texttt{AB}-Ergebnisse
 mit wachsender Konditionierungsstufe seltener werden. Der gleichzeitig
@@ -686,7 +694,7 @@ umklassifiziert.
     \makebox[\linewidth][c]{
         % fig06
     \includegraphics[width=1.30\linewidth]
-    {../../Themen/Conditional Indepence in AF/analysis_outputs/conditioning_set_z_large_text/fig06_ergebniszusammensetzung_triviale_unab.png}
+    {../../Themen/Conditional Indepence in AF/analysis_outputs/conditioning_set_k_large_text/fig06_ergebniszusammensetzung_triviale_unab.png}
     }
     \caption[Ergebniszusammensetzung mit trivialen UNAB]{%
         Ergebniszusammensetzung der jeweils 525 Solverläufe pro Semantik und
@@ -720,7 +728,7 @@ zeigt diesen Anteil über die sechs Konditionierungsstufen.
     \makebox[\linewidth][c]{%
         % fig02
         \includegraphics[width=1.30\linewidth]
-        {../../Themen/Conditional Indepence in AF/analysis_outputs/conditioning_set_z_large_text/fig02_ab_anteil_entschieden.png}
+        {../../Themen/Conditional Indepence in AF/analysis_outputs/conditioning_set_k_large_text/fig02_ab_anteil_entschieden.png}
     }
     \caption[AB-Anteil unter den entschiedenen Läufen]{%
         Anteil der \texttt{AB}-Ergebnisse unter den als \texttt{UNAB} oder
@@ -741,10 +749,12 @@ stärksten ist der Unterschied unter \emph{complete} ausgeprägt; dort fällt de
 Anteil bereits zwischen \(Z_0\) und \(Z_1\) von \(13{,}9\,\%\) auf
 \(2{,}1\,\%\).
 
-\paragraph{Statusübergänge zwischen \(Z_0\) und \(Z_5\).}
+\paragraph{Statusübergänge zwischen den Konditionierungsstufen
+\(k=0\) und \(k=5\).}
 Die aggregierten Anteile zeigen nicht, ob sich der Status derselben
 Argumentpaare verändert. Abbildung~\ref{fig:z-ci-transitions} stellt deshalb
-für jedes der 525 Paare den Übergang von \(Z_0\) zu \(Z_5\) dar.
+für jedes der 525 Paare den Übergang von der Konditionierungsstufe \(k=0\)
+zur Konditionierungsstufe \(k=5\) dar.
 
 \begin{figure}[!t]
     \centering
@@ -755,14 +765,14 @@ für jedes der 525 Paare den Übergang von \(Z_0\) zu \(Z_5\) dar.
             width=1.40\linewidth,
             trim=100bp 45bp 65bp 15bp,
             clip
-        ]{gfx/conditioning_set_z/fig05_uebergang_l0_l5.png}%
+        ]{../../Themen/Conditional Indepence in AF/analysis_outputs/conditioning_set_k_large_text/fig05_uebergang_k0_k5_kompakt.png}%
     }
 
-    \caption[Statusübergänge zwischen \(Z_0\) und \(Z_5\)]{%
+    \caption[Statusübergänge zwischen den Stufen \(k=0\) und \(k=5\)]{%
         Übergänge des beobachteten Ergebnisses desselben
-        \((x,y)\)-Paars von \(Z_0\) zu \(Z_5\).
-        Die Zeilen bezeichnen das Ergebnis bei \(Z_0\), die Spalten das
-        Ergebnis bei \(Z_5\). Jede Zelle enthält die Fallzahl und ihren
+        Argumentpaars von der Konditionierungsstufe \(k=0\) zur Stufe \(k=5\).
+        Die Zeilen bezeichnen das Ergebnis bei \(k=0\), die Spalten das
+        Ergebnis bei \(k=5\). Jede Zelle enthält die Fallzahl und ihren
         Anteil an den jeweils 525 Paaren.}
     \label{fig:z-ci-transitions}
 \end{figure}
@@ -849,13 +859,17 @@ logarithmische Zeitachse verwendet.
     \makebox[\linewidth][c]{%
         % fig03
         \includegraphics[width=1.30\linewidth]
-        {../../Themen/Conditional Indepence in AF/analysis_outputs/conditioning_set_z_large_text/fig03_solverlaufzeit_verteilung.png}
+        {../../Themen/Conditional Indepence in AF/analysis_outputs/conditioning_set_k_large_text/fig03_solverlaufzeit_achsen.png}
     }
     \caption[Solverlaufzeit nach Konditionierungsstufe]{%
         Verteilung von \(t_{\mathrm{solve}}\) für die als \texttt{UNAB}
-        oder \texttt{AB} entschiedenen Läufe. Die Box reicht von \(Q_1\)
-        bis \(Q_3\), die schwarze Linie bezeichnet den Median und die
-        Whisker sind auf \(1{,}5\)-IQR-Höhe.}
+        oder \texttt{AB} entschiedenen Läufe. Die \(y\)-Achse ist
+        logarithmisch skaliert. Die Boxen reichen jeweils von \(Q_1\) bis
+        \(Q_3\); die schwarze Linie bezeichnet den Median. Die Whisker enden
+        bei den äußersten beobachteten Werten innerhalb der Grenzen
+        \(Q_1-1{,}5\,\mathrm{IQR}\) und \(Q_3+1{,}5\,\mathrm{IQR}\), wobei
+        \(\mathrm{IQR}=Q_3-Q_1\). Außerhalb dieser Grenzen liegende Werte
+        sind nicht dargestellt.}
     \label{fig:z-runtime-distribution}
 \end{figure}
 Unter \emph{complete} steigt der Median von
@@ -899,12 +913,16 @@ Zeitbudget \(t\) entschiedenen Solverläufe am festen Nenner von 525 Läufen.
 \texttt{TIMEOUT} und \texttt{SOLVER\_ERR} erhöhen den Zähler nicht; deshalb
 entspricht das abschließende Plateau der Entscheidungsquote am Solverzeitlimit.
 
+Abbildung~\ref{fig:z-runtime-performance} stellt die so bestimmten
+kumulativen Entscheidungsquoten für alle drei Semantiken und sämtliche
+Konditionierungsstufen gegenüber.
+
 \begin{figure}[t]
     \centering
     \makebox[\linewidth][c]{%
         % fig04
         \includegraphics[width=1.30\linewidth]
-        {../../Themen/Conditional Indepence in AF/analysis_outputs/conditioning_set_z_large_text/fig04_kumulative_solverleistung.png}   
+        {../../Themen/Conditional Indepence in AF/analysis_outputs/conditioning_set_k_large_text/fig04_kumulative_solverleistung.png}   
     }
     \caption[Kumulative Entscheidungsquote nach Konditionierungsstufe]{%
         Kumulative Entscheidungsquote, also der Anteil der jeweils 525

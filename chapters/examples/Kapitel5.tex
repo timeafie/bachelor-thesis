@@ -13,7 +13,7 @@ in der Literatur betrachtet werden \cite{dung:1995:af,DUNNE2002187,handbook__of_
 
 Zunächst werden in Abschnitt~\ref{sec:acyc-afs} AFs ohne gerichteten Zyklus betrachtet. 
 Da ihre Struktur die semantische Bewertung für
-\(\sigma\in\{\mathsf{co},\mathsf{st},\mathsf{pr}\}\) 
+\(\sigma\in\{\mathrm{co},\mathrm{st},\mathrm{pr}\}\) 
 eindeutig festlegt, gilt \(X\perp_\sigma Y\mid Z\) unabhängig von der Wahl 
 der paarweise disjunkten Mengen \(X,Y,Z\). Abschnitt~\ref{sec:even-cycle-free-afs} 
 schwächt diese Voraussetzung ab und erlaubt gerichtete Zyklen ungerader Länge. 
@@ -42,7 +42,7 @@ eine unmittelbare Aussage über \(X\perp_\sigma Y\mid Z\) erlaubt.
 \begin{Proposition}
 \label{prop:acyc-af-ci-st-top}
     Sei \(F=(A,R)\) ein azyklisches AF und \(\sigma\) eine Semantik mit
-    \(\sigma \in \{\mathsf{co},\mathsf{st},\mathsf{pr}\}\). Dann gilt für alle paarweise disjunkten
+    \(\sigma \in \{\mathrm{co},\mathrm{st},\mathrm{pr}\}\). Dann gilt für alle paarweise disjunkten
     \(X,Y,Z \subseteq A\), dass \(X\perp_\sigma Y\mid Z\).
 \end{Proposition}
 
@@ -52,7 +52,7 @@ eine unmittelbare Aussage über \(X\perp_\sigma Y\mid Z\) erlaubt.
     \emph{preferred}- und \emph{stable}-Semantik mit der \emph{grounded}-Semantik zusammen. 
     Da das \emph{grounded}-Labelling eindeutig ist, existiert genau ein Labelling \(\lambda\),
      sodass \(\Lambda_{\mathrm{co}}(F)=\Lambda_{\mathrm{pr}}(F)=\Lambda_{\mathrm{st}}(F)=\{\lambda\}\).
-    Sei nun \(\sigma \in \{\mathsf{co},\mathsf{st},\mathsf{pr}\}\). Dann gilt insbesondere \(|\Lambda_{\sigma}(F)|=1\).
+    Sei nun \(\sigma \in \{\mathrm{co},\mathrm{st},\mathrm{pr}\}\). Dann gilt insbesondere \(|\Lambda_{\sigma}(F)|=1\).
      Nach Lemma~\ref{lem:independence-trivial-labelling-set} folgt für alle 
      paarweise disjunkten \(X,Y,Z \subseteq A\), dass \(X \perp_\sigma Y \mid Z\) gilt.
 \end{proof}
@@ -65,7 +65,7 @@ dass sich erneut allgemeine Aussagen über \(X\perp_\sigma Y\mid Z\) ableiten la
 \begin{Proposition}
 \label{prop:even-cycle-free-af-ci-st-top}
     Sei \(F=(A,R)\) ein AF ohne gerade Zyklen und \(\sigma\) eine Semantik mit
-    \(\sigma \in \{\mathsf{co},\mathsf{st},\mathsf{pr}\}\). Dann gilt für alle paarweise disjunkten
+    \(\sigma \in \{\mathrm{co},\mathrm{st},\mathrm{pr}\}\). Dann gilt für alle paarweise disjunkten
     \(X,Y,Z \subseteq A\), dass \(X\perp_\sigma Y\mid Z\).
 \end{Proposition}
 
@@ -76,7 +76,7 @@ dass sich erneut allgemeine Aussagen über \(X\perp_\sigma Y\mid Z\) ableiten la
     Für die \emph{stable}-Semantik ist das \emph{grounded}-Labelling der einzige mögliche Kandidat. 
     Daher gilt entweder \(\Lambda_{\mathrm{st}}(F)=\emptyset\), falls das \emph{grounded}-Labelling nicht \emph{stable} ist, oder \(\Lambda_{\mathrm{st}}(F)=\{\lambda\}\), 
     falls das \emph{grounded}-Labelling \emph{stable} ist. In beiden Fällen gilt \(|\Lambda_{\mathrm{st}}(F)| \leq 1\).
-    Somit gilt für jedes \(\sigma \in \{\mathsf{co},\mathsf{st},\mathsf{pr}\}\), dass \(|\Lambda_{\sigma}(F)| \leq 1\). 
+    Somit gilt für jedes \(\sigma \in \{\mathrm{co},\mathrm{st},\mathrm{pr}\}\), dass \(|\Lambda_{\sigma}(F)| \leq 1\). 
     Nach Lemma~\ref{lem:independence-trivial-labelling-set} folgt für alle paarweise disjunkten \(X,Y,Z \subseteq A\), dass \(X \perp_\sigma Y \mid Z\) gilt.
 \end{proof}
 
@@ -151,7 +151,8 @@ Die Beschränkung auf ungeradezykelfreie AFs senkt die Komplexität der \emph{st
     \label{fig:reduktion-stable}
 \end{figure}
 
-Abbildung~\ref{fig:reduktion-stable} zeigt eine konkrete Instanz der Reduktion.
+Abbildung~\ref{fig:reduktion-stable} konkretisiert die im Beweis verwendete
+Konstruktion. 
 Das vorangegangene Ergebnis lässt sich für ungeradezykelfreien AFs unmittelbar auf die \emph{preferred}-Unabhängigkeit übertragen. 
 Maßgeblich ist die Gleichheit \(\Lambda_{\mathrm{st}}(F)=\Lambda_{\mathrm{pr}}(F)\), 
 aufgrund derer beide Unabhängigkeitsbegriffe auf derselben Menge von Labellings ausgewertet werden.
@@ -447,9 +448,9 @@ modifizierte Konstruktion benötigt wird, die totale und partielle Belegungen un
     \begin{tabular}{@{}lccc@{}}
         \toprule
         AF-Klasse
-            & \(\mathsf{co}\)
-            & \(\mathsf{st}\)
-            & \(\mathsf{pr}\) \\
+            & \(\mathrm{co}\)
+            & \(\mathrm{st}\)
+            & \(\mathrm{pr}\) \\
         \midrule
         azyklisch
             & trivial & trivial & trivial \\

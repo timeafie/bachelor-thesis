@@ -5,45 +5,39 @@
     \pdfbookmark[0]{Zusammenfassung}{Zusammenfassung}
     \chapter*{Zusammenfassung}
 
-    Abstrakte Argumentationssysteme (AFs) modellieren Konflikte durch
-    Argumente und gerichtete Angriffe. Bedingte Unabhängigkeit fragt, ob
-    Bewertungen disjunkter Argumentmengen \(X\) und \(Y\) aus zulässigen
-    Labellings, die auf einer Konditionierungsmenge \(Z\) übereinstimmen, in
-    einem weiteren zulässigen Labelling rekombiniert werden können. Da
-    graphstrukturelle Kriterien nur einen Teil der geltenden
-    Unabhängigkeiten erfassen, ist eine exakte Prüfung erforderlich.
+    Abstrakte Argumentationssysteme modellieren den Umgang mit
+    widersprüchlichen Informationen durch Argumente und gerichtete Angriffe.
+    Eine Semantik legt fest, welche Gesamtbewertungen der Argumente zulässig
+    sind; Labellings stellen diese Bewertungen dar, indem sie jedes Argument
+    als akzeptiert, abgelehnt oder unentschieden kennzeichnen. Zwei
+    Argumentmengen sind bedingt unabhängig, wenn sich ihre jeweiligen
+    Bewertungen aus zwei beliebigen zulässigen Labellings, die auf einer
+    dritten Argumentmenge übereinstimmen, in einem weiteren zulässigen
+    Labelling zusammenführen lassen. Die Bewertung der dritten Menge bildet
+    den Kontext und bleibt dabei erhalten.
 
-    Für die \emph{complete}-, \emph{stable}- und
-    \emph{preferred}-Semantik entwickelt diese Arbeit eine einheitliche
-    Kodierung durch quantifizierte boolesche Formeln (QBFs). Boolesche
-    Variablen kodieren die Labels \(\mathsf{in}\), \(\mathsf{out}\) und
-    \(\mathsf{und}\); Semantik-, Gleichheits- und Mischungsbedingungen
-    verbinden zwei universell betrachtete Ausgangslabellings mit einem
-    existenziell geforderten Rekombinationslabelling. Für die
-    \emph{preferred}-Semantik wird zusätzlich die Inklusionsmaximalität der
-    Menge akzeptierter Argumente kodiert. Ein Korrektheitsnachweis zeigt,
-    dass die Formel genau dann wahr ist, wenn die angefragte bedingte
-    Unabhängigkeit gilt, ohne dass sämtliche zulässigen Labellings vorab
-    explizit erzeugt werden müssen.
+    Die theoretischen Eigenschaften bedingter Unabhängigkeit in solchen
+    Systemen sind bislang nur teilweise untersucht. Bestehende graphbasierte
+    Kriterien erfassen zudem nur einen Teil der geltenden Unabhängigkeiten.
+    Diese Arbeit untersucht die rechnerische Schwierigkeit des Problems und
+    entwickelt ein exaktes Entscheidungsverfahren.
 
-    Die Kodierungen werden im Format \texttt{QCIR-G14} erzeugt und mit QuAbS
-    ausgewertet. Untersucht werden \(105\) AFs aus der Instanzsammlung der
-    International Competition on Computational Models of Argumentation 2025
-    (ICCMA 2025). Für jedes AF werden unter jeder der drei Semantiken fünf
-    reproduzierbar ausgewählte ungeordnete Argumentpaare mit sechs unabhängig
-    gezogenen, nicht geschachtelten Konditionierungsmengen kombiniert. Dies
-    ergibt \(9\,450\) Anfragen, von denen \(7\,164\) entschieden werden:
-    \(6\,986\) (\(97{,}52\,\%\)) als unabhängig und \(178\)
-    (\(2{,}48\,\%\)) als abhängig. Unter den entschiedenen Anfragen sind
-    größere Konditionierungsmengen mit einem geringeren Anteil abhängiger
-    Ergebnisse verbunden; zugleich gehen sie tendenziell mit längeren
-    Solverlaufzeiten und niedrigeren kumulativen Entscheidungsquoten einher. Wegen der
-    nicht geschachtelten Mengen und des unbekannten logischen Status nicht
-    entschiedener Anfragen ist dieser Zusammenhang rein deskriptiv.
+    Für die häufig untersuchten Semantiken \emph{complete}, \emph{stable}
+    und \emph{preferred} werden Unabhängigkeitsanfragen einheitlich in
+    quantifizierte boolesche Formeln (QBFs) übersetzt und mit dem QBF-Solver
+    QuAbS ausgewertet. Ein Korrektheitsbeweis zeigt, dass eine erzeugte Formel
+    genau dann wahr ist, wenn die angefragte Unabhängigkeit gilt.
 
-    Komplexitätstheoretisch wird gezeigt, dass für azyklische und,
-    allgemeiner, für geradezykelfreie AFs jede Anfrage positiv beantwortet
-    wird, während das auf ungeradezykelfreie AFs eingeschränkte
-    Entscheidungsproblem unter allen drei Semantiken
-    \(\Pi_2^{\mathrm{P}}\)-vollständig ist.
+    Die Komplexitätsanalyse zeigt, dass in Systemen ohne gerichtete Zyklen
+    gerader Länge jede Unabhängigkeitsanfrage positiv beantwortet wird. In
+    Systemen ohne gerichtete Zyklen ungerader Länge bleibt das Problem unter
+    allen drei Semantiken dagegen rechnerisch schwierig
+    (\(\Pi_2^{\mathrm{P}}\)-vollständig).
+
+    In einer empirischen Evaluation mit \(9\,450\) Anfragen auf \(105\)
+    Systemen lassen sich rund drei Viertel der Anfragen entscheiden. Davon
+    bestätigen etwa \(98\,\%\) bedingte Unabhängigkeit. Größere Kontextmengen
+    sind unter den entschiedenen Anfragen mit weniger beobachteter
+    Abhängigkeit verbunden. Zugleich gehen sie tendenziell mit längeren
+    Laufzeiten und einem geringeren Anteil entschiedener Anfragen einher.
 \end{otherlanguage}

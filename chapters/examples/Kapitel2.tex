@@ -173,6 +173,23 @@ seine Angreifer mit \(\mathsf{out}\) gelabelt sind.
 Jedes Argumentationssystem besitzt genau ein \emph{grounded}-Labelling und
 mindestens ein \emph{complete}- sowie ein \emph{preferred}-Labelling. Die Menge
 \(\Lambda_{\mathrm{st}}(F)\) kann hingegen leer sein.
+Im Folgenden verwenden wir
+\(\mathrm{gr}\), \(\mathrm{co}\), \(\mathrm{pr}\) und \(\mathrm{st}\)
+als Kürzel für die Semantiken
+\emph{grounded}, \emph{complete}, \emph{preferred}
+beziehungsweise \emph{stable}.
+
+\begin{Definition}[Extensionen und Extensionszahl]
+    \label{def:af-extensions}
+    Sei \(F=(A,R)\) ein AF und sei
+    \(\sigma\in\{\mathrm{gr},\mathrm{co},\mathrm{st},\mathrm{pr}\}\).
+    Eine Menge \(E\subseteq A\) heißt \emph{\(\sigma\)-Extension} von \(F\),
+    wenn ein Labelling \(\lambda\in\Lambda_{\sigma}(F)\) mit
+    \(E=\mathsf{in}(\lambda)\) existiert.
+\end{Definition}
+Für die hier betrachteten Semantiken stimmt die Anzahl der 
+\(\sigma\)-Extensionen von einem AF \(F\) mit 
+\(\lvert\Lambda_{\sigma}(F)\rvert\) überein.
 
 \begin{Example}
     \label{ex:abendplanung-semantiken}
@@ -504,6 +521,12 @@ Hierarchie rekursiv definieren.
     \(\mathrm{PH}=\bigcup_{k\geq 0}\Sigma_k^{\mathrm{P}}\).
 \end{Definition}
 
+Abbildung~\ref{fig:polynomielle-hierarchie} veranschaulicht die so
+definierten Klassen und ihre Inklusionsbeziehungen innerhalb der
+polynomiellen Hierarchie. Insbesondere sind
+\(\Sigma_k^{\mathrm{P}}\) und \(\Pi_k^{\mathrm{P}}\) jeweils in
+\(\Delta_{k+1}^{\mathrm{P}}\) enthalten.
+
 \begin{figure}[htbp]
     \centering
     \input{gfx/polynomielle_hierarchie.tex}
@@ -591,7 +614,7 @@ Vergleichsprobleme.
     \label{def:standard-af-problems}
     Sei \(F=(A,R)\) ein AF und sei
     \(\sigma\in
-    \{\mathsf{gr},\mathsf{co},\mathsf{st},\mathsf{pr}\}\).
+    \{\mathrm{gr},\mathrm{co},\mathrm{st},\mathrm{pr}\}\).
     Das \emph{Verifikationsproblem}
     \(\mathrm{VER}_{\sigma}\) fragt für ein gegebenes Labelling
     \(\lambda\colon A\to\mathcal{L}\), ob
@@ -615,20 +638,20 @@ Vergleichsprobleme.
 Verifikation prüft somit ein konkret vorgegebenes Labelling, kredulöse
 Akzeptanz quantifiziert existenziell und skeptische Akzeptanz universell
 über die \(\sigma\)-Labellings. Die bekannten Komplexitätsergebnisse sind
-in Tabelle~\ref{tab:complexity-af-semantics} zusammengefasst
-\parencite[Tab.~3.3]{dvorak:2012:computational-aspects}.
+in Tabelle~\ref{tab:complexity-af-semantics} zusammengefasst.
 \begin{table}[h]
     \centering
     \caption{Komplexität der Verifikation sowie der kredulösen und
-    skeptischen Akzeptanz für die betrachteten AF-Semantiken.}
+    skeptischen Akzeptanz für die betrachteten AF-Semantiken. 
+    Tabelle adaptiert nach \cite{dvorak:2012:computational-aspects}.}
     \label{tab:complexity-af-semantics}
     \small
     \begin{tabular}{@{}lcccc@{}}
         \toprule
-        & \(\mathsf{gr}\)
-        & \(\mathsf{co}\)
-        & \(\mathsf{st}\)
-        & \(\mathsf{pr}\) \\
+        & \(\mathrm{gr}\)
+        & \(\mathrm{co}\)
+        & \(\mathrm{st}\)
+        & \(\mathrm{pr}\) \\
         \midrule
         \(\mathrm{VER}_{\sigma}\)
             & in \(\mathrm{P}\)
